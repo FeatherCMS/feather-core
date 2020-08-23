@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 2020. 08. 23..
 //
 
-import Vapor
-
 public extension EventLoopFuture {
 
     /// throwing version of the .flatMap function

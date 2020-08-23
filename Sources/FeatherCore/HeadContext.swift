@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 2020. 08. 23..
 //
 
-import Foundation
-
 /// a basic head context for rendering frontend pages  
 public struct HeadContext: Encodable {
 
