@@ -29,8 +29,6 @@ let package = Package(
             .product(name: "ViewKit", package: "view-kit"),
             .product(name: "Liquid", package: "liquid"),
             .product(name: "ViperKit", package: "viper-kit"),
-        ], swiftSettings: [
-            .unsafeFlags(["-cross-module-optimization"], .when(configuration: .release))
         ]),
         .testTarget(name: "FeatherCoreTests", dependencies: [
             .target(name: "FeatherCore"),
