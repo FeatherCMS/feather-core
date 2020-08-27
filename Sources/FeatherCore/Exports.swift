@@ -13,3 +13,7 @@
 @_exported import ViewKit
 @_exported import Liquid
 @_exported import ViperKit
+
+/// drivers
+@_exported import FluentSQLiteDriver
+@_exported import LiquidLocalDriver

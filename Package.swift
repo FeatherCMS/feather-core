@@ -18,6 +18,10 @@ let package = Package(
         .package(url: "https://github.com/binarybirds/view-kit", from: "1.1.0"),
         .package(url: "https://github.com/binarybirds/liquid", from: "1.0.0"),
         .package(url: "https://github.com/binarybirds/viper-kit", from: "1.3.0"),
+        
+        /// drivers
+        .package(url: "https://github.com/vapor/fluent-sqlite-driver", from: "4.0.0"),
+        .package(url: "https://github.com/binarybirds/liquid-local-driver", from: "1.0.0"),
     ],
     targets: [
         .target(name: "FeatherCore", dependencies: [
@@ -29,6 +33,10 @@ let package = Package(
             .product(name: "ViewKit", package: "view-kit"),
             .product(name: "Liquid", package: "liquid"),
             .product(name: "ViperKit", package: "viper-kit"),
+            
+            /// drivers
+            .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
+            .product(name: "LiquidLocalDriver", package: "liquid-local-driver"),
         ]),
         .testTarget(name: "FeatherCoreTests", dependencies: [
             .target(name: "FeatherCore"),
