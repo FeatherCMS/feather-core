@@ -1,4 +1,4 @@
-// swift-tools-version:5.2
+// swift-tools-version:5.3
 import PackageDescription
 
 let package = Package(
@@ -7,7 +7,7 @@ let package = Package(
        .macOS(.v10_15)
     ],
     products: [
-        .library(name: "FeatherCore", targets: ["FeatherCore"]),
+        .library(name: "FeatherCore", type: .dynamic, targets: ["FeatherCore"]),
     ],
     dependencies: [
         .package(url: "https://github.com/vapor/vapor", from: "4.29.0"),
