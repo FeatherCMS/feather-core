@@ -8,7 +8,5 @@
 public extension String {
 
     /// turns an empty string to a nil value
-    var emptyToNil: String? {
-        self.isEmpty ? nil : self
-    }
+    var emptyToNil: String? { isEmpty ? nil : self }
 }

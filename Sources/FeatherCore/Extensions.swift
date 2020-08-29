@@ -9,7 +9,7 @@ public extension String {
 
     /// replaces the last path component (separated by slashes) of a string with a new value
     func replaceLastPath(_ value: String) -> String {
-        var components = self.split(separator: "/").dropLast().map(String.init)
+        var components = split(separator: "/").dropLast().map(String.init)
         components.append(value)
         return "/" + components.joined(separator: "/") + "/"
     }
@@ -18,7 +18,7 @@ public extension String {
 public extension ViperModel where IDValue == UUID {
 
     /// unique view identifier implementation for a viper model
-    var viewIdentifier: String { self.id!.uuidString }
+    var viewIdentifier: String { id!.uuidString }
 }
 
 /// a protocol on top of the admin view controller, where the associated model is a viper model

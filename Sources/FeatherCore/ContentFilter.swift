@@ -27,6 +27,6 @@ public extension ContentFilter {
     
     /// a content filter can be used as a form field option
     var formFieldOption: FormFieldOption {
-        .init(key: self.key, label: self.label)
+        .init(key: key, label: label)
     }
 }
