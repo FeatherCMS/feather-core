@@ -9,7 +9,9 @@ import Vapor
 import Fluent
 
 public struct RequestVariablesMiddleware: Middleware {
-
+    
+    public init() {}
+    
     public func respond(to req: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
         req.application.viper.invokeHook(name: "prepare-variables", req: req, type: [String: String].self)
         .flatMap { items in
