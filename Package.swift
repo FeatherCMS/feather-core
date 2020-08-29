@@ -7,7 +7,7 @@ let package = Package(
        .macOS(.v10_15)
     ],
     products: [
-        .library(name: "FeatherCore", type: .dynamic, targets: ["FeatherCore"]),
+        .library(name: "FeatherCore", /*type: .dynamic,*/ targets: ["FeatherCore"]),
     ],
     dependencies: [
         .package(url: "https://github.com/vapor/vapor", from: "4.29.0"),
@@ -20,8 +20,8 @@ let package = Package(
         .package(url: "https://github.com/binarybirds/viper-kit", from: "1.3.0"),
         
         /// drivers
-        .package(url: "https://github.com/vapor/fluent-sqlite-driver", from: "4.0.0"),
-        .package(url: "https://github.com/binarybirds/liquid-local-driver", from: "1.0.0"),
+        //.package(url: "https://github.com/vapor/fluent-sqlite-driver", from: "4.0.0"),
+        //.package(url: "https://github.com/binarybirds/liquid-local-driver", from: "1.0.0"),
     ],
     targets: [
         .target(name: "FeatherCore", dependencies: [
@@ -35,8 +35,8 @@ let package = Package(
             .product(name: "ViperKit", package: "viper-kit"),
             
             /// drivers
-            .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
-            .product(name: "LiquidLocalDriver", package: "liquid-local-driver"),
+            //.product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
+            //.product(name: "LiquidLocalDriver", package: "liquid-local-driver"),
         ]),
         .testTarget(name: "FeatherCoreTests", dependencies: [
             .target(name: "FeatherCore"),
