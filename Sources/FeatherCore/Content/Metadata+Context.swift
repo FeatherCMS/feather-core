@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 08. 29..
 //
 
-extension Metadata {
+public extension Metadata {
 
     var metaContext: MetaContext {
         .init(title: self.title,
