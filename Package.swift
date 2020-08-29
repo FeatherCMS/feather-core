@@ -17,7 +17,7 @@ let package = Package(
         .package(url: "https://github.com/binarybirds/content-api", from: "1.0.0"),
         .package(url: "https://github.com/binarybirds/view-kit", from: "1.2.0-beta"),
         .package(url: "https://github.com/binarybirds/liquid", from: "1.0.0"),
-        .package(url: "https://github.com/binarybirds/viper-kit", from: "1.3.0"),
+        .package(url: "https://github.com/binarybirds/viper-kit", from: "1.3.4"),
         
         /// drivers
         //.package(url: "https://github.com/vapor/fluent-sqlite-driver", from: "4.0.0"),
