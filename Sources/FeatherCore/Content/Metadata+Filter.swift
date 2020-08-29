@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 08. 29..
 //
 
-extension Metadata {
+public extension Metadata {
 
     func filter(_ input: String, req: Request) -> String {
         req.application.viper.invokeAllSyncHooks(name: "content-filter",
