@@ -7,9 +7,12 @@ let package = Package(
        .macOS(.v10_15)
     ],
     products: [
+        .executable(name: "FeatherCli", targets: ["FeatherCli"]),
         .library(name: "FeatherCore", /*type: .dynamic,*/ targets: ["FeatherCore"]),
     ],
     dependencies: [
+        //.package(url: "https://github.com/vapor/console-kit", from: "4.2.0"),
+
         .package(url: "https://github.com/vapor/vapor", from: "4.29.0"),
         .package(url: "https://github.com/vapor/leaf", from: "4.0.0-rc"),
         .package(url: "https://github.com/vapor/fluent", from: "4.0.0"),
@@ -24,6 +27,9 @@ let package = Package(
         //.package(url: "https://github.com/binarybirds/liquid-local-driver", from: "1.0.0"),
     ],
     targets: [
+        .target(name: "FeatherCli", dependencies: [
+            .product(name: "Vapor", package: "vapor"),
+        ]),
         .target(name: "FeatherCore", dependencies: [
             .product(name: "Vapor", package: "vapor"),
             .product(name: "Leaf", package: "leaf"),

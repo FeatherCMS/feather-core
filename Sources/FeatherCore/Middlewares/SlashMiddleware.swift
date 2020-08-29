@@ -9,6 +9,8 @@ import Vapor
 
 public final class SlashMiddleware: Middleware {
 
+    public init() {}
+
     public func respond(to req: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
         let newPath = req.url.path.safePath()
         if req.url.path != newPath {

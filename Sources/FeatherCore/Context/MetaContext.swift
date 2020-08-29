@@ -1,12 +1,12 @@
 //
-//  HeadContext.swift
+//  MetaContext.swift
 //  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 08. 23..
 //
 
-/// a basic head context for rendering frontend pages  
-public struct HeadContext: Encodable {
+/// a basic meta context for rendering frontend page head tags
+public struct MetaContext: Encodable {
 
     /// title of the page
     public var title: String?
