@@ -11,13 +11,13 @@ import Fluent
 public struct RequestVariablesMiddleware: Middleware {
 
     public func respond(to req: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
-        req.application.viper.invokeHook(name: "prepare-variables", req: req, type: Void.self)
-//        SystemVariableModel.query(on: req.db).all().map { variables in
-//            for variable in variables {
-//                req.variables.cache.storage[variable.key] = variable.value
-//            }
-//        }
-        .flatMap { _ in next.respond(to: req) }
+        req.application.viper.invokeHook(name: "prepare-variables", req: req, type: [String: String].self)
+        .flatMap { items in
+            for variable in items ?? [:] {
+                req.variables.cache.storage[variable.key] = variable.value
+            }
+            return next.respond(to: req)
+        }
     }
 }
 
@@ -71,43 +71,29 @@ public extension Request.Variables {
     func set(_ key: String, value: String, hidden: Bool? = nil, notes: String? = nil) -> EventLoopFuture<Void> {
         request.application.viper.invokeHook(name: "set-variable",
                                                   req: request,
-                                                  type: Void.self,
+                                                  type: Bool.self,
                                                   params: ["key": key,
                                                            "value": value,
                                                            "hidden": hidden as Any,
                                                            "notes": notes as Any])
-//        SystemVariableModel
-//            .query(on: request.db)
-//            .filter(\.$key == key)
-//            .first()
-//            .flatMap { model -> EventLoopFuture<Void> in
-//                if let model = model {
-//                    model.value = value
-//                    if let hidden = hidden {
-//                        model.hidden = hidden
-//                    }
-//                    model.notes = notes
-//                    return model.update(on: request.db)
-//                }
-//                return SystemVariableModel(key: key,
-//                                           value: value,
-//                                           hidden: hidden ?? false,
-//                                           notes: notes)
-//                    .create(on: request.db)
-//            }
-            .map { _ in cache.storage[key] = value }
+
+            .map { result in
+                if let success = result, success {
+                    cache.storage[key] = value
+                }
+            }
     }
 
     func unset(_ key: String) -> EventLoopFuture<Void> {
         request.application.viper.invokeHook(name: "unset-variable",
                                                   req: request,
-                                                  type: Void.self,
+                                                  type: Bool.self,
                                                   params: ["key": key])
-//        SystemVariableModel
-//            .query(on: request.db)
-//            .filter(\.$key == key)
-//            .delete()
-            .map { _ in cache.storage[key] = nil }
+            .map { result in
+                if let success = result, success {
+                    cache.storage[key] = nil
+                }
+            }
     }
 }
 
