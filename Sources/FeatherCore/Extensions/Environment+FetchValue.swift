@@ -11,7 +11,7 @@ public extension Environment {
 
     static func fetch(_ key: String) -> String {
         guard let value = Environment.get(key) else {
-            precondition(false, """
+            fatalError("""
                 \(key) is not defined in the Environment.
                 Check README.md or documentation for how to set environment variables.
                 """)

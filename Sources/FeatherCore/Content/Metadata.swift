@@ -7,7 +7,7 @@
 
 public final class Metadata: Model {
 
-    public static let schema = "_feather_metadata"
+    public static let schema = "_feather_metadatas"
 
     struct FieldKeys {
         static var module: FieldKey { "module" }

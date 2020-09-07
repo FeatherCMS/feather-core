@@ -37,7 +37,7 @@ public extension ViperModel where Self.IDValue == UUID {
         }
     }
     
-    func publish(using slug: String? = nil, on db: Database) throws -> EventLoopFuture<Void> {
+    func publish(slug: String? = nil, on db: Database) throws -> EventLoopFuture<Void> {
         try self.updateMetadata(on: db) { metadata in
             metadata.status = .published
             if let slug = slug {
