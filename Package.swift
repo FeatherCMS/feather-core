@@ -13,12 +13,13 @@ let package = Package(
     dependencies: [
         //.package(url: "https://github.com/vapor/console-kit", from: "4.2.0"),
 
-        .package(url: "https://github.com/vapor/vapor", from: "4.29.0"),
-        .package(url: "https://github.com/vapor/leaf", from: "4.0.0-rc"),
+        .package(url: "https://github.com/vapor/vapor", from: "4.30.0"),
+        //.package(url: "https://github.com/vapor/leaf", from: "4.0.0"),
+        .package(url: "https://github.com/tdotclare/leaf.git", .branch("tau")),
         .package(url: "https://github.com/vapor/fluent", from: "4.0.0"),
         .package(url: "https://github.com/vapor/jwt", from: "4.0.0"),
         .package(url: "https://github.com/binarybirds/content-api", from: "1.0.0"),
-        .package(url: "https://github.com/binarybirds/view-kit", from: "1.2.0-beta"),
+        .package(url: "https://github.com/binarybirds/view-kit", from: "1.2.0-rc"),
         .package(url: "https://github.com/binarybirds/liquid", from: "1.0.0"),
         .package(url: "https://github.com/binarybirds/viper-kit", from: "1.4.0-beta"),
         

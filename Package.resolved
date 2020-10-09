@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/vapor/console-kit.git",
         "state": {
           "branch": null,
-          "revision": "7cf8185ad62d50ae9777ce78bcfde8f5c9f900e2",
-          "version": "4.2.1"
+          "revision": "f353ebf73014faf89804b76e51ff8171840b59ba",
+          "version": "4.2.3"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/binarybirds/content-api",
         "state": {
           "branch": null,
-          "revision": "e1c7d49a571758a1e897de4285e9392338443f2e",
-          "version": "1.0.4"
+          "revision": "c1971a7617b6dbd9ee6b2f6abc54c883ed617063",
+          "version": "1.0.5"
         }
       },
       {
@@ -69,26 +69,26 @@
         "repositoryURL": "https://github.com/vapor/jwt-kit.git",
         "state": {
           "branch": null,
-          "revision": "50a46ba65fa4e2c1bb3783ec7464b42232a23ee2",
-          "version": "4.1.0"
+          "revision": "6055fe8439769aa3646a3c797d573ce7305849c8",
+          "version": "4.2.0"
         }
       },
       {
         "package": "leaf",
-        "repositoryURL": "https://github.com/vapor/leaf",
+        "repositoryURL": "https://github.com/tdotclare/leaf.git",
         "state": {
-          "branch": null,
-          "revision": "6fc9ec82f5098ab93933e19ceb4ef030f52d646c",
-          "version": "4.0.0-rc.1.4"
+          "branch": "tau",
+          "revision": "03ee1169c7c025e3b1ee4a9bab9ed4dbd3fed78a",
+          "version": null
         }
       },
       {
         "package": "leaf-kit",
-        "repositoryURL": "https://github.com/vapor/leaf-kit.git",
+        "repositoryURL": "https://github.com/tdotclare/leaf-kit.git",
         "state": {
-          "branch": null,
-          "revision": "a3623bd217d1c0327839afbc0bdc2351f7d06c1a",
-          "version": "1.0.0-rc.1.17"
+          "branch": "Tau",
+          "revision": "fbe1dd5d03d0e470b4ea14d1afb95a633eb0f329",
+          "version": null
         }
       },
       {
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/binarybirds/liquid",
         "state": {
           "branch": null,
-          "revision": "8c7e219fb92c4e4ce8462eb0497732398b974120",
-          "version": "1.0.2"
+          "revision": "daf9dee3a5aa7e056603a454c183999a3c0fde92",
+          "version": "1.1.0"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/binarybirds/liquid-kit.git",
         "state": {
           "branch": null,
-          "revision": "6e5eeb0290c98f3bdc13271a2bc27391b1b43062",
-          "version": "1.0.2"
+          "revision": "7784afbeed9a86f672f99453dd0c80941000c323",
+          "version": "1.1.1"
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/apple/swift-crypto.git",
         "state": {
           "branch": null,
-          "revision": "9b9d1868601a199334da5d14f4ab2d37d4f8d0c5",
-          "version": "1.0.2"
+          "revision": "9680b7251cd2be22caaed8f1468bd9e8915a62fb",
+          "version": "1.1.2"
         }
       },
       {
@@ -168,8 +168,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "5fc24345f92ec4c274121776c215ab0aa1ed4d50",
-          "version": "2.22.0"
+          "revision": "c3e2359c55cd8b47207ab7363b77c9c398a95294",
+          "version": "2.23.0"
         }
       },
       {
@@ -186,8 +186,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-http2.git",
         "state": {
           "branch": null,
-          "revision": "1e68e51752be0b43c5a0ef35818c1dd24d13e77c",
-          "version": "1.14.1"
+          "revision": "78ddbdfca10f64e4399da37c63372fd8db232152",
+          "version": "1.15.0"
         }
       },
       {
@@ -195,8 +195,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-ssl.git",
         "state": {
           "branch": null,
-          "revision": "ea1dfd64193bf5af4490635a4a44c4fb43b1e1ae",
-          "version": "2.9.1"
+          "revision": "cc0e80dbccf8c89c1f49c3a11c5929575035076c",
+          "version": "2.9.2"
         }
       },
       {
@@ -213,8 +213,8 @@
         "repositoryURL": "https://github.com/vapor/vapor",
         "state": {
           "branch": null,
-          "revision": "66f412bcb276c09ad3a5df263f159cee9fecc310",
-          "version": "4.29.1"
+          "revision": "29f5370b119593083674a4f7e6795ac2f4d884ef",
+          "version": "4.32.0"
         }
       },
       {
@@ -222,8 +222,8 @@
         "repositoryURL": "https://github.com/binarybirds/view-kit",
         "state": {
           "branch": null,
-          "revision": "e61d48361f46ea8f66d96208e7fd14920a22610a",
-          "version": "1.2.0-beta.1"
+          "revision": "cfed8408f2a102919b0c42495ee4ab0ccf60f3b9",
+          "version": "1.2.0-rc.2"
         }
       },
       {
@@ -231,8 +231,8 @@
         "repositoryURL": "https://github.com/binarybirds/viper-kit",
         "state": {
           "branch": null,
-          "revision": "ec07c0bc2e45d3fc0de3d993d137bde3d24e3b3e",
-          "version": "1.4.0-beta.1"
+          "revision": "e495a49c2cfeb2d37405817f29ddaf5bd85e9f0c",
+          "version": "1.4.0-beta.3"
         }
       },
       {
