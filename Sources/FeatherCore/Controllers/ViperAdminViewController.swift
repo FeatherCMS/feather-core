@@ -6,13 +6,13 @@
 //
 
 /// a protocol on top of the admin view controller, where the associated model is a viper model
-public protocol ViperAdminViewController: AdminViewController where Model: ViperModel, Model.IDValue == UUID {
+public protocol ViperAdminViewController: AdminViewController where Model: ViperModel {
     
     /// we need to associate a generic module type
     associatedtype Module: ViperModule
 }
 
-public extension ViperAdminViewController {
+public extension ViperAdminViewController where  Model.IDValue == UUID  {
 
     /// default location for the list view templates
     var listView: String { "\(Module.name.capitalized)/Admin/\(Model.name.capitalized)/List" }
