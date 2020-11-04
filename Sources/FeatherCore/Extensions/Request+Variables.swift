@@ -61,6 +61,10 @@ public extension Request.Variables {
     fileprivate final class Cache {
         fileprivate var storage: [String: String] = [:]
     }
+    
+    var all: [String: String] {
+        cache.storage
+    }
 
     func get(_ key: String) -> String {
         cache.storage[key] ?? ""
