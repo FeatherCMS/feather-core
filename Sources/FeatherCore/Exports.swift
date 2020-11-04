@@ -1,5 +1,5 @@
 //
-//  Extensions.swift
+//  Exports.swift
 //  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 08. 23..
@@ -13,7 +13,3 @@
 @_exported import ViewKit
 @_exported import Liquid
 @_exported import ViperKit
-
-/// drivers
-//@_exported import FluentSQLiteDriver
-//@_exported import LiquidLocalDriver

@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  MetadataMigration_v1_0_0.swift
+//  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 08. 29..
 //
@@ -19,7 +19,7 @@ struct MetadataMigration_v1_0_0: Migration {
             .field(Metadata.FieldKeys.filters, .array(of: .string), .required)
             .field(Metadata.FieldKeys.feedItem, .bool, .required)
             .field(Metadata.FieldKeys.title, .string)
-            .field(Metadata.FieldKeys.excerpt, .string)
+            .field(Metadata.FieldKeys.excerpt, .data)
             .field(Metadata.FieldKeys.imageKey, .string)
             .field(Metadata.FieldKeys.canonicalUrl, .string)
             .unique(on: Metadata.FieldKeys.slug)

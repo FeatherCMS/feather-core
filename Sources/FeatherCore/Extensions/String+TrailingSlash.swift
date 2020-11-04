@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  String+TrailingSlash.swift
+//  FeatherCore
 //
 //  Created by Julian Gentges on 10.08.20.
 //

@@ -1,6 +1,6 @@
 //
 //  SlashMiddleware.swift
-//  FeatherCMS
+//  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 02. 16..
 //

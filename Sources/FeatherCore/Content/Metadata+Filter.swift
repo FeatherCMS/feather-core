@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Metadata+Filter.swift
+//  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 08. 29..
 //
@@ -12,7 +12,7 @@ public extension Metadata {
                                                  req: req,
                                                  type: [ContentFilter].self)
             .flatMap { $0 }
-            .filter { self.filters.contains($0.key) }
+            .filter { filters.contains($0.key) }
             .reduce(input) { $1.filter($0) }
     }
 }

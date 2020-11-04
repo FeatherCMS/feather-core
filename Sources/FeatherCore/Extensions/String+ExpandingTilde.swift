@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  String+ExpandingTilde.swift
+//  FeatherCore
 //
 //  Created by Julian Gentges on 10.08.20.
 //

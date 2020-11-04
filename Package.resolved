@@ -75,20 +75,20 @@
       },
       {
         "package": "leaf",
-        "repositoryURL": "https://github.com/tdotclare/leaf.git",
+        "repositoryURL": "https://github.com/vapor/leaf",
         "state": {
-          "branch": "tau",
-          "revision": "03ee1169c7c025e3b1ee4a9bab9ed4dbd3fed78a",
-          "version": null
+          "branch": null,
+          "revision": "a8348b682ec14a863cc470a2da8f0ebc262c6088",
+          "version": "4.0.0-tau.1"
         }
       },
       {
         "package": "leaf-kit",
-        "repositoryURL": "https://github.com/tdotclare/leaf-kit.git",
+        "repositoryURL": "https://github.com/vapor/leaf-kit",
         "state": {
-          "branch": "Tau",
-          "revision": "fbe1dd5d03d0e470b4ea14d1afb95a633eb0f329",
-          "version": null
+          "branch": null,
+          "revision": "8b965e6e2eadfe5914ea133669368aceb2b89ccb",
+          "version": "1.0.0-tau.1.1"
         }
       },
       {
@@ -213,8 +213,8 @@
         "repositoryURL": "https://github.com/vapor/vapor",
         "state": {
           "branch": null,
-          "revision": "29f5370b119593083674a4f7e6795ac2f4d884ef",
-          "version": "4.32.0"
+          "revision": "b040f90b80ac5906fcf1476a46d360c159f01892",
+          "version": "4.35.0"
         }
       },
       {
