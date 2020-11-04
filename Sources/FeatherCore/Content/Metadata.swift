@@ -28,17 +28,15 @@ public final class Metadata: Model {
     
     // MARK: - fields
     
-    public enum Status: String, CaseIterable, Codable, FormFieldOptionRepresentable {
+    public enum Status: String, CaseIterable, Codable, FormFieldStringOptionRepresentable {
         case draft
         case published
         case archived
         
-        public var localized: String {
-            self.rawValue.capitalized
-        }
+        public var localized: String { rawValue.capitalized }
 
-        public var formFieldOption: FormFieldOption {
-            .init(key: self.rawValue, label: self.localized)
+        public var formFieldStringOption: FormFieldStringOption {
+            .init(key: rawValue, label: localized)
         }
     }
     
@@ -46,7 +44,6 @@ public final class Metadata: Model {
     @Field(key: FieldKeys.module) public var module: String
     @Field(key: FieldKeys.model) public var model: String
     @Field(key: FieldKeys.reference) public var reference: UUID
-    
     
     @Field(key: FieldKeys.slug) public var slug: String
     @Field(key: FieldKeys.date) public var date: Date

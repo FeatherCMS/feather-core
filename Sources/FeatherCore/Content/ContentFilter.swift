@@ -6,7 +6,7 @@
 //
 
 /// a content filter can  synchronously transform an input string
-public protocol ContentFilter: FormFieldOptionRepresentable {
+public protocol ContentFilter: FormFieldStringOptionRepresentable {
     
     /// unique identifier key
     var key: String { get }
@@ -25,8 +25,8 @@ public extension ContentFilter {
     /// use input as default filter
     func filter(_ input: String) -> String { input }
     
-    /// a content filter can be used as a form field option
-    var formFieldOption: FormFieldOption {
+    /// a content filter can be used as a form field string option
+    var formFieldStringOption: FormFieldStringOption {
         .init(key: key, label: label)
     }
 }

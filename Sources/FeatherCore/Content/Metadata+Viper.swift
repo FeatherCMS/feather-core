@@ -8,11 +8,10 @@
 public extension ViperModel where Self.IDValue == UUID {
     
     static func findMetadata(on db: Database, path: String? = nil) -> QueryBuilder<Self> {
-        let query = self.query(on: db)
+        let query = Self.query(on: db)
             .join(Metadata.self, on: \Metadata.$reference == \Self._$id)
             .filter(Metadata.self, \.$module == Module.name)
             .filter(Metadata.self, \.$model == name)
-            //.filter(Metadata.self, \.$status != .archived)
 
         if let path = path {
             return query.filter(Metadata.self, \.$slug == path.safeSlug())
