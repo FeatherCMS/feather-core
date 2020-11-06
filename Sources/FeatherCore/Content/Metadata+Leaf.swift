@@ -9,7 +9,7 @@ extension Metadata: LeafDataRepresentable {
 
     public var leafData: LeafData {
         .dictionary([
-            "id": .string(id!.uuidString),
+            "id": .string(id?.uuidString),
             "module": .string(module),
             "model": .string(model),
             "reference": .string(reference.uuidString),
