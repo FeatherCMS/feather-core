@@ -11,14 +11,15 @@ let package = Package(
         .library(name: "FeatherCore", targets: ["FeatherCore"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/vapor/vapor", from: "4.34.0"),
-        .package(url: "https://github.com/vapor/leaf", from: "4.0.0-tau"),
+        .package(url: "https://github.com/vapor/vapor", from: "4.35.0"),
+        .package(url: "https://github.com/vapor/leaf", .exact("4.0.0-tau.1")),
+        .package(url: "https://github.com/vapor/leaf-kit", .exact("1.0.0-tau.1.1")),
         .package(url: "https://github.com/vapor/fluent", from: "4.0.0"),
         .package(url: "https://github.com/vapor/jwt", from: "4.0.0"),
         .package(url: "https://github.com/binarybirds/content-api", from: "1.0.0"),
-        .package(url: "https://github.com/binarybirds/view-kit", from: "1.2.0-rc"),
+        .package(url: "https://github.com/binarybirds/view-kit", from: "1.2.1"),
         .package(url: "https://github.com/binarybirds/liquid", from: "1.0.0"),
-        .package(url: "https://github.com/binarybirds/viper-kit", from: "1.4.0-beta"),
+        .package(url: "https://github.com/binarybirds/viper-kit", from: "1.4.1"),
     ],
     targets: [
         .target(name: "FeatherCli", dependencies: [
@@ -26,6 +27,7 @@ let package = Package(
         ]),
         .target(name: "FeatherCore", dependencies: [
             .product(name: "Leaf", package: "leaf"),
+            .product(name: "LeafKit", package: "leaf-kit"),
             .product(name: "Fluent", package: "fluent"),
             .product(name: "JWT", package: "jwt"),
             .product(name: "ContentApi", package: "content-api"),
