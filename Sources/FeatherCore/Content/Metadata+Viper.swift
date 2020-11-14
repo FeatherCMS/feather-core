@@ -7,6 +7,7 @@
 
 public extension ViperModel where Self.IDValue == UUID {
     
+    /// joins the metadata object on the ViperModel query, if a path is present it'll use it as a filter to return only one instance that matches the slug
     static func findMetadata(on db: Database, path: String? = nil) -> QueryBuilder<Self> {
         let query = Self.query(on: db)
             .join(Metadata.self, on: \Metadata.$reference == \Self._$id)
@@ -19,7 +20,8 @@ public extension ViperModel where Self.IDValue == UUID {
         return query
     }
     
-    func metadata(on db: Database) throws -> EventLoopFuture<Metadata> {
+    /// request the associated metadata object, if there is none the future will return a .notFound error
+    func metadata(on db: Database) -> EventLoopFuture<Metadata> {
         Metadata.query(on: db)
             .filter(\.$reference == id!)
             .filter(\.$module == Self.Module.name)
@@ -27,20 +29,17 @@ public extension ViperModel where Self.IDValue == UUID {
             .first()
             .unwrap(or: Abort(.notFound))
     }
-
-    func updateMetadata(on db: Database, _ block: @escaping (Metadata) -> Void) throws -> EventLoopFuture<Void> {
-        try metadata(on: db).flatMap { metadata in
+    
+    /// update a metadata object with a given set of properties using a block, can be used to patch metadata objects in the db
+    func updateMetadata(on db: Database, _ block: @escaping (Metadata) -> Void) -> EventLoopFuture<Void> {
+        metadata(on: db).flatMap { metadata in
             block(metadata)
             return metadata.update(on: db)
         }
     }
     
-    func publish(slug: String? = nil, on db: Database) throws -> EventLoopFuture<Void> {
-        try updateMetadata(on: db) { metadata in
-            metadata.status = .published
-            if let slug = slug {
-                metadata.slug = slug
-            }
-        }
+    /// publish a metadata object
+    func publish(on db: Database) -> EventLoopFuture<Void> {
+        updateMetadata(on: db) { $0.status = .published }
     }
 }
