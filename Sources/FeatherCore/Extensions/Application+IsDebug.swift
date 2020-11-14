@@ -7,7 +7,7 @@
 
 import Vapor
 
-extension Application {
+public extension Application {
 
     var isDebug: Bool { !environment.isRelease && environment != .production }
 }

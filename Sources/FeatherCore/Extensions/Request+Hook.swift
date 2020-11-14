@@ -8,7 +8,7 @@
 import Vapor
 import ViperKit
 
-extension Request {
+public extension Request {
     
     func hookAll<T>(_ name: String, type: T.Type, params: [String : Any] = [:]) -> EventLoopFuture<[T]> {
         application.viper.invokeAllHooks(name: name, req: self, type: type, params: params)
