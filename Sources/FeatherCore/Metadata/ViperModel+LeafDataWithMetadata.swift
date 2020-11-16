@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  ViperModel+LeafDataWithMetadata.swift
+//  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 11. 14..
 //
@@ -10,8 +10,9 @@ import Leaf
 import ViperKit
 
 public extension ViperModel where Self: LeafDataRepresentable {
-    
-    func joinedMetadata() -> LeafData {
+
+    /// returns the default leaf data object coinaining the metadata leaf data (metadata info must be already joined / present)
+    var leafDataWithMetadata: LeafData {
         var data: [String: LeafData] = leafData.dictionary!
         data["metadata"] = try! joined(Metadata.self).leafData
         return .dictionary(data)

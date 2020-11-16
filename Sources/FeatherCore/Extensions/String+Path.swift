@@ -9,6 +9,7 @@ import Foundation
 
 public extension String {
 
+    /// removes unsafe characters from a string, so it can be used as a slug
     func slugify() -> String {
         let allowed = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyz0123456789-_.")
         return trimmingCharacters(in: .whitespacesAndNewlines)
@@ -19,17 +20,30 @@ public extension String {
             .joined(separator: "-")
     }
 
-    func safeSlug() -> String {
-        var slug = self
-        if slug.hasPrefix("/") {
-            slug = String(slug.dropFirst())
+    /// expands the ~ character in a given path
+    var expandingTildeInPath: String {
+        var path = NSString(string: self).expandingTildeInPath
+        
+        if hasSuffix("/") {
+            path += "/"
         }
-        if slug.hasSuffix("/") {
-            slug = String(slug.dropLast())
-        }
-        return slug
+        return path
     }
-    
+
+    /// adds a trailing / character to a path string if necessary
+    var withTrailingSlash: String {
+        if hasSuffix("/") {
+            return self
+        }
+        return self + "/"
+    }
+
+    /// trims slashes from a path (also removes duplicate / characters)
+    func trimmingSlashes() -> String {
+        split(separator: "/").joined(separator: "/")
+    }
+
+    /// remove duplicate / characters from a string and adds a leading slash and a trailing / if the path has no extension (e.g. /foo/bar.html)
     func safePath() -> String {
         let components = split(separator: "/")
         var newPath = "/" + components.joined(separator: "/")
@@ -37,5 +51,12 @@ public extension String {
            newPath += "/"
         }
         return newPath
+    }
+    
+    /// replaces the last path component (separated by slashes) of a string with a new value
+    func replacingLastPath(_ value: String) -> String {
+        var components = split(separator: "/").dropLast().map(String.init)
+        components.append(value)
+        return "/" + components.joined(separator: "/") + "/"
     }
 }

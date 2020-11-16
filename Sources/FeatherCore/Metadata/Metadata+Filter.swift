@@ -7,6 +7,7 @@
 
 public extension Metadata {
 
+    /// invokes content filters that are associated to the metadata object
     func filter(_ input: String, req: Request) -> String {
         req.application.viper.invokeAllSyncHooks(name: "content-filter",
                                                  req: req,

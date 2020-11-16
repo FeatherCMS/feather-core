@@ -7,21 +7,28 @@
 
 extension Metadata: LeafDataRepresentable {
 
+    /// returns the LeafData types for a metadata
     public var leafData: LeafData {
         .dictionary([
             "id": .string(id?.uuidString),
             "module": .string(module),
             "model": .string(model),
             "reference": .string(reference.uuidString),
-            "slug": .string(slug),
-            "date": .double(date.timeIntervalSinceReferenceDate),
-            "status": .string(status.rawValue),
-            "filters": .array(filters),
-            "feedItem": .bool(feedItem),
+            
             "title": .string(title),
             "excerpt": .string(excerpt),
             "imageKey": .string(imageKey),
+            "date": .double(date.timeIntervalSinceReferenceDate),
+            
+            "slug": .string(slug),
+            "status": .string(status.rawValue),
+            "feedItem": .bool(feedItem),
             "canonicalUrl": .string(canonicalUrl),
+            
+            "filters": .array(filters),
+
+            "css": .string(css),
+            "js": .string(js),
         ])
     }
 }

@@ -7,6 +7,7 @@
 
 import Vapor
 
+/// converts a path into a safePath by removing duplicate / characters and redirects to the safe path if necessary
 public final class SlashMiddleware: Middleware {
 
     public init() {}

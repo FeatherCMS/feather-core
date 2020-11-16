@@ -14,8 +14,9 @@ public extension ViperModel where Self.IDValue == UUID {
             .filter(Metadata.self, \.$module == Module.name)
             .filter(Metadata.self, \.$model == name)
 
+        
         if let path = path {
-            return query.filter(Metadata.self, \.$slug == path.safeSlug())
+            return query.filter(Metadata.self, \.$slug == path.trimmingSlashes())
         }
         return query
     }

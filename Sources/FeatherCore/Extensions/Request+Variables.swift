@@ -8,10 +8,12 @@
 import Vapor
 import Fluent
 
+/// global request variables middleware it makes possible to store key-value pairs in a db table
 public struct RequestVariablesMiddleware: Middleware {
     
     public init() {}
-    
+
+    /// the variables are prepared via this middleware, so they can be accessed later on in a "synchronous" way
     public func respond(to req: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
         req.application.viper.invokeHook(name: "prepare-variables", req: req, type: [String: String].self)
         .flatMap { items in
@@ -25,6 +27,7 @@ public struct RequestVariablesMiddleware: Middleware {
 
 public extension Request {
 
+    /// system variables
     var variables: Variables {
         return .init(request: self)
     }
@@ -62,18 +65,22 @@ public extension Request.Variables {
         fileprivate var storage: [String: String] = [:]
     }
     
+    /// returns all system variables
     var all: [String: String] {
         cache.storage
     }
 
+    /// get a system variable based on a key, if the variable not exists, it'll return an empty string
     func get(_ key: String) -> String {
         cache.storage[key] ?? ""
     }
 
+    /// checks if a variable exists
     func has(_ key: String) -> Bool {
         cache.storage[key] != nil
     }
 
+    /// sets a new variable, it's an async operation so it returns an ELF object
     func set(_ key: String, value: String, hidden: Bool? = nil, notes: String? = nil) -> EventLoopFuture<Void> {
         request.application.viper.invokeHook(name: "set-variable",
                                                   req: request,
@@ -90,6 +97,7 @@ public extension Request.Variables {
             }
     }
 
+    /// removes a variable with a given key, it's an async operation, ELF returned
     func unset(_ key: String) -> EventLoopFuture<Void> {
         request.application.viper.invokeHook(name: "unset-variable",
                                                   req: request,
