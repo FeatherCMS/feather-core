@@ -42,6 +42,11 @@ public extension String {
     func trimmingSlashes() -> String {
         split(separator: "/").joined(separator: "/")
     }
+  
+    /// removes the last n path components separated by the slash character (e.g. "/foo/bar/baz/".trimmingLastPathComponents(2) => /foo/)
+    func trimmingLastPathComponents(_ n: Int = 1) -> String {
+        split(separator: "/").dropLast(n).joined(separator: "/").safePath()
+    }
 
     /// remove duplicate / characters from a string and adds a leading slash and a trailing / if the path has no extension (e.g. /foo/bar.html)
     func safePath() -> String {
