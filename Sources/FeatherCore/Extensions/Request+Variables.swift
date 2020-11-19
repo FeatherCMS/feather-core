@@ -70,9 +70,9 @@ public extension Request.Variables {
         cache.storage
     }
 
-    /// get a system variable based on a key, if the variable not exists, it'll return an empty string
-    func get(_ key: String) -> String {
-        cache.storage[key] ?? ""
+    /// get a system variable based on a key
+    func get(_ key: String) -> String? {
+        cache.storage[key]
     }
 
     /// checks if a variable exists
