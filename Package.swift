@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "feather-core",
     platforms: [
-       .macOS(.v11)
+       .macOS(.v10_15)
     ],
     products: [
         .executable(name: "FeatherCli", targets: ["FeatherCli"]),
