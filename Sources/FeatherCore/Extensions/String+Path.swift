@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 2020. 06. 09..
 //
 
-import Foundation
-
 public extension String {
 
     /// removes unsafe characters from a string, so it can be used as a slug

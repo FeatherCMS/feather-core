@@ -5,10 +5,6 @@
 //  Created by Tibor Bodecs on 2020. 11. 14..
 //
 
-import Vapor
-import Leaf
-import ViperKit
-
 public extension ViperModel where Self: LeafDataRepresentable {
 
     /// returns the default leaf data object coinaining the metadata leaf data (metadata info must be already joined / present)

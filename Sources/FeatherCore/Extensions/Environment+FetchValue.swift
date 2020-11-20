@@ -5,8 +5,6 @@
 //  Created by Michael Critz on 8/9/20.
 //
 
-import Vapor
-
 public extension Environment {
 
     /// fetches a key from the environment, if the key does not exists it'll result in a fatal error

@@ -5,9 +5,6 @@
 //  Created by Tibor Bodecs on 2020. 08. 29..
 //
 
-import Vapor
-import Fluent
-
 /// global request variables middleware it makes possible to store key-value pairs in a db table
 public struct RequestVariablesMiddleware: Middleware {
     

@@ -5,9 +5,6 @@
 //  Created by Tibor Bodecs on 2020. 11. 14..
 //
 
-import Vapor
-import ViperKit
-
 public extension Request {
     
     /// shorthand for the viper.invokeAllHooks method

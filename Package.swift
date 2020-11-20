@@ -31,6 +31,8 @@ let package = Package(
             .product(name: "Liquid", package: "liquid"),
             .product(name: "ViperKit", package: "viper-kit"),
             .product(name: "Vapor", package: "vapor"),
+        ], resources: [
+            .copy("Templates"),
         ]),
         .testTarget(name: "FeatherCoreTests", dependencies: [
             .target(name: "FeatherCore"),
