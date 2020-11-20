@@ -24,7 +24,7 @@ public struct FeatherCoreLeafSource: NonBlockingFileIOLeafSource {
             .appendingPathComponent("Templates")
             .path
 
-        let file = rootDirectory + template  + "." + fileExtension
+        let file = rootDirectory + "/" + template  + "." + fileExtension
         return read(path: file, on: eventLoop)
     }
 }
