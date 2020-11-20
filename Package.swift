@@ -7,7 +7,6 @@ let package = Package(
        .macOS(.v10_15)
     ],
     products: [
-        .executable(name: "FeatherCli", targets: ["FeatherCli"]),
         .library(name: "FeatherCore", targets: ["FeatherCore"]),
     ],
     dependencies: [
@@ -22,9 +21,6 @@ let package = Package(
         .package(url: "https://github.com/binarybirds/viper-kit", from: "1.5.0-beta"),
     ],
     targets: [
-        .target(name: "FeatherCli", dependencies: [
-            .product(name: "Vapor", package: "vapor"),
-        ]),
         .target(name: "FeatherCore", dependencies: [
             .product(name: "Leaf", package: "leaf"),
             .product(name: "LeafKit", package: "leaf-kit"),
