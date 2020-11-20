@@ -12,7 +12,7 @@ public struct FeatherCoreLeafSource: NonBlockingFileIOLeafSource {
     /// fileio used to read files
     public let fileio: NonBlockingFileIO
     
-    internal init(fileExtension: String, fileio: NonBlockingFileIO) {
+    public init(fileExtension: String, fileio: NonBlockingFileIO) {
         self.fileExtension = fileExtension
         self.fileio = fileio
     }
