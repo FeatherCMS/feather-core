@@ -5,7 +5,8 @@
 //  Created by Tibor Bodecs on 2020. 01. 24..
 //
 
-final class UserModel: ViperModel {
+// TODO: internal UserModel -> Leaf module extension for scoped variables
+public final class UserModel: ViperModel {
     typealias Module = UserModule
     
     static let name = "users"
