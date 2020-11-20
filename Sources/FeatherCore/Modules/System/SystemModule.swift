@@ -136,9 +136,10 @@ final class SystemModule: ViperModule {
         let assetsPath = Application.Paths.assets
 
         for module in req.application.viper.modules.map(\.name) {
-            let modulePath = Application.Paths.base + "Sources/App/Modules/" + module + "/"
+            let name = module.lowercased()
+            let modulePath = Application.Paths.base + "Sources/App/Modules/" + name.capitalized + "/"
             let installAsssetsPath = modulePath + "Assets/install/"
-            let destinationPath = assetsPath + module + "/"
+            let destinationPath = assetsPath + name + "/"
 
             do {
                 try FileManager.default.createDirectory(atPath: Application.Paths.assets,
@@ -150,7 +151,7 @@ final class SystemModule: ViperModule {
                 }
             }
             catch {
-                fatalError("Error, please check your Public / assets directories.\n\(error.localizedDescription)")
+                fatalError("Error: `\(error.localizedDescription)`")
             }
         }
 
