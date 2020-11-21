@@ -8,7 +8,7 @@
 public final class FrontendModule: ViperModule {
 
     public static let name = "frontend"
-    public var priority: Int { 100 }
+    public var priority: Int { 2000 }
     
     public var router: ViperRouter? = FrontendRouter()
     

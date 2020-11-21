@@ -8,7 +8,7 @@
 final class SystemModule: ViperModule {
 
     static var name: String = "system"
-    var priority: Int { 1 }
+    var priority: Int { 9000 }
 
     var router: ViperRouter? { SystemRouter() }
 

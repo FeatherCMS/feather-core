@@ -8,7 +8,7 @@
 final class UserModule: ViperModule {
 
     static let name = "user"
-    var priority: Int { 2 }
+    var priority: Int { 8000 }
     
     var router: ViperRouter? = UserRouter()
     

@@ -8,7 +8,7 @@
 final class ApiModule: ViperModule {
 
     static var name: String = "api"
-    var priority: Int { 100 }
+    var priority: Int { 2000 }
 
     var router: ViperRouter? { ApiRouter() }
     
