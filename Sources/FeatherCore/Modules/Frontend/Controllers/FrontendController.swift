@@ -5,13 +5,12 @@
 //  Created by Tibor Bodecs on 2020. 03. 27..
 //
 
+
 struct FrontendController {
     
     func catchAllView(req: Request) throws -> EventLoopFuture<Response> {
-        guard let future: EventLoopFuture<Response?> = req.invoke("frontend-page") else {
-            return req.eventLoop.future(error: Abort(.notFound))
-        }
-        return future.unwrap(or: Abort(.notFound))
+        let futures: [EventLoopFuture<Response?>] = req.invokeAll("frontend-page")
+        return req.eventLoop.first(futures).unwrap(or: Abort(.notFound))
     }
 
     // MARK: - sitemap, rss
