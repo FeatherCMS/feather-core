@@ -10,6 +10,8 @@ public struct ResolveLeafEntity: LeafUnsafeEntity, LeafNonMutatingMethod, String
     
     public static var callSignature: [LeafCallParameter] { [.string] }
     
+    public init() {}
+
     public func evaluate(_ params: LeafCallValues) -> LeafData {
         guard let req = req else { return .error("Needs unsafe access to Request") }
 
