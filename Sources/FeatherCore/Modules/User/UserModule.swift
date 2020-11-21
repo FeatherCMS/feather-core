@@ -37,8 +37,8 @@ final class UserModule: ViperModule {
         app.hooks.register("leaf-admin-menu", use: leafAdminMenuHook)
         app.hooks.register("installer", use: installerHook)
 
-        app.hooks.register("admin-auth-middlwares", use: adminAuthMiddlewaresHook)
-        app.hooks.register("api-auth-middlwares", use: apiAuthMiddlewaresHook)
+        app.hooks.register("admin-auth-middlewares", use: adminAuthMiddlewaresHook)
+        app.hooks.register("api-auth-middlewares", use: apiAuthMiddlewaresHook)
     }
     
     // MARK: - hook functions
