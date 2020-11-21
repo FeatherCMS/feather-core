@@ -155,7 +155,7 @@ final class SystemModule: ViperModule {
                 continue
             }
 
-            let sourcePath = moduleBundle.appendingPathComponent("Assets").appendingPathComponent("install").path
+            let sourcePath = moduleBundle.appendingPathComponent("Install").path
             let destinationPath = assetsPath + name + "/"
 
             do {

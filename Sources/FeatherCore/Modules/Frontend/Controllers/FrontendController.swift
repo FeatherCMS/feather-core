@@ -10,7 +10,7 @@ struct FrontendController {
     
     func catchAllView(req: Request) throws -> EventLoopFuture<Response> {
         let futures: [EventLoopFuture<Response?>] = req.invokeAll("frontend-page")
-        return req.eventLoop.first(futures).unwrap(or: Abort(.notFound))
+        return req.eventLoop.findFirstValue(futures).unwrap(or: Abort(.notFound))
     }
 
     // MARK: - sitemap, rss
