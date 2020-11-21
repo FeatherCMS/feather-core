@@ -47,7 +47,7 @@ final class SystemModule: ViperModule {
     
     // MARK: - hooks
 
-    func leafAdminMenuHook(args: HookArguments) -> [String: LeafDataRepresentable] {
+    func leafAdminMenuHook(args: HookArguments) -> LeafDataRepresentable {
         [
             "name": "System",
             "icon": "settings",

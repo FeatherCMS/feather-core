@@ -32,7 +32,7 @@ public final class FrontendModule: ViperModule {
     
     // MARK: - hooks
 
-    func leafAdminMenuHook(args: HookArguments) -> [String: LeafDataRepresentable] {
+    func leafAdminMenuHook(args: HookArguments) -> LeafDataRepresentable {
         [
             "name": "Frontend",
             "icon": "layout",

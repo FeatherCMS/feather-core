@@ -43,7 +43,7 @@ final class UserModule: ViperModule {
     
     // MARK: - hook functions
 
-    func leafAdminMenuHook(args: HookArguments) -> [String: LeafDataRepresentable] {
+    func leafAdminMenuHook(args: HookArguments) -> LeafDataRepresentable {
         [
             "name": "User",
             "icon": "user",
