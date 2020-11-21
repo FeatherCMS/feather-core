@@ -123,12 +123,12 @@ final class SystemModule: ViperModule {
             .map { true }
     }
  
-    func frontendPageHook(args: HookArguments) -> EventLoopFuture<Response?>? {
+    func frontendPageHook(args: HookArguments) -> EventLoopFuture<Response?> {
         let req = args["req"] as! Request
 
         /// check if system is already installed, if yes we don't do anything
         if req.variables.get("system.installed") == "true" {
-            return nil
+            return req.eventLoop.future(nil)
         }
 
         /// if the system path equals install, we render the start install screen
