@@ -13,7 +13,7 @@ struct AdminRouter: ViperRouter {
         let app = args["app"] as! Application
         let routes = args["routes"] as! RoutesBuilder
 
-        let middlewares: [[Middleware]] = app.hooks.invokeAll("admin-auth-middlwares")
+        let middlewares: [[Middleware]] = app.hooks.invokeAll("admin-auth-middlewares")
 
         /// groupd admin routes, first we use auth middlewares then the error middleware
         let protectedAdmin = routes.grouped("admin").grouped(middlewares.flatMap { $0 }).grouped(AdminErrorMiddleware())

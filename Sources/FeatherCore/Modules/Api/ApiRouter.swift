@@ -16,7 +16,7 @@ final class ApiRouter: ViperRouter {
         let _: [Void] = app.hooks.invokeAll("public-api", args: ["routes": publicApi])
 
         /// guard the api with auth middlewares, if there was no auth middlewares returned we simply stop the registration
-        let middlewares: [[Middleware]] = app.hooks.invokeAll("api-auth-middlwares")
+        let middlewares: [[Middleware]] = app.hooks.invokeAll("api-auth-middlewares")
 
         /// register protected api endpoints
         let protectedApi = publicApi.grouped(middlewares.flatMap { $0 })

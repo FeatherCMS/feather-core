@@ -20,11 +20,12 @@ struct FrontendRouter: ViperRouter {
         let app = args["app"] as! Application
         let routes = args["routes"] as! RoutesBuilder
 
-        /// if there are other middlewares we add them before the not found handler
-        var middlewares: [Middleware] = app.hooks.invokeAll("frontend-middlwares")
-        middlewares.append(FrontendNotFoundMiddleware())
+        /// if there are other middlewares we add them, finally we append the not found middleware
+        let middlewares: [[Middleware]] = app.hooks.invokeAll("frontend-middlewares")
+        var frontendMiddlewares = middlewares.flatMap { $0 }
+        frontendMiddlewares.append(FrontendNotFoundMiddleware())
 
-        let frontendRoutes = routes.grouped(middlewares)
+        let frontendRoutes = routes.grouped(frontendMiddlewares)
         /// handle root path and everything else via the controller method
         frontendRoutes.get(use: frontendController.catchAllView)
         frontendRoutes.get(.catchall, use: frontendController.catchAllView)
