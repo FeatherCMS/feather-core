@@ -123,7 +123,7 @@ final class SystemModule: ViperModule {
             .map { true }
     }
  
-    func frontendPageHook(args: HookArguments) -> EventLoopFuture<Response>? {
+    func frontendPageHook(args: HookArguments) -> EventLoopFuture<Response?>? {
         let req = args["req"] as! Request
 
         /// check if system is already installed, if yes we don't do anything
@@ -133,7 +133,7 @@ final class SystemModule: ViperModule {
 
         /// if the system path equals install, we render the start install screen
         guard req.url.path == "/system/install/" else {
-            return req.leaf.render("System/Install/Start").encodeResponse(for: req)
+            return req.leaf.render("System/Install/Start").encodeOptionalResponse(for: req)
         }
     
         /// create assets path under the public directory
@@ -197,6 +197,6 @@ final class SystemModule: ViperModule {
         return req.eventLoop.flatten(futures)
         .flatMap { _ in req.variables.set("system.installed", value: "true", hidden: true) }
         .flatMap { _ in req.leaf.render("System/Install/Finish") }
-        .encodeResponse(for: req)
+        .encodeOptionalResponse(for: req)
     }
 }

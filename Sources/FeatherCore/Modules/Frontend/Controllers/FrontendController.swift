@@ -8,10 +8,10 @@
 struct FrontendController {
     
     func catchAllView(req: Request) throws -> EventLoopFuture<Response> {
-        guard let future: EventLoopFuture<Response> = req.invoke("frontend-page") else {
+        guard let future: EventLoopFuture<Response?> = req.invoke("frontend-page") else {
             return req.eventLoop.future(error: Abort(.notFound))
         }
-        return future
+        return future.unwrap(or: Abort(.notFound))
     }
 
     // MARK: - sitemap, rss
