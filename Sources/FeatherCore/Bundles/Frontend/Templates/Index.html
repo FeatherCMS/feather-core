@@ -7,7 +7,7 @@
         <meta name="robots" content="noindex">
     #endif
 
-    <title>#(head.title) - #($vars["site.title"])</title>
+    <title>#(head.title) - #($system["site.title"])</title>
 
     #if($app.isDebug ?? false):
     <link rel="stylesheet" href="/css/frontend.css">
@@ -19,26 +19,26 @@
     
     <style type="text/css">
         body {
-            #if(!$vars["site.font.family"].isEmpty):
-            font-family: #($vars["site.font.family"]);
+            #if(!$system["site.font.family"].isEmpty):
+            font-family: #($system["site.font.family"]);
             #endif
-            #if(!$vars["site.font.size"].isEmpty):
-            font-size: #($vars["site.font.size"]);
+            #if(!$system["site.font.size"].isEmpty):
+            font-size: #($system["site.font.size"]);
             #endif
         }
-        #if(!$vars["site.color.primary"].isEmpty):
+        #if(!$system["site.color.primary"].isEmpty):
         a:link, a:visited, \#nav li a.selected {
-            color: #($vars["site.color.primary"]);
+            color: #($system["site.color.primary"]);
         }
         #endif
-        #if(!$vars["site.color.secondary"].isEmpty):
+        #if(!$system["site.color.secondary"].isEmpty):
         a:link:hover, a:visited:hover, \#nav a:link.selected:hover, \#nav li a:link:hover, \#nav li a:visited:hover{
-            color: #($vars["site.color.secondary"]);
+            color: #($system["site.color.secondary"]);
         }
         #endif
 
         #evaluate(css ?? "")
-        #($vars["site.css"] ?? "")
+        #($system["site.css"] ?? "")
         #(head.css ?? "")
     </style>
     
@@ -57,14 +57,14 @@
 <body class="m:zero">
     <header id="header">
         <a href="/" id="site-link">
-            <img src="#($vars["site.logo"].resolve() ?? "/images/logo-text.png")" alt="Logo of #($vars["site.title"])" title="#($vars["site.title"])">
+            <img src="#($system["site.logo"].resolve() ?? "/images/logo-text.png")" alt="Logo of #($system["site.title"])" title="#($system["site.title"])">
         </a>
 
         <input type="checkbox" id="menu-button" class="selection:off" />
         <label for="menu-button" id="menu-icon" class="selection:off"><span></span></label>
 
         <nav id="nav">
-            #for(item in $menus["main"].items ?? []):
+            #for(item in $menu["main"].items ?? []):
             <li>
                 <a href="#(item.url)" #if($req.url.path == item.url): class="selected"#endif#if(item.targetBlank): target="_blank"#endif>
                     #if(item.icon != nil):#svg(item.icon)#endif #(item.label)
@@ -81,9 +81,9 @@
     <footer>
         <section class="p:xl center">
 
-            #($vars["site.footer"])
+            #($system["site.footer"])
 
-            <p>#($vars["site.copy"]) &copy; #if($vars["site.copy.year.start"] != nil):#($vars["site.copy.year.start"])-#endif#Date(timeStamp: Timestamp(), fixedFormat: "y")</p>
+            <p>#($system["site.copy"]) &copy; #if($system["site.copy.year.start"] != nil):#($system["site.copy.year.start"])-#endif#Date(timeStamp: Timestamp(), fixedFormat: "y")</p>
 
             <p>
                 #if($user.isAuthenticated):
@@ -92,7 +92,7 @@
                 <a href="/login/">Login</a>
                 #endif
 
-                #for(item in $menus["footer"].items ?? []):
+                #for(item in $menu["footer"].items ?? []):
                     &middot;
                 <a href="#(item.url)" #if($req.url.path == item.url): class="selected"#endif#if(item.targetBlank): target="_blank"#endif>
                     #if(item.icon != nil):#svg(item.icon)#endif #(item.label)
@@ -100,14 +100,14 @@
                 #endfor
             </p>
             
-            #($vars["site.footer.bottom"])
+            #($system["site.footer.bottom"])
 
         </section>
     </footer>
     
     <script type="text/javascript">
         #evaluate(js ?? "")
-        #($vars["site.js"] ?? "")
+        #($system["site.js"] ?? "")
         #(head.js ?? "")
     </script>
 </body>

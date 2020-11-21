@@ -32,6 +32,10 @@ final class SystemModule: ViperModule {
             .appendingPathComponent("Bundles")
             .appendingPathComponent("System")
     }
+    
+    func leafDataGenerator(for req: Request) -> [String: LeafDataGenerator]? {
+        req.variables.all.mapValues { .lazy(LeafData.string($0)) }
+    }
 
     func boot(_ app: Application) throws {
         app.hooks.register("admin", use: (router as! SystemRouter).adminRoutesHook)

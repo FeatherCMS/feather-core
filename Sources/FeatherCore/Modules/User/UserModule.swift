@@ -29,6 +29,16 @@ final class UserModule: ViperModule {
             .appendingPathComponent("Bundles")
             .appendingPathComponent("User")
     }
+    
+    func leafDataGenerator(for req: Request) -> [String: LeafDataGenerator]? {
+        var res: [String: LeafDataGenerator] = [
+            "isAuthenticated": .lazy(LeafData.bool(req.auth.has(UserModel.self)))
+        ]
+        if let user = try? req.auth.require(UserModel.self) {
+            res["email"] = .lazy(LeafData.string(user.email))
+        }
+        return res
+    }
 
     func boot(_ app: Application) throws {
         app.databases.middleware.use(UserModelContentMiddleware())
