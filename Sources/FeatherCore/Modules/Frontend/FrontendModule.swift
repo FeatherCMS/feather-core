@@ -16,30 +16,33 @@ public final class FrontendModule: ViperModule {
         Metadata.migrations()
     }
     
-    public var viewsUrl: URL? {
-        nil
-//        Bundle.module.bundleURL
-//            .appendingPathComponent("Contents")
-//            .appendingPathComponent("Resources")
-//            .appendingPathComponent("Views")
+    public var bundleUrl: URL? {
+        Bundle.module.bundleURL
+            .appendingPathComponent("Contents")
+            .appendingPathComponent("Resources")
+            .appendingPathComponent("Bundles")
+            .appendingPathComponent("Frontend")
+    }
+
+    public func boot(_ app: Application) throws {
+        app.hooks.register("routes", use: (router as! FrontendRouter).routesHook)
+        app.hooks.register("admin", use: (router as! FrontendRouter).adminRoutesHook)
+        app.hooks.register("leaf-admin-menu", use: leafAdminMenuHook)
     }
     
-    public func invokeSync(name: String, req: Request?, params: [String : Any]) -> Any? {
-        switch name {
-        case "leaf-admin-menu":
-            return [
-                "name": "Frontend",
-                "icon": "layout",
-                "items": LeafData.array([
-                    [
-                        "url": "/admin/frontend/metadatas/",
-                        "label": "Metadatas",
-                    ],
-                ])
-            ]
-        default:
-            return nil
-        }
+    // MARK: - hooks
+
+    func leafAdminMenuHook(args: HookArguments) -> [String: LeafDataRepresentable] {
+        [
+            "name": "Frontend",
+            "icon": "layout",
+            "items": LeafData.array([
+                [
+                    "url": "/admin/frontend/metadatas/",
+                    "label": "Metadatas",
+                ],
+            ])
+        ]
     }
 }
 

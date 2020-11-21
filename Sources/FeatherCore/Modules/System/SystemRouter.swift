@@ -8,14 +8,11 @@
 final class SystemRouter: ViperRouter {
 
     let adminController = SystemVariableAdminController()
+    
+    func adminRoutesHook(args: HookArguments) {
+        let routes = args["routes"] as! RoutesBuilder
 
-    func hook(name: String, routes: RoutesBuilder, app: Application) throws {
-        switch name {
-        case "admin":
-            let adminModule = routes.grouped(.init(stringLiteral: SystemModule.name))
-            adminController.setupRoutes(on: adminModule, as: SystemVariableModel.pathComponent)
-        default:
-            break;
-        }
+        let modulePath = routes.grouped(SystemModule.pathComponent)
+        adminController.setupRoutes(on: modulePath, as: SystemVariableModel.pathComponent)
     }
 }

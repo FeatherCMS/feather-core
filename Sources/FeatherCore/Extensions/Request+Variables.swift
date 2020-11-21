@@ -12,9 +12,11 @@ public struct RequestVariablesMiddleware: Middleware {
 
     /// the variables are prepared via this middleware, so they can be accessed later on in a "synchronous" way
     public func respond(to req: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
-        req.application.viper.invokeHook(name: "prepare-variables", req: req, type: [String: String].self)
-        .flatMap { items in
-            for variable in items ?? [:] {
+        guard let result: EventLoopFuture<[String:String]> = req.invoke("prepare-variables") else {
+            return next.respond(to: req)
+        }
+        return result.flatMap { items in
+            for variable in items {
                 req.variables.cache.storage[variable.key] = variable.value
             }
             return next.respond(to: req)
@@ -79,32 +81,33 @@ public extension Request.Variables {
 
     /// sets a new variable, it's an async operation so it returns an ELF object
     func set(_ key: String, value: String, hidden: Bool? = nil, notes: String? = nil) -> EventLoopFuture<Void> {
-        request.application.viper.invokeHook(name: "set-variable",
-                                                  req: request,
-                                                  type: Bool.self,
-                                                  params: ["key": key,
-                                                           "value": value,
-                                                           "hidden": hidden as Any,
-                                                           "notes": notes as Any])
+        let args = [
+            "key": key,
+            "value": value,
+            "hidden": hidden as Any,
+            "notes": notes as Any
+        ]
 
-            .map { result in
-                if let success = result, success {
-                    cache.storage[key] = value
-                }
+        guard let result: EventLoopFuture<Bool> = request.invoke("set-variable", args: args) else {
+            return request.eventLoop.future()
+        }
+        return result.map { success in
+            if success {
+                cache.storage[key] = value
             }
+        }
     }
 
     /// removes a variable with a given key, it's an async operation, ELF returned
     func unset(_ key: String) -> EventLoopFuture<Void> {
-        request.application.viper.invokeHook(name: "unset-variable",
-                                                  req: request,
-                                                  type: Bool.self,
-                                                  params: ["key": key])
-            .map { result in
-                if let success = result, success {
-                    cache.storage[key] = nil
-                }
+        guard let result: EventLoopFuture<Bool> = request.invoke("unset-variable", args: ["key": key]) else {
+            return request.eventLoop.future()
+        }
+        return result.map { success in
+            if success {
+                cache.storage.removeValue(forKey: key)
             }
+        }
     }
 }
 

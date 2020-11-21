@@ -7,27 +7,19 @@
 
 struct UserRouter: ViperRouter {
     
-    let userFrontendController = UserFrontendController()
-    let userAdminController = UserAdminController()
+    let frontendController = UserFrontendController()
+    let adminController = UserAdminController()
 
-    func boot(routes: RoutesBuilder, app: Application) throws {
-        routes.get("login", use: userFrontendController.loginView)
-        routes.grouped(UserModelCredentialsAuthenticator()).post("login", use: userFrontendController.login)
-        routes.get("logout", use: userFrontendController.logout)
+    func boot(routes: RoutesBuilder) throws {
+        routes.get("login", use: frontendController.loginView)
+        routes.grouped(UserModelCredentialsAuthenticator()).post("login", use: frontendController.login)
+        routes.get("logout", use: frontendController.logout)
     }
 
-    func hook(name: String, routes: RoutesBuilder, app: Application) throws {
-        switch name {
-        case "admin":
-            let adminModule = routes.grouped(.init(stringLiteral: UserModule.name))
+    func adminRoutesHook(args: HookArguments) {
+        let routes = args["routes"] as! RoutesBuilder
 
-            userAdminController.setupRoutes(on: adminModule, as: .init(stringLiteral: UserModel.name))
-//        case "protected-api":
-//            let apiModule = routes.grouped("users")
-//            apiModule.get("users", use: userApiController.users)
-//            apiModule.post("users", use: userApiController.createUser)
-        default:
-            break;
-        }
+        let modulePath = routes.grouped(UserModule.pathComponent)
+        adminController.setupRoutes(on: modulePath, as: UserModel.pathComponent)
     }
 }

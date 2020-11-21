@@ -24,56 +24,50 @@ final class SystemModule: ViperModule {
             SystemInstallGuardMiddleware(),
         ]
     }
+    
+    var bundleUrl: URL? {
+        Bundle.module.bundleURL
+            .appendingPathComponent("Contents")
+            .appendingPathComponent("Resources")
+            .appendingPathComponent("Bundles")
+            .appendingPathComponent("System")
+    }
 
-    var viewsUrl: URL? {
-        nil
-//        Bundle.module.bundleURL
-//            .appendingPathComponent("Contents")
-//            .appendingPathComponent("Resources")
-//            .appendingPathComponent("Views")
+    func boot(_ app: Application) throws {
+        app.hooks.register("admin", use: (router as! SystemRouter).adminRoutesHook)
+        app.hooks.register("leaf-admin-menu", use: leafAdminMenuHook)
+        app.hooks.register("installer", use: installerHook)
+        
+        app.hooks.register("prepare-variables", use: prepareVariablesHook)
+        app.hooks.register("set-variable", use: setVariableHook)
+        app.hooks.register("unset-variable", use: unsetVariableHook)
+
+        app.hooks.register("frontend-page", use: frontendPageHook)
     }
     
-    // MARK: - hook functions
+    // MARK: - hooks
 
-    func invoke(name: String, req: Request, params: [String : Any] = [:]) -> EventLoopFuture<Any?>? {
-        switch name {
-        case "frontend-page":
-            return frontendPageHook(req: req)
-        case "prepare-variables":
-            return prepareVariables(req: req, params: params).erase()
-        case "set-variable":
-            return setVariable(req: req, params: params).erase()
-        case "unset-variable":
-            return unsetVariable(req: req, params: params).erase()
-
-        default:
-            return nil
-        }
+    func leafAdminMenuHook(args: HookArguments) -> [String: LeafDataRepresentable] {
+        [
+            "name": "System",
+            "icon": "settings",
+            "items": LeafData.array([
+                [
+                    "url": "/admin/system/variables/",
+                    "label": "Variables",
+                ],
+            ])
+        ]
     }
 
-    func invokeSync(name: String, req: Request?, params: [String : Any]) -> Any? {
-        switch name {
-        case "installer":
-            return SystemInstaller()
-        case "leaf-admin-menu":
-            return [
-                "name": "System",
-                "icon": "settings",
-                "items": LeafData.array([
-                    [
-                        "url": "/admin/system/variables/",
-                        "label": "Variables",
-                    ],
-                ])
-            ]
-        default:
-            return nil
-        }
+    func installerHook(args: HookArguments) -> ViperInstaller {
+        SystemInstaller()
     }
+    
 
-    private func prepareVariables(req: Request, params: [String: Any]) -> EventLoopFuture<[String:String]> {
-        return SystemVariableModel.query(on: req.db).all()
-        .map { variables in
+    func prepareVariablesHook(args: HookArguments) -> EventLoopFuture<[String:String]> {
+        let req = args["req"] as! Request
+        return SystemVariableModel.query(on: req.db).all().map { variables in
             var items: [String: String] = [:]
             for variable in variables {
                 items[variable.key] = variable.value
@@ -82,16 +76,18 @@ final class SystemModule: ViperModule {
         }
     }
     
-    private func setVariable(req: Request, params: [String: Any]) -> EventLoopFuture<Bool> {
+    func setVariableHook(args: HookArguments) -> EventLoopFuture<Bool> {
+        let req = args["req"] as! Request
+        
         guard
-            let key = params["key"] as? String,
-            let value = params["value"] as? String
+            let key = args["key"] as? String,
+            let value = args["value"] as? String
         else {
             return req.eventLoop.future(false)
         }
-        
-        let hidden = params["hidden"] as? Bool
-        let notes = params["notes"] as? String
+
+        let hidden = args["hidden"] as? Bool
+        let notes = args["notes"] as? String
 
         return SystemVariableModel
             .query(on: req.db)
@@ -115,8 +111,9 @@ final class SystemModule: ViperModule {
             }
     }
     
-    private func unsetVariable(req: Request, params: [String: Any]) -> EventLoopFuture<Bool> {
-        guard let key = params["key"] as? String else {
+    func unsetVariableHook(args: HookArguments) -> EventLoopFuture<Bool> {
+        let req = args["req"] as! Request
+        guard let key = args["key"] as? String else {
             return req.eventLoop.future(false)
         }
         return SystemVariableModel
@@ -126,32 +123,49 @@ final class SystemModule: ViperModule {
             .map { true }
     }
  
-    private func frontendPageHook(req: Request) -> EventLoopFuture<Any?>? {
+    func frontendPageHook(args: HookArguments) -> EventLoopFuture<Response>? {
+        let req = args["req"] as! Request
+
+        /// check if system is already installed, if yes we don't do anything
         if req.variables.get("system.installed") == "true" {
             return nil
         }
+
+        /// if the system path equals install, we render the start install screen
         guard req.url.path == "/system/install/" else {
-            return req.leaf.render("System/Install/Start").encodeResponse(for: req).erase()
+            return req.leaf.render("System/Install/Start").encodeResponse(for: req)
         }
+    
+        /// create assets path under the public directory
         let assetsPath = Application.Paths.assets
 
-        for module in req.application.viper.modules.map(\.name) {
-            let name = module.lowercased()
-            let modulePath = Application.Paths.base + "Sources/App/Modules/" + name.capitalized + "/"
-            let installAsssetsPath = modulePath + "Assets/install/"
+        do {
+            try FileManager.default.createDirectory(atPath: Application.Paths.assets,
+                                                    withIntermediateDirectories: true,
+                                                    attributes: [.posixPermissions: 0o744])
+        }
+        catch {
+            fatalError(error.localizedDescription)
+        }
+        
+        /// copy module assets if necessary
+        for module in req.application.viper.modules {
+            let name = module.name.lowercased()
+            guard let moduleBundle = module.bundleUrl else {
+                continue
+            }
+
+            let sourcePath = moduleBundle.appendingPathComponent("Assets").appendingPathComponent("install").path
             let destinationPath = assetsPath + name + "/"
 
             do {
-                try FileManager.default.createDirectory(atPath: Application.Paths.assets,
-                                                        withIntermediateDirectories: true,
-                                                        attributes: [.posixPermissions: 0o744])
                 var isDir : ObjCBool = false
-                if FileManager.default.fileExists(atPath: installAsssetsPath, isDirectory: &isDir), isDir.boolValue {
-                    try FileManager.default.copyItem(atPath: installAsssetsPath, toPath: destinationPath)
+                if FileManager.default.fileExists(atPath: sourcePath, isDirectory: &isDir), isDir.boolValue {
+                    try FileManager.default.copyItem(atPath: sourcePath, toPath: destinationPath)
                 }
             }
             catch {
-                fatalError("Error: `\(error.localizedDescription)`")
+                fatalError(error.localizedDescription)
             }
         }
 
@@ -159,9 +173,9 @@ final class SystemModule: ViperModule {
         var variables: [SystemVariableModel] = []
         /// we request the install futures for the database model creation
         var modelInstallFutures: [EventLoopFuture<Void>] = []
-        
+
         /// we request the installer objects, then use them to install everything
-        let installers = req.syncHookAll("installer", type: ViperInstaller.self)
+        let installers: [ViperInstaller] = req.invokeAll("installer")
         for installer in installers {
             let vars = installer.variables().compactMap { dict -> SystemVariableModel? in
                 guard let key = dict["key"] as? String, !key.isEmpty else {
@@ -184,6 +198,5 @@ final class SystemModule: ViperModule {
         .flatMap { _ in req.variables.set("system.installed", value: "true", hidden: true) }
         .flatMap { _ in req.leaf.render("System/Install/Finish") }
         .encodeResponse(for: req)
-        .erase()
     }
 }

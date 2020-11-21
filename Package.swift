@@ -32,7 +32,7 @@ let package = Package(
             .product(name: "ViperKit", package: "viper-kit"),
             .product(name: "Vapor", package: "vapor"),
         ], resources: [
-            .copy("Templates"),
+            .copy("Bundles"),
         ]),
         .testTarget(name: "FeatherCoreTests", dependencies: [
             .target(name: "FeatherCore"),

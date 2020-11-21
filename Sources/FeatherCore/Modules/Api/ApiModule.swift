@@ -11,4 +11,8 @@ final class ApiModule: ViperModule {
     var priority: Int { 100 }
 
     var router: ViperRouter? { ApiRouter() }
+    
+    func boot(_ app: Application) throws {
+        app.hooks.register("routes", use: (router as! ApiRouter).routesHook)
+    }
 }

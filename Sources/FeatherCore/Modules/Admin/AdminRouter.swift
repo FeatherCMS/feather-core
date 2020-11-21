@@ -9,17 +9,17 @@ struct AdminRouter: ViperRouter {
     
     let adminController = AdminController()
 
-    func boot(routes: RoutesBuilder, app: Application) throws {
+    func routesHook(args: HookArguments) {
+        let app = args["app"] as! Application
+        let routes = args["routes"] as! RoutesBuilder
 
-        /// protect admin routes through auth middlewares, if there was no auth middlewares returned we simply stop the registration
-        guard let middlewares = app.viper.invokeSyncHook(name: "admin-auth-middlwares", type: [Middleware].self) else {
-            return
-        }
+        let middlewares: [[Middleware]] = app.hooks.invokeAll("admin-auth-middlwares")
+
         /// groupd admin routes, first we use auth middlewares then the error middleware
-        let protectedAdmin = routes.grouped("admin").grouped(middlewares).grouped(AdminErrorMiddleware())
+        let protectedAdmin = routes.grouped("admin").grouped(middlewares.flatMap { $0 }).grouped(AdminErrorMiddleware())
         /// setup home view (dashboard)
         protectedAdmin.get(use: adminController.homeView)
         /// hook up other admin views that are protected by the authentication middleware
-        try invoke(name: "admin", routes: protectedAdmin, app: app)
+        let _: [Void] = app.hooks.invokeAll("admin", args: ["routes": protectedAdmin])
     }
 }

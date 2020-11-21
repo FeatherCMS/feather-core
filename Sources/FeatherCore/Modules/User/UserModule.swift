@@ -15,10 +15,6 @@ final class UserModule: ViperModule {
     var middlewares: [Middleware] = [
         UserModelSessionAuthenticator()
     ]
-    
-    func boot(_ app: Application) throws {
-        app.databases.middleware.use(UserModelContentMiddleware())
-    }
 
     var migrations: [Migration] {
         [
@@ -26,45 +22,49 @@ final class UserModule: ViperModule {
         ]
     }
 
-    var viewsUrl: URL? {
-        nil
-//        Bundle.module.bundleURL
-//            .appendingPathComponent("Contents")
-//            .appendingPathComponent("Resources")
-//            .appendingPathComponent("Views")
+    var bundleUrl: URL? {
+        Bundle.module.bundleURL
+            .appendingPathComponent("Contents")
+            .appendingPathComponent("Resources")
+            .appendingPathComponent("Bundles")
+            .appendingPathComponent("User")
+    }
+
+    func boot(_ app: Application) throws {
+        app.databases.middleware.use(UserModelContentMiddleware())
+        
+        app.hooks.register("admin", use: (router as! UserRouter).adminRoutesHook)
+        app.hooks.register("leaf-admin-menu", use: leafAdminMenuHook)
+        app.hooks.register("installer", use: installerHook)
+
+        app.hooks.register("admin-auth-middlwares", use: adminAuthMiddlewaresHook)
+        app.hooks.register("api-auth-middlwares", use: apiAuthMiddlewaresHook)
     }
     
     // MARK: - hook functions
 
-    func invoke(name: String, req: Request, params: [String : Any] = [:]) -> EventLoopFuture<Any?>? {
-        switch name {
-        default:
-            return nil
-        }
+    func leafAdminMenuHook(args: HookArguments) -> [String: LeafDataRepresentable] {
+        [
+            "name": "User",
+            "icon": "user",
+            "items": LeafData.array([
+                [
+                    "url": "/admin/user/users/",
+                    "label": "Users",
+                ],
+            ])
+        ]
     }
 
-    func invokeSync(name: String, req: Request?, params: [String : Any]) -> Any? {
-        switch name {
-        case "installer":
-            return UserInstaller()
-        case "admin-auth-middlwares":
-            return [UserModel.redirectMiddleware(path: "/login")]
-        case "api-auth-middlwares":
-            return [UserTokenModel.authenticator(), UserModel.guardMiddleware()]
-        case "leaf-admin-menu":
-            return [
-                "name": "User",
-                "icon": "user",
-                "items": LeafData.array([
-                    [
-                        "url": "/admin/user/users/",
-                        "label": "Users",
-                    ],
-                ])
-            ]
-        default:
-            return nil
-        }
+    func installerHook(args: HookArguments) -> ViperInstaller {
+        UserInstaller()
     }
-
+    
+    func adminAuthMiddlewaresHook(args: HookArguments) -> [Middleware] {
+        [UserModel.redirectMiddleware(path: "/login")]
+    }
+    
+    func apiAuthMiddlewaresHook(args: HookArguments) -> [Middleware] {
+        [UserTokenModel.authenticator(), UserModel.guardMiddleware()]
+    }
 }

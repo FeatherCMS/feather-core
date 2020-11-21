@@ -7,13 +7,9 @@
 
 public extension Metadata {
 
-    /// invokes content filters that are associated to the metadata object
+    /// invokes content filters that are associated to the metadata object    
     func filter(_ input: String, req: Request) -> String {
-        req.application.viper.invokeAllSyncHooks(name: "content-filter",
-                                                 req: req,
-                                                 type: [ContentFilter].self)
-            .flatMap { $0 }
-            .filter { filters.contains($0.key) }
-            .reduce(input) { $1.filter($0) }
+        let result: [[ContentFilter]] = req.invokeAll("content-filters")
+        return result.flatMap { $0 }.filter { filters.contains($0.key) }.reduce(input) { $1.filter($0) }
     }
 }

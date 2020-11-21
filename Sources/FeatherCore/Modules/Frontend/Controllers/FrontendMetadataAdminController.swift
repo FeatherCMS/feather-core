@@ -32,7 +32,7 @@ struct FrontendMetadataAdminController: ViperAdminViewController {
     }
 
     func beforeRender(req: Request, form: EditForm) -> EventLoopFuture<Void> {
-        let filters = req.syncHookAll("content-filter", type: [ContentFilter].self)
+        let filters: [[ContentFilter]] = req.invokeAll("content-filters")
         form.filters.options = filters.flatMap { $0 }.map(\.formFieldStringOption)
         return req.eventLoop.future()
     }

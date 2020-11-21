@@ -9,10 +9,18 @@ final class AdminModule: ViperModule {
 
     static let name = "admin"
     var priority: Int { 100 }
-    
+
     var router: ViperRouter? = AdminRouter()
 
-//    var bundleUrl: URL? {
-//        nil
-//    }
+    var bundleUrl: URL? {
+        Bundle.module.bundleURL
+            .appendingPathComponent("Contents")
+            .appendingPathComponent("Resources")
+            .appendingPathComponent("Bundles")
+            .appendingPathComponent("Admin")
+    }
+
+    func boot(_ app: Application) throws {
+        app.hooks.register("routes", use: (router as! AdminRouter).routesHook)
+    }
 }
