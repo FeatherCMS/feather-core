@@ -1,0 +1,16 @@
+<section class="m:bottom">
+     <script src='https://cdn.tiny.cloud/1/#($system["site.tiny.apikey"])/tinymce/5/tinymce.min.js' referrerpolicy="origin">
+     </script>
+     <script>
+       tinymce.init({
+         selector: '\#tinymce-#(field.id)',
+         plugins: '#($system["site.tiny.plugins"] ?? "print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists textcolor wordcount imagetools contextmenu colorpicker textpattern")',
+         toolbar: '#($system["site.tiny.toolbar"] ?? "styleselect bold italic underline | forecolor backcolor | alignleft aligncenter alignright | bullist numlist outdent indent | link image table youtube giphy | codesample code")'
+        });
+     </script>
+    <label for="#(field.id)">#(field.label ?? field.id.capitalized())#if(field.required ?? false):<span class="required">*</span>#endif#if(field.more ?? false): <span class="more">(#(field.more))</span>#endif</label>
+    <textarea id="tinymce-#(field.id)" name="#(field.id)" class="#(field.size)"#if(field.required ?? false): aria-required="true"#endif>#(field.data.value)</textarea>
+    #if(field.data.error != nil):
+    <span class="error">#(field.data.error)</span>
+    #endif
+</section>
