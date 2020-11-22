@@ -35,12 +35,18 @@ final class SystemModule: ViperModule {
     
     func leafDataGenerator(for req: Request) -> [String: LeafDataGenerator]? {
         var results: [String: LeafDataGenerator] = req.variables.all.mapValues { .lazy(LeafData.string($0)) }
-        let locale = Application.Config.locale
+        var locale = Application.Config.locale
+        
+        /// If prefer cleint language is set, Retrieve first browser  language preference
+        if Application.Config.clientlocale,
+           let userlocale = req.headers[.acceptLanguage].first?.split(separator: ",").first {
+            locale = Locale(identifier: userlocale.description)
+        }
         
         /// Here we match the development  language of  the app
         let language = locale.languageCode ?? "en"
         let identifier = locale.identifier
-        guard language != "en", identifier != "en_US" else {
+        guard language != "en", identifier.lowercased() != "en_US" else {
             return results
         }
         

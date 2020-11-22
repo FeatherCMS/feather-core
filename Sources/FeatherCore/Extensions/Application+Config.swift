@@ -64,6 +64,13 @@ public extension Application {
             return .autoupdatingCurrent
         }
         
+        public static var clientlocale: Bool {
+            if let localeValue = Application.Config.get("site.clientlocale"), let usebrowswerlocale = Bool(localeValue) {
+                return usebrowswerlocale
+            }
+            return false
+        }
+        
         public static func dateFormatter(dateStyle: DateFormatter.Style = .short, timeStyle: DateFormatter.Style = .short) -> DateFormatter {
             let formatter = DateFormatter()
             formatter.timeZone = Application.Config.timezone
