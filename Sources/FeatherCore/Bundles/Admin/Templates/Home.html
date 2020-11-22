@@ -6,7 +6,7 @@
 <div id="dashboard" class="wrapper w:full m:xl">
 
     <header class="m:bottom:l center">
-        <p>#($system["admin.dashboard.welcome"]) <b>#($user.email)</b>, #($system["admin.dashboard.message"])</p>
+        <p>#($system["admin.dashboard.welcome"] ?? "Welcome") <b>#($user.email)</b>, #($system["admin.dashboard.message"] ?? "this is your admin dashboard. Please select an option:")</p>
     </header>
 
     <div class="g3 g:gap:l center">
