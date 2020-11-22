@@ -34,7 +34,34 @@ final class SystemModule: ViperModule {
     }
     
     func leafDataGenerator(for req: Request) -> [String: LeafDataGenerator]? {
-        req.variables.all.mapValues { .lazy(LeafData.string($0)) }
+        var results: [String: LeafDataGenerator] = req.variables.all.mapValues { .lazy(LeafData.string($0)) }
+        let locale = Application.Config.locale
+        
+        /// Here we match the development  language of  the app
+        let language = locale.languageCode ?? "en"
+        let identifier = locale.identifier
+        guard language != "en", identifier != "en_US" else {
+            return results
+        }
+        
+        /// If we have a local define in the settings, we try to match the key which are either `language` or `identifier`
+        for key in results.keys {
+            if let translated = results[key + ".\(identifier)"] { /// Matching identifier (prefered if available)
+                 results[key] = translated
+            } else if let translated = results[key + ".\(language)"] { /// Matching language (Fall back if no identifier_
+                results[key] = translated
+            } else {
+                /// Case where we have the translated variable but not the original one
+                if let suffix = key.split(separator: ".").last,
+                   suffix == language || suffix == identifier {
+                    var keyspart = key.split(separator: ".")
+                    keyspart.removeLast()
+                    let newkey = keyspart.joined(separator: ".")
+                    results[newkey] = results[key]
+                }
+            }
+        }
+        return results
     }
 
     func boot(_ app: Application) throws {
