@@ -14,7 +14,7 @@
         #if(Request(query: "order") != nil):
         <input type="hidden" id="order" name="order" value="#Request(query: "order")">
         #endif
-        <input type="text" id="search" name="search" placeholder="Search..." value="#Request(query: "search")">
+        <input type="text" id="search" name="search" placeholder=#($system["search.placeholder"] ?? "Search...") value="#Request(query: "search")">
     </form>
 </div>
 
