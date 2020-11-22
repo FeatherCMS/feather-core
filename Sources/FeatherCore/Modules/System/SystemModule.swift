@@ -46,7 +46,7 @@ final class SystemModule: ViperModule {
         /// Here we match the development  language of  the app
         let language = locale.languageCode ?? "en"
         let identifier = locale.identifier
-        guard language != "en", identifier.lowercased() != "en_US" else {
+        guard language != "en", identifier != "en_US" else {
             return results
         }
         
