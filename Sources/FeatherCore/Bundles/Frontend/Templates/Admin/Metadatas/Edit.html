@@ -1,7 +1,11 @@
-#define(toolbarLeft):
+#define(toolbarLeftAfter):
     #if(fields.modelId != nil):
-    <a href="/admin/#(fields.module.value)/#(fields.model.value)/#(fields.reference.value)">#svg("edit")</a>
     <a href="#if(!fields.slug.value.isEmpty()):/#(fields.slug.value)/#else:/#endif" target="_blank">#svg("eye")</a>
+    #endif
+#enddefine
+#define(toolbarRightBefore):
+    #if(fields.modelId != nil):
+    <a href="/admin/#(fields.module.value)/#(fields.model.value)/#(fields.reference.value)">#svg("feather")</a>
     #endif
 #enddefine
 #define(fields):
@@ -16,7 +20,7 @@
     #(field = ["id": "title", "data": fields.title])
     #inline("Admin/Fields/Text")
 
-    #(field = ["id": "excerpt", "size": "small", "data": fields.excerpt])
+    #(field = ["id": "excerpt", "size": "s", "data": fields.excerpt])
     #inline("Admin/Fields/Textarea")
     
     
@@ -45,10 +49,10 @@
     #(field = ["id": "filters", "data": fields.filters])
     #inline("Admin/Fields/Multiselection")
 
-    #(field = ["id": "css", "label": "CSS", "size": "small", "data": fields.css])
+    #(field = ["id": "css", "label": "CSS", "size": "s", "data": fields.css])
     #inline("Admin/Fields/Textarea")
 
-    #(field = ["id": "js", "label": "JavaScript", "size": "small", "data": fields.js])
+    #(field = ["id": "js", "label": "JavaScript", "size": "s", "data": fields.js])
     #inline("Admin/Fields/Textarea")
 </fieldset>
 

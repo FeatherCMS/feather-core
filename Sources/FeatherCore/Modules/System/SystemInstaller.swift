@@ -53,7 +53,7 @@ struct SystemInstaller: ViperInstaller {
             ],
             [
                 "key": "site.footer",
-                "value": "<img class=\"w64\" src=\"/images/icons/icon.png\" alt=\"Logo of Feather\" title=\"Feather\">",
+                "value": "<img class=\"s64\" src=\"/images/icons/icon.png\" alt=\"Logo of Feather\" title=\"Feather\">",
                 "note": "Custom contents for the footer",
                 "hidden": true,
             ],

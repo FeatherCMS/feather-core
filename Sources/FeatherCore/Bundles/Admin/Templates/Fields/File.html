@@ -1,7 +1,7 @@
 <section class="m:bottom #(field.class ?? "large")-uploader uploader">
     <label for="#(field.id)">#(field.label ?? field.id.capitalized())#if(field.required ?? false):<span class="required">*</span>#endif</label>
     <div id="image-uploader" class="image-uploader">
-        <div id="placeholder" class="p:l #if(field.data.value != ""):hidden#endif">#svg(field.placeholder ?? "image", class: "w64 block")</div>
+        <div id="placeholder" class="p:l #if(field.data.value != ""):hidden#endif">#svg(field.placeholder ?? "image", class: "s64 block m:h:auto")</div>
         #if(field.data.value != ""):
             <img id="uploaded-image" src="#(field.data.value.resolve() ?? "")">
         #endif

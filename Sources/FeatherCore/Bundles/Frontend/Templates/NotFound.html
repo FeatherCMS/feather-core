@@ -3,15 +3,13 @@
     "description": $system["page.not.found.description"]
 ])
 #define(body):
-<div id="not-found" class="wrapper w-full m-l">
-    
-    <section class="center m:vh:l">
+<div class="content t:center">
+    <div class="m:xl">
         <span class="h1">#($system["page.not.found.icon"])</span>
-        <h1>#(head.title)</h1>
+        <h1 class="m:t:zero">#(head.title)</h1>
         <p>#(head.description)</p>
         <a href="/">#($system["page.not.found.link"])</a>
-    </section>
-
+    </div>
 </div>
 #enddefine
 #inline("Frontend/Index")

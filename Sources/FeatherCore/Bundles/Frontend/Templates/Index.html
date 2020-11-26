@@ -11,8 +11,6 @@
 
     #if($app.isDebug ?? false):
     <link rel="stylesheet" href="/css/frontend.css">
-    <link rel="stylesheet" href="/css/frontend.light.css">
-    <link rel="stylesheet" href="/css/frontend.dark.css">
     #else:
     <link rel="stylesheet" href="/css/frontend.min.css">
     #endif
@@ -51,8 +49,6 @@
     #if(Request(query: "page") != nil || Request(query: "search") != nil):
         <link rel="canonical" href="#($app.baseUrl)#($req.url.path)">
     #endif
-
-    
 </head>
 <body class="m:zero">
     <header id="header">
@@ -79,13 +75,13 @@
     </main>
     
     <footer>
-        <section class="p:xl center">
+        <section class="p:xl t:center">
 
             #($system["site.footer"])
 
-            <p>#($system["site.copy"]) &copy; #if($system["site.copy.year.start"] != nil):#($system["site.copy.year.start"])-#endif#Date(timeStamp: Timestamp(), fixedFormat: "y")</p>
+            <p class="t:size:s">#($system["site.copy"]) &copy; #($system["site.copy.year.start"] ?? "") #Date(timeStamp: Timestamp(), fixedFormat: "y")</p>
 
-            <p>
+            <p class="t:size:s">
                 #if($user.isAuthenticated):
                 <a href="/admin/">Admin</a> &middot; <a href="/logout/">Logout</a>
                 #else:

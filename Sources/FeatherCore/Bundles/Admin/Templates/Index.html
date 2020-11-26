@@ -8,70 +8,63 @@
 
     <title>#evaluate(toolbarCenter ?? "") - #($system["site.title"]) &middot; CMS</title>
 
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+
     #if($app.isDebug):
     <link rel="stylesheet" href="/css/frontend.css">
-    <link rel="stylesheet" href="/css/frontend.light.css">
-    <link rel="stylesheet" href="/css/frontend.dark.css">
     <link rel="stylesheet" href="/css/admin.css">
-    <link rel="stylesheet" href="/css/admin.light.css">
-    <link rel="stylesheet" href="/css/admin.dark.css">
     #else:
     <link rel="stylesheet" href="/css/frontend.min.css">
     <link rel="stylesheet" href="/css/admin.min.css">
     #endif
-
-    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
         
     <style type="text/css">
         #evaluate(css ?? "")
     </style>
-
-    <script type="text/javascript">
-        #evaluate(js ?? "")
-    </script>
 </head>
 
 <body class="m:zero">
 
     <header id="header">
-        <input type="checkbox" id="menu-button" class="noselect" />
-        <label for="menu-button" id="menu-icon" class="noselect"><span></span></label>
+        <input type="checkbox" id="menu-button" class="selection:off" />
+        <label for="menu-button" id="menu-icon" class="selection:off"><span></span></label>
 
+        <a id="site-link" href="/">
+            <img src="/images/logo-text.png" alt="Logo of #($system["site.title"])" title="#($system["site.title"])">
+        </a>
+        
         <nav id="nav">
-            <li><a href="/admin/">Admin</a></li>
+            #if($req.url.path != "/admin/"):
+            <li><a href="/admin/">Dashboard</a></li>
+            #endif
             #evaluate(breadcrumb ?? "")
+            <li><a id="account" href="/logout/">Sign out</a></li>
         </nav>
 
-          <a id="site-link" href="/">
-              <img src="/images/logo-text.png" alt="Logo of #($system["site.title"])" title="#($system["site.title"])">
-          </a>
-
-          <a id="account" href="/logout/">#svg("log-out")</a>
     </header>
 
-    <div id="toolbar" class="g3">
-        <div id="left" class="g:col1">
-            <div class="container">
+    <div class="m:h:s">
+        <div id="toolbar" class="g3 g:gap:zero w:full">
+            
+            <div id="left" class="g:col1 container t:left">
                 #evaluate(toolbarLeft ?? "")
             </div>
-        </div>
-        <div id="center" class="g:col1 center">
-            <div class="container">
-                <h3 class="m:s">#evaluate(toolbarCenter ?? "")</h3>
+            <div id="center" class="g:col1 t:center">
+                <h3 class="m:zero">#evaluate(toolbarCenter ?? "")</h3>
             </div>
-        </div>
-        <div id="right" class="g:col1">
-            <div class="container">
+            <div id="right" class="g:col1 container t:right">
                 #evaluate(toolbarRight ?? "")
             </div>
-            
         </div>
     </div>
 
-    <main>
+    <main class="container">
         #body()
     </main>
 
     <script src="/javascript/admin.js"></script>
+    <script type="text/javascript">
+        #evaluate(js ?? "")
+    </script>
 </body>
 </html>

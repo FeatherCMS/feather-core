@@ -28,15 +28,15 @@ tr {
 #enddefine
 #define(th):
     #var(link = nil)
-    <th class="t:left m:horizontal:s">#(link = ["key": "key", "default": true])#inline("Admin/SortLink")</th>
-    <th class="t:left">#(link = ["key": "value"])#inline("Admin/SortLink")</th>
+    <th class="td:left">#(link = ["key": "key", "default": true])#inline("Admin/SortLink")</th>
+    <th class="td:left">#(link = ["key": "value"])#inline("Admin/SortLink")</th>
     #inline("Admin/TableActionLabels")
 #enddefine
 #define(tr):
     #for(item in list.items):
 <tr>
-    <td class="t:left m:horizontal:s"><a href="#($req.url.path)#(item.id)/">#(item.key)</a></td>
-    <td class="t:left"><a href="#($req.url.path)#(item.id)/">#(item.value)</a></td>
+    <td class="td:left"><a href="#($req.url.path)#(item.id)/">#(item.key)</a></td>
+    <td class="td:left"><a href="#($req.url.path)#(item.id)/">#(item.value)</a></td>
     #inline("Admin/TableActionButtons")
 </tr>
     #endfor

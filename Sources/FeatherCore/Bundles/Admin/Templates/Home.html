@@ -3,25 +3,24 @@
 #enddefine
 #define(body):
 
-<div id="dashboard" class="wrapper w:full m:xl">
-
-    <header class="m:bottom:l center">
-        <p>Welcome <b>#($user.email)</b>, this is your admin dashboard. Please select an option:</p>
+<div id="dashboard" class="m t:center">
+    <header>
+        <p>Welcome <b>#($user.email)</b>, this is your admin dashboard. Please select an option.</p>
     </header>
 
-    <div class="g3 g:gap:l center">
+    <div class="g321 g:gap:col g:gap:row">
         #let(menus = InvokeAllHooks("admin-menu"))
         #for(menu in menus):
-        <div class="g:col1 bg2 p:l br:s border1">
-            <span>#svg(menu.icon, class: "block w64")</span>
-            <h3>#(menu.name)</h3>
-            <ul class="lst:none p:zero">
+        <div class="g:col1 c:background:secondary p r:xs">
+            <span>#svg(menu.icon, class: "block s64 m:h:auto c:link:secondary")</span>
+            <h3 class="m:t">#(menu.name)</h3>
+            <ul class="list:off m:zero p:zero">
             #for(item in menu.items):
                 <li><a href="#(item.url)">#(item.label)</a></li>
             #endfor
             </ul>
         </div>
-        #endfor        
+        #endfor
     </div>
 </div>
 

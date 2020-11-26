@@ -6,6 +6,11 @@
     <li><a href="#($req.url.path.trimLast())">#(form.list.capitalized())</a></li>
     #endif
 #enddefine
+#define(toolbarLeft):
+    <button type="submit" form="#(form.key)-form">#svg("save")</button>
+    #evaluate(toolbarLeftAfter ?? "")
+#enddefine
+
 #define(toolbarRight):
     #evaluate(toolbarRightBefore ?? "")
     #if(form.modelId != nil):
@@ -13,8 +18,8 @@
     #endif
 #enddefine
 #define(body):
-<div id="form" class="wrapper w">
-    <form id="#(form.key)-form" class="m:xl" method="post" action="#($req.url.path)"#if(form.multipart ?? false): enctype="multipart/form-data"#endif>
+<div id="form" class="w m:h:auto m:b:xl">
+    <form id="#(form.key)-form" class="m" method="post" action="#($req.url.path)"#if(form.multipart ?? false): enctype="multipart/form-data"#endif>
         #var(field = nil)
 
         #(field = ["id": "modelId", "value": form.modelId])

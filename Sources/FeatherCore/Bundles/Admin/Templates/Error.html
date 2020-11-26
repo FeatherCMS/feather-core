@@ -1,13 +1,11 @@
 #define(body):
-<div id="not-found" class="wrapper w-full m-l">
-    
-    <section class="center m:vh:l">
+<div class="content t:center">
+    <div class="m:xl">
         <span class="h1">⚠️</span>
-        <h1>#(error.code) - #(error.reason)</h1>
+        <h1 class="m:t:zero">#(error.code) - #(error.reason)</h1>
         <p>Something went wrong with your request</p>
         <a href="#($req.url.path)">Please try again →</a>
-    </section>
-
+    </div>
 </div>
 #enddefine
 #inline("Admin/Index")

@@ -5,9 +5,7 @@
     <a href="#($req.url.path)new/">#svg("plus-circle")</a>
 #enddefine
 #define(body):
-
-<div class="wrapper w:full m:l">
-    <form id="search-form" action="#($req.url.path)" method="get" class="m:bottom">
+    <form id="search-form" class="m" action="#($req.url.path)" method="get">
         #if(Request(query: "sort") != nil):
         <input type="hidden" id="sort" name="sort" value="#Request(query: "sort")">
         #endif
@@ -16,13 +14,10 @@
         #endif
         <input type="text" id="search" name="search" placeholder="Search..." value="#Request(query: "search")">
     </form>
-</div>
-
 #if(list.items.isEmpty()):
     #inline("Admin/Empty")
 #else:
-<div class="wrapper w:full m:l">
-    <table>
+    <table class="m">
         <thead>
             <tr>
                 #th()
@@ -32,12 +27,9 @@
             #tr()
         </tbody>
     </table>
-</div>
-<div class="wrapper w:full m:l">
-    <div id="pagination">
+    <div id="pagination" class="m t:center">
     #inline("Admin/Pagination")
     </div>
-</div>
 #endif
 #enddefine
 #inline("Admin/Index")
