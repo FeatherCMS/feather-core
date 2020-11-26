@@ -8,6 +8,6 @@
 struct UserInstaller: ViperInstaller {
 
     func createModels(_ req: Request) -> EventLoopFuture<Void>? {
-        UserModel(email: "feather@binarybirds.com", password: try! Bcrypt.hash("Feather")).create(on: req.db)
+        UserModel(email: "feather@binarybirds.com", password: try! Bcrypt.hash("FeatherCMS")).create(on: req.db)
     }
 }
