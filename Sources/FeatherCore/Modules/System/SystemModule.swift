@@ -25,7 +25,7 @@ final class SystemModule: ViperModule {
         ]
     }
     
-    var bundleUrl: URL? {
+    static var bundleUrl: URL? {
         Bundle.module.resourceURL?
             .appendingPathComponent("Bundles")
             .appendingPathComponent(name.capitalized)

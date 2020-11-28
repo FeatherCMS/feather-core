@@ -23,7 +23,7 @@ final class MenuModule: ViperModule {
         ]
     }
 
-    var bundleUrl: URL? {
+    static var bundleUrl: URL? {
         Bundle.module.resourceURL?
             .appendingPathComponent("Bundles")
             .appendingPathComponent(name.capitalized)
