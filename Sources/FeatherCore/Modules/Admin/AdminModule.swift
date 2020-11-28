@@ -12,7 +12,7 @@ final class AdminModule: ViperModule {
 
     var router: ViperRouter? = AdminRouter()
 
-    static var bundleUrl: URL? {
+    var bundleUrl: URL? {
         Bundle.module.resourceURL?
             .appendingPathComponent("Bundles")
             .appendingPathComponent(name.capitalized)

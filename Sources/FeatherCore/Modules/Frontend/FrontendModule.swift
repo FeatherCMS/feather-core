@@ -16,7 +16,7 @@ public final class FrontendModule: ViperModule {
         Metadata.migrations()
     }
     
-    static var bundleUrl: URL? {
+    public var bundleUrl: URL? {
         Bundle.module.resourceURL?
             .appendingPathComponent("Bundles")
             .appendingPathComponent(name.capitalized)
