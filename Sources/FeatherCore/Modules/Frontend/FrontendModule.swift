@@ -16,12 +16,10 @@ public final class FrontendModule: ViperModule {
         Metadata.migrations()
     }
     
-    public static var bundleUrl: URL? {
-        Bundle.module.bundleURL
-            .appendingPathComponent("Contents")
-            .appendingPathComponent("Resources")
+    static var bundleUrl: URL? {
+        Bundle.module.resourceURL?
             .appendingPathComponent("Bundles")
-            .appendingPathComponent("Frontend")
+            .appendingPathComponent(name.capitalized)
     }
 
     public func boot(_ app: Application) throws {

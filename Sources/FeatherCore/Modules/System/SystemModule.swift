@@ -26,11 +26,9 @@ final class SystemModule: ViperModule {
     }
     
     static var bundleUrl: URL? {
-        Bundle.module.bundleURL
-            .appendingPathComponent("Contents")
-            .appendingPathComponent("Resources")
+        Bundle.module.resourceURL?
             .appendingPathComponent("Bundles")
-            .appendingPathComponent("System")
+            .appendingPathComponent(name.capitalized)
     }
     
     func leafDataGenerator(for req: Request) -> [String: LeafDataGenerator]? {

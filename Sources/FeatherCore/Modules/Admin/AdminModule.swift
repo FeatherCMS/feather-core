@@ -13,11 +13,9 @@ final class AdminModule: ViperModule {
     var router: ViperRouter? = AdminRouter()
 
     static var bundleUrl: URL? {
-        Bundle.module.bundleURL
-            .appendingPathComponent("Contents")
-            .appendingPathComponent("Resources")
+        Bundle.module.resourceURL?
             .appendingPathComponent("Bundles")
-            .appendingPathComponent("Admin")
+            .appendingPathComponent(name.capitalized)
     }
 
     func boot(_ app: Application) throws {

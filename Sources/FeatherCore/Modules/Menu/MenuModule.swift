@@ -24,11 +24,9 @@ final class MenuModule: ViperModule {
     }
 
     static var bundleUrl: URL? {
-        Bundle.module.bundleURL
-            .appendingPathComponent("Contents")
-            .appendingPathComponent("Resources")
+        Bundle.module.resourceURL?
             .appendingPathComponent("Bundles")
-            .appendingPathComponent("Menu")
+            .appendingPathComponent(name.capitalized)
     }
 
     // NOTE: this is a core dependency -> FeatherCore?
