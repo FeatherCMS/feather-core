@@ -13,15 +13,15 @@ struct FrontendController {
         return req.eventLoop.findFirstValue(futures).unwrap(or: Abort(.notFound))
     }
 
-    // MARK: - sitemap, rss
-
+    /// a helper method to render sitemap and rss feed
     private func renderContentList(_ req: Request,
                                    using template: String,
-                                   filter: ((QueryBuilder<Metadata>) -> QueryBuilder<Metadata>)? = nil)
+                                   filter: ((QueryBuilder<FrontendMetadata>) -> QueryBuilder<FrontendMetadata>)? = nil)
         -> EventLoopFuture<Response>
     {
-        var qb = Metadata.query(on: req.db)
+        var qb = FrontendMetadata.query(on: req.db)
         .filter(\.$status == .published)
+        .filter(\.$date <= Date())
         if let filter = filter {
             qb = filter(qb)
         }
@@ -37,5 +37,10 @@ struct FrontendController {
     
     func rss(_ req: Request) throws -> EventLoopFuture<Response> {
         renderContentList(req, using: "Frontend/Rss") { $0.filter(\.$feedItem == true) }
+    }
+
+    func robots(_ req: Request) throws -> EventLoopFuture<Response> {
+        req.leaf.render(template: "Frontend/Robots")
+            .encodeResponse(status: .ok, headers: ["Content-Type": "text/plain; charset=utf-8"], for: req)
     }
 }

@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 08. 29..
 //
 
-extension Metadata: LeafDataRepresentable {
+extension FrontendMetadata: LeafDataRepresentable {
 
     /// returns the LeafData types for a metadata
     public var leafData: LeafData {

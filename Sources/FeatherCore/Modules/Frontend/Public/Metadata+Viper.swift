@@ -10,20 +10,20 @@ public extension ViperModel where Self.IDValue == UUID {
     /// joins the metadata object on the ViperModel query, if a path is present it'll use it as a filter to return only one instance that matches the slug
     static func findMetadata(on db: Database, path: String? = nil) -> QueryBuilder<Self> {
         let query = Self.query(on: db)
-            .join(Metadata.self, on: \Metadata.$reference == \Self._$id)
-            .filter(Metadata.self, \.$module == Module.name)
-            .filter(Metadata.self, \.$model == name)
+            .join(FrontendMetadata.self, on: \FrontendMetadata.$reference == \Self._$id)
+            .filter(FrontendMetadata.self, \.$module == Module.name)
+            .filter(FrontendMetadata.self, \.$model == name)
 
         
         if let path = path {
-            return query.filter(Metadata.self, \.$slug == path.trimmingSlashes())
+            return query.filter(FrontendMetadata.self, \.$slug == path.trimmingSlashes())
         }
         return query
     }
     
     /// request the associated metadata object, if there is none the future will return a .notFound error
-    func fetchMetadata(on db: Database) -> EventLoopFuture<Metadata> {
-        Metadata.query(on: db)
+    func fetchMetadata(on db: Database) -> EventLoopFuture<FrontendMetadata> {
+        FrontendMetadata.query(on: db)
             .filter(\.$reference == id!)
             .filter(\.$module == Self.Module.name)
             .filter(\.$model == Self.name)
@@ -32,7 +32,7 @@ public extension ViperModel where Self.IDValue == UUID {
     }
     
     /// update a metadata object with a given set of properties using a block, can be used to patch metadata objects in the db
-    func updateMetadata(on db: Database, _ block: @escaping (Metadata) -> Void) -> EventLoopFuture<Void> {
+    func updateMetadata(on db: Database, _ block: @escaping (FrontendMetadata) -> Void) -> EventLoopFuture<Void> {
         fetchMetadata(on: db).flatMap { metadata in
             block(metadata)
             return metadata.update(on: db)

@@ -5,22 +5,16 @@
 //  Created by Tibor Bodecs on 2020. 06. 09..
 //
 
-extension Metadata: ViperModel {
-    public static var name: String { "metadatas" }
-
-    public typealias Module = FrontendModule
-}
-
 struct FrontendMetadataAdminController: ViperAdminViewController {
     
     typealias Module = FrontendModule
-    typealias Model = Metadata
+    typealias Model = FrontendMetadata
     typealias EditForm = FrontendMetadataEditForm
-    
+
     var listAllowedOrders: [FieldKey] = [
         "slug", "module", "model"
     ]
-    
+
     func search(using qb: QueryBuilder<Model>, for searchTerm: String) {
         qb.filter(\.$slug ~~ searchTerm)
         qb.filter(\.$title ~~ searchTerm)

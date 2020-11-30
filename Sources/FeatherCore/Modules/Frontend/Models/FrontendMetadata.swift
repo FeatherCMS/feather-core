@@ -6,9 +6,11 @@
 //
 
 /// this object is a representation for frontend related pages with unique slugs
-public final class Metadata: Model {
+public final class FrontendMetadata: ViperModel {
 
-    public static let schema = "_feather_metadatas"
+    public typealias Module = FrontendModule
+
+    public static let name = "metadatas"
 
     struct FieldKeys {
         /// reference

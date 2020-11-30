@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 08. 29..
 //
 
-public extension Metadata {
+public extension FrontendMetadata {
 
     /// invokes content filters that are associated to the metadata object    
     func filter(_ input: String, req: Request) -> String {

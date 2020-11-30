@@ -13,9 +13,11 @@ public final class FrontendModule: ViperModule {
     public var router: ViperRouter? = FrontendRouter()
     
     public var migrations: [Migration] {
-        Metadata.migrations()
+        [
+            FrontendMetadataMigration_v1_0_0()
+        ]
     }
-    
+
     public static var bundleUrl: URL? {
         Bundle.module.resourceURL?
             .appendingPathComponent("Bundles")

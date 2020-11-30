@@ -7,7 +7,7 @@
 
 final class FrontendMetadataEditForm: ModelForm {
 
-    typealias Model = Metadata
+    typealias Model = FrontendMetadata
     
     struct Input: Decodable {
         var modelId: String
@@ -24,7 +24,6 @@ final class FrontendMetadataEditForm: ModelForm {
         var feedItem: String
         var css: String
         var js: String
-
         var image: File?
         var imageDelete: Bool?
     }
