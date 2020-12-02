@@ -13,14 +13,22 @@ struct MenuInstaller: ViperInstaller {
         let mainId = UUID()
         let mainMenu = MenuModel(id: mainId, handle: "main", name: "Main menu")
 
-        // TODO: invoke hook!
-        let mainItems = [
-            MenuItemModel(label: "Home", url: "/", priority: 1000, menuId: mainId),
-            MenuItemModel(label: "Posts", url: "/posts/", priority: 900, menuId: mainId),
-            MenuItemModel(label: "Categories", url: "/categories/", priority: 800, menuId: mainId),
-            MenuItemModel(label: "Authors", url: "/authors/", priority: 700, menuId: mainId),
-            MenuItemModel(label: "About", url: "/about/", priority: 600, menuId: mainId),
-        ]
+        /// gather the main menu items through a hook function then map them
+        let menuItems: [[[String: Any]]] = req.invokeAll("main-menu-install")
+        var mainMenuItemModels = menuItems.flatMap { $0 }.compactMap { item -> MenuItemModel? in
+            guard let label = item["label"] as? String, let url = item["url"] as? String else {
+                return nil
+            }
+            let icon = item["icon"] as? String
+            let targetBlank = item["targetBlank"] as? Bool ?? false
+            let priority = item["priority"] as? Int ?? 100
+
+            return MenuItemModel(icon: icon, label: label, url: url, priority: priority, targetBlank: targetBlank, menuId: mainId)
+        }
+
+        /// we add a home menu item as well with a relatively high priority
+        let homeMenuItem = MenuItemModel(label: "Home", url: "/", priority: 1000, menuId: mainId)
+        mainMenuItemModels.insert(homeMenuItem, at: 0)
 
         let footerId = UUID()
         let footerMenu = MenuModel(id: footerId, handle: "footer", name: "Footer menu")
@@ -31,7 +39,7 @@ struct MenuInstaller: ViperInstaller {
         ]
 
         return [mainMenu, footerMenu].create(on: req.db).flatMap {
-            (mainItems + footerItems).create(on: req.db)
+            (mainMenuItemModels + footerItems).create(on: req.db)
         }
     }
 }
