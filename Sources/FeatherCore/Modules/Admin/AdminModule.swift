@@ -20,5 +20,12 @@ final class AdminModule: ViperModule {
 
     func boot(_ app: Application) throws {
         app.hooks.register("routes", use: (router as! AdminRouter).routesHook)
+        app.hooks.register("user-permission-install", use: userPermissionInstallHook)
+    }
+
+    func userPermissionInstallHook(args: HookArguments) -> [[String: Any]] {
+        [
+            ["key": "admin", "name": "Admin module"],
+        ]
     }
 }

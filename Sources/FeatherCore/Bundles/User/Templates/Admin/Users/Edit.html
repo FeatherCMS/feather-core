@@ -7,6 +7,17 @@
     #(field = ["id": "password", "type": "password", "data": fields.password])
     #inline("Admin/Fields/Text")
 
+    #(field = ["id": "root", "label": "Root access", "data": fields.root])
+    #inline("Admin/Fields/Selection")
+
+    <section class="m:b">
+        <label>Roles</label><br>
+        #for(role in fields.roles.options):
+        <input type="checkbox" name="roles[]" value="#(role.key)" id="role-#(role.key)" #if(fields.roles.values.contains(role.key)):checked#endif>
+        <label for="role-#(role.key)">#(role.label)</label><br>
+        #endfor
+    </section>
+
 #enddefine
 
 #let(form = [

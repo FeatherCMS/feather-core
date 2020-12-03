@@ -10,7 +10,7 @@
         <p>#(head.description)</p>
     </header>
 
-    <form action="#($req.url.path)?redirect=admin" method="post" class="w:xs m:h:auto">
+    <form action="#($req.url.path)" method="post" class="w:xs m:h:auto">
         #var(field = nil)
         #(field = ["id": "email", "type": "email", "required": true, "data": edit.email, "placeholder": "feather@binarybirds.com"])
         #inline("Admin/Fields/Text")

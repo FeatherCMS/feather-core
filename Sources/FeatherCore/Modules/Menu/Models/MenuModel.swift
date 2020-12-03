@@ -11,29 +11,29 @@ final class MenuModel: ViperModel {
     static let name = "menus"
     
     struct FieldKeys {
-        static var handle: FieldKey { "handle" }
+        static var key: FieldKey { "key" }
         static var name: FieldKey { "name" }
-        static var icon: FieldKey { "icon" }
+        static var notes: FieldKey { "notes" }
     }
 
     // MARK: - fields
 
     @ID() var id: UUID?
-    @Field(key: FieldKeys.handle) var handle: String
+    @Field(key: FieldKeys.key) var key: String
     @Field(key: FieldKeys.name) var name: String?
-    @Field(key: FieldKeys.icon) var icon: String?
+    @Field(key: FieldKeys.notes) var notes: String?
     @Children(for: \.$menu) var items: [MenuItemModel]
     
     init() { }
     
     init(id: IDValue? = nil,
-         handle: String,
+         key: String,
          name: String? = nil,
-         icon: String? = nil)
+         notes: String? = nil)
     {
         self.id = id
-        self.handle = handle
+        self.key = key
         self.name = name
-        self.icon = icon
+        self.notes = notes
     }
 }

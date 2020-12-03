@@ -30,6 +30,16 @@ public extension ViperAdminViewController where  Model.IDValue == UUID  {
     func afterDelete(req: Request, model: Model) -> EventLoopFuture<Response> {
         req.eventLoop.future(req.redirect(to: req.url.path.trimmingLastPathComponents(2)))
     }
+
+    private func viperAccess(_ key: String, req: Request) -> EventLoopFuture<Bool> {
+        let name = [Module.name, Model.name, key].joined(separator: ".")
+        return req.checkUserAccess(name)
+    }
+
+    func accessList(req: Request) -> EventLoopFuture<Bool> { viperAccess("list", req: req) }
+    func accessCreate(req: Request) -> EventLoopFuture<Bool> { viperAccess("create", req: req) }
+    func accessUpdate(req: Request) -> EventLoopFuture<Bool> { viperAccess("update", req: req) }
+    func accessDelete(req: Request) -> EventLoopFuture<Bool> { viperAccess("delete", req: req) }
 }
 
 public extension ViperAdminViewController {

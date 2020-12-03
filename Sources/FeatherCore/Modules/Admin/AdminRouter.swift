@@ -13,13 +13,13 @@ struct AdminRouter: ViperRouter {
         let app = args["app"] as! Application
         let routes = args["routes"] as! RoutesBuilder
 
-        let middlewares: [[Middleware]] = app.hooks.invokeAll("admin-auth-middlewares")
+        let middlewares: [[Middleware]] = app.invokeAll("admin-auth-middlewares")
 
         /// groupd admin routes, first we use auth middlewares then the error middleware
-        let protectedAdmin = routes.grouped("admin").grouped(middlewares.flatMap { $0 }).grouped(AdminErrorMiddleware())
+        let protectedAdmin = routes.grouped("admin").grouped(AdminErrorMiddleware()).grouped(middlewares.flatMap { $0 })
         /// setup home view (dashboard)
         protectedAdmin.get(use: adminController.homeView)
         /// hook up other admin views that are protected by the authentication middleware
-        let _: [Void] = app.hooks.invokeAll("admin", args: ["routes": protectedAdmin])
+        let _: [Void] = app.invokeAll("admin", args: ["routes": protectedAdmin])
     }
 }

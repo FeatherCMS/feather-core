@@ -15,7 +15,7 @@ struct FrontendMetadataAdminController: ViperAdminViewController {
         "slug", "module", "model"
     ]
 
-    func search(using qb: QueryBuilder<Model>, for searchTerm: String) {
+    func searchList(using qb: QueryBuilder<Model>, for searchTerm: String) {
         qb.filter(\.$slug ~~ searchTerm)
         qb.filter(\.$title ~~ searchTerm)
     }

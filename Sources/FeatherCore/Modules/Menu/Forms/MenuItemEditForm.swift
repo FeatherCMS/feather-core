@@ -16,6 +16,7 @@ final class MenuItemEditForm: ModelForm {
         var url: String
         var priority: String
         var targetBlank: String
+        var permission: String
         var menuId: String
     }
 
@@ -25,6 +26,7 @@ final class MenuItemEditForm: ModelForm {
     var url = StringFormField()
     var priority = StringFormField()
     var targetBlank = StringSelectionFormField()
+    var permission = StringFormField()
     var menuId: String! = nil
     var notification: String?
 
@@ -36,6 +38,7 @@ final class MenuItemEditForm: ModelForm {
             "url": url,
             "priority": priority,
             "targetBlank": targetBlank,
+            "permission": permission,
             "menuId": menuId,
             "notification": notification,
         ])
@@ -55,6 +58,7 @@ final class MenuItemEditForm: ModelForm {
         url.value = context.url
         priority.value = context.priority
         targetBlank.value = context.targetBlank
+        permission.value = context.permission
         menuId = context.menuId
     }
 
@@ -91,6 +95,10 @@ final class MenuItemEditForm: ModelForm {
             targetBlank.error = "Invalid target"
             valid = false
         }
+        if Validator.count(...250).validate(permission.value).isFailure {
+            permission.error = "Permission is too long (max 250 characters)"
+            valid = false
+        }
 
         return req.eventLoop.future(valid)
     }
@@ -102,6 +110,7 @@ final class MenuItemEditForm: ModelForm {
         url.value = input.url
         priority.value = String(input.priority)
         targetBlank.value = String(input.targetBlank)
+        permission.value = input.permission ?? ""
         menuId = input.$menu.id.uuidString
     }
 
@@ -111,6 +120,7 @@ final class MenuItemEditForm: ModelForm {
         output.url = url.value
         output.priority = Int(priority.value)!
         output.targetBlank = Bool(targetBlank.value)!
+        output.permission = permission.value.emptyToNil
         output.$menu.id = UUID(uuidString: menuId)!
     }
 }

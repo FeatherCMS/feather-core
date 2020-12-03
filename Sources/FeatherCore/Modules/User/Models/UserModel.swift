@@ -14,6 +14,7 @@ final class UserModel: ViperModel {
         
         static var email: FieldKey { "email" }
         static var password: FieldKey { "password" }
+        static var root: FieldKey { "root" }
     }
     
     // MARK: - fields
@@ -24,16 +25,24 @@ final class UserModel: ViperModel {
     @Field(key: FieldKeys.email) var email: String
     /// hashed password of the user
     @Field(key: FieldKeys.password) var password: String
+    /// is the user root user
+    @Field(key: FieldKeys.root) var root: Bool
+
+    @Siblings(through: UserUserRoleModel.self, from: \.$user, to: \.$role) var roles: [UserRoleModel]
     
+    var permissions: [String] = []
+
     init() { }
     
     init(id: UserModel.IDValue? = nil,
          email: String,
-         password: String)
+         password: String,
+         root: Bool = false)
     {
         self.id = id
         self.email = email
         self.password = password
+        self.root = root
     }
 }
 

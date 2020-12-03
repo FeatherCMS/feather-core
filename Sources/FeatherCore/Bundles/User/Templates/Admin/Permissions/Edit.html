@@ -1,9 +1,3 @@
-#define(toolbarRightBefore):
-    #if(fields.modelId != nil):
-    <a href="/admin/menu/menus/#(fields.modelId)/items">#svg("list")</a>
-    #endif
-#enddefine
-
 #define(fields):
     #var(field = nil)
 
@@ -19,10 +13,10 @@
 #enddefine
 
 #let(form = [
-    "list": "menus",
+    "list": "permissions",
     "id": formId,
     "token": formToken,
     "modelId": fields.modelId,
-    "key": "menu"
+    "key": "permission"
 ])
 #inline("Admin/Form")

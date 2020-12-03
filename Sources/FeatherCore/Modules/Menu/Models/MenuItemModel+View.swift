@@ -15,6 +15,7 @@ extension MenuItemModel: LeafDataRepresentable {
             "url": url,
             "priority": priority,
             "targetBlank": targetBlank,
+            "permission": permission,
         ])
     }
 }

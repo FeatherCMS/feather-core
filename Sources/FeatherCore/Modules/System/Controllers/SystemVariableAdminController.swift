@@ -16,7 +16,7 @@ struct SystemVariableAdminController: ViperAdminViewController {
         Model.FieldKeys.value,
     ]
 
-    func search(using qb: QueryBuilder<Model>, for searchTerm: String) {
+    func searchList(using qb: QueryBuilder<Model>, for searchTerm: String) {
         qb.filter(\.$key ~~ searchTerm)
         qb.filter(\.$value ~~ searchTerm)
     }

@@ -1,19 +1,20 @@
 //
-//  MenuEditForm.swift
+//  UserPermissionEditForm.swift
 //  Feather
 //
-//  Created by Tibor Bodecs on 2020. 11. 15..
+//  Created by Tibor Bodecs on 2020. 03. 23..
 //
 
-final class MenuEditForm: ModelForm {
+final class UserPermissionEditForm: ModelForm {
 
-    typealias Model = MenuModel
+    typealias Model = UserPermissionModel
 
     struct Input: Decodable {
         var modelId: String
         var key: String
         var name: String
         var notes: String
+        var permissions: [String]
     }
 
     var modelId: String? = nil
@@ -21,7 +22,7 @@ final class MenuEditForm: ModelForm {
     var name = StringFormField()
     var notes = StringFormField()
     var notification: String?
-
+    
     var leafData: LeafData {
         .dictionary([
             "modelId": modelId,
@@ -31,7 +32,7 @@ final class MenuEditForm: ModelForm {
             "notification": notification,
         ])
     }
-        
+
     init() {}
 
     init(req: Request) throws {
@@ -44,8 +45,7 @@ final class MenuEditForm: ModelForm {
     
     func validate(req: Request) -> EventLoopFuture<Bool> {
         var valid = true
-       
-        /// TODO: check unique handle.
+
         if key.value.isEmpty {
             key.error = "Key is required"
             valid = false
@@ -55,14 +55,13 @@ final class MenuEditForm: ModelForm {
             valid = false
         }
         if Validator.count(...250).validate(name.value).isFailure {
-            name.error = "Name is too long (max 250 characters)"
+            name.error = "Key is too long (max 250 characters)"
             valid = false
         }
         if Validator.count(...250).validate(notes.value).isFailure {
-            notes.error = "Icon is too long (max 250 characters)"
+            notes.error = "Key is too long (max 250 characters)"
             valid = false
         }
-
         return req.eventLoop.future(valid)
     }
 

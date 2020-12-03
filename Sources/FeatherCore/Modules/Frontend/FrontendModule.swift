@@ -28,6 +28,7 @@ public final class FrontendModule: ViperModule {
         app.hooks.register("routes", use: (router as! FrontendRouter).routesHook)
         app.hooks.register("admin", use: (router as! FrontendRouter).adminRoutesHook)
         app.hooks.register("leaf-admin-menu", use: leafAdminMenuHook)
+        app.hooks.register("user-permission-install", use: userPermissionInstallHook)
     }
     
     // MARK: - hooks
@@ -36,12 +37,26 @@ public final class FrontendModule: ViperModule {
         [
             "name": "Frontend",
             "icon": "layout",
+            "permission": "frontend",
             "items": LeafData.array([
                 [
                     "url": "/admin/frontend/metadatas/",
                     "label": "Metadatas",
+                    "permission": "frontend.metadatas.list",
                 ],
             ])
+        ]
+    }
+    
+    func userPermissionInstallHook(args: HookArguments) -> [[String: Any]] {
+        [
+            /// user
+            ["key": "frontend",                     "name": "Frontend module"],
+            /// variables
+            ["key": "frontend.metadatas.list",      "name": "Frontend metadata list"],
+            ["key": "frontend.metadatas.create",    "name": "Frontend metadata create"],
+            ["key": "frontend.metadatas.update",    "name": "Frontend metadata update"],
+            ["key": "frontend.metadatas.delete",    "name": "Frontend metadata delete"],
         ]
     }
 }

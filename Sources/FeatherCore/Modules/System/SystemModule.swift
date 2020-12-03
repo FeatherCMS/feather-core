@@ -38,7 +38,9 @@ final class SystemModule: ViperModule {
     func boot(_ app: Application) throws {
         app.hooks.register("admin", use: (router as! SystemRouter).adminRoutesHook)
         app.hooks.register("leaf-admin-menu", use: leafAdminMenuHook)
+        
         app.hooks.register("installer", use: installerHook)
+        app.hooks.register("user-permission-install", use: userPermissionInstallHook)
         
         app.hooks.register("prepare-variables", use: prepareVariablesHook)
         app.hooks.register("set-variable", use: setVariableHook)
@@ -53,10 +55,12 @@ final class SystemModule: ViperModule {
         [
             "name": "System",
             "icon": "settings",
+            "permission": "system",
             "items": LeafData.array([
                 [
                     "url": "/admin/system/variables/",
                     "label": "Variables",
+                    "permission": "system.variables.list",
                 ],
             ])
         ]
@@ -64,6 +68,18 @@ final class SystemModule: ViperModule {
 
     func installerHook(args: HookArguments) -> ViperInstaller {
         SystemInstaller()
+    }
+    
+    func userPermissionInstallHook(args: HookArguments) -> [[String: Any]] {
+        [
+            /// system
+            ["key": "system",                   "name": "System module"],
+            /// variables
+            ["key": "system.variables.list",    "name": "System variable list"],
+            ["key": "system.variables.create",  "name": "System variable create"],
+            ["key": "system.variables.update",  "name": "System variable update"],
+            ["key": "system.variables.delete",  "name": "System variable delete"],
+        ]
     }
     
 

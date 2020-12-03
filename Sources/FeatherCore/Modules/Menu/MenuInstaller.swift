@@ -11,7 +11,7 @@ struct MenuInstaller: ViperInstaller {
     /// we create the menus with the associated menu items
     func createModels(_ req: Request) -> EventLoopFuture<Void>? {
         let mainId = UUID()
-        let mainMenu = MenuModel(id: mainId, handle: "main", name: "Main menu")
+        let mainMenu = MenuModel(id: mainId, key: "main", name: "Main menu")
 
         /// gather the main menu items through a hook function then map them
         let menuItems: [[[String: Any]]] = req.invokeAll("main-menu-install")
@@ -31,7 +31,7 @@ struct MenuInstaller: ViperInstaller {
         mainMenuItemModels.insert(homeMenuItem, at: 0)
 
         let footerId = UUID()
-        let footerMenu = MenuModel(id: footerId, handle: "footer", name: "Footer menu")
+        let footerMenu = MenuModel(id: footerId, key: "footer", name: "Footer menu")
 
         let footerItems = [
             MenuItemModel(label: "Sitemap", url: "/sitemap.xml", priority: 1000, targetBlank: true, menuId: footerId),

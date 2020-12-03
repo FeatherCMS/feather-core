@@ -11,10 +11,10 @@ struct MenuMigration_v1_0_0: Migration {
         db.eventLoop.flatten([
             db.schema(MenuModel.schema)
                 .id()
-                .field(MenuModel.FieldKeys.handle, .string, .required)
+                .field(MenuModel.FieldKeys.key, .string, .required)
                 .field(MenuModel.FieldKeys.name, .string)
-                .field(MenuModel.FieldKeys.icon, .int)
-                .unique(on: MenuModel.FieldKeys.handle)
+                .field(MenuModel.FieldKeys.notes, .string)
+                .unique(on: MenuModel.FieldKeys.key)
                 .create(),
             db.schema(MenuItemModel.schema)
                 .id()
@@ -24,6 +24,7 @@ struct MenuMigration_v1_0_0: Migration {
                 .field(MenuItemModel.FieldKeys.priority, .int, .required)
                 .field(MenuItemModel.FieldKeys.targetBlank, .bool, .required)
                 .field(MenuItemModel.FieldKeys.menuId, .uuid, .required)
+                .field(MenuItemModel.FieldKeys.permission, .string)
                 .foreignKey(MenuItemModel.FieldKeys.menuId, references: MenuModel.schema, .id)
                 .create()
         ])

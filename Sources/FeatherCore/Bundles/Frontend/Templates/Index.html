@@ -61,11 +61,13 @@
 
         <nav id="nav">
             #for(item in $menu["main"].items ?? []):
+            #if(UserHasPermission(item.permission) ?? true):
             <li>
                 <a href="#(item.url)" #if($req.url.path == item.url): class="selected"#endif#if(item.targetBlank): target="_blank"#endif>
                     #if(item.icon != nil):#svg(item.icon)#endif #(item.label)
                 </a>
             </li>
+            #endif
             #endfor
         </nav>
     </header>
@@ -83,16 +85,21 @@
 
             <p class="t:size:s">
                 #if($user.isAuthenticated):
-                <a href="/admin/">Admin</a> &middot; <a href="/logout/">Logout</a>
+                    #if(UserHasPermission("admin")):
+                    <a href="/admin/">Admin</a> &middot;
+                    #endif
+                    <a href="/logout/">Logout</a>
                 #else:
                 <a href="/login/">Login</a>
                 #endif
 
                 #for(item in $menu["footer"].items ?? []):
+                #if(UserHasPermission(item.permission) ?? true):
                     &middot;
                 <a href="#(item.url)" #if($req.url.path == item.url): class="selected"#endif#if(item.targetBlank): target="_blank"#endif>
                     #if(item.icon != nil):#svg(item.icon)#endif #(item.label)
                 </a>
+                #endif
                 #endfor
             </p>
             

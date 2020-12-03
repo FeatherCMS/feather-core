@@ -7,19 +7,26 @@
 
 struct UserRouter: ViperRouter {
     
-    let frontendController = UserFrontendController()
-    let adminController = UserAdminController()
+    let frontend = UserFrontendController()
+    
+    let userAdmin = UserAdminController()
+    let roleAdmin = UserRoleAdminController()
+    let permissionAdmin = UserPermissionAdminController()
+    
 
     func boot(routes: RoutesBuilder) throws {
-        routes.get("login", use: frontendController.loginView)
-        routes.grouped(UserModelCredentialsAuthenticator()).post("login", use: frontendController.login)
-        routes.get("logout", use: frontendController.logout)
+        routes.get("login", use: frontend.loginView)
+        routes.grouped(UserModelCredentialsAuthenticator()).post("login", use: frontend.login)
+        routes.get("logout", use: frontend.logout)
     }
 
     func adminRoutesHook(args: HookArguments) {
         let routes = args["routes"] as! RoutesBuilder
 
         let modulePath = routes.grouped(UserModule.pathComponent)
-        adminController.setupRoutes(on: modulePath, as: UserModel.pathComponent)
+
+        userAdmin.setupRoutes(on: modulePath, as: UserModel.pathComponent)
+        roleAdmin.setupRoutes(on: modulePath, as: UserRoleModel.pathComponent)
+        permissionAdmin.setupRoutes(on: modulePath, as: UserPermissionModel.pathComponent)
     }
 }

@@ -1,0 +1,30 @@
+#define(fields):
+    #var(field = nil)
+
+    #(field = ["id": "key", "required": true, "data": fields.key])
+    #inline("Admin/Fields/Text")
+
+    #(field = ["id": "name", "data": fields.name])
+    #inline("Admin/Fields/Text")
+
+    #(field = ["id": "notes", "size": "s", "data": fields.notes])
+    #inline("Admin/Fields/Textarea")
+
+    <section class="m:b">
+        <label>Permissions</label><br>
+        #for(permission in fields.permissions.options):
+        <input type="checkbox" name="permissions[]" value="#(permission.key)" id="permission-#(permission.key)" #if(fields.permissions.values.contains(permission.key)):checked#endif>
+        <label for="permission-#(permission.key)">#(permission.label)</label><br>
+        #endfor
+    </section>
+
+#enddefine
+
+#let(form = [
+    "list": "roles",
+    "id": formId,
+    "token": formToken,
+    "modelId": fields.modelId,
+    "key": "role"
+])
+#inline("Admin/Form")

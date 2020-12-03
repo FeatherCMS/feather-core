@@ -5,7 +5,6 @@
 //  Created by Tibor Bodecs on 2020. 06. 01..
 //
 
-
 struct UserModelCredentialsAuthenticator: CredentialsAuthenticator {
     
     struct Input: Content {
@@ -14,7 +13,7 @@ struct UserModelCredentialsAuthenticator: CredentialsAuthenticator {
     }
 
     func authenticate(credentials: Input, for req: Request) -> EventLoopFuture<Void> {
-        UserModel.query(on: req.db).filter(\.$email == credentials.email.lowercased()).first().map {
+        UserModel.findWithPermissionsBy(email: credentials.email, on: req.db).map {
             do {
                 if let user = $0, try Bcrypt.verify(credentials.password, created: user.password) {
                     req.auth.login(user)

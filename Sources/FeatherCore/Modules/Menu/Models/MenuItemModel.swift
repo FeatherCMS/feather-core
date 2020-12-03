@@ -16,6 +16,7 @@ final class MenuItemModel: ViperModel {
         static var url: FieldKey { "url" }
         static var priority: FieldKey { "priority" }
         static var targetBlank: FieldKey { "target_blank" }
+        static var permission: FieldKey { "permission" }
         static var menuId: FieldKey { "menu_id" }
     }
 
@@ -27,6 +28,7 @@ final class MenuItemModel: ViperModel {
     @Field(key: FieldKeys.url) var url: String
     @Field(key: FieldKeys.priority) var priority: Int
     @Field(key: FieldKeys.targetBlank) var targetBlank: Bool
+    @Field(key: FieldKeys.permission) var permission: String?
     @Parent(key: FieldKeys.menuId) var menu: MenuModel
 
     init() { }
@@ -37,6 +39,7 @@ final class MenuItemModel: ViperModel {
          url: String,
          priority: Int = 100,
          targetBlank: Bool = false,
+         permission: String? = nil,
          menuId: UUID)
     {
         self.id = id
@@ -45,6 +48,7 @@ final class MenuItemModel: ViperModel {
         self.url = url
         self.priority = priority
         self.targetBlank = targetBlank
+        self.permission = permission
         self.$menu.id = menuId
     }
 }
