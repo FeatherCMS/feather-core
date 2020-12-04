@@ -9,7 +9,8 @@ struct MenuItemAdminController: ViperAdminViewController {
 
     typealias Module = MenuModule
     typealias Model = MenuItemModel
-    typealias EditForm = MenuItemEditForm
+    typealias CreateForm = MenuItemEditForm
+    typealias UpdateForm = MenuItemEditForm
 
     var idParamKey: String { "itemId" }
     

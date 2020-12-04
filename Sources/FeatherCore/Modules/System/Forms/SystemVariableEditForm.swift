@@ -5,69 +5,47 @@
 //  Created by Tibor Bodecs on 2020. 06. 10..
 //
 
-final class SystemVariableEditForm: ModelForm {
-
-    typealias Model = SystemVariableModel
+final class SystemVariableEditForm: ModelForm<SystemVariableModel> {
 
     struct Input: Decodable {
-        var modelId: String
+        var modelId: UUID?
         var key: String
         var value: String
         var notes: String
     }
 
-    var modelId: String? = nil
-    var key = StringFormField()
-    var value = StringFormField()
-    var notes = StringFormField()
-    var notification: String?
-    
-    var leafData: LeafData {
-        .dictionary([
-            "modelId": modelId,
-            "key": key,
-            "value": value,
-            "notes": notes,
-            "notification": notification,
-        ])
+    var key = FormField<String>(key: "key").required().length(max: 250)
+    var value = FormField<String>(key: "value")
+    var notes = FormField<String>(key: "notes")
+
+    required init() {
+        super.init()
     }
 
-    init() {}
-
-    init(req: Request) throws {
+    required init(req: Request) throws {
+        try super.init(req: req)
         let context = try req.content.decode(Input.self)
-        modelId = context.modelId.emptyToNil
+        modelId = context.modelId
         key.value = context.key
         value.value = context.value
         notes.value = context.notes
     }
-    
-    func validate(req: Request) -> EventLoopFuture<Bool> {
-        var valid = true
-       
-        if key.value.isEmpty {
-            key.error = "Key is required"
-            valid = false
-        }
-        if Validator.count(...250).validate(key.value).isFailure {
-            key.error = "Key is too long (max 250 characters)"
-            valid = false
-        }
 
-        return req.eventLoop.future(valid)
+    override func fields() -> [FormFieldInterface] {
+        [key, value, notes]
     }
 
-    func read(from input: Model)  {
-        modelId = input.id?.uuidString
+    override func read(from input: Model)  {
+        modelId = input.id
         key.value = input.key
-        value.value = input.value ?? ""
-        notes.value = input.notes ?? ""
+        value.value = input.value
+        notes.value = input.notes
     }
 
-    func write(to output: Model) {
-        output.key = key.value
-        output.value = value.value.emptyToNil
-        output.notes = notes.value.emptyToNil
+    override func write(to output: Model) {
+        output.key = key.value!
+        output.value = value.value?.emptyToNil
+        output.notes = notes.value?.emptyToNil
         output.hidden = false
     }
 }

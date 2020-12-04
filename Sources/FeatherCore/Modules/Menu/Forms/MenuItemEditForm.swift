@@ -5,122 +5,75 @@
 //  Created by Tibor Bodecs on 2020. 11. 15..
 //
 
-final class MenuItemEditForm: ModelForm {
-
-    typealias Model = MenuItemModel
+final class MenuItemEditForm: ModelForm<MenuItemModel> {
 
     struct Input: Decodable {
-        var modelId: String
+        var modelId: UUID?
         var icon: String
         var label: String
         var url: String
-        var priority: String
-        var targetBlank: String
+        var priority: Int
+        var targetBlank: Bool
         var permission: String
-        var menuId: String
+        var menuId: UUID
     }
 
-    var modelId: String? = nil
-    var icon = StringFormField()
-    var label = StringFormField()
-    var url = StringFormField()
-    var priority = StringFormField()
-    var targetBlank = StringSelectionFormField()
-    var permission = StringFormField()
-    var menuId: String! = nil
-    var notification: String?
-
-    var leafData: LeafData {
-        .dictionary([
-            "modelId": modelId,
-            "icon": icon,
-            "label": label,
-            "url": url,
-            "priority": priority,
-            "targetBlank": targetBlank,
-            "permission": permission,
-            "menuId": menuId,
-            "notification": notification,
-        ])
-    }
+    var icon = FormField<String>(key: "icon")
+    var label = FormField<String>(key: "label").required().length(max: 250)
+    var url = FormField<String>(key: "url").required().length(max: 250)
+    var priority = FormField<Int>(key: "priority")
+    var targetBlank = FormField<Bool>(key: "targetBlank")
+    var permission = FormField<String>(key: "permission").length(max: 250)
+    var menuId = FormField<UUID>(key: "menuId")
     
-    init() {
+    required init() {
+        super.init()
         initialize()
     }
 
-    init(req: Request) throws {
+    required init(req: Request) throws {
+        try super.init(req: req)
         initialize()
 
         let context = try req.content.decode(Input.self)
-        modelId = context.modelId.emptyToNil
+        modelId = context.modelId
         icon.value = context.icon
         label.value = context.label
         url.value = context.url
         priority.value = context.priority
         targetBlank.value = context.targetBlank
         permission.value = context.permission
-        menuId = context.menuId
+        menuId.value = context.menuId
     }
 
     func initialize() {
-        targetBlank.options = FormFieldStringOption.trueFalse()
-        targetBlank.value = String(false)
-        priority.value = String(100)
-    }
-    
-    func validate(req: Request) -> EventLoopFuture<Bool> {
-        var valid = true
-       
-        if label.value.isEmpty {
-            label.error = "Label is required"
-            valid = false
-        }
-        if Validator.count(...250).validate(label.value).isFailure {
-            label.error = "Label is too long (max 250 characters)"
-            valid = false
-        }
-        if url.value.isEmpty {
-            url.error = "Url is required"
-            valid = false
-        }
-        if Validator.count(...250).validate(url.value).isFailure {
-            url.error = "URL is too long (max 250 characters)"
-            valid = false
-        }
-        if Int(priority.value) == nil {
-            priority.error = "Invalid priority"
-            valid = false
-        }
-        if Bool(targetBlank.value) == nil {
-            targetBlank.error = "Invalid target"
-            valid = false
-        }
-        if Validator.count(...250).validate(permission.value).isFailure {
-            permission.error = "Permission is too long (max 250 characters)"
-            valid = false
-        }
-
-        return req.eventLoop.future(valid)
+        targetBlank.options = FormFieldOption.trueFalse()
+        targetBlank.value = false
+        priority.value = 100
     }
 
-    func read(from input: Model)  {
-        modelId = input.id?.uuidString
-        icon.value = input.icon ?? ""
+    override func fields() -> [FormFieldInterface] {
+        [icon, label, url, priority, targetBlank, permission, menuId]
+    }
+
+    override func read(from input: Model)  {
+        modelId = input.id
+        icon.value = input.icon
         label.value = input.label
         url.value = input.url
-        priority.value = String(input.priority)
-        targetBlank.value = String(input.targetBlank)
-        permission.value = input.permission ?? ""
-        menuId = input.$menu.id.uuidString
+        priority.value = input.priority
+        targetBlank.value = input.targetBlank
+        permission.value = input.permission
+        menuId.value = input.$menu.id
     }
 
-    func write(to output: Model) {
-        output.icon = icon.value.emptyToNil
-        output.label = label.value
-        output.url = url.value
-        output.priority = Int(priority.value)!
-        output.targetBlank = Bool(targetBlank.value)!
-        output.permission = permission.value.emptyToNil
-        output.$menu.id = UUID(uuidString: menuId)!
+    override func write(to output: Model) {
+        output.icon = icon.value?.emptyToNil
+        output.label = label.value!
+        output.url = url.value!
+        output.priority = priority.value!
+        output.targetBlank = targetBlank.value!
+        output.permission = permission.value?.emptyToNil
+        output.$menu.id = menuId.value!
     }
 }

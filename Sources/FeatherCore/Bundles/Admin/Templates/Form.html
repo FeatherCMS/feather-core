@@ -20,10 +20,13 @@
 #define(body):
 <div id="form" class="w m:h:auto m:b:xl">
     <form id="#(form.key)-form" class="m" method="post" action="#($req.url.path)"#if(form.multipart ?? false): enctype="multipart/form-data"#endif>
-        #var(field = nil)
 
-        #(field = ["id": "modelId", "value": form.modelId])
-        #inline("Admin/Fields/Hidden")
+        #if(form.modelId != nil):
+            #let(field = ["id": "modelId", "value": form.modelId])
+            #inline("Admin/Fields/Hidden")
+        #endif
+
+        #var(field = nil)
 
         #(field = ["id": "formId", "value": form.id])
         #inline("Admin/Fields/Hidden")

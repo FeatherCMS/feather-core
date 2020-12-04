@@ -17,9 +17,9 @@ extension UserRoleModel: LeafDataRepresentable {
     }
 }
 
-extension UserRoleModel: FormFieldStringOptionRepresentable {
+extension UserRoleModel: FormFieldOptionRepresentable {
 
-    var formFieldStringOption: FormFieldStringOption {
+    var formFieldOption: FormFieldOption {
         .init(key: id!.uuidString, label: name ?? key)
     }
 }

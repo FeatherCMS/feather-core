@@ -5,76 +5,48 @@
 //  Created by Tibor Bodecs on 2020. 03. 23..
 //
 
-final class UserPermissionEditForm: ModelForm {
-
-    typealias Model = UserPermissionModel
+final class UserPermissionEditForm: ModelForm<UserPermissionModel> {
 
     struct Input: Decodable {
-        var modelId: String
+        var modelId: UUID
         var key: String
         var name: String
         var notes: String
-        var permissions: [String]
+        var permissions: [UUID]
     }
 
-    var modelId: String? = nil
-    var key = StringFormField()
-    var name = StringFormField()
-    var notes = StringFormField()
-    var notification: String?
-    
-    var leafData: LeafData {
-        .dictionary([
-            "modelId": modelId,
-            "key": key,
-            "name": name,
-            "notes": notes,
-            "notification": notification,
-        ])
+    var key = FormField<String>(key: "key").required().length(max: 250)
+    var name = FormField<String>(key: "name").length(max: 250)
+    var notes = FormField<String>(key: "notes").length(max: 250)
+
+    required init() {
+        super.init()
     }
 
-    init() {}
+    required init(req: Request) throws {
+        super.init()
 
-    init(req: Request) throws {
         let context = try req.content.decode(Input.self)
-        modelId = context.modelId.emptyToNil
+        modelId = context.modelId
         key.value = context.key
         name.value = context.name
         notes.value = context.notes
     }
-    
-    func validate(req: Request) -> EventLoopFuture<Bool> {
-        var valid = true
 
-        if key.value.isEmpty {
-            key.error = "Key is required"
-            valid = false
-        }
-        if Validator.count(...250).validate(key.value).isFailure {
-            key.error = "Key is too long (max 250 characters)"
-            valid = false
-        }
-        if Validator.count(...250).validate(name.value).isFailure {
-            name.error = "Key is too long (max 250 characters)"
-            valid = false
-        }
-        if Validator.count(...250).validate(notes.value).isFailure {
-            notes.error = "Key is too long (max 250 characters)"
-            valid = false
-        }
-        return req.eventLoop.future(valid)
+    override func fields() -> [FormFieldInterface] {
+        [key, name, notes]
     }
 
-    func read(from input: Model)  {
-        modelId = input.id?.uuidString
+    override func read(from input: Model)  {
+        modelId = input.id
         key.value = input.key
-        name.value = input.name ?? ""
-        notes.value = input.notes ?? ""
+        name.value = input.name
+        notes.value = input.notes
     }
 
-    func write(to output: Model) {
-        output.key = key.value
-        output.name = name.value.emptyToNil
-        output.notes = notes.value.emptyToNil
+    override func write(to output: Model) {
+        output.key = key.value!
+        output.name = name.value?.emptyToNil
+        output.notes = notes.value?.emptyToNil
     }
 }

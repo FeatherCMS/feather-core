@@ -5,15 +5,13 @@
 //  Created by Tibor Bodecs on 2020. 06. 09..
 //
 
-final class FrontendMetadataEditForm: ModelForm {
-
-    typealias Model = FrontendMetadata
+final class FrontendMetadataEditForm: ModelForm<FrontendMetadata> {
     
     struct Input: Decodable {
-        var modelId: String
+        var modelId: UUID
         var module: String
         var model: String
-        var reference: String
+        var reference: UUID
         var slug: String
         var title: String
         var excerpt: String
@@ -21,68 +19,48 @@ final class FrontendMetadataEditForm: ModelForm {
         var statusId: String
         var filters: [String]
         var date: String
-        var feedItem: String
+        var feedItem: Bool
         var css: String
         var js: String
         var image: File?
         var imageDelete: Bool?
     }
 
-    var modelId: String? = nil
-    var module = StringFormField()
-    var model = StringFormField()
-    var reference = StringFormField()
-    var slug = StringFormField()
-    var title = StringFormField()
-    var excerpt = StringFormField()
-    var canonicalUrl = StringFormField()
-    var statusId = StringSelectionFormField()
-    var feedItem = StringSelectionFormField()
-    var filters = StringArraySelectionFormField()
-    var date = StringFormField()
-    var image = FileFormField()
-    var css = StringFormField()
-    var js = StringFormField()
-    var notification: String?
-    var dateFormat: String?
-    
-    var leafData: LeafData {
-        .dictionary([
-            "modelId": modelId,
-            "module": module,
-            "model": model,
-            "reference": reference,
-            "slug": slug,
-            "title": title,
-            "excerpt": excerpt,
-            "canonicalUrl": canonicalUrl,
-            "statusId": statusId,
-            "feedItem": feedItem,
-            "filters": filters,
-            "date": date,
-            "css": css,
-            "js": js,
-            "image": image,
-            "notification": notification,
-            "dateFormat": dateFormat,
-        ])
-    }
+    var module = FormField<String>(key: "module").required().length(max: 250)
+    var model = FormField<String>(key: "model").required().length(max: 250)
+    var reference = FormField<UUID>(key: "reference")
+    var slug = FormField<String>(key: "slug").required().length(max: 250)
+    var title = FormField<String>(key: "title").length(max: 250)
+    var excerpt = FormField<String>(key: "excerpt").length(max: 250)
+    var canonicalUrl = FormField<String>(key: "canonicalUrl").length(max: 250)
+    var statusId = FormField<String>(key: "statusId")
+    var feedItem = FormField<Bool>(key: "feedItem")
+    var filters = FormField<[String]>(key: "filters")
+    var date = FormField<String>(key: "date")
+    var image = FormField<FileUploadValue>(key: "image")
+    var css = FormField<String>(key: "css")
+    var js = FormField<String>(key: "js")
 
-    init() {
+    var dateFormat: String?
+
+    required init() {
+        super.init()
+
         initialize()
     }
 
-    init(req: Request) throws {
+    required init(req: Request) throws {
+        try super.init(req: req)
         initialize()
 
         let context = try req.content.decode(Input.self)
-        modelId = context.modelId.emptyToNil
+        modelId = context.modelId
         module.value = context.module
         model.value = context.model
         reference.value = context.reference
         slug.value = context.slug
         statusId.value = context.statusId
-        filters.values = context.filters
+        filters.value = context.filters
         date.value = context.date
         title.value = context.title
         excerpt.value = context.excerpt
@@ -91,101 +69,55 @@ final class FrontendMetadataEditForm: ModelForm {
         css.value = context.css
         js.value = context.js
 
-        image.delete = context.imageDelete ?? false
-        if let img = context.image, let data = img.data.getData(at: 0, length: img.data.readableBytes), !data.isEmpty {
-            image.data = data
-        }
+//        image.delete = context.imageDelete ?? false
+//        if let img = context.image, let data = img.data.getData(at: 0, length: img.data.readableBytes), !data.isEmpty {
+//            image.data = data
+//        }
     }
-
+    
     func initialize() {
         dateFormat = Application.Config.dateFormatter().dateFormat
-        statusId.options = Model.Status.allCases.map(\.formFieldStringOption)
+        statusId.options = Model.Status.allCases.map(\.formFieldOption)
         statusId.value = Model.Status.draft.rawValue
         date.value = Application.Config.dateFormatter().string(from: Date())
-        feedItem.options = FormFieldStringOption.trueFalse()
-    }
-    
-    func validate(req: Request) -> EventLoopFuture<Bool> {
-        var valid = true
-       
-        if module.value.isEmpty {
-            module.error = "Module is required"
-            valid = false
-        }
-        if Validator.count(...250).validate(module.value).isFailure {
-            module.error = "Module is too long (max 250 characters)"
-            valid = false
-        }
-        if model.value.isEmpty {
-            model.error = "Model is required"
-            valid = false
-        }
-        if Validator.count(...250).validate(model.value).isFailure {
-            model.error = "Model is too long (max 250 characters)"
-            valid = false
-        }
-        if UUID(uuidString: reference.value) == nil {
-            reference.error = "Invalid reference"
-            valid = false
-        }
-        if Bool(feedItem.value) == nil {
-            feedItem.error = "Invalid feed item value"
-            valid = false
-        }
-        if Model.Status(rawValue: statusId.value) == nil {
-            statusId.error = "Invalid status"
-            valid = false
-        }
-        if Application.Config.dateFormatter().date(from: date.value) == nil {
-            date.error = "Invalid date"
-            valid = false
-        }
-        if Validator.count(...250).validate(slug.value).isFailure {
-            slug.error = "Slug is too long (max 250 characters)"
-            valid = false
-        }
-        if Validator.count(...250).validate(title.value).isFailure {
-            title.error = "Title is too long (max 250 characters)"
-            valid = false
-        }
-        if Validator.count(...250).validate(canonicalUrl.value).isFailure {
-            canonicalUrl.error = "Canonical URL is too long (max 250 characters)"
-            valid = false
-        }
-        return req.eventLoop.future(valid)
-    }
-    
-    func read(from input: Model)  {
-        modelId = input.id?.uuidString
-        module.value = input.module
-        model.value = input.model
-        reference.value = input.reference.uuidString
-        slug.value = input.slug
-        statusId.value = input.status.rawValue
-        feedItem.value = String(input.feedItem)
-        filters.values = input.filters
-        date.value = Application.Config.dateFormatter().string(from: input.date)
-        title.value = input.title ?? ""
-        excerpt.value = input.excerpt ?? ""
-        canonicalUrl.value = input.canonicalUrl ?? ""
-        image.value = input.imageKey ?? ""
-        css.value = input.css ?? ""
-        js.value = input.js ?? ""
+        feedItem.options = FormFieldOption.trueFalse()
     }
 
-    func write(to output: Model) {
-        output.module = module.value
-        output.model = model.value
-        output.reference = UUID(uuidString: reference.value)!
-        output.slug = slug.value
-        output.status = Model.Status(rawValue: statusId.value)!
-        output.feedItem = Bool(feedItem.value)!
-        output.filters = filters.values
-        output.date = Application.Config.dateFormatter().date(from: date.value)!
-        output.title = title.value.emptyToNil
-        output.excerpt = excerpt.value.emptyToNil
-        output.canonicalUrl = canonicalUrl.value.emptyToNil
-        output.css = css.value.emptyToNil
-        output.js = js.value.emptyToNil
+    override func fields() -> [FormFieldInterface] {
+        [module, model, reference, slug, title, excerpt, canonicalUrl, statusId, feedItem, filters, date, image, css, js]
+    }
+    
+    override func read(from input: Model)  {
+        modelId = input.id
+        module.value = input.module
+        model.value = input.model
+        reference.value = input.reference
+        slug.value = input.slug
+        statusId.value = input.status.rawValue
+        feedItem.value = input.feedItem
+        filters.value = input.filters
+        date.value = Application.Config.dateFormatter().string(from: input.date)
+        title.value = input.title
+        excerpt.value = input.excerpt
+        canonicalUrl.value = input.canonicalUrl
+//        image.value = input.imageKey
+        css.value = input.css
+        js.value = input.js
+    }
+
+    override func write(to output: Model) {
+        output.module = module.value!
+        output.model = model.value!
+        output.reference = reference.value!
+        output.slug = slug.value!
+        output.status = Model.Status(rawValue: statusId.value!)!
+        output.feedItem = feedItem.value!
+        output.filters = filters.value ?? []
+        output.date = Application.Config.dateFormatter().date(from: date.value!)!
+        output.title = title.value?.emptyToNil
+        output.excerpt = excerpt.value?.emptyToNil
+        output.canonicalUrl = canonicalUrl.value?.emptyToNil
+        output.css = css.value?.emptyToNil
+        output.js = js.value?.emptyToNil
     }
 }

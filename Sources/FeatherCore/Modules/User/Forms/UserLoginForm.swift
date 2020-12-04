@@ -11,34 +11,23 @@ final class UserLoginForm: Form {
         var email: String
         var password: String
     }
-    
-    var email = StringFormField()
-    var password = StringFormField()
-    var notification: String?
 
-    var leafData: LeafData {
-        .dictionary([
-            "email": email,
-            "password": password,
-            "notification": notification,
-        ])
+    var email = FormField<String>(key: "email")
+    var password = FormField<String>(key: "password")
+
+    override func fields() -> [FormFieldInterface] {
+        [email, password]
     }
 
-    init() {}
+    required init() {
+        super.init()
+    }
 
-    init(req: Request) throws {
+    required init(req: Request) throws {
+        try super.init(req: req)
+
         let context = try req.content.decode(Input.self)
         email.value = context.email
         password.value = context.password
-    }
-
-    func validate(req: Request) -> EventLoopFuture<Bool> {
-        let valid = !Validator.email.validate(email.value).isFailure &&
-            !Validator.count(8...).validate(password.value).isFailure
-
-        if !valid {
-            notification = "Invalid username or password"
-        }
-        return req.eventLoop.future(valid)
     }
 }

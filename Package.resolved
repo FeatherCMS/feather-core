@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/binarybirds/content-api",
         "state": {
           "branch": null,
-          "revision": "c1971a7617b6dbd9ee6b2f6abc54c883ed617063",
-          "version": "1.0.5"
+          "revision": "25fcc8cabef0482eac7b4a14e64cf26396d78460",
+          "version": "1.1.0-beta.1"
         }
       },
       {
@@ -186,8 +186,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-http2.git",
         "state": {
           "branch": null,
-          "revision": "2f3c6e742317cdf2bbe89ac802b6187b1420e0f3",
-          "version": "1.16.0"
+          "revision": "f4b49cbed134db2c5132ffba1876e2814845a569",
+          "version": "1.16.1"
         }
       },
       {
@@ -222,8 +222,8 @@
         "repositoryURL": "https://github.com/binarybirds/view-kit",
         "state": {
           "branch": null,
-          "revision": "9066d435b75454c21ad13114dca526ca2ffc5c4f",
-          "version": "1.3.0-beta.4"
+          "revision": "a491fd9a87c1baba809c1026e0ee61bd1f404211",
+          "version": "1.3.0-beta.9"
         }
       },
       {

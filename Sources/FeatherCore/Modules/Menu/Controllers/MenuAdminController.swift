@@ -9,7 +9,8 @@ struct MenuAdminController: ViperAdminViewController {
 
     typealias Module = MenuModule
     typealias Model = MenuModel
-    typealias EditForm = MenuEditForm
+    typealias CreateForm = MenuEditForm
+    typealias UpdateForm = MenuEditForm
     
     var listAllowedOrders: [FieldKey] = [
         Model.FieldKeys.key,

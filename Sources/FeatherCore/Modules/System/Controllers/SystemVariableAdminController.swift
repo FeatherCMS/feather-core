@@ -9,7 +9,8 @@ struct SystemVariableAdminController: ViperAdminViewController {
 
     typealias Module = SystemModule
     typealias Model = SystemVariableModel
-    typealias EditForm = SystemVariableEditForm
+    typealias CreateForm = SystemVariableEditForm
+    typealias UpdateForm = SystemVariableEditForm
 
     var listAllowedOrders: [FieldKey] = [
         Model.FieldKeys.key,

@@ -39,7 +39,7 @@ public final class FrontendMetadata: ViperModel {
     // MARK: - fields
     
     /// status of the public page
-    public enum Status: String, CaseIterable, Codable, FormFieldStringOptionRepresentable {
+    public enum Status: String, CaseIterable, Codable, FormFieldOptionRepresentable {
         /// drafts can be shared via direct urls, but not indexed by robots
         case draft
         /// published articles can be indexed and they are visible for everyone
@@ -49,7 +49,7 @@ public final class FrontendMetadata: ViperModel {
         
         public var localized: String { rawValue.capitalized }
 
-        public var formFieldStringOption: FormFieldStringOption {
+        public var formFieldOption: FormFieldOption {
             .init(key: rawValue, label: localized)
         }
     }

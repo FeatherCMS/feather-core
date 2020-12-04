@@ -15,9 +15,9 @@ extension UserModel: LeafDataRepresentable {
     }
 }
 
-extension UserModel: FormFieldStringOptionRepresentable {
+extension UserModel: FormFieldOptionRepresentable {
 
-    var formFieldStringOption: FormFieldStringOption {
+    var formFieldOption: FormFieldOption {
         .init(key: id!.uuidString, label: email)
     }
 }

@@ -14,15 +14,14 @@ public protocol ViperAdminViewController: AdminViewController where Model: Viper
 
 public extension ViperAdminViewController where  Model.IDValue == UUID  {
 
-    /// default location for the list view templates
     var listView: String { "\(Module.name.capitalized)/Admin/\(Model.name.capitalized)/List" }
-    /// default location for the edit view templates
-    var editView: String { "\(Module.name.capitalized)/Admin/\(Model.name.capitalized)/Edit" }
-    /// default location for the delete view templates
+    var getView: String { "\(Module.name.capitalized)/Admin/\(Model.name.capitalized)/Get" }
+    var createView: String { "\(Module.name.capitalized)/Admin/\(Model.name.capitalized)/Edit" }
+    var updateView: String { "\(Module.name.capitalized)/Admin/\(Model.name.capitalized)/Edit" }
     var deleteView: String { "\(Module.name.capitalized)/Admin/\(Model.name.capitalized)/Delete" }
 
     /// after we create a new viper model we can redirect the user to the edit screen using the unique id and replace the last path component
-    func afterCreate(req: Request, form: EditForm, model: Model) -> EventLoopFuture<Response> {
+    func afterCreate(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Response> {
         req.eventLoop.future(req.redirect(to: req.url.path.replacingLastPath(model.id!.uuidString)))
     }
 
@@ -37,6 +36,7 @@ public extension ViperAdminViewController where  Model.IDValue == UUID  {
     }
 
     func accessList(req: Request) -> EventLoopFuture<Bool> { viperAccess("list", req: req) }
+    func accessGet(req: Request) -> EventLoopFuture<Bool> { viperAccess("get", req: req) }
     func accessCreate(req: Request) -> EventLoopFuture<Bool> { viperAccess("create", req: req) }
     func accessUpdate(req: Request) -> EventLoopFuture<Bool> { viperAccess("update", req: req) }
     func accessDelete(req: Request) -> EventLoopFuture<Bool> { viperAccess("delete", req: req) }

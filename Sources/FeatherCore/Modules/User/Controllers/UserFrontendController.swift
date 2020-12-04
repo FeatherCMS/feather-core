@@ -11,7 +11,7 @@ struct UserFrontendController {
         if let model = model {
             form.email.value = model.email
         }
-        return req.leaf.render(template: "User/Frontend/Login", context: ["edit": form.leafData]).encodeResponse(for: req)
+        return req.leaf.render(template: "User/Frontend/Login", context: ["fields": form.leafData]).encodeResponse(for: req)
     }
 
     private func getCustomRedirect(req: Request) -> String {

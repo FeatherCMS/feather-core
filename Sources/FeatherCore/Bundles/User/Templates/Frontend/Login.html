@@ -12,17 +12,17 @@
 
     <form action="#($req.url.path)" method="post" class="w:xs m:h:auto">
         #var(field = nil)
-        #(field = ["id": "email", "type": "email", "required": true, "data": edit.email, "placeholder": "feather@binarybirds.com"])
+        #(field = ["id": "email", "type": "email", "required": true, "data": fields.email, "placeholder": "feather@binarybirds.com"])
         #inline("Admin/Fields/Text")
         
-        #(field = ["id": "password", "type": "password", "required": true, "data": edit.password])
+        #(field = ["id": "password", "type": "password", "required": true, "data": fields.password])
         #inline("Admin/Fields/Text")
         
         #(field = ["label": "Sign in"])
         #inline("Admin/Fields/Button")
 
-        #if(edit.notification != nil):
-        <p id="notification" class="center"><span class="error">#(edit.notification)</span></p>
+        #if(fields.notification != nil):
+        <p id="notification" class="center"><span class="error">#(fields.notification)</span></p>
         #endif
     </form>
 </div>

@@ -9,7 +9,8 @@ struct UserPermissionAdminController: ViperAdminViewController {
     
     typealias Module = UserModule
     typealias Model = UserPermissionModel
-    typealias EditForm = UserPermissionEditForm
+    typealias CreateForm = UserPermissionEditForm
+    typealias UpdateForm = UserPermissionEditForm
 
     var listAllowedOrders: [FieldKey] = [
         Model.FieldKeys.name,
