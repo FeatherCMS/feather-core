@@ -34,11 +34,15 @@ struct UserFrontendController {
             req.session.authenticate(user)
             return req.eventLoop.future(req.redirect(to: getCustomRedirect(req: req)))
         }
-        let form = try UserLoginForm(req: req)
-        return form.validate(req: req).flatMap { _ in
-            form.notification = "Invalid username or password"
-            return render(req: req, form: form)
-        }
+        let form = UserLoginForm()
+        return form.initialize(req: req)
+            .flatMap {
+                form.validate(req: req)
+            }
+            .flatMap { _ in
+                form.notification = "Invalid username or password"
+                return render(req: req, form: form)
+            }
     }
 
     func logout(req: Request) throws -> Response {

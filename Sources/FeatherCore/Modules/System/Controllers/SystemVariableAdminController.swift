@@ -21,7 +21,7 @@ struct SystemVariableAdminController: ViperAdminViewController {
         qb.filter(\.$key ~~ searchTerm)
         qb.filter(\.$value ~~ searchTerm)
     }
-    
+//    
     func beforeList(req: Request, queryBuilder: QueryBuilder<Model>) throws -> QueryBuilder<Model> {
         queryBuilder
             .filter(\.$hidden == false)

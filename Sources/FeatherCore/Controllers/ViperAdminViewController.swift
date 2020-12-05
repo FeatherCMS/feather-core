@@ -21,8 +21,9 @@ public extension ViperAdminViewController where  Model.IDValue == UUID  {
     var deleteView: String { "\(Module.name.capitalized)/Admin/\(Model.name.capitalized)/Delete" }
 
     /// after we create a new viper model we can redirect the user to the edit screen using the unique id and replace the last path component
-    func afterCreate(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Response> {
-        req.eventLoop.future(req.redirect(to: req.url.path.replacingLastPath(model.id!.uuidString)))
+    func createResponse(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Response> {
+        let path = req.url.path.replacingLastPath(model.id!.uuidString)
+        return req.eventLoop.future(req.redirect(to: path + "/update/"))
     }
 
     /// after we delete a model, we can redirect back to the list, using the current path component, but trimming the final uuid/delete part.

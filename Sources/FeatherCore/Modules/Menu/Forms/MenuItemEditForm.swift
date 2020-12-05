@@ -5,7 +5,8 @@
 //  Created by Tibor Bodecs on 2020. 11. 15..
 //
 
-final class MenuItemEditForm: ModelForm<MenuItemModel> {
+final class MenuItemEditForm: ModelForm {
+    typealias Model = MenuItemModel
 
     struct Input: Decodable {
         var modelId: UUID?
@@ -18,23 +19,30 @@ final class MenuItemEditForm: ModelForm<MenuItemModel> {
         var menuId: UUID
     }
 
+    var modelId: UUID?
     var icon = FormField<String>(key: "icon")
     var label = FormField<String>(key: "label").required().length(max: 250)
     var url = FormField<String>(key: "url").required().length(max: 250)
     var priority = FormField<Int>(key: "priority")
-    var targetBlank = FormField<Bool>(key: "targetBlank")
+    var targetBlank = SelectionFormField<Bool>(key: "targetBlank")
     var permission = FormField<String>(key: "permission").length(max: 250)
     var menuId = FormField<UUID>(key: "menuId")
+    var notification: String?
     
-    required init() {
-        super.init()
-        initialize()
+    var fields: [AbstractFormField] {
+        [icon, label, url, priority, targetBlank, permission, menuId]
     }
 
-    required init(req: Request) throws {
-        try super.init(req: req)
-        initialize()
+    init() {}
 
+    func initialize(req: Request) -> EventLoopFuture<Void> {
+        targetBlank.options = FormFieldOption.trueFalse()
+        targetBlank.value = false
+        priority.value = 100
+        return req.eventLoop.future()
+    }
+
+    func processInput(req: Request) throws -> EventLoopFuture<Void> {
         let context = try req.content.decode(Input.self)
         modelId = context.modelId
         icon.value = context.icon
@@ -44,19 +52,10 @@ final class MenuItemEditForm: ModelForm<MenuItemModel> {
         targetBlank.value = context.targetBlank
         permission.value = context.permission
         menuId.value = context.menuId
+        return req.eventLoop.future()
     }
 
-    func initialize() {
-        targetBlank.options = FormFieldOption.trueFalse()
-        targetBlank.value = false
-        priority.value = 100
-    }
-
-    override func fields() -> [FormFieldInterface] {
-        [icon, label, url, priority, targetBlank, permission, menuId]
-    }
-
-    override func read(from input: Model)  {
+    func read(from input: Model)  {
         modelId = input.id
         icon.value = input.icon
         label.value = input.label
@@ -67,7 +66,7 @@ final class MenuItemEditForm: ModelForm<MenuItemModel> {
         menuId.value = input.$menu.id
     }
 
-    override func write(to output: Model) {
+    func write(to output: Model) {
         output.icon = icon.value?.emptyToNil
         output.label = label.value!
         output.url = url.value!

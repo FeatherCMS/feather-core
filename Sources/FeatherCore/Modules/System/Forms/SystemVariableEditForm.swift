@@ -5,7 +5,8 @@
 //  Created by Tibor Bodecs on 2020. 06. 10..
 //
 
-final class SystemVariableEditForm: ModelForm<SystemVariableModel> {
+final class SystemVariableEditForm: ModelForm {
+    typealias Model = SystemVariableModel
 
     struct Input: Decodable {
         var modelId: UUID?
@@ -14,35 +15,35 @@ final class SystemVariableEditForm: ModelForm<SystemVariableModel> {
         var notes: String
     }
 
+    var modelId: UUID?
     var key = FormField<String>(key: "key").required().length(max: 250)
     var value = FormField<String>(key: "value")
     var notes = FormField<String>(key: "notes")
+    var notification: String?
 
-    required init() {
-        super.init()
+    var fields: [AbstractFormField] {
+        [key, value, notes]
     }
 
-    required init(req: Request) throws {
-        try super.init(req: req)
+    init() {}
+    
+    func processInput(req: Request) throws -> EventLoopFuture<Void> {
         let context = try req.content.decode(Input.self)
         modelId = context.modelId
         key.value = context.key
         value.value = context.value
         notes.value = context.notes
+        return req.eventLoop.future()
     }
 
-    override func fields() -> [FormFieldInterface] {
-        [key, value, notes]
-    }
-
-    override func read(from input: Model)  {
+    func read(from input: Model)  {
         modelId = input.id
         key.value = input.key
         value.value = input.value
         notes.value = input.notes
     }
 
-    override func write(to output: Model) {
+    func write(to output: Model) {
         output.key = key.value!
         output.value = value.value?.emptyToNil
         output.notes = notes.value?.emptyToNil

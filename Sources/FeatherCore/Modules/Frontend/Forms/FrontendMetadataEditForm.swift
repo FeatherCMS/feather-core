@@ -5,7 +5,8 @@
 //  Created by Tibor Bodecs on 2020. 06. 09..
 //
 
-final class FrontendMetadataEditForm: ModelForm<FrontendMetadata> {
+final class FrontendMetadataEditForm: ModelForm {
+    typealias Model = FrontendMetadata
     
     struct Input: Decodable {
         var modelId: UUID
@@ -26,6 +27,7 @@ final class FrontendMetadataEditForm: ModelForm<FrontendMetadata> {
         var imageDelete: Bool?
     }
 
+    var modelId: UUID?
     var module = FormField<String>(key: "module").required().length(max: 250)
     var model = FormField<String>(key: "model").required().length(max: 250)
     var reference = FormField<UUID>(key: "reference")
@@ -33,26 +35,33 @@ final class FrontendMetadataEditForm: ModelForm<FrontendMetadata> {
     var title = FormField<String>(key: "title").length(max: 250)
     var excerpt = FormField<String>(key: "excerpt").length(max: 250)
     var canonicalUrl = FormField<String>(key: "canonicalUrl").length(max: 250)
-    var statusId = FormField<String>(key: "statusId")
-    var feedItem = FormField<Bool>(key: "feedItem")
+    var statusId = SelectionFormField<String>(key: "statusId")
+    var feedItem = SelectionFormField<Bool>(key: "feedItem")
     var filters = FormField<[String]>(key: "filters")
     var date = FormField<String>(key: "date")
     var image = FormField<FileUploadValue>(key: "image")
     var css = FormField<String>(key: "css")
     var js = FormField<String>(key: "js")
+    var notification: String?
 
     var dateFormat: String?
-
-    required init() {
-        super.init()
-
-        initialize()
+    
+    var fields: [AbstractFormField] {
+        [module, model, reference, slug, title, excerpt, canonicalUrl, statusId, feedItem, filters, date, image, css, js]
     }
 
-    required init(req: Request) throws {
-        try super.init(req: req)
-        initialize()
+    init() {}
 
+    func initialize(req: Request) -> EventLoopFuture<Void> {
+        dateFormat = Application.Config.dateFormatter().dateFormat
+        statusId.options = Model.Status.allCases.map(\.formFieldOption)
+        statusId.value = Model.Status.draft.rawValue
+        date.value = Application.Config.dateFormatter().string(from: Date())
+        feedItem.options = FormFieldOption.trueFalse()
+        return req.eventLoop.future()
+    }
+    
+    func processInput(req: Request) throws -> EventLoopFuture<Void> {
         let context = try req.content.decode(Input.self)
         modelId = context.modelId
         module.value = context.module
@@ -73,21 +82,11 @@ final class FrontendMetadataEditForm: ModelForm<FrontendMetadata> {
 //        if let img = context.image, let data = img.data.getData(at: 0, length: img.data.readableBytes), !data.isEmpty {
 //            image.data = data
 //        }
-    }
-    
-    func initialize() {
-        dateFormat = Application.Config.dateFormatter().dateFormat
-        statusId.options = Model.Status.allCases.map(\.formFieldOption)
-        statusId.value = Model.Status.draft.rawValue
-        date.value = Application.Config.dateFormatter().string(from: Date())
-        feedItem.options = FormFieldOption.trueFalse()
+
+        return req.eventLoop.future()
     }
 
-    override func fields() -> [FormFieldInterface] {
-        [module, model, reference, slug, title, excerpt, canonicalUrl, statusId, feedItem, filters, date, image, css, js]
-    }
-    
-    override func read(from input: Model)  {
+    func read(from input: Model)  {
         modelId = input.id
         module.value = input.module
         model.value = input.model
@@ -105,7 +104,7 @@ final class FrontendMetadataEditForm: ModelForm<FrontendMetadata> {
         js.value = input.js
     }
 
-    override func write(to output: Model) {
+    func write(to output: Model) {
         output.module = module.value!
         output.model = model.value!
         output.reference = reference.value!

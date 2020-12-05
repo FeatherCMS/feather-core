@@ -14,20 +14,18 @@ final class UserLoginForm: Form {
 
     var email = FormField<String>(key: "email")
     var password = FormField<String>(key: "password")
+    var notification: String?
 
-    override func fields() -> [FormFieldInterface] {
+    var fields: [AbstractFormField] {
         [email, password]
     }
 
-    required init() {
-        super.init()
-    }
+    init() {}
 
-    required init(req: Request) throws {
-        try super.init(req: req)
-
+    func processInput(req: Request) throws -> EventLoopFuture<Void> {
         let context = try req.content.decode(Input.self)
         email.value = context.email
         password.value = context.password
+        return req.eventLoop.future()
     }
 }
