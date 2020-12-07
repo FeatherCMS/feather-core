@@ -16,12 +16,9 @@ struct UserPermissionAdminController: ViperAdminViewController {
         Model.FieldKeys.name,
     ]
 
-    func searchList(using qb: QueryBuilder<Model>, for searchTerm: String) {
-        qb.filter(\.$name ~~ searchTerm)
-    }
-
-    func beforeList(req: Request, queryBuilder: QueryBuilder<Model>) throws -> QueryBuilder<Model> {
-        queryBuilder.sort(\Model.$name)
+    func listQuery(search: String, queryBuilder: QueryBuilder<UserPermissionModel>, req: Request) {
+        queryBuilder.filter(\.$name ~~ search)
+        queryBuilder.filter(\.$key ~~ search)
     }
 }
 

@@ -13,25 +13,21 @@ struct FrontendMetadataAdminController: ViperAdminViewController {
     typealias UpdateForm = FrontendMetadataEditForm
 
     var listAllowedOrders: [FieldKey] = [
-        "slug", "module", "model"
+        FrontendMetadata.FieldKeys.slug,
+        FrontendMetadata.FieldKeys.module,
+        FrontendMetadata.FieldKeys.model,
     ]
 
-    func searchList(using qb: QueryBuilder<Model>, for searchTerm: String) {
-        qb.filter(\.$slug ~~ searchTerm)
-        qb.filter(\.$title ~~ searchTerm)
+    func listQuery(search: String, queryBuilder: QueryBuilder<FrontendMetadata>, req: Request) {
+        queryBuilder.filter(\.$slug ~~ search)
+        queryBuilder.filter(\.$title ~~ search)
     }
-    
+
     private func path(_ model: Model) -> String {
         let date = DateFormatter.asset.string(from: Date())
         return Model.path + model.id!.uuidString + "_" + date + ".jpg"
     }
 
-//    func beforeRender(req: Request, form: EditForm) -> EventLoopFuture<Void> {
-//        let filters: [[ContentFilter]] = req.invokeAll("content-filters")
-//        form.filters.options = filters.flatMap { $0 }.map(\.formFieldStringOption)
-//        return req.eventLoop.future()
-//    }
-//
 //    func beforeCreate(req: Request, model: Model, form: EditForm) -> EventLoopFuture<Model> {
 //        model.id = UUID()
 //        var future: EventLoopFuture<Model> = req.eventLoop.future(model)

@@ -222,8 +222,8 @@
         "repositoryURL": "https://github.com/binarybirds/view-kit",
         "state": {
           "branch": null,
-          "revision": "ea5961ae3ba922d32c3f2f7bf58f4a08784207fa",
-          "version": "1.3.0-beta.14"
+          "revision": "ce23298e506429a5aeff2f186924ef3f495cbe35",
+          "version": "1.3.0-beta.19"
         }
       },
       {
@@ -231,8 +231,8 @@
         "repositoryURL": "https://github.com/binarybirds/viper-kit",
         "state": {
           "branch": null,
-          "revision": "dc4598b3a2bf882af7759ddb54081c9f84bbd93e",
-          "version": "1.5.0-beta.7"
+          "revision": "a7ce44e9ba96eddfc60299c2067ddf057d9da351",
+          "version": "1.5.0-beta.8"
         }
       },
       {

@@ -1,0 +1,21 @@
+#let(detail = [
+    "title": "Page",
+    "list": [
+        "title": "Pages",
+        "url": "/admin/frontend/pages/"
+    ]
+])
+#define(details):
+    <dl class="t:center">
+        <dt>Id</dt>
+        <dd class="m:h:zero m:b">#(model.id)</dd>
+
+        <dt>Title</dt>
+        <dd class="m:h:zero m:b">#(model.title)</dd>
+        
+        <dt>Content</dt>
+        <dd class="m:h:zero m:b">#(model.content)</dd>
+
+    </dl>
+#enddefine
+#inline("Admin/Detail")

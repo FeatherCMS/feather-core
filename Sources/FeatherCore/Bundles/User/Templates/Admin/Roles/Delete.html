@@ -1,7 +1,11 @@
 #let(delete = [
     "id": formId,
     "token": formToken,
-    "context": model.email,
-    "type": "role"
+    "context": model.name,
+    "type": "role",
+    "list": [
+        "title": "Roles",
+        "url": "/admin/user/roles/"
+    ]
 ])
 #inline("Admin/Delete")

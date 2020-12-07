@@ -51,14 +51,14 @@ public extension Application {
         }
         
         public static var timezone: TimeZone {
-            if let tzValue = Application.Config.get("site.timezone"), let tz = TimeZone(identifier: tzValue) {
+            if let tzValue = Application.Config.get("frontend.site.timezone"), let tz = TimeZone(identifier: tzValue) {
                 return tz
             }
             return .autoupdatingCurrent
         }
 
         public static var locale: Locale {
-            if let localeValue = Application.Config.get("site.locale") {
+            if let localeValue = Application.Config.get("frontend.site.locale") {
                 return Locale(identifier: localeValue)
             }
             return .autoupdatingCurrent

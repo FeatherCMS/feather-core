@@ -1,10 +1,21 @@
+#let(form = [
+    "id": formId,
+    "token": formToken,
+    "key": "permission",
+    "modelId": modelId,
+    "list": [
+        "title": "Permissions",
+        "url": "/admin/user/permissions/"
+    ]
+])
+
 #define(fields):
     #var(field = nil)
 
     #(field = ["id": "key", "required": true, "data": fields.key])
     #inline("Admin/Fields/Text")
 
-    #(field = ["id": "name", "data": fields.name])
+    #(field = ["id": "name", "required": true, "data": fields.name])
     #inline("Admin/Fields/Text")
 
     #(field = ["id": "notes", "size": "s", "data": fields.notes])
@@ -12,11 +23,4 @@
 
 #enddefine
 
-#let(form = [
-    "list": "permissions",
-    "id": formId,
-    "token": formToken,
-    "modelId": fields.modelId ?? nil,
-    "key": "permission"
-])
 #inline("Admin/Form")

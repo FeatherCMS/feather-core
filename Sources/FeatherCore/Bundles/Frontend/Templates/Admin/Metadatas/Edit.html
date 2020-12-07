@@ -1,10 +1,19 @@
-#define(toolbarLeftAfter):
-    #if(fields.modelId != nil):
-    <a href="#if(!fields.slug.value.isEmpty()):/#(fields.slug.value)/#else:/#endif" target="_blank">#svg("eye")</a>
-    #endif
-#enddefine
+#let(form = [
+    "id": formId,
+    "token": formToken,
+    "key": "metadata",
+    "modelId": modelId,
+    "multipart": true,
+    "delete": false,
+    "list": [
+        "title": "Metadatas",
+        "url": "/admin/frontend/metadatas/"
+    ]
+])
+
 #define(toolbarRightBefore):
-    #if(fields.modelId != nil):
+    #if(modelId != nil):
+    <a href="#if(!fields.slug.value.isEmpty()):/#(fields.slug.value)/#else:/#endif" target="_blank">#svg("eye")</a>
     <a href="/admin/#(fields.module.value)/#(fields.model.value)/#(fields.reference.value)">#svg("feather")</a>
     #endif
 #enddefine
@@ -56,7 +65,7 @@
     #inline("Admin/Fields/Textarea")
 </fieldset>
 
-<fieldset class="p m:bottom:l br:xs">
+<fieldset class="p m:bottom:l br:xs" style="display: none;">
     <legend class="p:horizontal:s">Reference</legend>
 
     #(field = ["id": "module", "required": true, "data": fields.module])
@@ -71,12 +80,4 @@
 
 #enddefine
 
-#let(form = [
-    "list": "metadatas",
-    "id": formId,
-    "token": formToken,
-    "modelId": fields.modelId ?? nil,
-    "key": "metadata",
-    "multipart": true
-])
 #inline("Admin/Form")

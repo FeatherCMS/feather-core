@@ -1,0 +1,33 @@
+#let(form = [
+    "id": formId,
+    "token": formToken,
+    "key": "page",
+    "modelId": modelId,
+    "list": [
+        "title": "Pages",
+        "url": "/admin/frontend/pages/"
+    ]
+])
+
+#define(toolbarLeftAfter):
+    #if(modelId != nil):
+    <a href="#if(!metadata.slug.isEmpty()):/#(metadata.slug)/#else:/#endif" target="_blank">#svg("eye")</a>
+    #endif
+#enddefine
+#define(toolbarRightBefore):
+    #if(modelId != nil):
+    <a href="/admin/frontend/metadatas/#(metadata.id)">#svg("feather")</a>
+    #endif
+#enddefine
+#define(fields):
+    #var(field = nil)
+
+    #(field = ["id": "title", "required": true, "data": fields.title])
+    #inline("Admin/Fields/Text")
+
+    #(field = ["id": "content", "size": "large", "data": fields.content])
+    #inline("Admin/Fields/Textarea")
+
+#enddefine
+
+#inline("Admin/Form")

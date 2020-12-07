@@ -11,8 +11,8 @@ extension SystemVariableModel: LeafDataRepresentable {
         .dictionary([
             "id": id,
             "key": key,
+            "name": name,
             "value": value,
-            "hidden": hidden,
             "notes": notes,
         ])
     }

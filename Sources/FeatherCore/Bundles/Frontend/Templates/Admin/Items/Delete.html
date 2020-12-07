@@ -1,0 +1,13 @@
+#let(menuId = Request(parameter: "id"))
+
+#let(delete = [
+    "id": formId,
+    "token": formToken,
+    "context": model.label,
+    "type": "menu item",
+    "list": [
+        "title": "Menu items",
+        "url": "/admin/frontend/menus/" + menuId + "/items/"
+    ]
+])
+#inline("Admin/Delete")

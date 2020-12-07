@@ -20,7 +20,6 @@ final class SystemModule: ViperModule {
     
     var middlewares: [Middleware] {
         [
-            RequestVariablesMiddleware(),
             SystemInstallGuardMiddleware(),
         ]
     }
@@ -32,44 +31,49 @@ final class SystemModule: ViperModule {
     }
     
     func leafDataGenerator(for req: Request) -> [String: LeafDataGenerator]? {
-        req.variables.all.mapValues { .lazy(LeafData.string($0)) }
+        let variables = req.cache["system.variables"] as? [String: String?] ?? [:]
+        return [
+            "variables": .lazy(LeafData.dictionary(variables))
+        ]
     }
 
     func boot(_ app: Application) throws {
+        /// install
+        app.hooks.register("model-install", use: modelInstallHook)
+        app.hooks.register("user-permission-install", use: userPermissionInstallHook)
+
+        /// admin
         app.hooks.register("admin", use: (router as! SystemRouter).adminRoutesHook)
         app.hooks.register("leaf-admin-menu", use: leafAdminMenuHook)
         
-        app.hooks.register("installer", use: installerHook)
-        app.hooks.register("user-permission-install", use: userPermissionInstallHook)
-        
-        app.hooks.register("prepare-variables", use: prepareVariablesHook)
-        app.hooks.register("set-variable", use: setVariableHook)
-        app.hooks.register("unset-variable", use: unsetVariableHook)
+        /// cache
+        app.hooks.register("prepare-request-cache", use: prepareRequestCacheHook)
 
+        /// frontend
         app.hooks.register("frontend-page", use: frontendPageHook)
     }
     
     // MARK: - hooks
-
-    func leafAdminMenuHook(args: HookArguments) -> LeafDataRepresentable {
-        [
-            "name": "System",
-            "icon": "settings",
-            "permission": "system",
-            "items": LeafData.array([
-                [
-                    "url": "/admin/system/variables/",
-                    "label": "Variables",
-                    "permission": "system.variables.list",
-                ],
-            ])
-        ]
-    }
-
-    func installerHook(args: HookArguments) -> ViperInstaller {
-        SystemInstaller()
-    }
     
+    func modelInstallHook(args: HookArguments) -> EventLoopFuture<Void> {
+        let req = args["req"] as! Request
+
+        let variableItems: [[[String: Any]]] = req.invokeAll("system-variables-install")
+        let systemVariableModels = variableItems.flatMap { $0 }.compactMap { dict -> SystemVariableModel? in
+            guard
+                let key = dict["key"] as? String, !key.isEmpty,
+                let name = dict["name"] as? String, !name.isEmpty
+            else {
+                return nil
+            }
+            let value = dict["value"] as? String
+            let hidden = dict["hidden"] as? Bool ?? false
+            let notes = dict["notes"] as? String
+            return SystemVariableModel(key: key, name: name, value: value, hidden: hidden, notes: notes)
+        }
+        return systemVariableModels.create(on: req.db)
+    }
+
     func userPermissionInstallHook(args: HookArguments) -> [[String: Any]] {
         [
             /// system
@@ -82,8 +86,32 @@ final class SystemModule: ViperModule {
         ]
     }
     
+    func leafAdminMenuHook(args: HookArguments) -> LeafDataRepresentable {
+        let app = args["app"] as! Application
+        var items = [
+            [
+                "url": "/admin/system/variables/",
+                "label": "Variables",
+                "permission": "system.variables.list",
+            ],
+        ]
+        /// if the frontend module is enabled (hacky, but it's fine.)
+        if app.viper.modules.first(where: { $0.name == "frontend" }) != nil {
+            items.append([
+                "url": "/admin/frontend/metadatas/",
+                "label": "Metadatas",
+                "permission": "frontend.metadatas.list",
+            ])
+        }
+        return [
+            "name": "System",
+            "icon": "settings",
+            "permission": "system",
+            "items": LeafData.array(items)
+        ]
+    }
 
-    func prepareVariablesHook(args: HookArguments) -> EventLoopFuture<[String:String]> {
+    func prepareRequestCacheHook(args: HookArguments) -> EventLoopFuture<[String: Any?]> {
         let req = args["req"] as! Request
         return SystemVariableModel.query(on: req.db).all().map { variables in
             var items: [String: String] = [:]
@@ -92,66 +120,29 @@ final class SystemModule: ViperModule {
             }
             return items
         }
-    }
-    
-    func setVariableHook(args: HookArguments) -> EventLoopFuture<Bool> {
-        let req = args["req"] as! Request
-        
-        guard
-            let key = args["key"] as? String,
-            let value = args["value"] as? String
-        else {
-            return req.eventLoop.future(false)
+        .map { items in
+             ["system.variables": items as Any?]
         }
-
-        let hidden = args["hidden"] as? Bool
-        let notes = args["notes"] as? String
-
-        return SystemVariableModel
-            .query(on: req.db)
-            .filter(\.$key == key)
-            .first()
-            .flatMap { model -> EventLoopFuture<Bool> in
-                if let model = model {
-                    model.value = value
-                    if let hidden = hidden {
-                        model.hidden = hidden
-                    }
-                    model.notes = notes
-                    return model.update(on: req.db).map { true }
-                }
-                return SystemVariableModel(key: key,
-                                           value: value,
-                                           hidden: hidden ?? false,
-                                           notes: notes)
-                    .create(on: req.db)
-                    .map { true }
-            }
     }
-    
-    func unsetVariableHook(args: HookArguments) -> EventLoopFuture<Bool> {
-        let req = args["req"] as! Request
-        guard let key = args["key"] as? String else {
-            return req.eventLoop.future(false)
-        }
-        return SystemVariableModel
-            .query(on: req.db)
-            .filter(\.$key == key)
-            .delete()
-            .map { true }
-    }
- 
+
     func frontendPageHook(args: HookArguments) -> EventLoopFuture<Response?> {
         let req = args["req"] as! Request
 
         /// check if system is already installed, if yes we don't do anything
-        if req.variables.get("system.installed") == "true" {
-            return req.eventLoop.future(nil)
+        return SystemVariableModel.isInstalled(db: req.db).flatMap { [unowned self] installed -> EventLoopFuture<Response?> in
+            if installed {
+                return req.eventLoop.future(nil)
+            }
+            return systemInstallStep(req: req).encodeOptionalResponse(for: req)
         }
-
+    }
+    
+    // MARK: perform install steps
+    
+    func systemInstallStep(req: Request) -> EventLoopFuture<View> {
         /// if the system path equals install, we render the start install screen
         guard req.url.path == "/system/install/" else {
-            return req.leaf.render("System/Install/Start").encodeOptionalResponse(for: req)
+            return req.leaf.render("System/Install/Start")
         }
     
         /// create assets path under the public directory
@@ -165,7 +156,7 @@ final class SystemModule: ViperModule {
         catch {
             fatalError(error.localizedDescription)
         }
-        
+
         /// copy module assets if necessary
         for module in req.application.viper.modules {
             let name = module.name.lowercased()
@@ -187,34 +178,15 @@ final class SystemModule: ViperModule {
             }
         }
 
-        /// we gather the system variables, based on the dictionary
-        var variables: [SystemVariableModel] = []
         /// we request the install futures for the database model creation
-        var modelInstallFutures: [EventLoopFuture<Void>] = []
-
-        /// we request the installer objects, then use them to install everything
-        let installers: [ViperInstaller] = req.invokeAll("installer")
-        for installer in installers {
-            let vars = installer.variables().compactMap { dict -> SystemVariableModel? in
-                guard let key = dict["key"] as? String, !key.isEmpty else {
-                    return nil
-                }
-                let value = dict["value"] as? String
-                let hidden = dict["hidden"] as? Bool ?? false
-                let notes = dict["notes"] as? String
-                return SystemVariableModel(key: key, value: value, hidden: hidden, notes: notes)
+        let modelInstallFutures: [EventLoopFuture<Void>] = req.invokeAll("model-install")
+        return req.eventLoop.flatten(modelInstallFutures)
+            .flatMap { SystemVariableModel.setInstalled(db: req.db) }
+            .flatMap { req.leaf.render("System/Install/Finish") }
+            .flatMapError { err in
+                print(err.localizedDescription)
+                return req.eventLoop.future(error: err)
             }
-            variables.append(contentsOf: vars)
-
-            if let future = installer.createModels(req) {
-                modelInstallFutures.append(future)
-            }
-        }
-        /// we combine the existing futures and call them
-        let futures = [variables.create(on: req.db)] + modelInstallFutures
-        return req.eventLoop.flatten(futures)
-        .flatMap { _ in req.variables.set("system.installed", value: "true", hidden: true) }
-        .flatMap { _ in req.leaf.render("System/Install/Finish") }
-        .encodeOptionalResponse(for: req)
+            
     }
 }

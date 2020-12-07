@@ -2,9 +2,7 @@
     #if(form.modelId != nil):Edit#else:Create#endif #(form.key)
 #enddefine
 #define(breadcrumb):
-    #if(form.list != nil):
-    <li><a href="#($req.url.path.trimLast())">#(form.list.capitalized())</a></li>
-    #endif
+    <li><a href="#(form.list.url)">#(form.list.title)</a></li>
 #enddefine
 #define(toolbarLeft):
     <button type="submit" form="#(form.key)-form">#svg("save")</button>
@@ -14,7 +12,9 @@
 #define(toolbarRight):
     #evaluate(toolbarRightBefore ?? "")
     #if(form.modelId != nil):
-    <td class="td:center"><a href="#($req.url.path)delete/?redirect=#($req.url.path)">#svg("trash")</a></td>
+    #if(form.delete ?? true):
+    <a href="#($req.url.path.trimLast())delete/?cancel=#($req.url.path)">#svg("trash")</a>
+    #endif
     #endif
 #enddefine
 #define(body):
@@ -39,6 +39,7 @@
         #(field = ["label": "Save"])
         #inline("Admin/Fields/Button")
     </form>
+
 </div>
 #enddefine
 #inline("Admin/Index")

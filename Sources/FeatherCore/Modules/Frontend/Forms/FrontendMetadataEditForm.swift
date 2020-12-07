@@ -9,7 +9,7 @@ final class FrontendMetadataEditForm: ModelForm {
     typealias Model = FrontendMetadata
     
     struct Input: Decodable {
-        var modelId: UUID
+        var modelId: UUID?
         var module: String
         var model: String
         var reference: UUID
@@ -31,13 +31,13 @@ final class FrontendMetadataEditForm: ModelForm {
     var module = FormField<String>(key: "module").required().length(max: 250)
     var model = FormField<String>(key: "model").required().length(max: 250)
     var reference = FormField<UUID>(key: "reference")
-    var slug = FormField<String>(key: "slug").required().length(max: 250)
+    var slug = FormField<String>(key: "slug").length(max: 250)
     var title = FormField<String>(key: "title").length(max: 250)
     var excerpt = FormField<String>(key: "excerpt").length(max: 250)
     var canonicalUrl = FormField<String>(key: "canonicalUrl").length(max: 250)
     var statusId = SelectionFormField<String>(key: "statusId")
     var feedItem = SelectionFormField<Bool>(key: "feedItem")
-    var filters = FormField<[String]>(key: "filters")
+    var filters = ArraySelectionFormField<String>(key: "filters")
     var date = FormField<String>(key: "date")
     var image = FormField<FileUploadValue>(key: "image")
     var css = FormField<String>(key: "css")
@@ -58,6 +58,10 @@ final class FrontendMetadataEditForm: ModelForm {
         statusId.value = Model.Status.draft.rawValue
         date.value = Application.Config.dateFormatter().string(from: Date())
         feedItem.options = FormFieldOption.trueFalse()
+
+        let contentFilters: [[ContentFilter]] = req.invokeAll("content-filters")
+        filters.options = contentFilters.flatMap { $0 }.map(\.formFieldOption)
+
         return req.eventLoop.future()
     }
     
@@ -69,7 +73,7 @@ final class FrontendMetadataEditForm: ModelForm {
         reference.value = context.reference
         slug.value = context.slug
         statusId.value = context.statusId
-        filters.value = context.filters
+        filters.values = context.filters
         date.value = context.date
         title.value = context.title
         excerpt.value = context.excerpt
@@ -94,7 +98,7 @@ final class FrontendMetadataEditForm: ModelForm {
         slug.value = input.slug
         statusId.value = input.status.rawValue
         feedItem.value = input.feedItem
-        filters.value = input.filters
+        filters.values = input.filters
         date.value = Application.Config.dateFormatter().string(from: input.date)
         title.value = input.title
         excerpt.value = input.excerpt
@@ -111,7 +115,7 @@ final class FrontendMetadataEditForm: ModelForm {
         output.slug = slug.value!
         output.status = Model.Status(rawValue: statusId.value!)!
         output.feedItem = feedItem.value!
-        output.filters = filters.value ?? []
+        output.filters = filters.values
         output.date = Application.Config.dateFormatter().date(from: date.value!)!
         output.title = title.value?.emptyToNil
         output.excerpt = excerpt.value?.emptyToNil

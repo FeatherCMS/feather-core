@@ -11,6 +11,7 @@ struct SystemMigration_v1_0_0: Migration {
         db.schema(SystemVariableModel.schema)
             .id()
             .field(SystemVariableModel.FieldKeys.key, .string, .required)
+            .field(SystemVariableModel.FieldKeys.name, .string, .required)
             .field(SystemVariableModel.FieldKeys.value, .data)
             .field(SystemVariableModel.FieldKeys.hidden, .bool, .required)
             .field(SystemVariableModel.FieldKeys.notes, .data)

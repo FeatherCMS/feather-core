@@ -9,7 +9,7 @@ final class UserPermissionEditForm: ModelForm {
     typealias Model = UserPermissionModel
 
     struct Input: Decodable {
-        var modelId: UUID
+        var modelId: UUID?
         var key: String
         var name: String
         var notes: String
@@ -18,7 +18,7 @@ final class UserPermissionEditForm: ModelForm {
 
     var modelId: UUID?
     var key = FormField<String>(key: "key").required().length(max: 250)
-    var name = FormField<String>(key: "name").length(max: 250)
+    var name = FormField<String>(key: "name").required().length(max: 250)
     var notes = FormField<String>(key: "notes").length(max: 250)
     var notification: String?
 
@@ -36,6 +36,16 @@ final class UserPermissionEditForm: ModelForm {
         notes.value = context.notes
         return req.eventLoop.future()
     }
+    
+    func validateAfterFields(req: Request) -> EventLoopFuture<Bool> {
+        UserPermissionModel.query(on: req.db).filter(\.$key == key.value!).first().map { [unowned self] model -> Bool in
+            if (modelId == nil && model != nil) || (modelId != nil && model != nil && modelId! != model!.id) {
+                key.error = "Key is already in use"
+                return false
+            }
+            return true
+        }
+    }
 
     func read(from input: Model)  {
         modelId = input.id
@@ -46,7 +56,8 @@ final class UserPermissionEditForm: ModelForm {
 
     func write(to output: Model) {
         output.key = key.value!
-        output.name = name.value?.emptyToNil
+        output.name = name.value!
         output.notes = notes.value?.emptyToNil
     }
+    
 }

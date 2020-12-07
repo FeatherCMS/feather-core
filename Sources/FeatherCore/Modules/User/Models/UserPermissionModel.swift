@@ -22,7 +22,7 @@ final class UserPermissionModel: ViperModel {
     @ID() var id: UUID?
     /// name of the permission
     @Field(key: FieldKeys.key) var key: String
-    @Field(key: FieldKeys.name) var name: String?
+    @Field(key: FieldKeys.name) var name: String
     @Field(key: FieldKeys.notes) var notes: String?
     
     /// permission relation
@@ -30,7 +30,7 @@ final class UserPermissionModel: ViperModel {
     
     init() { }
 
-    init(id: UUID? = nil, key: String, name: String? = nil, notes: String? = nil) {
+    init(id: UUID? = nil, key: String, name: String, notes: String? = nil) {
         self.id = id
         self.key = key
         self.name = name

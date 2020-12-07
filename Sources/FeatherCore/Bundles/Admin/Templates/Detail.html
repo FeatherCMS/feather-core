@@ -1,0 +1,29 @@
+#define(toolbarCenter):
+    #(detail.title ?? "Details")
+#enddefine
+    
+#define(breadcrumb):
+    <li><a href="#(detail.list.url)">#(detail.list.title)</a></li>
+#enddefine
+    
+#define(toolbarLeft):
+    <a href="#($req.url.path)update/">#svg("edit-2")</a>
+    #evaluate(toolbarLeftAfter ?? "")
+#enddefine
+
+#define(toolbarRight):
+    #evaluate(toolbarRightBefore ?? "")
+    #if(detail.delete ?? true):
+    <a href="#($req.url.path)delete/">#svg("trash")</a>
+    #endif
+#enddefine
+    
+#define(body):
+<div class="w m:h:auto m:b:xl">
+    <div class="m">
+        #evaluate(details ?? "")
+    </div>
+</div>
+#enddefine
+
+#inline("Admin/Index")

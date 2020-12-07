@@ -20,6 +20,6 @@ extension UserPermissionModel: LeafDataRepresentable {
 extension UserPermissionModel: FormFieldOptionRepresentable {
 
     var formFieldOption: FormFieldOption {
-        .init(key: id!.uuidString, label: name ?? key)
+        .init(key: id!.uuidString, label: name)
     }
 }

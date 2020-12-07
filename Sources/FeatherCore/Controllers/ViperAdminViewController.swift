@@ -15,7 +15,7 @@ public protocol ViperAdminViewController: AdminViewController where Model: Viper
 public extension ViperAdminViewController where  Model.IDValue == UUID  {
 
     var listView: String { "\(Module.name.capitalized)/Admin/\(Model.name.capitalized)/List" }
-    var getView: String { "\(Module.name.capitalized)/Admin/\(Model.name.capitalized)/Get" }
+    var getView: String { "\(Module.name.capitalized)/Admin/\(Model.name.capitalized)/View" }
     var createView: String { "\(Module.name.capitalized)/Admin/\(Model.name.capitalized)/Edit" }
     var updateView: String { "\(Module.name.capitalized)/Admin/\(Model.name.capitalized)/Edit" }
     var deleteView: String { "\(Module.name.capitalized)/Admin/\(Model.name.capitalized)/Delete" }
@@ -27,8 +27,13 @@ public extension ViperAdminViewController where  Model.IDValue == UUID  {
     }
 
     /// after we delete a model, we can redirect back to the list, using the current path component, but trimming the final uuid/delete part.
-    func afterDelete(req: Request, model: Model) -> EventLoopFuture<Response> {
-        req.eventLoop.future(req.redirect(to: req.url.path.trimmingLastPathComponents(2)))
+    func deleteResponse(req: Request, model: Model) -> EventLoopFuture<Response> {
+        // /[model]/:id/delete -> /[model]/
+        var url = req.url.path.trimmingLastPathComponents(2)
+        if let redirect = try? req.content.get(String.self, at: "redirect") {
+            url = redirect
+        }
+        return req.eventLoop.future(req.redirect(to: url))
     }
 
     private func viperAccess(_ key: String, req: Request) -> EventLoopFuture<Bool> {

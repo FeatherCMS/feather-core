@@ -11,6 +11,8 @@ extension UserModel: LeafDataRepresentable {
         .dictionary([
             "id": id,
             "email": email,
+            "root": root,
+            "roles": $roles.value != nil ? roles.map(\.leafData) : [],
         ])
     }
 }

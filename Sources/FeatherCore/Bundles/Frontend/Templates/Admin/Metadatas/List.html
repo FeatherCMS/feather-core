@@ -1,48 +1,31 @@
+#let(table = [
+    "title": "Metadatas",
+    "create": false
+])
+
 #define(css):
 tr {
     grid-template-columns: 1fr 1fr;
 }
-@media (max-width: 599px) {
-    th:nth-of-type(4), th:nth-of-type(5) {
-        display: none;
-    }
-    th:nth-of-type(1), th:nth-of-type(2), th:nth-of-type(3), td:nth-of-type(1), td:nth-of-type(2), td:nth-of-type(3)  {
-        grid-column: span 2;
-    }
-    td:nth-of-type(3) {
-        padding-bottom: 16px;
-        margin-bottom: 16px;
-        border-bottom: 1px solid #e9e9e9;
-    }
-    @media (prefers-color-scheme: dark) {
-        td:nth-of-type(3) {
-            border-bottom: 1px solid #232323;
-        }
-    }
-}
 @media (min-width: 600px) {
     tr {
-        grid-template-columns: 1fr 128px 128px 64px 96px;
+        grid-template-columns: 1fr 96px;
     }
 }
 #enddefine
+
 #define(th):
     #var(link = nil)
-    <th class="td:left m:h:s">#(link = ["key": "slug", "default": true])#inline("Admin/SortLink")</th>
-    <th class="td:center">#(link = ["key": "module"])#inline("Admin/SortLink")</th>
-    <th class="td:center">#(link = ["key": "model"])#inline("Admin/SortLink")</th>
-    #inline("Admin/TableActionLabels")
+    <th class="td:left m:h:s td:compact:col2">#(link = ["key": "slug", "default": true])#inline("Admin/SortLink")</th>
+    <th class="td:center td:compact:hidden">Edit</th>
 #enddefine
 #define(tr):
     #for(item in list.items):
 <tr>
-    <td class="td:left m:h:s"><a href="#($req.url.path)#(item.id)/">#(item.slug.isEmpty() ? "[home]" : item.slug)</a></td>
-    <td class="td:center"><a href="#($req.url.path)#(item.id)/">#(item.module)</a></td>
-    <td class="td:center"><a href="#($req.url.path)#(item.id)/">#(item.model)</a></td>
-    #inline("Admin/TableActionButtons")
+    <td class="td:left m:h:s td:compact:col2 td:compact:separator"><a href="#($req.url.path)#(item.id)/">#(item.slug)#if(item.slug.isEmpty()):[home]#endif</a></td>
+    <td class="td:center"><a href="#($req.url.path)#(item.id)/update">#svg("edit-2")</a></td>
 </tr>
     #endfor
 #enddefine
-#let(title = "Metadatas")
-#inline("Admin/Table")
 
+#inline("Admin/Table")

@@ -7,7 +7,7 @@
         <meta name="robots" content="noindex">
     #endif
 
-    <title>#(head.title) - #($system["site.title"])</title>
+    <title>#(head.title) - #($system.variables["frontend.site.title"])</title>
 
     #if($app.isDebug ?? false):
     <link rel="stylesheet" href="/css/frontend.css">
@@ -17,26 +17,26 @@
     
     <style type="text/css">
         body {
-            #if(!$system["site.font.family"].isEmpty):
-            font-family: #($system["site.font.family"]);
+            #if(!$system.variables["frontend.site.font.family"].isEmpty):
+            font-family: #($system.variables["frontend.site.font.family"]);
             #endif
-            #if(!$system["site.font.size"].isEmpty):
-            font-size: #($system["site.font.size"]);
+            #if(!$system.variables["frontend.site.font.size"].isEmpty):
+            font-size: #($system.variables["frontend.site.font.size"]);
             #endif
         }
-        #if(!$system["site.color.primary"].isEmpty):
+        #if(!$system.variables["frontend.site.color.primary"].isEmpty):
         a:link, a:visited, \#nav li a.selected {
-            color: #($system["site.color.primary"]);
+            color: #($system.variables["frontend.site.color.primary"]);
         }
         #endif
-        #if(!$system["site.color.secondary"].isEmpty):
+        #if(!$system.variables["frontend.site.color.secondary"].isEmpty):
         a:link:hover, a:visited:hover, \#nav a:link.selected:hover, \#nav li a:link:hover, \#nav li a:visited:hover{
-            color: #($system["site.color.secondary"]);
+            color: #($system.variables["frontend.site.color.secondary"]);
         }
         #endif
 
         #evaluate(css ?? "")
-        #($system["site.css"] ?? "")
+        #($system.variables["frontend.site.css"] ?? "")
         #(head.css ?? "")
     </style>
     
@@ -53,14 +53,14 @@
 <body class="m:zero">
     <header id="header">
         <a href="/" id="site-link">
-            <img src="#($system["site.logo"].resolve() ?? "/images/logo-text.png")" alt="Logo of #($system["site.title"])" title="#($system["site.title"])">
+            <img src="#($system.variables["frontend.site.logo"].resolve() ?? "/images/logo-text.png")" alt="Logo of #($system.variables["frontend.site.title"])" title="#($system.variables["frontend.site.title"])">
         </a>
 
         <input type="checkbox" id="menu-button" class="selection:off" />
         <label for="menu-button" id="menu-icon" class="selection:off"><span></span></label>
 
         <nav id="nav">
-            #for(item in $menu["main"].items ?? []):
+            #for(item in $frontend.menus.main.items ?? []):
             #if(UserHasPermission(item.permission) ?? true):
             <li>
                 <a href="#(item.url)" #if($req.url.path == item.url): class="selected"#endif#if(item.targetBlank): target="_blank"#endif>
@@ -79,9 +79,9 @@
     <footer>
         <section class="p:xl t:center">
 
-            #($system["site.footer"])
+            #($system.variables["frontend.site.footer"])
 
-            <p class="t:size:s">#($system["site.copy"]) &copy; #($system["site.copy.year.start"] ?? "") #Date(timeStamp: Timestamp(), fixedFormat: "y")</p>
+            <p class="t:size:s">#($system.variables["frontend.site.copy"]) &copy; #($system.variables["frontend.site.copy.year.start"] ?? "") #Date(timeStamp: Timestamp(), fixedFormat: "y")</p>
 
             <p class="t:size:s">
                 #if($user.isAuthenticated):
@@ -93,7 +93,7 @@
                 <a href="/login/">Login</a>
                 #endif
 
-                #for(item in $menu["footer"].items ?? []):
+                #for(item in $frontend.menus.footer.items ?? []):
                 #if(UserHasPermission(item.permission) ?? true):
                     &middot;
                 <a href="#(item.url)" #if($req.url.path == item.url): class="selected"#endif#if(item.targetBlank): target="_blank"#endif>
@@ -103,14 +103,14 @@
                 #endfor
             </p>
             
-            #($system["site.footer.bottom"])
+            #($system.variables["frontend.site.footer.bottom"])
 
         </section>
     </footer>
     
     <script type="text/javascript">
         #evaluate(js ?? "")
-        #($system["site.js"] ?? "")
+        #($system.variables["frontend.site.js"] ?? "")
         #(head.js ?? "")
     </script>
 </body>

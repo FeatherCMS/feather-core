@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>#($system["site.title"])</title>
-        <description>#($system["site.excerpt"])</description>
+        <title>#($system.variables["frontend.site.title"])</title>
+        <description>#($system.variables["frontend.site.excerpt"])</description>
         <link></link>
         <language>#($app.locale)</language>
         <lastBuildDate>#Date(timeStamp: Timestamp(), fixedFormat: "EEE, dd MMM y HH:mm:ss Z", timeZone: $app.timezone)</lastBuildDate>

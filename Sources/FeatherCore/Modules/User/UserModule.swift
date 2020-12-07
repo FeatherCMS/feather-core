@@ -40,23 +40,54 @@ final class UserModule: ViperModule {
 
     func boot(_ app: Application) throws {
         app.databases.middleware.use(UserModelContentMiddleware())
+
+        /// install
+        app.hooks.register("model-install", use: modelInstallHook)
+        app.hooks.register("user-permission-install", use: userPermissionInstallHook)
         
+        /// admin
         app.hooks.register("admin", use: (router as! UserRouter).adminRoutesHook)
         app.hooks.register("leaf-admin-menu", use: leafAdminMenuHook)
-        app.hooks.register("installer", use: installerHook)
-        app.hooks.register("user-permission-install", use: userPermissionInstallHook)
+        
+        /// permission / access
         app.hooks.register("access", use: accessHook)
         app.hooks.register("leaf-permission-hook", use: leafPermissionHook)
-
+        
+        /// auth
         app.hooks.register("admin-auth-middlewares", use: adminAuthMiddlewaresHook)
         app.hooks.register("api-auth-middlewares", use: apiAuthMiddlewaresHook)
+        
         //app.hooks.register("system-variables-list-access", use: systemVariablesAccessHook)
     }
     
     // MARK: - hook functions
 
-    func installerHook(args: HookArguments) -> ViperInstaller {
-        UserInstaller()
+    func modelInstallHook(args: HookArguments) -> EventLoopFuture<Void> {
+        let req = args["req"] as! Request
+
+        /// gather the main menu items through a hook function then map them
+        let permissionItems: [[[String: Any]]] = req.invokeAll("user-permission-install")
+        let permissionModels = permissionItems.flatMap { $0 }.compactMap { item -> UserPermissionModel? in
+            guard
+                let key = item["key"] as? String, !key.isEmpty,
+                let name = item["name"] as? String, !name.isEmpty
+            else {
+                return nil
+            }
+            let notes = item["notes"] as? String
+            return UserPermissionModel(key: key, name: name, notes: notes)
+        }
+        let roles = [
+            UserRoleModel(key: "editors", name: "Editors", notes: "Just an example role for editors, feel free to select permissions."),
+        ]
+        let users = [
+            UserModel(email: "feather@binarybirds.com", password: try! Bcrypt.hash("FeatherCMS"), root: true),
+        ]
+        return req.eventLoop.flatten([
+            permissionModels.create(on: req.db),
+            roles.create(on: req.db),
+            users.create(on: req.db),
+        ])
     }
 
     func userPermissionInstallHook(args: HookArguments) -> [[String: Any]] {

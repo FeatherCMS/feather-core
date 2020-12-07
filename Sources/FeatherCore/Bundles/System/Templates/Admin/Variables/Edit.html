@@ -1,7 +1,21 @@
+#let(form = [
+    "id": formId,
+    "token": formToken,
+    "key": "variable",
+    "modelId": modelId,
+    "list": [
+        "title": "Variables",
+        "url": "/admin/system/variables/"
+    ]
+])
+
 #define(fields):
     #var(field = nil)
 
     #(field = ["id": "key", "required": true, "data": fields.key])
+    #inline("Admin/Fields/Text")
+
+    #(field = ["id": "name", "required": true, "data": fields.name])
     #inline("Admin/Fields/Text")
 
     #(field = ["id": "value", "size": "s", "data": fields.value])
@@ -12,11 +26,4 @@
 
 #enddefine
 
-#let(form = [
-    "list": "variables",
-    "id": formId,
-    "token": formToken,
-    "modelId": fields.modelId ?? nil,
-    "key": "variable"
-])
 #inline("Admin/Form")

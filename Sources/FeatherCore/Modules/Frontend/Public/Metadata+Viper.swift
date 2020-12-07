@@ -8,6 +8,15 @@
 public extension ViperModel where Self.IDValue == UUID {
     
     /// joins the metadata object on the ViperModel query, if a path is present it'll use it as a filter to return only one instance that matches the slug
+    static func findMetadata(id: UUID, on db: Database) -> EventLoopFuture<FrontendMetadata?> {
+        FrontendMetadata.query(on: db)
+            .filter(\.$module == Module.name)
+            .filter(\.$model == name)
+            .filter(\.$reference == id)
+            .first()
+    }
+    
+    /// joins the metadata object on the ViperModel query, if a path is present it'll use it as a filter to return only one instance that matches the slug
     static func findMetadata(on db: Database, path: String? = nil) -> QueryBuilder<Self> {
         let query = Self.query(on: db)
             .join(FrontendMetadata.self, on: \FrontendMetadata.$reference == \Self._$id)
@@ -28,7 +37,7 @@ public extension ViperModel where Self.IDValue == UUID {
             .filter(\.$module == Self.Module.name)
             .filter(\.$model == Self.name)
             .first()
-            .unwrap(or: Abort(.notFound))
+            .unwrap(or: Abort(.notFound, reason: "Metadata not found"))
     }
     
     /// update a metadata object with a given set of properties using a block, can be used to patch metadata objects in the db

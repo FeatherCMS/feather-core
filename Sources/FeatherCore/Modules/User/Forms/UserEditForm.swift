@@ -45,6 +45,16 @@ final class UserEditForm: ModelForm {
 
         return req.eventLoop.future()
     }
+    
+    func validateAfterFields(req: Request) -> EventLoopFuture<Bool> {
+        UserModel.query(on: req.db).filter(\.$email == email.value!).first().map { [unowned self] model -> Bool in
+            if (modelId == nil && model != nil) || (modelId != nil && model != nil && modelId! != model!.id) {
+                email.error = "Email is already in use"
+                return false
+            }
+            return true
+        }
+    }
 
     func read(from input: Model) {
         modelId = input.id

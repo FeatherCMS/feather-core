@@ -7,14 +7,19 @@
 
 struct FrontendRouter: ViperRouter {
     
-    let frontendController = FrontendController()
-    var adminController = FrontendMetadataAdminController()
+    let frontend = FrontendController()
+    var metadataAdmin = FrontendMetadataAdminController()
+    let menuAdmin = FrontendMenuAdminController()
+    let itemAdmin = FrontendMenuItemAdminController()
+    let pageAdmin = FrontendPageAdminController()
+    
+    let siteAdmin = FrontendSiteAdminController()
     
     func boot(routes: RoutesBuilder) throws {
         /// register public sitemap and rss routes
-        routes.get("sitemap.xml", use: frontendController.sitemap)
-        routes.get("rss.xml", use: frontendController.rss)
-        routes.get("robots.txt", use: frontendController.robots)
+        routes.get("sitemap.xml", use: frontend.sitemap)
+        routes.get("rss.xml", use: frontend.rss)
+        routes.get("robots.txt", use: frontend.robots)
     }
 
     func routesHook(args: HookArguments) {
@@ -28,14 +33,24 @@ struct FrontendRouter: ViperRouter {
 
         let frontendRoutes = routes.grouped(frontendMiddlewares)
         /// handle root path and everything else via the controller method
-        frontendRoutes.get(use: frontendController.catchAllView)
-        frontendRoutes.get(.catchall, use: frontendController.catchAllView)
+        frontendRoutes.get(use: frontend.catchAllView)
+        frontendRoutes.get(.catchall, use: frontend.catchAllView)
     }
 
     func adminRoutesHook(args: HookArguments) {
         let routes = args["routes"] as! RoutesBuilder
 
         let modulePath = routes.grouped(FrontendModule.pathComponent)
-        adminController.setupRoutes(on: modulePath, as: "metadatas")
+        metadataAdmin.setupRoutes(on: modulePath, as: FrontendMetadata.pathComponent)
+
+        modulePath.get("settings", use: siteAdmin.settingsView)
+        modulePath.post("settings", use: siteAdmin.updateSettings)
+        
+        menuAdmin.setupRoutes(on: modulePath, as: FrontendMenuModel.pathComponent)
+
+        let itemPath = modulePath.grouped(.init(stringLiteral: FrontendMenuModel.name), menuAdmin.idPathComponent)
+        itemAdmin.setupRoutes(on: itemPath, as: FrontendMenuItemModel.pathComponent)
+        
+        pageAdmin.setupRoutes(on: modulePath, as: FrontendPageModel.pathComponent)
     }
 }

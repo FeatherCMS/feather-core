@@ -1,0 +1,39 @@
+
+#let(menuId = Request(parameter: "id"))
+#let(form = [
+    "id": formId,
+    "token": formToken,
+    "key": "item",
+    "modelId": modelId,
+    "list": [
+        "title": "Menu items",
+        "url": "/admin/frontend/menus/" + menuId + "/items/"
+    ]
+])
+
+
+#define(fields):
+    <input type="hidden" name="menuId" value="#(menuId)">
+
+    #var(field = nil)
+
+    #(field = ["id": "icon", "data": fields.icon])
+    #inline("Admin/Fields/Text")
+    
+    #(field = ["id": "label", "required": true, "data": fields.label])
+    #inline("Admin/Fields/Text")
+    
+    #(field = ["id": "url", "required": true, "data": fields.url])
+    #inline("Admin/Fields/Text")
+
+    #(field = ["id": "priority", "required": true, "data": fields.priority])
+    #inline("Admin/Fields/Text")
+    
+    #(field = ["id": "targetBlank", "label": "Open in new window?", "data": fields.targetBlank])
+    #inline("Admin/Fields/Selection")
+    
+    #(field = ["id": "permission", "data": fields.permission])
+    #inline("Admin/Fields/Text")
+
+#enddefine
+#inline("Admin/Form")

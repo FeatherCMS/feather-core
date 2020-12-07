@@ -13,6 +13,7 @@ extension UserRoleModel: LeafDataRepresentable {
             "key": key,
             "name": name,
             "notes": notes,
+            "permissions": $permissions.value != nil ? permissions.map(\.leafData) : [],
         ])
     }
 }
@@ -20,6 +21,6 @@ extension UserRoleModel: LeafDataRepresentable {
 extension UserRoleModel: FormFieldOptionRepresentable {
 
     var formFieldOption: FormFieldOption {
-        .init(key: id!.uuidString, label: name ?? key)
+        .init(key: id!.uuidString, label: name)
     }
 }

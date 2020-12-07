@@ -13,18 +13,18 @@ struct SystemVariableAdminController: ViperAdminViewController {
     typealias UpdateForm = SystemVariableEditForm
 
     var listAllowedOrders: [FieldKey] = [
+        Model.FieldKeys.name,
         Model.FieldKeys.key,
         Model.FieldKeys.value,
     ]
 
-    func searchList(using qb: QueryBuilder<Model>, for searchTerm: String) {
-        qb.filter(\.$key ~~ searchTerm)
-        qb.filter(\.$value ~~ searchTerm)
+    func listQuery(search: String, queryBuilder: QueryBuilder<SystemVariableModel>, req: Request) {
+        queryBuilder.filter(\.$name ~~ search)
+        queryBuilder.filter(\.$key ~~ search)
+        queryBuilder.filter(\.$value ~~ search)
     }
-//    
-    func beforeList(req: Request, queryBuilder: QueryBuilder<Model>) throws -> QueryBuilder<Model> {
-        queryBuilder
-            .filter(\.$hidden == false)
-            .sort(\Model.$key)
+    
+    func beforeListQuery(req: Request, queryBuilder: QueryBuilder<SystemVariableModel>) -> QueryBuilder<SystemVariableModel> {
+        queryBuilder.filter(\.$hidden == false)
     }
 }

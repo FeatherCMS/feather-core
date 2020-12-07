@@ -1,3 +1,14 @@
+#let(form = [
+    "id": formId,
+    "token": formToken,
+    "key": "user",
+    "modelId": modelId,
+    "list": [
+        "title": "Users",
+        "url": "/admin/user/users/"
+    ]
+])
+
 #define(fields):
     #var(field = nil)
 
@@ -17,14 +28,6 @@
         <label for="role-#(role.key)">#(role.label)</label><br>
         #endfor
     </section>
-
 #enddefine
 
-#let(form = [
-    "list": "users",
-    "id": formId,
-    "token": formToken,
-    "modelId": fields.modelId ?? nil,
-    "key": "user"
-])
 #inline("Admin/Form")

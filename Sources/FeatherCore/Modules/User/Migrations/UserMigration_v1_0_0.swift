@@ -26,14 +26,14 @@ struct UserMigration_v1_0_0: Migration {
             db.schema(UserRoleModel.schema)
                 .id()
                 .field(UserPermissionModel.FieldKeys.key, .string, .required)
-                .field(UserPermissionModel.FieldKeys.name, .string)
+                .field(UserPermissionModel.FieldKeys.name, .string, .required)
                 .field(UserPermissionModel.FieldKeys.notes, .string)
                 .unique(on: UserPermissionModel.FieldKeys.key)
                 .create(),
             db.schema(UserPermissionModel.schema)
                 .id()
                 .field(UserPermissionModel.FieldKeys.key, .string, .required)
-                .field(UserPermissionModel.FieldKeys.name, .string)
+                .field(UserPermissionModel.FieldKeys.name, .string, .required)
                 .field(UserPermissionModel.FieldKeys.notes, .string)
                 .unique(on: UserPermissionModel.FieldKeys.key)
                 .create(),

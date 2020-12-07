@@ -6,6 +6,9 @@ document.onkeydown=function(evt){
     }
 }
 #enddefine
+#define(breadcrumb):
+    <li><a href="#(delete.list.url)">#(delete.list.title)</a></li>
+#enddefine
 #define(body):
 <div class="content t:center">
     <div class="m:xl">
@@ -18,11 +21,11 @@ document.onkeydown=function(evt){
             #if(delete.key != nil):
             <input type="hidden" name="key" value="#(delete.key ?? "")">
             #endif
-            <input type="hidden" name="redirect" value="#(Request(query: "redirect") ?? "")">
+            <input type="hidden" name="redirect" value="#(delete.list.url ?? $req.url.path.trimLast(2))">
 
             <input type="submit" class="s:w256 m:h:auto" value="#(delete.confirm ?? "Delete")" />
         </form>
-        <a class="block m:t" href="#Request(query: "redirect")">#(delete.cancel ?? "Cancel")</a>
+        <a class="block m:t" href="#(Request(query: "cancel") ?? delete.list.url)">#(delete.cancel ?? "Cancel")</a>
     </div>
 </div>
 #enddefine

@@ -19,6 +19,13 @@ final class UserLoginForm: Form {
     var fields: [AbstractFormField] {
         [email, password]
     }
+    
+    var leafData: LeafData {
+        .dictionary([
+            "fields": fieldsLeafData,
+            "notification": .string(notification),
+        ])
+    }
 
     init() {}
 

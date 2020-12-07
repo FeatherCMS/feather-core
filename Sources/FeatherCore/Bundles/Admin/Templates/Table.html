@@ -1,10 +1,13 @@
 #define(toolbarCenter):
-    #(title)
+    #(table.title ?? "List")
 #enddefine
 #define(toolbarLeft):
+    #if(table.create ?? true):
     <a href="#($req.url.path)create/">#svg("plus-circle")</a>
+    #endif
 #enddefine
 #define(body):
+    #if(table.search ?? true):
     <form id="search-form" class="m" action="#($req.url.path)" method="get">
         #if(Request(query: "sort") != nil):
         <input type="hidden" id="sort" name="sort" value="#Request(query: "sort")">
@@ -14,9 +17,11 @@
         #endif
         <input type="text" id="search" name="search" placeholder="Search..." value="#Request(query: "search")">
     </form>
-#if(list.items.isEmpty()):
+    #endif
+
+    #if(list.items.isEmpty()):
     #inline("Admin/Empty")
-#else:
+    #else:
     <table class="m">
         <thead>
             <tr>
@@ -30,6 +35,7 @@
     <div id="pagination" class="m t:center">
     #inline("Admin/Pagination")
     </div>
-#endif
+    #endif
 #enddefine
+
 #inline("Admin/Index")

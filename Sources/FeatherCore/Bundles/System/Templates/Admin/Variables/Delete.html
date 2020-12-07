@@ -1,7 +1,11 @@
 #let(delete = [
     "id": formId,
     "token": formToken,
-    "context": model.key,
-    "type": "variable"
+    "context": model.name,
+    "type": "variable",
+    "list": [
+        "title": "Variables",
+        "url": "/admin/system/variables/"
+    ]
 ])
 #inline("Admin/Delete")

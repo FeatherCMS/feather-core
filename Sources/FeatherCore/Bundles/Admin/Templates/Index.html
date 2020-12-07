@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex">
 
-    <title>#evaluate(toolbarCenter ?? "") - #($system["site.title"]) &middot; CMS</title>
+    <title>#evaluate(toolbarCenter ?? "") - #($system.variables["frontend.site.title"]) &middot; CMS</title>
 
     <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
 
@@ -30,7 +30,7 @@
         <label for="menu-button" id="menu-icon" class="selection:off"><span></span></label>
 
         <a id="site-link" href="/">
-            <img src="/images/logo-text.png" alt="Logo of #($system["site.title"])" title="#($system["site.title"])">
+            <img src="/images/logo-text.png" alt="Logo of #($system.variables["frontend.site.title"])" title="#($system.variables["frontend.site.title"])">
         </a>
         
         <nav id="nav">

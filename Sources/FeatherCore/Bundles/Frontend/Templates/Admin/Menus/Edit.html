@@ -1,0 +1,32 @@
+#let(form = [
+    "id": formId,
+    "token": formToken,
+    "key": "menu",
+    "modelId": modelId,
+    "list": [
+        "title": "Menus",
+        "url": "/admin/frontend/menus/"
+    ]
+])
+
+#define(toolbarRightBefore):
+    #if(modelId):
+    <a href="/admin/frontend/menus/#(modelId)/items">#svg("anchor")</a>
+    #endif
+#enddefine
+
+#define(fields):
+    #var(field = nil)
+
+    #(field = ["id": "key", "required": true, "data": fields.key])
+    #inline("Admin/Fields/Text")
+
+    #(field = ["id": "name", "required": true, "data": fields.name])
+    #inline("Admin/Fields/Text")
+
+    #(field = ["id": "notes", "size": "s", "data": fields.notes])
+    #inline("Admin/Fields/Textarea")
+
+#enddefine
+
+#inline("Admin/Form")

@@ -7,11 +7,15 @@
 
 struct UserFrontendController {
 
+    // MARK: - private
+    
     private func render(req: Request, model: UserModel? = nil, form: UserLoginForm = .init()) -> EventLoopFuture<Response> {
         if let model = model {
             form.email.value = model.email
         }
-        return req.leaf.render(template: "User/Frontend/Login", context: ["fields": form.leafData]).encodeResponse(for: req)
+
+        return req.leaf.render(template: "User/Frontend/Login", context: .init(form.leafData.dictionary!))
+            .encodeResponse(for: req)
     }
 
     private func getCustomRedirect(req: Request) -> String {
@@ -20,6 +24,8 @@ struct UserFrontendController {
         }
         return "/"
     }
+    
+    // MARK: - api
     
     func loginView(req: Request) throws -> EventLoopFuture<Response> {
         guard req.auth.has(UserModel.self) else {
