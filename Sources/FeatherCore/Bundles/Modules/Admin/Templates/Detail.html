@@ -14,7 +14,7 @@
 #define(toolbarRight):
     #evaluate(toolbarRightBefore ?? "")
     #if(detail.delete ?? true):
-    <a href="#($req.url.path)delete/">#svg("trash")</a>
+    <a href="#($req.url.path)delete/?cancel=#($req.url.path)">#svg("trash")</a>
     #endif
 #enddefine
     
