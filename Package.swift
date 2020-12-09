@@ -24,7 +24,7 @@ let package = Package(
         /// drivers
         .package(url: "https://github.com/vapor/fluent-sqlite-driver", from: "4.0.0"),
         .package(url: "https://github.com/binarybirds/liquid-local-driver", from: "1.2.0-beta"),
-//    ],
+    ],
     targets: [
         .target(name: "FeatherCore", dependencies: [
             .product(name: "Leaf", package: "leaf"),
