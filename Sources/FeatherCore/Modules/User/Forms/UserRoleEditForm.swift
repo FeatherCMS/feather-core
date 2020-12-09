@@ -8,14 +8,6 @@
 final class UserRoleEditForm: ModelForm {
     typealias Model = UserRoleModel
 
-    struct Input: Decodable {
-        var modelId: UUID?
-        var key: String
-        var name: String
-        var notes: String
-        var permissions: [UUID]
-    }
-
     var modelId: UUID?
     var key = FormField<String>(key: "key").required().length(max: 250)
     var name = FormField<String>(key: "name").required().length(max: 250)
@@ -23,7 +15,7 @@ final class UserRoleEditForm: ModelForm {
     var permissions = ArraySelectionFormField<UUID>(key: "permissions")
     var notification: String?
     
-    var fields: [AbstractFormField] {
+    var fields: [FormFieldRepresentable] {
         [key, name, notes, permissions]
     }
 
@@ -37,16 +29,6 @@ final class UserRoleEditForm: ModelForm {
             .map { [unowned self] in permissions.options = $0 }
     }
     
-    func processInput(req: Request) throws -> EventLoopFuture<Void> {
-        let context = try req.content.decode(Input.self)
-        modelId = context.modelId
-        key.value = context.key
-        name.value = context.name
-        notes.value = context.notes
-        permissions.values = context.permissions
-        return req.eventLoop.future()
-    }
-    
     func validateAfterFields(req: Request) -> EventLoopFuture<Bool> {
         UserRoleModel.query(on: req.db).filter(\.$key == key.value!).first().map { [unowned self] model -> Bool in
             if (modelId == nil && model != nil) || (modelId != nil && model != nil && modelId! != model!.id) {
@@ -58,7 +40,6 @@ final class UserRoleEditForm: ModelForm {
     }
     
     func read(from input: Model)  {
-        modelId = input.id
         key.value = input.key
         name.value = input.name
         notes.value = input.notes
@@ -80,5 +61,4 @@ final class UserRoleEditForm: ModelForm {
             permissions.values.map { UserRolePermissionModel(roleId: model.id!, permissionId: $0) }.create(on: req.db)
         }
     }
-
 }

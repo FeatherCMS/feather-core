@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/vapor/fluent",
         "state": {
           "branch": null,
-          "revision": "e681c93df3201a2d8ceef15e8a9a0634578df233",
-          "version": "4.0.0"
+          "revision": "855cd81cd129675dcb9adadeca2286281dbc0190",
+          "version": "4.1.0"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/binarybirds/liquid-kit.git",
         "state": {
           "branch": null,
-          "revision": "a50084b7892bbd8975e25d0a053fd40a542541a4",
-          "version": "1.2.0-beta.4"
+          "revision": "c32f534f2e401f6ee422abbd0d1b9c0ec4422500",
+          "version": "1.2.0-beta.6"
         }
       },
       {
@@ -222,8 +222,8 @@
         "repositoryURL": "https://github.com/binarybirds/view-kit",
         "state": {
           "branch": null,
-          "revision": "ce23298e506429a5aeff2f186924ef3f495cbe35",
-          "version": "1.3.0-beta.19"
+          "revision": "fc346b5989df507af9339f79aadf563f25993dc1",
+          "version": "1.3.0-beta.27"
         }
       },
       {

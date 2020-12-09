@@ -1,18 +1,28 @@
 <section class="m:bottom #(field.class ?? "large")-uploader uploader">
+
+    #if(field.data.value.key != nil):
+        <img id="preview" src="#(field.data.value.key.resolve())">
+    #else:
+        <div id="placeholder" class="p:l">#svg(field.placeholder ?? "image", class: "s64 block m:h:auto")</div>
+    #endif
+
     <label for="#(field.id)">#(field.label ?? field.id.capitalized())#if(field.required ?? false):<span class="required">*</span>#endif</label>
-    <div id="image-uploader" class="image-uploader">
-        <div id="placeholder" class="p:l #if(field.data.value != ""):hidden#endif">#svg(field.placeholder ?? "image", class: "s64 block m:h:auto")</div>
-        #if(field.data.value != ""):
-            <img id="uploaded-image" src="#(field.data.value.resolve() ?? "")">
-        #endif
-        
-        <a id="choose-button" href="javascript:void(0);" onclick="chooseImage();">Choose</a>
-        #if(!field.required ?? false):
-        <a id="remove-button" href="javascript:void(0);" onclick="removeImage()">Remove</a>
-        #endif
-        <input id="#(field.id)Delete" name="#(field.id)Delete" type="hidden" value="false">
-        <input id="#(field.id)" name="#(field.id)" type="file"#if(field.accept != nil): accept="#(field.accept)"#endif class="hidden"#if(field.required ?? false): aria-required="true"#endif>
-    </div>
+    <input id="#(field.id)" name="#(field.id)" type="file"#if(field.accept != nil): accept="#(field.accept)"#endif #if(field.required ?? false): aria-required="true"#endif>
+
+    #if(!field.required ?? false):
+    <input id="#(field.id)Delete" name="#(field.id)Delete" type="checkbox" value="true" #if(field.data.value.delete == true):checked#endif>
+    <label for="#(field.id)Delete">Remove</label>
+    #endif
+
+    #if(field.data.value.originalKey != nil):
+    <input id="#(field.id)OriginalKey" name="#(field.id)OriginalKey" type="hidden" value="#(field.data.value.originalKey)">
+    #endif
+
+    #if(field.data.value.temporaryFile != nil):
+    <input id="#(field.id)TemporaryKey" name="#(field.id)TemporaryKey" type="hidden" value="#(field.data.value.temporaryFile.key)">
+    <input id="#(field.id)TemporaryName" name="#(field.id)TemporaryName" type="hidden" value="#(field.data.value.temporaryFile.name)">
+    #endif
+
     #if(field.data.error != nil):
     <span class="error">#(field.data.error)</span>
     #endif

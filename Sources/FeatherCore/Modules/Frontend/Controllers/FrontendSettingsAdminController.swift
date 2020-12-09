@@ -31,13 +31,15 @@ struct FrontendSiteAdminController {
 
         let form = FrontendSettingsForm()
         return form.initialize(req: req)
-            .throwingFlatMap { try form.processInput(req: req) }
+            .flatMap { form.process(req: req) }
             .flatMap { form.validate(req: req) }
             .flatMap { [self] isValid -> EventLoopFuture<View> in
                 guard isValid else {
                     return render(req: req, form: form)
                 }
-                return form.save(req: req).flatMap { render(req: req, form: form) }
+                return form.save(req: req).flatMap {
+                    render(req: req, form: form)
+                }
             }
             .encodeResponse(for: req)
     }

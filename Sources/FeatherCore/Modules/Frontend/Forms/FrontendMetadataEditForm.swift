@@ -7,25 +7,6 @@
 
 final class FrontendMetadataEditForm: ModelForm {
     typealias Model = FrontendMetadata
-    
-    struct Input: Decodable {
-        var modelId: UUID?
-        var module: String
-        var model: String
-        var reference: UUID
-        var slug: String
-        var title: String
-        var excerpt: String
-        var canonicalUrl: String
-        var statusId: String
-        var filters: [String]
-        var date: String
-        var feedItem: Bool
-        var css: String
-        var js: String
-        var image: File?
-        var imageDelete: Bool?
-    }
 
     var modelId: UUID?
     var module = FormField<String>(key: "module").required().length(max: 250)
@@ -39,14 +20,14 @@ final class FrontendMetadataEditForm: ModelForm {
     var feedItem = SelectionFormField<Bool>(key: "feedItem")
     var filters = ArraySelectionFormField<String>(key: "filters")
     var date = FormField<String>(key: "date")
-    var image = FormField<FileUploadValue>(key: "image")
     var css = FormField<String>(key: "css")
     var js = FormField<String>(key: "js")
+    var image = FileFormField(key: "image")
     var notification: String?
 
     var dateFormat: String?
     
-    var fields: [AbstractFormField] {
+    var fields: [FormFieldRepresentable] {
         [module, model, reference, slug, title, excerpt, canonicalUrl, statusId, feedItem, filters, date, image, css, js]
     }
 
@@ -64,34 +45,12 @@ final class FrontendMetadataEditForm: ModelForm {
 
         return req.eventLoop.future()
     }
-    
-    func processInput(req: Request) throws -> EventLoopFuture<Void> {
-        let context = try req.content.decode(Input.self)
-        modelId = context.modelId
-        module.value = context.module
-        model.value = context.model
-        reference.value = context.reference
-        slug.value = context.slug
-        statusId.value = context.statusId
-        filters.values = context.filters
-        date.value = context.date
-        title.value = context.title
-        excerpt.value = context.excerpt
-        canonicalUrl.value = context.canonicalUrl
-        feedItem.value = context.feedItem
-        css.value = context.css
-        js.value = context.js
 
-//        image.delete = context.imageDelete ?? false
-//        if let img = context.image, let data = img.data.getData(at: 0, length: img.data.readableBytes), !data.isEmpty {
-//            image.data = data
-//        }
-
-        return req.eventLoop.future()
+    func processAfterFields(req: Request) -> EventLoopFuture<Void> {
+        image.uploadTemporaryFile(req: req)
     }
 
     func read(from input: Model)  {
-        modelId = input.id
         module.value = input.module
         model.value = input.model
         reference.value = input.reference
@@ -103,7 +62,7 @@ final class FrontendMetadataEditForm: ModelForm {
         title.value = input.title
         excerpt.value = input.excerpt
         canonicalUrl.value = input.canonicalUrl
-//        image.value = input.imageKey
+        image.value.originalKey = input.imageKey
         css.value = input.css
         js.value = input.js
     }
@@ -122,5 +81,9 @@ final class FrontendMetadataEditForm: ModelForm {
         output.canonicalUrl = canonicalUrl.value?.emptyToNil
         output.css = css.value?.emptyToNil
         output.js = js.value?.emptyToNil
+    }
+    
+    func willSave(req: Request, model: Model) -> EventLoopFuture<Void> {
+        image.save(to: Model.path, req: req).map { model.imageKey = $0 }
     }
 }

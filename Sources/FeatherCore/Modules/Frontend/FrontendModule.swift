@@ -189,6 +189,11 @@ public final class FrontendModule: ViperModule {
     func systemVariablesInstallHook(args: HookArguments) -> [[String: Any]] {
         [
             [
+                "key": "frontend.site.logo",
+                "name": "Site logo",
+                "note": "Logo of the website",
+            ],
+            [
                 "key": "frontend.site.title",
                 "name": "Site title",
                 "value": "Feather",

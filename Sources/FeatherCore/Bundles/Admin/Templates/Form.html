@@ -36,6 +36,12 @@
 
         #fields()
 
+        #if(notification != nil):
+        <section id="notification">
+            <span>#(notification)</span>
+        </section>
+        #endif
+
         #(field = ["label": "Save"])
         #inline("Admin/Fields/Button")
     </form>

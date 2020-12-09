@@ -8,17 +8,6 @@
 final class FrontendMenuItemEditForm: ModelForm {
     typealias Model = FrontendMenuItemModel
 
-    struct Input: Decodable {
-        var modelId: UUID?
-        var icon: String
-        var label: String
-        var url: String
-        var priority: Int
-        var targetBlank: Bool
-        var permission: String
-        var menuId: UUID
-    }
-
     var modelId: UUID?
     var icon = FormField<String>(key: "icon")
     var label = FormField<String>(key: "label").required().length(max: 250)
@@ -29,7 +18,7 @@ final class FrontendMenuItemEditForm: ModelForm {
     var menuId = FormField<UUID>(key: "menuId")
     var notification: String?
     
-    var fields: [AbstractFormField] {
+    var fields: [FormFieldRepresentable] {
         [icon, label, url, priority, targetBlank, permission, menuId]
     }
 
@@ -42,21 +31,7 @@ final class FrontendMenuItemEditForm: ModelForm {
         return req.eventLoop.future()
     }
 
-    func processInput(req: Request) throws -> EventLoopFuture<Void> {
-        let context = try req.content.decode(Input.self)
-        modelId = context.modelId
-        icon.value = context.icon
-        label.value = context.label
-        url.value = context.url
-        priority.value = context.priority
-        targetBlank.value = context.targetBlank
-        permission.value = context.permission
-        menuId.value = context.menuId
-        return req.eventLoop.future()
-    }
-
     func read(from input: Model)  {
-        modelId = input.id
         icon.value = input.icon
         label.value = input.label
         url.value = input.url

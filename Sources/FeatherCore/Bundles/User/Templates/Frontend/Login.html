@@ -18,12 +18,15 @@
         #(field = ["id": "password", "type": "password", "required": true, "data": fields.password])
         #inline("Admin/Fields/Text")
         
+        #if(notification != nil):
+        <section id="notification" class="m:v t:center error">
+            <span>#(notification)</span>
+        </section>
+        #endif
+
         #(field = ["label": "Sign in"])
         #inline("Admin/Fields/Button")
-
-        #if(notification != nil):
-        <p id="notification" class="center"><span class="error">#(notification)</span></p>
-        #endif
+        
     </form>
 </div>
 #enddefine
