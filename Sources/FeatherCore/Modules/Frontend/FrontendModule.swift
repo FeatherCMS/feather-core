@@ -40,6 +40,8 @@ public final class FrontendModule: ViperModule {
         app.hooks.register("prepare-request-cache", use: prepareRequestCacheHook)
         
         app.hooks.register("routes", use: (router as! FrontendRouter).routesHook)
+        
+        app.hooks.register("frontend-page", use: frontendPageHook)
     }
 
     public func leafDataGenerator(for req: Request) -> [String: LeafDataGenerator]? {
@@ -131,7 +133,6 @@ public final class FrontendModule: ViperModule {
              ["frontend.menus": items as Any?]
         }
     }
-    
     
     // MARK: - hooks
 
@@ -295,5 +296,34 @@ public final class FrontendModule: ViperModule {
             ],
         ]
     }
+    
+    func frontendPageHook(args: HookArguments) -> EventLoopFuture<Response?> {
+        let req = args["req"] as! Request
+
+        return FrontendMetadata.query(on: req.db)
+            .filter(FrontendMetadata.self, \.$module == FrontendModule.name)
+            .filter(FrontendMetadata.self, \.$model == FrontendPageModel.name)
+            .filter(FrontendMetadata.self, \.$slug == req.url.path.trimmingSlashes())
+            .filter(FrontendMetadata.self, \.$status != .archived)
+            .first()
+            .flatMap { metadata -> EventLoopFuture<Response?> in
+                guard let metadata = metadata else {
+                    return req.eventLoop.future(nil)
+                }
+                return FrontendPageModel
+                    .find(metadata.reference, on: req.db)
+                    .flatMap { page in
+                        guard let page = page else {
+                            return req.eventLoop.future(nil)
+                        }
+                        return req.leaf.render(template: "Frontend/Page", context: [
+                            "page": page.leafData,
+                            "metadata": metadata.leafData,
+                        ])
+                        .encodeOptionalResponse(for: req)
+                    }
+            }
+    }
+
 }
 
