@@ -42,6 +42,7 @@ public final class FrontendModule: ViperModule {
         app.hooks.register("routes", use: (router as! FrontendRouter).routesHook)
         
         app.hooks.register("frontend-page", use: frontendPageHook)
+        app.hooks.register("frontend-home-page", use: frontendHomePageHook)
     }
 
     public func leafDataGenerator(for req: Request) -> [String: LeafDataGenerator]? {
@@ -245,7 +246,7 @@ public final class FrontendModule: ViperModule {
             [
                 "key": "frontend.site.copy",
                 "name": "Site copy",
-                "value": "This site is powered by <a href=\"https://github.com/binarybirds/feather\" target=\"_blank\">Feather</a>",
+                "value": "This site is powered by <a href=\"https://feathercms.com/\" target=\"_blank\">Feather CMS</a>",
                 "note": "Copyright text for the website",
             ],
             [
@@ -261,14 +262,32 @@ public final class FrontendModule: ViperModule {
             [
                 "key": "frontend.home.page.title",
                 "name": "Home page title",
-                "value": "Home page title",
+                "value": "Welcome",
                 "note": "Title of the home page",
             ],
             [
                 "key": "frontend.home.page.description",
                 "name": "Home page description",
-                "value": "Home page description",
+                "value": "This is your brand new Feather CMS powered website",
                 "note": "Description of the home page",
+            ],
+            [
+                "key": "frontend.home.page.icon",
+                "name": "Home page icon",
+                "value": "🪶",
+                "note": "Icon of the home page",
+            ],
+            [
+                "key": "frontend.home.page.link.label",
+                "name": "Home page link label",
+                "value": "Start customizing →",
+                "note": "Link label of the home page",
+            ],
+            [
+                "key": "frontend.home.page.link.url",
+                "name": "Home page link url",
+                "value": "/admin/",
+                "note": "Link URL of the home page",
             ],
             [
                 "key": "frontend.page.not.found.icon",
@@ -316,13 +335,35 @@ public final class FrontendModule: ViperModule {
                         guard let page = page else {
                             return req.eventLoop.future(nil)
                         }
+                        let content = page.content.trimmingCharacters(in: .whitespacesAndNewlines)
+                        if content.hasPrefix("["), content.hasSuffix("]") {
+                            let name = String(content.dropFirst().dropLast())
+                            let args = ["page-metadata": metadata]
+                            if let future: EventLoopFuture<Response?> = req.invoke(name, args: args) {
+                                return future
+                            }
+                        }
                         return req.leaf.render(template: "Frontend/Page", context: [
-                            "page": page.leafData,
+                            "page": .dictionary([
+                                "title": page.title,
+                                "content": metadata.filter(content, req: req),
+                            ]),
                             "metadata": metadata.leafData,
                         ])
                         .encodeOptionalResponse(for: req)
                     }
             }
+    }
+    
+    /// renders the [frontend-home-page] content
+    func frontendHomePageHook(args: HookArguments) -> EventLoopFuture<Response?> {
+        let req = args["req"] as! Request
+        let metadata = args["page-metadata"] as! FrontendMetadata
+
+        return req.leaf.render(template: "Frontend/Home", context: [
+            "metadata": metadata.leafData,
+        ])
+        .encodeOptionalResponse(for: req)
     }
 
 }

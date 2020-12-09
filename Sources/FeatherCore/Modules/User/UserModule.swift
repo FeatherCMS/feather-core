@@ -113,7 +113,7 @@ final class UserModule: ViperModule {
     }
     
     func adminAuthMiddlewaresHook(args: HookArguments) -> [Middleware] {
-        [UserModel.redirectMiddleware(path: "/login"), UserAccessMiddleware(name: "admin")]
+        [UserModel.redirectMiddleware(path: "/login/?redirect=/admin/"), UserAccessMiddleware(name: "admin")]
     }
     
     func apiAuthMiddlewaresHook(args: HookArguments) -> [Middleware] {

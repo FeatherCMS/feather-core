@@ -1,0 +1,15 @@
+#let(head = [
+    "title": $system.variables["frontend.home.page.title"],
+    "description": $system.variables["frontend.home.page.description"]
+])
+#define(body):
+<div class="content t:center">
+    <div class="m:xl">
+        <span class="h1">#($system.variables["frontend.home.page.icon"])</span>
+        <h1 class="m:t:zero">#(head.title)</h1>
+        <p>#(head.description)</p>
+        <a href="#($system.variables["frontend.home.page.link.url"])">#($system.variables["frontend.home.page.link.label"])</a>
+    </div>
+</div>
+#enddefine
+#inline("Frontend/Index")

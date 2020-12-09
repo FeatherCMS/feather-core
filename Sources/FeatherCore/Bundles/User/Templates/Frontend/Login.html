@@ -10,8 +10,10 @@
         <p>#(head.description)</p>
     </header>
 
-    <form action="#($req.url.path)" method="post" class="w:xs m:h:auto">
+    <form method="post" class="w:xs m:h:auto">
+
         #var(field = nil)
+
         #(field = ["id": "email", "type": "email", "required": true, "data": fields.email, "placeholder": "feather@binarybirds.com"])
         #inline("Admin/Fields/Text")
         
