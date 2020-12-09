@@ -21,6 +21,7 @@ public final class FrontendModule: ViperModule {
     public static var bundleUrl: URL? {
         Bundle.module.resourceURL?
             .appendingPathComponent("Bundles")
+            .appendingPathComponent("Modules")
             .appendingPathComponent(name.capitalized)
     }
 
@@ -78,6 +79,10 @@ public final class FrontendModule: ViperModule {
         /// we add a home menu item as well with a relatively high priority
         let homeMenuItem = FrontendMenuItemModel(label: "Home", url: "/", priority: 1000, menuId: mainId)
         mainMenuItemModels.insert(homeMenuItem, at: 0)
+
+        /// we add an about menu item
+        let aboutMenuItem = FrontendMenuItemModel(label: "About", url: "/about/", priority: 0, menuId: mainId)
+        mainMenuItemModels.insert(aboutMenuItem, at: 0)
 
         let footerId = UUID()
         let footerMenu = FrontendMenuModel(id: footerId, key: "footer", name: "Footer menu")
