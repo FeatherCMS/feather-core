@@ -11,7 +11,7 @@ final class UserRolePermissionModel: ViperModel {
 
     typealias Module = UserModule
     
-    static let name = "role_permission"
+    static let name = "role_permissions"
     
     struct FieldKeys {
         static var roleId: FieldKey { "role_id" }

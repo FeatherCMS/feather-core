@@ -9,7 +9,7 @@
 final class UserUserRoleModel: ViperModel {
     typealias Module = UserModule
     
-    static let name = "user_role"
+    static let name = "user_roles"
     
     struct FieldKeys {
         static var userId: FieldKey { "user_id" }
