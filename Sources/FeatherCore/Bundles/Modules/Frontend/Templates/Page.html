@@ -1,10 +1,10 @@
 #let(head = [
-    "title": metadata.title,
+    "title": title,
     "description": metadata.excerpt,
     "css": metadata.css,
     "js": metadata.js
 ])
 #define(body):
-    #(page.content)
+    #(content)
 #enddefine
 #inline("Frontend/Index")

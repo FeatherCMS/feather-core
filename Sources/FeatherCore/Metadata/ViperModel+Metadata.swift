@@ -46,25 +46,13 @@ public extension ViperModel where Self: MetadataRepresentable {
     }
 
     /// joins the metadata object on the ViperModel query, if a path is present it'll use it as a filter to return only one instance that matches the slug
-    static func queryJoinMetadata(on db: Database) -> QueryBuilder<Self> {
-        Self.query(on: db)
-            .join(FrontendMetadataModel.self, on: \FrontendMetadataModel.$reference == \Self._$id)
-            .filter(FrontendMetadataModel.self, \.$module == Module.name)
-            .filter(FrontendMetadataModel.self, \.$model == name)
-    }
-    
-    /// find an object with an associated the metadata object for a given path
-    static func queryJoinMetadataFilterBy(path: String, on db: Database) -> QueryBuilder<Self> {
-        Self.queryJoinMetadata(on: db)
-            .filter(FrontendMetadataModel.self, \.$slug == path.trimmingSlashes())
+    static func queryPublicMetadata(on db: Database) -> QueryBuilder<Self> {
+        query(on: db).joinPublicMetadata()
     }
 
-    /// find an object with associated public (status is published & date is in the past) metadatas ordered by date descending
-    static func queryJoinMetadataFilterPublic(on db: Database) -> QueryBuilder<Self> {
-        Self.queryJoinMetadata(on: db)
-            .filter(FrontendMetadataModel.self, \.$status == .published)
-            .filter(FrontendMetadataModel.self, \.$date <= Date())
-            .sort(FrontendMetadataModel.self, \.$date, .descending)
+    /// find an object with an associated the metadata object for a given path
+    static func queryPublicMetadata(path: String, on db: Database) -> QueryBuilder<Self> {
+        queryPublicMetadata(on: db).filterMetadata(path: path)
     }
     
     // MARK: - update associated metadata
