@@ -5,8 +5,8 @@
 //  Created by Tibor Bodecs on 2020. 06. 09..
 //
 
-final class FrontendMetadataEditForm: ModelForm {
-    typealias Model = FrontendMetadata
+final class FrontendMetadataModelEditForm: ModelForm {
+    typealias Model = FrontendMetadataModel
 
     var modelId: UUID?
     var module = FormField<String>(key: "module").required().length(max: 250)
@@ -35,8 +35,8 @@ final class FrontendMetadataEditForm: ModelForm {
 
     func initialize(req: Request) -> EventLoopFuture<Void> {
         dateFormat = Application.Config.dateFormatter().dateFormat
-        statusId.options = Model.Status.allCases.map(\.formFieldOption)
-        statusId.value = Model.Status.draft.rawValue
+        statusId.options = Metadata.Status.allCases.map(\.formFieldOption)
+        statusId.value = FrontendMetadataObject.Status.draft.rawValue
         date.value = Application.Config.dateFormatter().string(from: Date())
         feedItem.options = FormFieldOption.trueFalse()
 
@@ -72,7 +72,7 @@ final class FrontendMetadataEditForm: ModelForm {
         output.model = model.value!
         output.reference = reference.value!
         output.slug = slug.value!
-        output.status = Model.Status(rawValue: statusId.value!)!
+        output.status = Metadata.Status(rawValue: statusId.value!)!
         output.feedItem = feedItem.value!
         output.filters = filters.values
         output.date = Application.Config.dateFormatter().date(from: date.value!)!

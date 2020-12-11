@@ -13,7 +13,7 @@ final class FrontendPageEditForm: ModelForm {
     var title = FormField<String>(key: "title").required().length(max: 250)
     var content = FormField<String>(key: "content").required()
     var notification: String?
-    var metadata: FrontendMetadata?
+    var metadata: Metadata?
 
     var fields: [FormFieldRepresentable] {
         [title, content]
@@ -32,7 +32,7 @@ final class FrontendPageEditForm: ModelForm {
     
     func initialize(req: Request) -> EventLoopFuture<Void> {
         if let id = modelId {
-            return Model.findMetadata(id: id, on: req.db).map { [unowned self] in metadata = $0 }
+            return Model.findMetadataBy(id: id, on: req.db) .map { [unowned self] in metadata = $0 }
         }
         return req.eventLoop.future()
     }

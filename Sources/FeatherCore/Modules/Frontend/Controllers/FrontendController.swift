@@ -16,10 +16,10 @@ struct FrontendController {
     /// a helper method to render sitemap and rss feed
     private func renderContentList(_ req: Request,
                                    using template: String,
-                                   filter: ((QueryBuilder<FrontendMetadata>) -> QueryBuilder<FrontendMetadata>)? = nil)
+                                   filter: ((QueryBuilder<FrontendMetadataModel>) -> QueryBuilder<FrontendMetadataModel>)? = nil)
         -> EventLoopFuture<Response>
     {
-        var qb = FrontendMetadata.query(on: req.db)
+        var qb = FrontendMetadataModel.query(on: req.db)
         .filter(\.$status == .published)
         .filter(\.$date <= Date())
         if let filter = filter {

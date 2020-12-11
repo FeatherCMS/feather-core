@@ -5,7 +5,14 @@
 //  Created by Tibor Bodecs on 2020. 08. 29..
 //
 
-extension FrontendMetadata: LeafDataRepresentable {
+extension Metadata.Status: FormFieldOptionRepresentable {
+
+    public var formFieldOption: FormFieldOption {
+        .init(key: rawValue, label: localized)
+    }
+}
+
+extension FrontendMetadataModel: LeafDataRepresentable {
 
     /// returns the LeafData types for a metadata
     public var leafData: LeafData {

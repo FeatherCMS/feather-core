@@ -14,3 +14,4 @@
 @_exported import Liquid
 @_exported import ViperKit
 @_exported import LeafFoundation
+@_exported import FeatherCoreApi

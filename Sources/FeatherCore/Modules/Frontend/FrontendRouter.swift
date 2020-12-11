@@ -8,7 +8,7 @@
 struct FrontendRouter: ViperRouter {
     
     let frontend = FrontendController()
-    var metadataAdmin = FrontendMetadataAdminController()
+    var metadataAdmin = FrontendMetadataModelAdminController()
     let menuAdmin = FrontendMenuAdminController()
     let itemAdmin = FrontendMenuItemAdminController()
     let pageAdmin = FrontendPageAdminController()
@@ -41,7 +41,7 @@ struct FrontendRouter: ViperRouter {
         let routes = args["routes"] as! RoutesBuilder
 
         let modulePath = routes.grouped(FrontendModule.pathComponent)
-        metadataAdmin.setupRoutes(on: modulePath, as: FrontendMetadata.pathComponent)
+        metadataAdmin.setupRoutes(on: modulePath, as: FrontendMetadataModel.pathComponent)
 
         modulePath.get("settings", use: siteAdmin.settingsView)
         modulePath.post("settings", use: siteAdmin.updateSettings)

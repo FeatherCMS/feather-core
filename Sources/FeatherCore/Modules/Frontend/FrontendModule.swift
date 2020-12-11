@@ -5,28 +5,28 @@
 //  Created by Tibor Bodecs on 2020. 01. 26..
 //
 
-public final class FrontendModule: ViperModule {
+final class FrontendModule: ViperModule {
 
-    public static let name = "frontend"
-    public var priority: Int { 2000 }
+    static let name = "frontend"
+    var priority: Int { 2000 }
     
-    public var router: ViperRouter? = FrontendRouter()
+    var router: ViperRouter? = FrontendRouter()
     
-    public var migrations: [Migration] {
+    var migrations: [Migration] {
         [
             FrontendMigration_v1_0_0()
         ]
     }
 
-    public static var bundleUrl: URL? {
+    static var bundleUrl: URL? {
         Bundle.module.resourceURL?
             .appendingPathComponent("Bundles")
             .appendingPathComponent("Modules")
             .appendingPathComponent(name.capitalized)
     }
 
-    public func boot(_ app: Application) throws {
-        app.databases.middleware.use(FrontendMetadataMiddleware<FrontendPageModel>())
+    func boot(_ app: Application) throws {
+        app.databases.middleware.use(MetadataModelMiddleware<FrontendPageModel>())
 
         /// install
         app.hooks.register("model-install", use: modelInstallHook)
@@ -46,7 +46,7 @@ public final class FrontendModule: ViperModule {
         app.hooks.register("frontend-home-page", use: frontendHomePageHook)
     }
 
-    public func leafDataGenerator(for req: Request) -> [String: LeafDataGenerator]? {
+    func leafDataGenerator(for req: Request) -> [String: LeafDataGenerator]? {
         let menus = req.cache["frontend.menus"] as? [String: LeafDataRepresentable] ?? [:]
         return [
             "menus": .lazy(LeafData.dictionary(menus))
@@ -114,7 +114,7 @@ public final class FrontendModule: ViperModule {
         /// we persist the pages to the database
         return req.eventLoop.flatten([
             /// save home page and set it as a published root page by altering the metadata
-            homePage.create(on: req.db).flatMap { homePage.updateMetadata(on: req.db, { $0.slug = ""; $0.status = .published }) },
+            homePage.create(on: req.db).flatMap { homePage.publishAsHomePage(on: req.db) },
             /// save pages, then we publish the associated metadatas
             pageModels.create(on: req.db).flatMap { _ in
                 req.eventLoop.flatten(pageModels.map { $0.publishMetadata(on: req.db) })
@@ -324,46 +324,32 @@ public final class FrontendModule: ViperModule {
     func frontendPageHook(args: HookArguments) -> EventLoopFuture<Response?> {
         let req = args["req"] as! Request
 
-        return FrontendMetadata.query(on: req.db)
-            .filter(FrontendMetadata.self, \.$module == FrontendModule.name)
-            .filter(FrontendMetadata.self, \.$model == FrontendPageModel.name)
-            .filter(FrontendMetadata.self, \.$slug == req.url.path.trimmingSlashes())
-            .filter(FrontendMetadata.self, \.$status != .archived)
+        return FrontendPageModel.queryJoinMetadataFilterBy(path: req.url.path, on: req.db)
             .first()
-            .flatMap { metadata -> EventLoopFuture<Response?> in
-                guard let metadata = metadata else {
+            .flatMap { page -> EventLoopFuture<Response?> in
+                guard let page = page else {
                     return req.eventLoop.future(nil)
                 }
-                return FrontendPageModel
-                    .find(metadata.reference, on: req.db)
-                    .flatMap { page in
-                        guard let page = page else {
-                            return req.eventLoop.future(nil)
-                        }
-                        let content = page.content.trimmingCharacters(in: .whitespacesAndNewlines)
-                        if content.hasPrefix("["), content.hasSuffix("]") {
-                            let name = String(content.dropFirst().dropLast())
-                            let args = ["page-metadata": metadata]
-                            if let future: EventLoopFuture<Response?> = req.invoke(name, args: args) {
-                                return future
-                            }
-                        }
-                        return req.leaf.render(template: "Frontend/Page", context: [
-                            "page": .dictionary([
-                                "title": page.title,
-                                "content": metadata.filter(content, req: req),
-                            ]),
-                            "metadata": metadata.leafData,
-                        ])
-                        .encodeOptionalResponse(for: req)
+                /// if the content of a page has a page tag, then we respond with the corresponding page hook function
+                let content = page.content.trimmingCharacters(in: .whitespacesAndNewlines)
+                if content.hasPrefix("["), content.hasSuffix("-page]") {
+                    let name = String(content.dropFirst().dropLast())
+                    let args: HookArguments = ["page-metadata": page.joinedMetadata as Any]
+                    if let future: EventLoopFuture<Response?> = req.invoke(name, args: args) {
+                        return future
                     }
+                }
+                /// render the page with the filtered content
+                var ctx = page.leafDataWithJoinedMetadata.dictionary!
+                ctx["content"] = .string(page.filter(content, req: req))
+                return req.leaf.render(template: "Frontend/Page", context: .init(ctx)).encodeOptionalResponse(for: req)
             }
     }
     
     /// renders the [frontend-home-page] content
     func frontendHomePageHook(args: HookArguments) -> EventLoopFuture<Response?> {
         let req = args["req"] as! Request
-        let metadata = args["page-metadata"] as! FrontendMetadata
+        let metadata = args["page-metadata"] as! Metadata
 
         return req.leaf.render(template: "Frontend/Home", context: [
             "metadata": metadata.leafData,

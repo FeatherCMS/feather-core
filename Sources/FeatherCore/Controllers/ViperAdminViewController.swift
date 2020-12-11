@@ -47,15 +47,3 @@ public extension ViperAdminViewController where  Model.IDValue == UUID  {
     func accessUpdate(req: Request) -> EventLoopFuture<Bool> { viperAccess("update", req: req) }
     func accessDelete(req: Request) -> EventLoopFuture<Bool> { viperAccess("delete", req: req) }
 }
-
-public extension ViperAdminViewController {
-
-    /// tries to find a metadata object reference for the given UUID
-    func findMetadata(on db: Database, uuid: UUID) -> EventLoopFuture<FrontendMetadata?> {
-        FrontendMetadata.query(on: db)
-            .filter(\.$module == Module.name)
-            .filter(\.$model == Model.name)
-            .filter(\.$reference == uuid)
-            .first()
-    }
-}

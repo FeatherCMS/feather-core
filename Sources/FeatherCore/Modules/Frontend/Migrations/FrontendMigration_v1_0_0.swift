@@ -9,28 +9,28 @@ struct FrontendMigration_v1_0_0: Migration {
         
     func prepare(on db: Database) -> EventLoopFuture<Void> {
         db.eventLoop.flatten([
-            db.schema(FrontendMetadata.schema)
+            db.schema(FrontendMetadataModel.schema)
                 .id()
-                .field(FrontendMetadata.FieldKeys.module, .string, .required)
-                .field(FrontendMetadata.FieldKeys.model, .string, .required)
-                .field(FrontendMetadata.FieldKeys.reference, .uuid, .required)
+                .field(FrontendMetadataModel.FieldKeys.module, .string, .required)
+                .field(FrontendMetadataModel.FieldKeys.model, .string, .required)
+                .field(FrontendMetadataModel.FieldKeys.reference, .uuid, .required)
                 
-                .field(FrontendMetadata.FieldKeys.title, .string)
-                .field(FrontendMetadata.FieldKeys.excerpt, .data)
-                .field(FrontendMetadata.FieldKeys.imageKey, .string)
-                .field(FrontendMetadata.FieldKeys.date, .date, .required)
+                .field(FrontendMetadataModel.FieldKeys.title, .string)
+                .field(FrontendMetadataModel.FieldKeys.excerpt, .data)
+                .field(FrontendMetadataModel.FieldKeys.imageKey, .string)
+                .field(FrontendMetadataModel.FieldKeys.date, .date, .required)
                 
-                .field(FrontendMetadata.FieldKeys.slug, .string, .required)
-                .field(FrontendMetadata.FieldKeys.status, .string, .required)
-                .field(FrontendMetadata.FieldKeys.feedItem, .bool, .required)
-                .field(FrontendMetadata.FieldKeys.canonicalUrl, .string)
+                .field(FrontendMetadataModel.FieldKeys.slug, .string, .required)
+                .field(FrontendMetadataModel.FieldKeys.status, .string, .required)
+                .field(FrontendMetadataModel.FieldKeys.feedItem, .bool, .required)
+                .field(FrontendMetadataModel.FieldKeys.canonicalUrl, .string)
                 
-                .field(FrontendMetadata.FieldKeys.filters, .array(of: .string), .required)
-                .field(FrontendMetadata.FieldKeys.css, .data)
-                .field(FrontendMetadata.FieldKeys.js, .data)
+                .field(FrontendMetadataModel.FieldKeys.filters, .array(of: .string), .required)
+                .field(FrontendMetadataModel.FieldKeys.css, .data)
+                .field(FrontendMetadataModel.FieldKeys.js, .data)
 
-                .unique(on: FrontendMetadata.FieldKeys.slug)
-                .unique(on: FrontendMetadata.FieldKeys.module, FrontendMetadata.FieldKeys.model, FrontendMetadata.FieldKeys.reference)
+                .unique(on: FrontendMetadataModel.FieldKeys.slug)
+                .unique(on: FrontendMetadataModel.FieldKeys.module, FrontendMetadataModel.FieldKeys.model, FrontendMetadataModel.FieldKeys.reference)
                 .create(),
             db.schema(FrontendPageModel.schema)
                 .id()
@@ -63,7 +63,7 @@ struct FrontendMigration_v1_0_0: Migration {
             db.schema(FrontendMenuItemModel.schema).delete(),
             db.schema(FrontendMenuModel.schema).delete(),
             db.schema(FrontendPageModel.schema).delete(),
-            db.schema(FrontendMetadata.schema).delete(),
+            db.schema(FrontendMetadataModel.schema).delete(),
         ])
         
     }

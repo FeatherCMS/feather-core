@@ -25,7 +25,10 @@ let package = Package(
         .package(url: "https://github.com/binarybirds/liquid-local-driver", from: "1.2.0-beta"),
     ],
     targets: [
+        .target(name: "FeatherCoreApi"),
         .target(name: "FeatherCore", dependencies: [
+            .target(name: "FeatherCoreApi"),
+
             .product(name: "Leaf", package: "leaf"),
             .product(name: "LeafKit", package: "leaf-kit"),
             .product(name: "Fluent", package: "fluent"),
@@ -35,7 +38,6 @@ let package = Package(
             .product(name: "Liquid", package: "liquid"),
             .product(name: "ViperKit", package: "viper-kit"),
             .product(name: "LeafFoundation", package: "leaf-foundation"),
-
             .product(name: "Vapor", package: "vapor"),
         ], resources: [
             .copy("Bundles"),

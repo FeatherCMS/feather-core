@@ -5,16 +5,13 @@
 //  Created by Tibor Bodecs on 2020. 08. 29..
 //
 
-public protocol FrontendMetadataChangeDelegate: ViperModel where Self.IDValue == UUID {
-    /// you can provide convenience a getter for using slug values
-    var slug: String { get }
-    
-    /// if a model data has been changed this method will be called so you can alter the metadata to reflect the new changes
-    func willUpdate(_: FrontendMetadata)
+public protocol MetadataRepresentable: ViperModel where Self.IDValue == UUID {
+
+    var metadata: Metadata { get }
 }
 
 /// monitors model changes and calls the MetadataChangeDelegate if the metadata needs to be updated
-public struct FrontendMetadataMiddleware<T: FrontendMetadataChangeDelegate>: ModelMiddleware {
+public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware {
     
     public init() {}
     
@@ -22,12 +19,12 @@ public struct FrontendMetadataMiddleware<T: FrontendMetadataChangeDelegate>: Mod
     public func create(model: T, on db: Database, next: AnyModelResponder) -> EventLoopFuture<Void> {
         next.create(model, on: db)
             .flatMap {
-                let content = FrontendMetadata(id: UUID(),
+                let content = FrontendMetadataModel(id: UUID(),
                                                module: Model.Module.name,
                                                model: Model.name,
                                                reference: model.id!,
-                                               slug: model.slug)
-                model.willUpdate(content)
+                                               slug: model.metadata.slug)
+                content.use(model.metadata, updateSlug: true)
                 return content.create(on: db)
             }
     }
@@ -36,7 +33,7 @@ public struct FrontendMetadataMiddleware<T: FrontendMetadataChangeDelegate>: Mod
     public func update(model: T, on db: Database, next: AnyModelResponder) -> EventLoopFuture<Void> {
         next.update(model, on: db)
             .flatMap {
-                FrontendMetadata.query(on: db)
+                FrontendMetadataModel.query(on: db)
                     .filter(\.$reference == model.id!)
                     .filter(\.$module == Model.Module.name)
                     .filter(\.$model == Model.name)
@@ -46,7 +43,7 @@ public struct FrontendMetadataMiddleware<T: FrontendMetadataChangeDelegate>: Mod
                 guard let content = content else {
                     return db.eventLoop.future()
                 }
-                model.willUpdate(content)
+                content.use(model.metadata, updateSlug: false)
                 return content.update(on: db)
             }
     }
@@ -55,7 +52,7 @@ public struct FrontendMetadataMiddleware<T: FrontendMetadataChangeDelegate>: Mod
     public func delete(model: T, force: Bool, on db: Database, next: AnyModelResponder) -> EventLoopFuture<Void> {
         next.delete(model, force: force, on: db)
             .flatMap {
-                FrontendMetadata.query(on: db)
+                FrontendMetadataModel.query(on: db)
                     .filter(\.$reference == model.id!)
                     .filter(\.$module == Model.Module.name)
                     .filter(\.$model == Model.name)
