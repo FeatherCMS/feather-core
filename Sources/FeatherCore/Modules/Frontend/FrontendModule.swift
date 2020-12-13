@@ -108,7 +108,7 @@ final class FrontendModule: ViperModule {
         let homePage = FrontendPageModel(title: "Home", content: "[frontend-home-page]")
 
         /// create a sample about page
-        let aboutPage = FrontendPageModel(title: "About", content: FrontendModule.sample(asset: "about.html"))
+        let aboutPage = FrontendPageModel(title: "About", content: FrontendModule.sample(asset: "About.html"))
         pageModels.append(aboutPage)
 
         /// we persist the pages to the database
