@@ -40,7 +40,7 @@ public struct Feather {
     ///
     public func start() throws {
         /// copy bundled files & resources if needed
-        if app.environment != .testing, let resources = Bundle.module.resourceURL {
+        if let resources = Bundle.module.resourceURL {
             let core = resources.appendingPathComponent("Bundles").appendingPathComponent("Core")
             let base = URL(fileURLWithPath: Application.Paths.base)
 
