@@ -31,6 +31,14 @@
         </fieldset>
 
         <fieldset>
+            <legend>Content</legend>
+        
+            #(field = ["id": "filters", "data": fields.filters])
+            #inline("Admin/Fields/Checkbox")
+        
+        </fieldset>
+
+        <fieldset>
             <legend>Localization</legend>
             
             #(field = ["id": "locale", "label": "Locale", "required": true, "data": fields.locale])

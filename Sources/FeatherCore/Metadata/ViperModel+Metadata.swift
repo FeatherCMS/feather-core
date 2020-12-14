@@ -1,5 +1,5 @@
 //
-//  ViperModel+LeafDataWithMetadata.swift
+//  ViperModel+Metadata.swift
 //  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 11. 14..
@@ -15,8 +15,28 @@ public extension ViperModel where Self: MetadataRepresentable {
         guard let metadata = joinedMetadataModel else {
             return content
         }
+        /// if the user explicitly disabled filters we can return the content
+        if metadata.filters.contains("[disable-all-filters]") {
+            return content
+        }
         let result: [[ContentFilter]] = req.invokeAll("content-filters")
-        return result.flatMap { $0 }.filter { metadata.filters.contains($0.key) }.reduce(content) { $1.filter($0) }
+
+        /// we use the default filters if there was no selected filter for the metadata
+        var filters: [String] = []
+        if
+            metadata.filters.isEmpty,
+            let variables = req.cache["system.variables"] as? [String:Any],
+            let defaultFilters = variables["frontend.site.filters"] as? String
+        {
+            filters = defaultFilters.split(separator: ",").map { String($0) }
+        }
+        else {
+            filters = metadata.filters
+        }
+        return result
+            .flatMap { $0 }
+            .filter { filters.contains($0.key) }
+            .reduce(content) { $1.filter($0) }
     }
 
 

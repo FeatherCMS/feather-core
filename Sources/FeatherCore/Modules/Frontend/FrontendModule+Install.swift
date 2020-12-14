@@ -129,6 +129,11 @@ extension FrontendModule {
                 "note": "Custom font size for the site",
             ],
             [
+                "key": "frontend.site.filters",
+                "name": "Default content filters",
+                "note": "Coma separated list of default content filters",
+            ],
+            [
                 "key": "frontend.site.css",
                 "name": "Site CSS",
                 "note": "Global CSS injection for the site",

@@ -57,7 +57,12 @@
 <fieldset class="p m:bottom:l br:xs">
     <legend class="p:horizontal:s">Content</legend>
     #(field = ["id": "filters", "data": fields.filters])
-    #inline("Admin/Fields/Multiselection")
+    #inline("Admin/Fields/Checkbox")
+
+</fieldset>
+
+<fieldset class="p m:bottom:l br:xs">
+    <legend class="p:horizontal:s">Design</legend>
 
     #(field = ["id": "css", "label": "CSS", "size": "s", "data": fields.css])
     #inline("Admin/Fields/Textarea")
@@ -65,6 +70,7 @@
     #(field = ["id": "js", "label": "JavaScript", "size": "s", "data": fields.js])
     #inline("Admin/Fields/Textarea")
 </fieldset>
+
 
 <fieldset class="p m:bottom:l br:xs" style="display: none;">
     <legend class="p:horizontal:s">Reference</legend>

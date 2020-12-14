@@ -9,6 +9,7 @@ import FeatherCore
 import FluentSQLiteDriver
 import LiquidLocalDriver
 
+
 var env = try Environment.detect()
 try LoggingSystem.bootstrap(from: &env)
 let feather = try Feather(env: env)

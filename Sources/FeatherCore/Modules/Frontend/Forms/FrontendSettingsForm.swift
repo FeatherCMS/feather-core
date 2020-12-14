@@ -17,6 +17,7 @@ final class FrontendSettingsForm: Form {
     var fontSize = FormField<String>(key: "fontSize")
     var locale = SelectionFormField<String>(key: "locale")
     var timezone = SelectionFormField<String>(key: "timezone")
+    var filters = ArraySelectionFormField<String>(key: "filters")
     var css = FormField<String>(key: "css")
     var js = FormField<String>(key: "js")
     var footer = FormField<String>(key: "footer")
@@ -27,7 +28,7 @@ final class FrontendSettingsForm: Form {
     var notification: String?
 
     var fields: [FormFieldRepresentable] {
-        [title, excerpt, primaryColor, secondaryColor, fontFamily, fontSize, locale, timezone, css, js, footer, footerBottom, copy, copyYearStart, image]
+        [title, excerpt, primaryColor, secondaryColor, fontFamily, fontSize, locale, timezone, filters, css, js, footer, footerBottom, copy, copyYearStart, image]
     }
 
     init() {}
@@ -56,10 +57,16 @@ final class FrontendSettingsForm: Form {
 
         timezone.value = Application.Config.timezone.identifier
         timezone.options = FormFieldOption.gmtTimezones
+        
+        let contentFilters: [[ContentFilter]] = req.invokeAll("content-filters")
+        filters.options = contentFilters.flatMap { $0 }.map(\.formFieldOption)
 
         return req.eventLoop.flatten([
-                SystemVariableModel.find(key: settingsKey(for: "logo"), db: req.db)
-                .map { [unowned self] in image.value.originalKey = $0?.value?.emptyToNil },
+            SystemVariableModel.find(key: settingsKey(for: "logo"), db: req.db)
+            .map { [unowned self] in image.value.originalKey = $0?.value?.emptyToNil },
+        
+            SystemVariableModel.find(key: settingsKey(for: "filters"), db: req.db)
+                .map { [unowned self] in filters.values = $0?.value?.split(separator: ",").map { String($0) } ?? [] },
 
             load(key: "title", keyPath: \.title, db: req.db),
             load(key: "excerpt", keyPath: \.excerpt, db: req.db),
@@ -67,6 +74,7 @@ final class FrontendSettingsForm: Form {
             load(key: "color.secondary", keyPath: \.secondaryColor, db: req.db),
             load(key: "font.family", keyPath: \.fontFamily, db: req.db),
             load(key: "font.size", keyPath: \.fontSize, db: req.db),
+            
             load(key: "css", keyPath: \.css, db: req.db),
             load(key: "js", keyPath: \.js, db: req.db),
             load(key: "footer", keyPath: \.footer, db: req.db),
@@ -95,7 +103,8 @@ final class FrontendSettingsForm: Form {
         return req.eventLoop.flatten([
             image.save(to: FrontendModule.path, req: req)
                 .flatMap { [unowned self] in save(key: "logo", value: $0, db: req.db) },
-
+            
+            save(key: "filters", value: filters.values.joined(separator: ","), db: req.db),
             save(key: "title", value: title.value, db: req.db),
             save(key: "excerpt", value: excerpt.value, db: req.db),
             save(key: "color.primary", value: primaryColor.value, db: req.db),

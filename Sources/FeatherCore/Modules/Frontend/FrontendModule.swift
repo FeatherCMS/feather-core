@@ -5,6 +5,27 @@
 //  Created by Tibor Bodecs on 2020. 01. 26..
 //
 
+
+/*
+struct AFilter: ContentFilter {
+    var key: String { "a" }
+    var label: String { "A" }
+
+    func filter(_ input: String) -> String {
+        input.replacingOccurrences(of: "a", with: "-")
+    }
+}
+
+struct BFilter: ContentFilter {
+    var key: String { "b" }
+    var label: String { "B" }
+
+    func filter(_ input: String) -> String {
+        input.replacingOccurrences(of: "b", with: "_")
+    }
+}
+*/
+
 final class FrontendModule: ViperModule {
 
     static let name = "frontend"
@@ -44,8 +65,14 @@ final class FrontendModule: ViperModule {
         
         app.hooks.register("frontend-page", use: frontendPageHook)
         app.hooks.register("frontend-home-page", use: frontendHomePageHook)
+        
+        app.hooks.register("content-filters", use: contentFiltersHook)
     }
 
+    func contentFiltersHook(args: HookArguments) -> [ContentFilter] {
+        [] //[AFilter(), BFilter()]
+    }
+    
     func leafDataGenerator(for req: Request) -> [String: LeafDataGenerator]? {
         let menus = req.cache["frontend.menus"] as? [String: LeafDataRepresentable] ?? [:]
         return [
