@@ -14,12 +14,10 @@ public struct Feather {
         ApiBuilder(),
         FrontendBuilder(),
     ]
-    
-    private let app: Application
 
-    public init() throws {
-        var env = try Environment.detect()
-        try LoggingSystem.bootstrap(from: &env)
+    public let app: Application
+
+    public init(env: inout Environment) throws {
         app = Application(env)
     }
 

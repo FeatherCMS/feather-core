@@ -7,20 +7,14 @@
     <meta name="robots" content="noindex">
 
     <title>Install - Feather CMS</title>
+    
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
 
     #if($app.isDebug):
     <link rel="stylesheet" href="/css/frontend.css">
-    <link rel="stylesheet" href="/css/frontend.light.css">
-    <link rel="stylesheet" href="/css/frontend.dark.css">
     #else:
     <link rel="stylesheet" href="/css/frontend.min.css">
     #endif
-
-    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
-        
-    <style>
-        #evaluate(css ?? "")
-    </style>
 </head>
 
 <body class="m:zero">
@@ -34,6 +28,5 @@
     <main class="container">
         #body()
     </main>
-
 </body>
 </html>
