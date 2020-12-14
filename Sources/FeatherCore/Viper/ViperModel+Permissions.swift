@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 12. 14..
 //
 
-extension ViperModel {
+public extension ViperModel {
 
     static var permissions: [[String: Any]] {
         let crud = ["list", "get", "create", "update", "delete"]
