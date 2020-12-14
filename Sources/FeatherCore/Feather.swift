@@ -5,8 +5,16 @@
 //  Created by Tibor Bodecs on 2020. 12. 09..
 //
 
+/// Feather CMS  a modern Swift-based content management
+///
+/// Feather is a content management system powered by Vapor 4.
+///
+/// # Reference:
+/// - More details about [Vapor 4](https://docs.vapor.codes/4.0/environment).
+/// - More details about [Feather CMS](https://github.com/BinaryBirds/feather).
+/// - Available public [Feather CMS modules ](https://github.com/feather-modules).
 public struct Feather {
-    
+
     private let coreModules = [
         UserBuilder(),
         SystemBuilder(),
@@ -15,14 +23,22 @@ public struct Feather {
         FrontendBuilder(),
     ]
 
+    /// application reference
     public let app: Application
 
+    ///
+    /// Designated initializer
+    ///
     public init(env: inout Environment) throws {
         app = Application(env)
     }
 
+    ///
+    /// Start the application and bind the listening port
+    ///
+    /// - Throws: `Error` due to `FileManager` error when copying default "Public", "Resources"
+    ///
     public func start() throws {
-        
         /// copy bundled files & resources if needed
         if let resources = Bundle.module.resourceURL {
             let core = resources.appendingPathComponent("Bundles").appendingPathComponent("Core")
@@ -40,10 +56,27 @@ public struct Feather {
         try app.run()
     }
 
+    ///
+    /// Stop the application and unbind the listening port
+    ///
     public func stop() {
         app.shutdown()
     }
 
+    ///
+    /// This function will configure the instance
+    ///
+    /// - Throws: `Error` due to `modules` registration
+    ///
+    /// - parameters:
+    ///     - database: An instance of Type [DatabaseConfigurationFactory](https://docs.vapor.codes/4.0/fluent/overview)
+    ///     - databaseId: An Instance of Type [DatabaseID](https://docs.vapor.codes/4.0/fluent/overview)
+    ///     - fileStorage: An Instance of Type [FileStorageConfigurationFactory](https://github.com/BinaryBirds/liquid-kit)
+    ///     - fileStorageId: File storage Type [FileStorageID](https://github.com/BinaryBirds/liquid-kit)
+    ///     - maxUploadSize: (Optional)  An Instance of Type **ByteCount** - Required format: **XXmb** - Default: 10mb
+    ///     - modules: An Array containing intances of type [ViperBuilder](https://github.com/BinaryBirds/viper-kit)
+    ///     - usePublicFileMiddleware: (Optional) A **Bool** to deactivate the MiddleWare, if you implemented your own -  Default **true**
+    ///
     public func configure(database: DatabaseConfigurationFactory,
                       databaseId: DatabaseID,
                       fileStorage: FileStorageConfigurationFactory,
