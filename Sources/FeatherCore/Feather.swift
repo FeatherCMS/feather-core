@@ -29,7 +29,7 @@ public struct Feather {
     ///
     /// Designated initializer
     ///
-    public init(env: inout Environment) throws {
+    public init(env: Environment) throws {
         app = Application(env)
     }
 
@@ -40,7 +40,7 @@ public struct Feather {
     ///
     public func start() throws {
         /// copy bundled files & resources if needed
-        if let resources = Bundle.module.resourceURL {
+        if app.environment != .testing, let resources = Bundle.module.resourceURL {
             let core = resources.appendingPathComponent("Bundles").appendingPathComponent("Core")
             let base = URL(fileURLWithPath: Application.Paths.base)
 
