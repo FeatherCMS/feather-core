@@ -44,6 +44,7 @@ public struct Feather {
             let core = resources.appendingPathComponent("Bundles").appendingPathComponent("Core")
             let base = URL(fileURLWithPath: Application.Paths.base)
 
+            /// copy bundled public and resource files if needed
             for item in ["Public", "Resources"] {
                 let source = core.appendingPathComponent(item)
                 let dest = base.appendingPathComponent(item)
@@ -51,7 +52,20 @@ public struct Feather {
                     try FileManager.default.copyItem(at: source, to: dest)
                 }
             }
+            
+            /// process and minify css files using the public/css folder
+            let cssDir = base.appendingPathComponent("Public").appendingPathComponent("css")
+            let contents = try FileManager.default.contentsOfDirectory(atPath: cssDir.path)
+            let cssFiles = contents.map { cssDir.appendingPathComponent($0) }
+                .filter { $0.pathExtension == "css" && !$0.lastPathComponent.contains(".min.css") }
+            
+            for file in cssFiles {
+                let cssString = try String(contentsOf: file)
+                let newFile = file.deletingPathExtension().appendingPathExtension("min").appendingPathExtension("css")
+                try cssString.minifiedCss.write(to: newFile, atomically: true, encoding: .utf8)
+            }
         }
+
         /// run the application
         try app.run()
     }
