@@ -39,35 +39,38 @@ public struct Feather {
     /// - Throws: `Error` due to `FileManager` error when copying default "Public", "Resources"
     ///
     public func start() throws {
-        /// copy bundled files & resources if needed
-        if let resources = Bundle.module.resourceURL {
-            let core = resources.appendingPathComponent("Bundles").appendingPathComponent("Core")
-            let base = URL(fileURLWithPath: Application.Paths.base)
-
-            /// copy bundled public and resource files if needed
-            for item in ["Public", "Resources"] {
-                let source = core.appendingPathComponent(item)
-                let dest = base.appendingPathComponent(item)
-                if !FileManager.default.fileExists(atPath: dest.path) {
-                    try FileManager.default.copyItem(at: source, to: dest)
-                }
-            }
-            
-            /// process and minify css files using the public/css folder
-            let cssDir = base.appendingPathComponent("Public").appendingPathComponent("css")
-            let contents = try FileManager.default.contentsOfDirectory(atPath: cssDir.path)
-            let cssFiles = contents.map { cssDir.appendingPathComponent($0) }
-                .filter { $0.pathExtension == "css" && !$0.lastPathComponent.contains(".min.css") }
-            
-            for file in cssFiles {
-                let cssString = try String(contentsOf: file)
-                let newFile = file.deletingPathExtension().appendingPathExtension("min").appendingPathExtension("css")
-                try cssString.minifiedCss.write(to: newFile, atomically: true, encoding: .utf8)
-            }
-        }
-
+        try copyBundledResources()
         /// run the application
         try app.run()
+    }
+    
+    private func copyBundledResources() throws {
+        guard let resources = Bundle.module.resourceURL else {
+            return
+        }
+        let core = resources.appendingPathComponent("Bundles").appendingPathComponent("Core")
+        let base = URL(fileURLWithPath: Application.Paths.base)
+
+        /// copy bundled public and resource files if needed
+        for item in ["Public", "Resources"] {
+            let source = core.appendingPathComponent(item)
+            let dest = base.appendingPathComponent(item)
+            if !FileManager.default.fileExists(atPath: dest.path) {
+                try FileManager.default.copyItem(at: source, to: dest)
+            }
+        }
+        
+        /// process and minify css files using the public/css folder
+        let cssDir = base.appendingPathComponent("Public").appendingPathComponent("css")
+        let contents = try FileManager.default.contentsOfDirectory(atPath: cssDir.path)
+        let cssFiles = contents.map { cssDir.appendingPathComponent($0) }
+            .filter { $0.pathExtension == "css" && !$0.lastPathComponent.contains(".min.css") }
+        
+        for file in cssFiles {
+            let cssString = try String(contentsOf: file)
+            let newFile = file.deletingPathExtension().appendingPathExtension("min").appendingPathExtension("css")
+            try cssString.minifiedCss.write(to: newFile, atomically: true, encoding: .utf8)
+        }
     }
 
     ///
@@ -145,6 +148,7 @@ public struct Feather {
         LeafEngine.sources = multipleSources
         LeafEngine.useLeafFoundation()
         LeafEngine.entities.use(ResolveLeafEntity(), asMethod: "resolve")
+        LeafEngine.entities.use(SafePathEntity(), asMethod: "safePath")
         LeafEngine.entities.use(InvokeHookLeafEntity(), asFunction: "InvokeHook")
         LeafEngine.entities.use(InvokeAllHooksLeafEntity(), asFunction: "InvokeAllHooks")
         LeafEngine.entities.use(InlineSvg(iconset: "feather-icons"), asFunction: "svg")

@@ -1,7 +1,8 @@
 #let(form = [
     "id": formId,
     "token": formToken,
-    "key": "metadata",
+    "title": "Metadata",
+    "key": "frontend.metadatas",
     "modelId": modelId,
     "multipart": true,
     "delete": false,
@@ -13,7 +14,7 @@
 
 #define(toolbarRightBefore):
     #if(modelId != nil):
-    <a href="#if(!fields.slug.value.isEmpty()):/#(fields.slug.value)/#else:/#endif" target="_blank">#svg("eye")</a>
+    <a href="#(fields.slug.value.safePath())" target="_blank">#svg("eye")</a>
     <a href="/admin/#(fields.module.value)/#(fields.model.value)/#(fields.reference.value)">#svg("feather")</a>
     #endif
 #enddefine

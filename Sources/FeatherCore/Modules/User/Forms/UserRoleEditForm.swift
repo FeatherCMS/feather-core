@@ -23,7 +23,7 @@ final class UserRoleEditForm: ModelForm {
 
     func initialize(req: Request) -> EventLoopFuture<Void> {
         UserPermissionModel.query(on: req.db)
-            .sort(\.$name)
+            .sort(\.$key)
             .all()
             .mapEach(\.formFieldOption)
             .map { [unowned self] in permissions.options = $0 }

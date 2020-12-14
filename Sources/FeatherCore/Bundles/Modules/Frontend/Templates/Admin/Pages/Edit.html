@@ -1,7 +1,8 @@
 #let(form = [
     "id": formId,
     "token": formToken,
-    "key": "page",
+    "title": "Page",
+    "key": "frontend.pages",
     "modelId": modelId,
     "list": [
         "title": "Pages",
@@ -11,12 +12,14 @@
 
 #define(toolbarLeftAfter):
     #if(modelId != nil):
-    <a href="#if(!metadata.slug.isEmpty()):/#(metadata.slug)/#else:/#endif" target="_blank">#svg("eye")</a>
+    <a href="#(metadata.slug.safePath())" target="_blank">#svg("eye")</a>
     #endif
 #enddefine
 #define(toolbarRightBefore):
     #if(modelId != nil):
-    <a href="/admin/frontend/metadatas/#(metadata.id)">#svg("feather")</a>
+        #if(UserHasPermission("frontend.metadatas.update")):
+            <a href="/admin/frontend/metadatas/#(metadata.id)/update/">#svg("feather")</a>
+        #endif
     #endif
 #enddefine
 #define(fields):

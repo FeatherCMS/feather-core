@@ -63,55 +63,7 @@ final class UserModule: ViperModule {
     
     // MARK: - hook functions
 
-    func modelInstallHook(args: HookArguments) -> EventLoopFuture<Void> {
-        let req = args["req"] as! Request
-
-        /// gather the main menu items through a hook function then map them
-        let permissionItems: [[[String: Any]]] = req.invokeAll("user-permission-install")
-        let permissionModels = permissionItems.flatMap { $0 }.compactMap { item -> UserPermissionModel? in
-            guard
-                let key = item["key"] as? String, !key.isEmpty,
-                let name = item["name"] as? String, !name.isEmpty
-            else {
-                return nil
-            }
-            let notes = item["notes"] as? String
-            return UserPermissionModel(key: key, name: name, notes: notes)
-        }
-        let roles = [
-            UserRoleModel(key: "editors", name: "Editors", notes: "Just an example role for editors, feel free to select permissions."),
-        ]
-        let users = [
-            UserModel(email: "feather@binarybirds.com", password: try! Bcrypt.hash("FeatherCMS"), root: true),
-        ]
-        return req.eventLoop.flatten([
-            permissionModels.create(on: req.db),
-            roles.create(on: req.db),
-            users.create(on: req.db),
-        ])
-    }
-
-    func userPermissionInstallHook(args: HookArguments) -> [[String: Any]] {
-        [
-            /// user
-            ["key": "user",                     "name": "User module"],
-            /// users
-            ["key": "user.users.list",          "name": "User list"],
-            ["key": "user.users.create",        "name": "User create"],
-            ["key": "user.users.update",        "name": "User update"],
-            ["key": "user.users.delete",        "name": "User delete"],
-            /// roles
-            ["key": "user.roles.list",          "name": "User role list"],
-            ["key": "user.roles.create",        "name": "User role create"],
-            ["key": "user.roles.update",        "name": "User role update"],
-            ["key": "user.roles.delete",        "name": "User role delete"],
-            /// permissions
-            ["key": "user.permissions.list",    "name": "User permission list"],
-            ["key": "user.permissions.create",  "name": "User permission create"],
-            ["key": "user.permissions.update",  "name": "User permission update"],
-            ["key": "user.permissions.delete",  "name": "User permission delete"],
-        ]
-    }
+   
     
     func adminAuthMiddlewaresHook(args: HookArguments) -> [Middleware] {
         [UserModel.redirectMiddleware(path: "/login/?redirect=/admin/"), UserAccessMiddleware(name: "admin")]

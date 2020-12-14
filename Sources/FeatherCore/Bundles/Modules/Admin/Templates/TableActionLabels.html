@@ -1,2 +1,6 @@
+#if(UserHasPermission(table.key + ".update")):
 <th class="td:center td:compact:hidden">Edit</th>
+#endif
+#if(UserHasPermission(table.key + ".delete")):
 <th class="td:center td:compact:hidden">Delete</th>
+#endif

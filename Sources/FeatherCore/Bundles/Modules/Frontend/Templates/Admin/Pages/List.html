@@ -1,5 +1,6 @@
 #let(table = [
-    "title": "Pages"
+    "title": "Pages",
+    "key": "frontend.pages"
 ])
 
 #define(css):
@@ -18,10 +19,19 @@ tr {
     <th class="td:left m:h:s td:compact:col2">#(link = ["key": "title", "default": true])#inline("Admin/SortLink")</th>
     #inline("Admin/TableActionLabels")
 #enddefine
+
 #define(tr):
     #for(item in list.items):
 <tr>
-    <td class="td:left m:h:s td:compact:col2 td:compact:separator"><a href="#($req.url.path)#(item.id)/">#(item.title)</a></td>
+    <td class="td:left m:h:s td:compact:col2 td:compact:separator">
+        #if(UserHasPermission(table.key + ".update")):
+            <a href="#($req.url.path)#(item.id)/update/">#(item.title)</a>
+        #elseif(UserHasPermission(table.key + ".get")):
+            <a href="#($req.url.path)#(item.id)/">#(item.title)</a>
+        #else:
+            #(item.title)
+        #endif
+    </td>
     #inline("Admin/TableActionButtons")
 </tr>
     #endfor

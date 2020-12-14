@@ -55,38 +55,7 @@ final class SystemModule: ViperModule {
     }
     
     // MARK: - hooks
-    
-    func modelInstallHook(args: HookArguments) -> EventLoopFuture<Void> {
-        let req = args["req"] as! Request
 
-        let variableItems: [[[String: Any]]] = req.invokeAll("system-variables-install")
-        let systemVariableModels = variableItems.flatMap { $0 }.compactMap { dict -> SystemVariableModel? in
-            guard
-                let key = dict["key"] as? String, !key.isEmpty,
-                let name = dict["name"] as? String, !name.isEmpty
-            else {
-                return nil
-            }
-            let value = dict["value"] as? String
-            let hidden = dict["hidden"] as? Bool ?? false
-            let notes = dict["notes"] as? String
-            return SystemVariableModel(key: key, name: name, value: value, hidden: hidden, notes: notes)
-        }
-        return systemVariableModels.create(on: req.db)
-    }
-
-    func userPermissionInstallHook(args: HookArguments) -> [[String: Any]] {
-        [
-            /// system
-            ["key": "system",                   "name": "System module"],
-            /// variables
-            ["key": "system.variables.list",    "name": "System variable list"],
-            ["key": "system.variables.create",  "name": "System variable create"],
-            ["key": "system.variables.update",  "name": "System variable update"],
-            ["key": "system.variables.delete",  "name": "System variable delete"],
-        ]
-    }
-    
     func leafAdminMenuHook(args: HookArguments) -> LeafDataRepresentable {
         let app = args["app"] as! Application
         var items = [

@@ -3,7 +3,9 @@
 #enddefine
 #define(toolbarLeft):
     #if(table.create ?? true):
-    <a href="#($req.url.path)create/">#svg("plus-circle")</a>
+        #if(UserHasPermission(table.key + ".create")):
+        <a href="#($req.url.path)create/">#svg("plus-circle")</a>
+        #endif
     #endif
 #enddefine
 #define(body):
