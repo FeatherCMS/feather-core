@@ -24,9 +24,7 @@ tr {
     #for(item in list.items):
 <tr>
     <td class="td:left m:h:s td:compact:col2 td:compact:separator">
-        #if(UserHasPermission(table.key + ".update")):
-            <a href="#($req.url.path)#(item.id)/update/">#(item.title)</a>
-        #elseif(UserHasPermission(table.key + ".get")):
+        #if(UserHasPermission(table.key + ".get")):
             <a href="#($req.url.path)#(item.id)/">#(item.title)</a>
         #else:
             #(item.title)

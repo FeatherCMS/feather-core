@@ -23,7 +23,7 @@ tr {
 #define(tr):
     #for(item in list.items):
 <tr>
-    <td class="td:left m:h:s td:compact:col2 td:compact:separator"><a href="#($req.url.path)#(item.id)/">#(item.slug)#if(item.slug.isEmpty()):[home]#endif</a></td>
+    <td class="td:left m:h:s td:compact:col2 td:compact:separator"><a href="#($req.url.path)#(item.id)/">#(item.slug)#if(item.slug.isEmpty()):home#endif</a></td>
     <td class="td:center"><a href="#($req.url.path)#(item.id)/update">#svg("edit-2")</a></td>
 </tr>
     #endfor

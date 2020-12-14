@@ -14,8 +14,8 @@
 
 #define(toolbarRightBefore):
     #if(modelId != nil):
-    <a href="#(fields.slug.value.safePath())" target="_blank">#svg("eye")</a>
-    <a href="/admin/#(fields.module.value)/#(fields.model.value)/#(fields.reference.value)">#svg("feather")</a>
+    <a href="/admin/#(fields.module.value)/#(fields.model.value)/#(fields.reference.value)/update/">#svg("feather")</a>
+    <a href="#(fields.slug.value.safePath())" target="_blank">#svg("external-link")</a>
     #endif
 #enddefine
 #define(fields):

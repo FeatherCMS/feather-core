@@ -6,6 +6,11 @@
 #enddefine
 #define(toolbarLeft):
     <button type="submit" form="#(form.key)-form">#svg("save")</button>
+
+    #if(form.view ?? true):
+    <a href="#($req.url.path.trimLast())">#svg("eye")</a>
+    #endif
+
     #evaluate(toolbarLeftAfter ?? "")
 #enddefine
 
@@ -19,6 +24,7 @@
     #endif
     #endif
 #enddefine
+
 #define(body):
 <div id="form" class="w m:h:auto m:b:xl">
     <form id="#(form.key)-form" class="m" method="post" action="#($req.url.path)"#if(form.multipart ?? false): enctype="multipart/form-data"#endif>

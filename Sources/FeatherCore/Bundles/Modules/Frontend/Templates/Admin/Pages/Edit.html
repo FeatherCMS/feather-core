@@ -10,11 +10,6 @@
     ]
 ])
 
-#define(toolbarLeftAfter):
-    #if(modelId != nil):
-    <a href="#(metadata.slug.safePath())" target="_blank">#svg("eye")</a>
-    #endif
-#enddefine
 #define(toolbarRightBefore):
     #if(modelId != nil):
         #if(UserHasPermission("frontend.metadatas.update")):
