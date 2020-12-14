@@ -13,7 +13,7 @@ env.testing:
 
 
 clean:
-	rm -rf ./db.sqlite ./Resources/config.json ./Public/assets
+	rm -rf ./db.sqlite ./Resources ./Public
 
 test: env.testing
 	swift test --enable-test-discovery

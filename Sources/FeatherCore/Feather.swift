@@ -71,6 +71,24 @@ public struct Feather {
             let newFile = file.deletingPathExtension().appendingPathExtension("min").appendingPathExtension("css")
             try cssString.minifiedCss.write(to: newFile, atomically: true, encoding: .utf8)
         }
+        
+        /// copy bundled templates
+        let tpl = URL(fileURLWithPath: Application.Paths.resources).appendingPathComponent("Templates")
+        
+        if !FileManager.default.fileExists(atPath: tpl.path) {
+            try FileManager.default.createDirectory(at: tpl, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o744])
+        }
+
+        for module in app.viper.modules {
+            guard let bundle = module.bundleUrl else {
+                continue
+            }
+            let source = bundle.appendingPathComponent("Templates")
+            let dest = tpl.appendingPathComponent(module.name.lowercased().capitalized)
+            if !FileManager.default.fileExists(atPath: dest.path) {
+                try FileManager.default.copyItem(at: source, to: dest)
+            }
+        }
     }
 
     ///
@@ -101,12 +119,10 @@ public struct Feather {
                       maxUploadSize: ByteCount = "10mb",
                       modules userModules: [ViperBuilder] = [],
                       usePublicFileMiddleware: Bool = true) throws {
-
-//        app.directory.workingDirectory = "/Users/tib/"
-//        app.directory.publicDirectory = "/Users/tib/"
-//        app.directory.resourcesDirectory = "/Users/tib/"
-//        app.directory.viewsDirectory = "/Users/tib/"
-
+ 
+        /// override views directory name with templates
+        app.directory.viewsDirectory = app.directory.resourcesDirectory + "Templates/"
+        
         if usePublicFileMiddleware {
             app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
         }
