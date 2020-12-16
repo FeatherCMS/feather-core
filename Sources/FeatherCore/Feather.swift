@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Feather.swift
+//  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 12. 09..
 //
@@ -44,6 +44,18 @@ public struct Feather {
         try app.run()
     }
     
+    /// Removes the Public & Resources folders
+    public func reset() throws {
+        let base = URL(fileURLWithPath: Application.Paths.base)
+        for item in ["Public", "Resources"] {
+            let dest = base.appendingPathComponent(item)
+            if FileManager.default.fileExists(atPath: dest.path) {
+                try FileManager.default.removeItem(at: dest)
+            }
+        }
+    }
+    
+    /// copies the bundled resources from the modules & feather core to the Public & Resources folders
     private func copyBundledResources() throws {
         guard let resources = Bundle.module.resourceURL else {
             return

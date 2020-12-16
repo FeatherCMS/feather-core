@@ -20,4 +20,8 @@ try feather.configure(database: .sqlite(.file("db.sqlite")),
                       fileStorage: .local(publicUrl: Application.baseUrl, publicPath: Application.Paths.public, workDirectory: "assets"),
                       fileStorageId: .local,
                       modules: [])
+
+if feather.app.isDebug {
+    try feather.reset()
+}
 try feather.start()
