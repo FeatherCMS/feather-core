@@ -102,7 +102,7 @@ final class FrontendModule: ViperModule {
         [
             "name": "Frontend",
             "icon": "layout",
-            "permission": "frontend",
+            "permission": "frontend.module.access",
             "items": LeafData.array([
                 [
                     "label": "Pages",

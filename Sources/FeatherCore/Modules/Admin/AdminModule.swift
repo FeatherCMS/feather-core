@@ -27,9 +27,7 @@ final class AdminModule: ViperModule {
     }
 
     func userPermissionInstallHook(args: HookArguments) -> [[String: Any]] {
-        [
-            ["key": "admin", "name": "Admin module"],
-        ]
+        AdminModule.permissions
     }
     
     func systemVariablesInstallHook(args: HookArguments) -> [[String: Any]] {

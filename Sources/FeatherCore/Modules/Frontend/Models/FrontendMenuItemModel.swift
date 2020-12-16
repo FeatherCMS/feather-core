@@ -8,7 +8,9 @@
 final class FrontendMenuItemModel: ViperModel {
     typealias Module = FrontendModule
 
-    static let name = "items"
+    static let name = "menu_items"
+
+    static var pathComponent: PathComponent { "items" }
     
     struct FieldKeys {
         static var icon: FieldKey { "icon" }

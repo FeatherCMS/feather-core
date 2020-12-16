@@ -22,6 +22,6 @@ try feather.configure(database: .sqlite(.file("db.sqlite")),
                       modules: [])
 
 if feather.app.isDebug {
-    try feather.reset()
+    try feather.reset(resourcesOnly: true)
 }
 try feather.start()

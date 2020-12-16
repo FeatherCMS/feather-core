@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 2020. 03. 23..
 //
 
-
-
 final class UserEditForm: ModelForm {
     typealias Model = UserModel
 

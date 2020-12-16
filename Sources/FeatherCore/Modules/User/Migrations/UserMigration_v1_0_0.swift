@@ -25,17 +25,21 @@ struct UserMigration_v1_0_0: Migration {
                 .create(),
             db.schema(UserRoleModel.schema)
                 .id()
-                .field(UserPermissionModel.FieldKeys.key, .string, .required)
-                .field(UserPermissionModel.FieldKeys.name, .string, .required)
-                .field(UserPermissionModel.FieldKeys.notes, .string)
-                .unique(on: UserPermissionModel.FieldKeys.key)
+                .field(UserRoleModel.FieldKeys.key, .string, .required)
+                .field(UserRoleModel.FieldKeys.name, .string, .required)
+                .field(UserRoleModel.FieldKeys.notes, .string)
+                .unique(on: UserRoleModel.FieldKeys.key)
                 .create(),
             db.schema(UserPermissionModel.schema)
                 .id()
-                .field(UserPermissionModel.FieldKeys.key, .string, .required)
+                .field(UserPermissionModel.FieldKeys.module, .string, .required)
+                .field(UserPermissionModel.FieldKeys.context, .string, .required)
+                .field(UserPermissionModel.FieldKeys.action, .string, .required)
                 .field(UserPermissionModel.FieldKeys.name, .string, .required)
                 .field(UserPermissionModel.FieldKeys.notes, .string)
-                .unique(on: UserPermissionModel.FieldKeys.key)
+                .unique(on: UserPermissionModel.FieldKeys.module,
+                            UserPermissionModel.FieldKeys.context,
+                            UserPermissionModel.FieldKeys.action)
                 .create(),
             db.schema(UserUserRoleModel.schema)
                 .id()

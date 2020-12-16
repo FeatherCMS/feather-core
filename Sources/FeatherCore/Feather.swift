@@ -45,9 +45,13 @@ public struct Feather {
     }
     
     /// Removes the Public & Resources folders
-    public func reset() throws {
+    public func reset(resourcesOnly: Bool = false) throws {
+        var items = ["Resources"]
+        if !resourcesOnly {
+            items.append("Public")
+        }
         let base = URL(fileURLWithPath: Application.Paths.base)
-        for item in ["Public", "Resources"] {
+        for item in items {
             let dest = base.appendingPathComponent(item)
             if FileManager.default.fileExists(atPath: dest.path) {
                 try FileManager.default.removeItem(at: dest)

@@ -27,9 +27,7 @@ extension SystemModule {
     }
 
     func userPermissionInstallHook(args: HookArguments) -> [[String: Any]] {
-        [
-            ["key": "system",                   "name": "System module"],
-        ] +
+        SystemModule.permissions + 
         SystemVariableModel.permissions
     }
 }

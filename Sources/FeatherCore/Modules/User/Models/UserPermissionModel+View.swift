@@ -11,6 +11,9 @@ extension UserPermissionModel: LeafDataRepresentable {
         .dictionary([
             "id": id,
             "key": key,
+            "module": module,
+            "context": context,
+            "action": action,
             "name": name,
             "notes": notes,
         ])

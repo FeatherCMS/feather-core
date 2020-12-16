@@ -18,7 +18,9 @@ struct UserPermissionAdminController: ViperAdminViewController {
 
     func listQuery(search: String, queryBuilder: QueryBuilder<UserPermissionModel>, req: Request) {
         queryBuilder.filter(\.$name ~~ search)
-        queryBuilder.filter(\.$key ~~ search)
+        queryBuilder.filter(\.$module ~~ search)
+        queryBuilder.filter(\.$context ~~ search)
+        queryBuilder.filter(\.$action ~~ search)
     }
 }
 

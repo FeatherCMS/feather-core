@@ -23,12 +23,12 @@ final class FrontendSettingsForm: Form {
     var footer = FormField<String>(key: "footer")
     var footerBottom = FormField<String>(key: "footerBottom")
     var copy = FormField<String>(key: "copy")
-    var copyYearStart = FormField<String>(key: "copyYearStart")
+    var copyPrefix = FormField<String>(key: "copyPrefix")
     var image = FileFormField(key: "image")
     var notification: String?
 
     var fields: [FormFieldRepresentable] {
-        [title, excerpt, primaryColor, secondaryColor, fontFamily, fontSize, locale, timezone, filters, css, js, footer, footerBottom, copy, copyYearStart, image]
+        [title, excerpt, primaryColor, secondaryColor, fontFamily, fontSize, locale, timezone, filters, css, js, footer, footerBottom, copy, copyPrefix, image]
     }
 
     init() {}
@@ -80,7 +80,7 @@ final class FrontendSettingsForm: Form {
             load(key: "footer", keyPath: \.footer, db: req.db),
             load(key: "footer.bottom", keyPath: \.footerBottom, db: req.db),
             load(key: "copy", keyPath: \.copy, db: req.db),
-            load(key: "copy.year.start", keyPath: \.copyYearStart, db: req.db),
+            load(key: "copy.prefix", keyPath: \.copyPrefix, db: req.db),
         ])
     }
 
@@ -102,7 +102,12 @@ final class FrontendSettingsForm: Form {
 
         return req.eventLoop.flatten([
             image.save(to: FrontendModule.path, req: req)
-                .flatMap { [unowned self] in save(key: "logo", value: $0, db: req.db) },
+                .flatMap { [unowned self] key in
+                    if let key = key {
+                        return save(key: "logo", value: key, db: req.db)
+                    }
+                    return req.eventLoop.future()
+                },
             
             save(key: "filters", value: filters.values.joined(separator: ","), db: req.db),
             save(key: "title", value: title.value, db: req.db),
@@ -116,7 +121,7 @@ final class FrontendSettingsForm: Form {
             save(key: "footer", value: footer.value, db: req.db),
             save(key: "footer.bottom", value: footerBottom.value, db: req.db),
             save(key: "copy", value: copy.value, db: req.db),
-            save(key: "copy.year.start", value: copyYearStart.value, db: req.db),
+            save(key: "copy.prefix", value: copyPrefix.value, db: req.db),
         ])
         .map { [unowned self] in notification = "Settings saved" }
     }

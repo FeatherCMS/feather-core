@@ -81,7 +81,7 @@
 
             #($system.variables["frontend.site.footer"])
 
-            <p class="t:size:s">#($system.variables["frontend.site.copy"]) &copy; #($system.variables["frontend.site.copy.year.start"] ?? "") #Date(timeStamp: Timestamp(), fixedFormat: "y")</p>
+            <p class="t:size:s">#($system.variables["frontend.site.copy"]) &copy; #($system.variables["frontend.site.copy.prefix"] ?? "") #Date(timeStamp: Timestamp(), fixedFormat: "y")</p>
 
             <p class="t:size:s">
                 #if($user.isAuthenticated):

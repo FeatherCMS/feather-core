@@ -76,7 +76,7 @@ final class SystemModule: ViperModule {
         return [
             "name": "System",
             "icon": "settings",
-            "permission": "system",
+            "permission": "system.module.access",
             "items": LeafData.array(items)
         ]
     }

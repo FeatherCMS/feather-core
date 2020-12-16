@@ -30,6 +30,7 @@
 
         </fieldset>
 
+        #if(!fields.filters.values.isEmpty()):
         <fieldset>
             <legend>Content</legend>
         
@@ -37,6 +38,7 @@
             #inline("Admin/Fields/Checkbox")
         
         </fieldset>
+        #endif
 
         <fieldset>
             <legend>Localization</legend>
@@ -89,7 +91,7 @@
             #(field = ["id": "copy", "label": "Copyright", "size": "s", "required": true, "data": fields.copy])
             #inline("Admin/Fields/Textarea")
             
-            #(field = ["id": "copyYearStart", "label": "Copyright start year", "data": fields.copyYearStart])
+            #(field = ["id": "copyPrefix", "label": "Copyright prefix", "data": fields.copyPrefix])
             #inline("Admin/Fields/Text")
         
         </fieldset>

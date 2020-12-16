@@ -66,7 +66,7 @@ final class UserModule: ViperModule {
    
     
     func adminAuthMiddlewaresHook(args: HookArguments) -> [Middleware] {
-        [UserModel.redirectMiddleware(path: "/login/?redirect=/admin/"), UserAccessMiddleware(name: "admin")]
+        [UserModel.redirectMiddleware(path: "/login/?redirect=/admin/"), UserAccessMiddleware(name: "admin.module.access")]
     }
     
     func apiAuthMiddlewaresHook(args: HookArguments) -> [Middleware] {
@@ -77,7 +77,7 @@ final class UserModule: ViperModule {
         [
             "name": "User",
             "icon": "user",
-            "permission": "user",
+            "permission": "user.module.access",
             "items": LeafData.array([
                 [
                     "url": "/admin/user/users/",

@@ -11,17 +11,21 @@ final class UserPermissionModel: ViperModel {
     static let name = "permissions"
 
     struct FieldKeys {
-        static var key: FieldKey { "key" }
+        static var module: FieldKey { "module" }
+        static var context: FieldKey { "context" }
+        static var action: FieldKey { "action" }
         static var name: FieldKey { "name" }
         static var notes: FieldKey { "notes" }
     }
     
     // MARK: - fields
-    
+
     /// unique identifier of the model
     @ID() var id: UUID?
     /// name of the permission
-    @Field(key: FieldKeys.key) var key: String
+    @Field(key: FieldKeys.module) var module: String
+    @Field(key: FieldKeys.context) var context: String
+    @Field(key: FieldKeys.action) var action: String
     @Field(key: FieldKeys.name) var name: String
     @Field(key: FieldKeys.notes) var notes: String?
     
@@ -30,11 +34,21 @@ final class UserPermissionModel: ViperModel {
     
     init() { }
 
-    init(id: UUID? = nil, key: String, name: String, notes: String? = nil) {
+    init(id: UUID? = nil,
+         module: String,
+         context: String,
+         action: String,
+         name: String,
+         notes: String? = nil) {
         self.id = id
-        self.key = key
+        self.module = module
+        self.context = context
+        self.action = action
         self.name = name
         self.notes = notes
     }
 }
 
+extension UserPermissionModel {
+    var key: String { [module, context, action].joined(separator: ".") }
+}

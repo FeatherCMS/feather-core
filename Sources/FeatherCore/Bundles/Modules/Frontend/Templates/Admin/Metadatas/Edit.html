@@ -54,12 +54,13 @@
     #inline("Admin/Fields/Text")
 </fieldset>
 
+#if(!fields.filters.values.isEmpty()):
 <fieldset class="p m:bottom:l br:xs">
     <legend class="p:horizontal:s">Content</legend>
     #(field = ["id": "filters", "data": fields.filters])
     #inline("Admin/Fields/Checkbox")
-
 </fieldset>
+#endif
 
 <fieldset class="p m:bottom:l br:xs">
     <legend class="p:horizontal:s">Design</legend>

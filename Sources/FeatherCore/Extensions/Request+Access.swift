@@ -11,8 +11,12 @@ public extension Request {
     func checkUserAccess(_ name: String) -> EventLoopFuture<Bool> {
         let accessIdentifier = "access"
 
-        /// permission (access) components are separated by . character, so we have turn it to an access hook name
-        let accessHook = name.replacingOccurrences(of: ".", with: "-") + "-" + accessIdentifier
+        /// permission components are separated by . character, so we have turn it them into proper an access hook names
+        var accessHook = name.replacingOccurrences(of: ".", with: "-")
+        /// if a permission name ends with access we won't append the suffix again
+        if !accessHook.hasSuffix("-access") {
+            accessHook += "-" + accessIdentifier
+        }
         /// invoke name access hook if there is any
         let namedAccess: EventLoopFuture<Bool>? = invoke(accessHook)
         /// invoke generic access hook if there is any

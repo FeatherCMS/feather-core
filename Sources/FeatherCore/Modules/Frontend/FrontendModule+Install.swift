@@ -79,14 +79,19 @@ extension FrontendModule {
     }
     
     func userPermissionInstallHook(args: HookArguments) -> [[String: Any]] {
-        [
-            ["key": "frontend",                     "name": "Frontend module"],
-            ["key": "frontend.settings",            "name": "Frontend settings"],
-        ] +
+        FrontendModule.permissions +
         FrontendMetadataModel.permissions +
         FrontendMenuModel.permissions +
         FrontendMenuItemModel.permissions +
-        FrontendPageModel.permissions
+        FrontendPageModel.permissions +
+            [
+                [
+                    "module": FrontendModule.name,
+                    "context": "settings",
+                    "action": "update",
+                    "name": "Frontend settings update"
+                ],
+            ]
     }
 
     func systemVariablesInstallHook(args: HookArguments) -> [[String: Any]] {
@@ -156,9 +161,9 @@ extension FrontendModule {
                 "note": "Copyright text for the website",
             ],
             [
-                "key": "frontend.site.copy.start.year",
-                "name": "Site copy start year",
-                "note": "Start year placed before the current one in the copy line",
+                "key": "frontend.site.copy.prefix",
+                "name": "Site copy prefix",
+                "note": "Can be used to place a start year before the current one in the copy line",
             ],
             [
                 "key": "frontend.site.footer.bottom",

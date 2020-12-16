@@ -23,8 +23,29 @@
     #(field = ["id": "notes", "size": "s", "data": fields.notes])
     #inline("Admin/Fields/Textarea")
 
-    #(field = ["id": "permissions", "data": fields.permissions])
-    #inline("Admin/Fields/Checkbox")
+    <section class="m:b">
+        <label>Permissions</label>
+        #for(option in fields.permissions.options):
+        <fieldset>
+            <legend>#(option.module)</legend>
+
+            <div class="g1">
+            #for(group in option.groups):
+                <div class="m:b g:col1">
+                    <label class="block">#(group.name)</label>
+                    #for(p in group.permissions):
+                    <input type="checkbox" name="permissions[]" value="#(p.key)" id="#(p.key)" #if(fields.permissions.values.contains(p.key)):checked#endif>
+                    <label for="#(p.key)">#(p.label)</label><br>
+                    #endfor
+                </div>
+            #endfor
+            </div>
+        </fieldset>
+        #endfor
+        #if(fields.permissions.error != nil):
+        <span class="error">#(fields.permissions.error)</span>
+        #endif
+    </section>
 
 #enddefine
 

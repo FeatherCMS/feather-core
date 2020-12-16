@@ -14,13 +14,16 @@ extension UserModule {
         let permissionItems: [[[String: Any]]] = req.invokeAll("user-permission-install")
         let permissionModels = permissionItems.flatMap { $0 }.compactMap { item -> UserPermissionModel? in
             guard
-                let key = item["key"] as? String, !key.isEmpty,
+                let module = item["module"] as? String, !module.isEmpty,
+                let context = item["context"] as? String, !context.isEmpty,
+                let action = item["action"] as? String, !action.isEmpty,
                 let name = item["name"] as? String, !name.isEmpty
             else {
                 return nil
             }
             let notes = item["notes"] as? String
-            return UserPermissionModel(key: key, name: name, notes: notes)
+
+            return UserPermissionModel(module: module, context: context, action: action, name: name, notes: notes)
         }
         let roles = [
             UserRoleModel(key: "editors", name: "Editors", notes: "Just an example role for editors, feel free to select permissions."),
@@ -36,9 +39,7 @@ extension UserModule {
     }
 
     func userPermissionInstallHook(args: HookArguments) -> [[String: Any]] {
-        [
-            ["key": "user", "name": "User module"],
-        ] +
+        UserModule.permissions +
         UserModel.permissions +
         UserRoleModel.permissions +
         UserPermissionModel.permissions

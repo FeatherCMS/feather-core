@@ -6,7 +6,7 @@
 
 #define(css):
 tr {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
 }
 @media (min-width: 600px) {
     tr {
@@ -17,13 +17,13 @@ tr {
 
 #define(th):
     #var(link = nil)
-    <th class="td:left m:h:s td:compact:col2">#(link = ["key": "slug", "default": true])#inline("Admin/SortLink")</th>
+    <th class="td:left m:h:s">#(link = ["key": "slug", "default": true])#inline("Admin/SortLink")</th>
     <th class="td:center td:compact:hidden">Edit</th>
 #enddefine
 #define(tr):
     #for(item in list.items):
 <tr>
-    <td class="td:left m:h:s td:compact:col2 td:compact:separator"><a href="#($req.url.path)#(item.id)/">#(item.slug)#if(item.slug.isEmpty()):home#endif</a></td>
+    <td class="td:left m:h:s td:compact:separator"><a href="#($req.url.path)#(item.id)/">#(item.slug)#if(item.slug.isEmpty()):home#endif</a></td>
     <td class="td:center"><a href="#($req.url.path)#(item.id)/update">#svg("edit-2")</a></td>
 </tr>
     #endfor

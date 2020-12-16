@@ -48,7 +48,7 @@ struct FrontendRouter: ViperRouter {
         
         menuAdmin.setupRoutes(on: modulePath, as: FrontendMenuModel.pathComponent)
 
-        let itemPath = modulePath.grouped(.init(stringLiteral: FrontendMenuModel.name), menuAdmin.idPathComponent)
+        let itemPath = modulePath.grouped(FrontendMenuModel.pathComponent, menuAdmin.idPathComponent)
         itemAdmin.setupRoutes(on: itemPath, as: FrontendMenuItemModel.pathComponent)
         
         pageAdmin.setupRoutes(on: modulePath, as: FrontendPageModel.pathComponent)

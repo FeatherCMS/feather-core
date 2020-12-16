@@ -1,7 +1,7 @@
 #let(form = [
     "id": formId,
     "token": formToken,
-    "title": "User",
+    "title": "Permission",
     "key": "user.permissions",
     "modelId": modelId,
     "list": [
@@ -13,7 +13,13 @@
 #define(fields):
     #var(field = nil)
 
-    #(field = ["id": "key", "required": true, "data": fields.key])
+    #(field = ["id": "module", "required": true, "data": fields.module])
+    #inline("Admin/Fields/Text")
+
+    #(field = ["id": "context", "required": true, "data": fields.context])
+    #inline("Admin/Fields/Text")
+
+    #(field = ["id": "action", "required": true, "data": fields.action])
     #inline("Admin/Fields/Text")
 
     #(field = ["id": "name", "required": true, "data": fields.name])
