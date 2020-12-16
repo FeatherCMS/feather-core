@@ -136,4 +136,18 @@ final class UserModule: ViperModule {
 //        let req = args["req"] as! Request
 //        return req.eventLoop.future(true)
 //    }
+    
+/*
+     Translation experiment:
+
+     #("foo".t())
+     
+     app.hooks.register("translation", use: test)
+
+     func test(args: HookArguments) -> [String: String] {
+        [
+            "jolesz": "jo"
+        ]
+     }
+ */
 }

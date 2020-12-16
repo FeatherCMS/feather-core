@@ -182,11 +182,13 @@ public struct Feather {
         LeafEngine.entities.use(ResolveLeafEntity(), asMethod: "resolve")
         LeafEngine.entities.use(SafePathEntity(), asMethod: "safePath")
         LeafEngine.entities.use(AbsoluteUrlEntity(), asMethod: "absoluteUrl")
-        
+//        LeafEngine.entities.use(TranslationLeafEntity(), asMethod: "t")
+
         LeafEngine.entities.use(MinEntity(), asFunction: "min")
         LeafEngine.entities.use(MaxEntity(), asFunction: "max")
         LeafEngine.entities.use(InlineSvg(iconset: "feather-icons"), asFunction: "svg")
 
+        
         LeafEngine.entities.use(InvokeHookLeafEntity(), asFunction: "InvokeHook")
         LeafEngine.entities.use(InvokeAllHooksLeafEntity(), asFunction: "InvokeAllHooks")
         

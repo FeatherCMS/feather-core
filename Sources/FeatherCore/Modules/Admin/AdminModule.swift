@@ -25,7 +25,7 @@ final class AdminModule: ViperModule {
         app.hooks.register("user-permission-install", use: userPermissionInstallHook)
         app.hooks.register("system-variables-install", use: systemVariablesInstallHook)
     }
-
+    
     func userPermissionInstallHook(args: HookArguments) -> [[String: Any]] {
         AdminModule.permissions
     }

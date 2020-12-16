@@ -8,6 +8,7 @@ let package = Package(
     ],
     products: [
         .library(name: "FeatherCore", targets: ["FeatherCore"]),
+        .library(name: "DynamicFeatherCore", type: .dynamic, targets: ["FeatherCore"])
     ],
     dependencies: [
         .package(url: "https://github.com/vapor/vapor", from: "4.34.0"),
