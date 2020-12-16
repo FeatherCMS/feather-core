@@ -3,19 +3,23 @@
 #enddefine
     
 #define(breadcrumb):
+    #if(UserHasPermission(detail.key + ".list")):
     <li><a href="#(detail.list.url)">#(detail.list.title)</a></li>
+    #endif
 #enddefine
     
 #define(toolbarLeft):
-    #if(detail.edit ?? true):
+    #if((detail.edit ?? true) && UserHasPermission(detail.key + ".update")):
     <a href="#($req.url.path)update/">#svg("edit-2")</a>
     #endif
+
     #evaluate(toolbarLeftAfter ?? "")
 #enddefine
 
 #define(toolbarRight):
     #evaluate(toolbarRightBefore ?? "")
-    #if(detail.delete ?? true):
+
+    #if((detail.delete ?? true) && UserHasPermission(detail.key + ".delete")):
     <a href="#($req.url.path)delete/?cancel=#($req.url.path)">#svg("trash")</a>
     #endif
 #enddefine

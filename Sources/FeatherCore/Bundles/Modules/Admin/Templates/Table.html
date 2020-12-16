@@ -1,43 +1,69 @@
-#define(toolbarCenter):
-    #(table.title ?? "List")
-#enddefine
-#define(toolbarLeft):
-    #if(table.create ?? true):
-        #if(UserHasPermission(table.key + ".create")):
-        <a href="#($req.url.path)create/">#svg("plus-circle")</a>
-        #endif
-    #endif
-#enddefine
-#define(body):
-    #if(table.search ?? true):
-    <form id="search-form" class="m" action="#($req.url.path)" method="get">
-        #if(Request(query: "sort") != nil):
-        <input type="hidden" id="sort" name="sort" value="#Request(query: "sort")">
-        #endif
-        #if(Request(query: "order") != nil):
-        <input type="hidden" id="order" name="order" value="#Request(query: "order")">
-        #endif
-        <input type="text" id="search" name="search" placeholder="Search..." value="#Request(query: "search")">
-    </form>
-    #endif
+#var(columns = "1fr")
+#var(actions = 0)
+#if((table.edit ?? true) && UserHasPermission(table.key + ".update")):
+    #(columns += " 64px")
+    #(actions += 1)
+#endif
+#if((table.delete ?? true) && UserHasPermission(table.key + ".delete")):
+    #(columns += " 64px")
+    #(actions += 1)
+#endif
 
-    #if(list.items.isEmpty()):
-    #inline("Admin/Empty")
-    #else:
-    <table class="m">
-        <thead>
-            <tr>
-                #th()
-            </tr>
-        </thead>
-        <tbody>
-            #tr()
-        </tbody>
-    </table>
-    <div id="pagination" class="m t:center">
-    #inline("Admin/Pagination")
-    </div>
-    #endif
+#define(css):
+tr {
+    grid-template-columns: repeat(#max(1, actions), 1fr);
+}
+@media (min-width: 600px) {
+    tr {
+        grid-template-columns: #(columns);
+    }
+}
 #enddefine
 
-#inline("Admin/Index")
+#define(th):
+    <th class="td:left m:h:s#if(actions > 0): td:compact:col#(actions)#endif">
+        #let(link = [
+             "key": table.field.key,
+             "default": true,
+             "sort": (table.field.sort ?? "asc")
+        ])
+        #inline("Admin/SortLink")
+    </th>
+
+    #if((table.edit ?? true) && UserHasPermission(table.key + ".update")):
+    <th class="td:center td:compact:hidden">Edit</th>
+    #endif
+    
+    #if((table.delete ?? true) && UserHasPermission(table.key + ".delete")):
+    <th class="td:center td:compact:hidden">Drop</th>
+    #endif
+
+#enddefine
+
+#define(tr):
+    #for(item in list.items):
+    <tr>
+        <td class="td:left m:h:s td:compact:margin #if(actions > 0): td:compact:separator td:compact:col#(actions)#endif">
+            #if((table.view ?? true) && UserHasPermission(table.key + ".get")):
+            <a href="#($req.url.path)#(item.id)/">#(item[table.field.key])</a>
+            #else:
+            #(item[table.field.key])
+            #endif
+        </td>
+        
+        #if((table.edit ?? true) && UserHasPermission(table.key + ".update")):
+        <td class="td:center">
+            <a href="#($req.url.path)#(item.id)/update">#svg("edit-2")</a>
+        </td>
+        #endif
+
+        #if((table.delete ?? true) && UserHasPermission(table.key + ".delete")):
+        <td class="td:center">
+            <a href="#($req.url.path)#(item.id)/delete/">#svg("trash")</a>
+        </td>
+        #endif
+    </tr>
+    #endfor
+#enddefine
+
+#inline("Admin/BaseTable")

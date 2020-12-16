@@ -83,8 +83,13 @@ final class FrontendMetadataModelEditForm: ModelForm {
         output.css = css.value?.emptyToNil
         output.js = js.value?.emptyToNil
     }
-    
+
     func willSave(req: Request, model: Model) -> EventLoopFuture<Void> {
-        image.save(to: Model.path, req: req).map { model.imageKey = $0 }
+        image.save(to: Model.path, req: req).map { [unowned self] key in
+            if image.value.delete || key != nil {
+                model.imageKey = key
+            }
+            image.value.delete = false
+        }
     }
 }

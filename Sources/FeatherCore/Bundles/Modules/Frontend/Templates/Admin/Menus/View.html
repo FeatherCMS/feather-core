@@ -1,5 +1,6 @@
 #let(detail = [
     "title": "Menu",
+    "key": "frontend.menus",
     "list": [
         "title": "Menus",
         "url": "/admin/frontend/menus/"
@@ -7,7 +8,7 @@
 ])
 
 #define(toolbarRightBefore):
-    <a href="/admin/frontend/menus/#(model.id)/items/">#svg("anchor")</a>
+    <a href="/admin/frontend/menus/#(model.id)/items/">#svg("link")</a>
 #enddefine
 
 #define(details):

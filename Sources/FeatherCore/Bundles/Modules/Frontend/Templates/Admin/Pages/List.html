@@ -1,38 +1,9 @@
 #let(table = [
     "title": "Pages",
-    "key": "frontend.pages"
+    "key": "frontend.pages",
+    "field": [
+        "key": "title"
+    ]
 ])
-
-#define(css):
-tr {
-    grid-template-columns: 1fr 1fr;
-}
-@media (min-width: 600px) {
-    tr {
-        grid-template-columns: 1fr 64px 96px;
-    }
-}
-#enddefine
-
-#define(th):
-    #var(link = nil)
-    <th class="td:left m:h:s td:compact:col2">#(link = ["key": "title", "default": true])#inline("Admin/SortLink")</th>
-    #inline("Admin/TableActionLabels")
-#enddefine
-
-#define(tr):
-    #for(item in list.items):
-<tr>
-    <td class="td:left m:h:s td:compact:col2 td:compact:separator">
-        #if(UserHasPermission(table.key + ".get")):
-            <a href="#($req.url.path)#(item.id)/">#(item.title)</a>
-        #else:
-            #(item.title)
-        #endif
-    </td>
-    #inline("Admin/TableActionButtons")
-</tr>
-    #endfor
-#enddefine
 
 #inline("Admin/Table")

@@ -1,39 +1,15 @@
 #let(table = [
     "title": "Menu items",
-    "key": "frontend.items"
+    "key": "frontend.menu.items",
+    "field": [
+        "key": "label"
+    ]
 ])
-
-#define(css):
-tr {
-    grid-template-columns: 1fr 1fr;
-}
-@media (min-width: 600px) {
-    tr {
-        grid-template-columns: 1fr 1fr 128px 64px 96px;
-    }
-}
-#enddefine
 
 #define(toolbarRight):
     <a href="/admin/frontend/menus/#Request(parameter: "id")">#svg("compass")</a>
 #enddefine
 
-#define(th):
-    #var(link = nil)
-    <th class="td:left m:h:s td:compact:col2">#(link = ["key": "label", "default": true])#inline("Admin/SortLink")</th>
-    <th class="td:left m:h:s td:compact:col2">#(link = ["key": "url"])#inline("Admin/SortLink")</th>
-    <th class="td:center m:h:s td:compact:col2">#(link = ["key": "priority"])#inline("Admin/SortLink")</th>
-    #inline("Admin/TableActionLabels")
-#enddefine
-#define(tr):
-    #for(item in list.items):
-<tr>
-    <td class="td:left m:h:s td:compact:col2"><a href="#($req.url.path)#(item.id)/">#(item.label)</a></td>
-    <td class="td:left td:compact:col2"><a href="#($req.url.path)#(item.id)/">#(item.url)</a></td>
-    <td class="td:center td:compact:col2 td:compact:separator"><a href="#($req.url.path)#(item.id)/">#(item.priority)</a></td>
-    #inline("Admin/TableActionButtons")
-</tr>
-    #endfor
-#enddefine
-
 #inline("Admin/Table")
+
+

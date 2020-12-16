@@ -1,31 +1,9 @@
 #let(table = [
     "title": "Variables",
-    "key": "system.variables"
+    "key": "system.variables",
+    "field": [
+        "key": "name"
+    ]
 ])
-
-#define(css):
-tr {
-    grid-template-columns: 1fr 1fr;
-}
-@media (min-width: 600px) {
-    tr {
-        grid-template-columns: 1fr 64px 96px;
-    }
-}
-#enddefine
-
-#define(th):
-    #var(link = nil)
-    <th class="td:left m:h:s td:compact:col2">#(link = ["key": "name", "default": true, "sort": "desc"])#inline("Admin/SortLink")</th>
-    #inline("Admin/TableActionLabels")
-#enddefine
-#define(tr):
-    #for(item in list.items):
-<tr>
-    <td class="td:left m:h:s td:compact:col2 td:compact:separator"><a href="#($req.url.path)#(item.id)/">#(item.name)</a></td>
-    #inline("Admin/TableActionButtons")
-</tr>
-    #endfor
-#enddefine
 
 #inline("Admin/Table")

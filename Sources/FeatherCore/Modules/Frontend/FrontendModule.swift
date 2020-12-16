@@ -116,7 +116,7 @@ final class FrontendModule: ViperModule {
                 [
                     "url": "/admin/frontend/settings/",
                     "label": "Settings",
-                    "permission": "frontend.settings",
+                    "permission": "frontend.settings.update",
                 ],
                 
             ])

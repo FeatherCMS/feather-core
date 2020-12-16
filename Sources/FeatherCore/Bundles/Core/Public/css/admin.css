@@ -3,6 +3,7 @@ dt {
     text-decoration: underline;
 }
 @media (max-width: 599px) {
+    .td\:compact\:margin { margin-top: 0.75rem; margin-bottom: 0.75rem; }
     .td\:compact\:hidden { display: none; }
     .td\:compact\:col2 { grid-column: span 2; }
     .td\:compact\:col3 { grid-column: span 3; }

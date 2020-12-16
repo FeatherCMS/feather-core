@@ -3,11 +3,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    #if(!head.indexed ?? false):
-        <meta name="robots" content="noindex">
+    #if(head.noindex ?? metadata.status != "published"):
+    <meta name="robots" content="noindex">
     #endif
+    
+    <title>#(metadata.title ?? head.title ?? "") - #($system.variables["frontend.site.title"])</title>
+    <meta name="description" content="#(metadata.excerpt ?? head.description ?? "")">
 
-    <title>#(head.title) - #($system.variables["frontend.site.title"])</title>
+    #inline("Frontend/Metatags")
+
+    #inline("Frontend/Icons")
 
     #if($app.isDebug ?? false):
     <link rel="stylesheet" href="/css/frontend.css">
@@ -16,20 +21,22 @@
     #endif
     
     <style type="text/css">
+        #if($system.variables["frontend.site.font.family"] != nil):
         body {
-            #if(!$system.variables["frontend.site.font.family"].isEmpty):
             font-family: #($system.variables["frontend.site.font.family"]);
-            #endif
-            #if(!$system.variables["frontend.site.font.size"].isEmpty):
-            font-size: #($system.variables["frontend.site.font.size"]);
-            #endif
         }
-        #if(!$system.variables["frontend.site.color.primary"].isEmpty):
+        #endif
+        #if($system.variables["frontend.site.font.size"] != nil):
+        body {
+            font-size: #($system.variables["frontend.site.font.size"]);
+        }
+        #endif
+        #if($system.variables["frontend.site.color.primary"] != nil):
         a:link, a:visited, \#nav li a.selected {
             color: #($system.variables["frontend.site.color.primary"]);
         }
         #endif
-        #if(!$system.variables["frontend.site.color.secondary"].isEmpty):
+        #if($system.variables["frontend.site.color.secondary"] != nil):
         a:link:hover, a:visited:hover, \#nav a:link.selected:hover, \#nav li a:link:hover, \#nav li a:visited:hover{
             color: #($system.variables["frontend.site.color.secondary"]);
         }
@@ -37,17 +44,15 @@
 
         #evaluate(css ?? "")
         #($system.variables["frontend.site.css"] ?? "")
-        #(head.css ?? "")
+        #(metadata.css ?? "")
     </style>
-    
-    #inline("Frontend/Icons")
 
-    #if(head.canonicalUrl ?? false):
-        <link rel="canonical" href="#(head.canonicalUrl)">
+    #if(metadata.canonicalUrl ?? false):
+    <link rel="canonical" href="#(head.canonicalUrl)">
     #endif
 
     #if(Request(query: "page") != nil || Request(query: "search") != nil):
-        <link rel="canonical" href="#($app.baseUrl)#($req.url.path)">
+    <link rel="canonical" href="#($req.url.path.absoluteUrl())">
     #endif
 </head>
 <body class="m:zero">
@@ -85,7 +90,7 @@
 
             <p class="t:size:s">
                 #if($user.isAuthenticated):
-                    #if(UserHasPermission("admin")):
+                    #if(UserHasPermission("admin.module.access")):
                     <a href="/admin/">Admin</a> &middot;
                     #endif
                     <a href="/logout/">Logout</a>
@@ -111,7 +116,7 @@
     <script type="text/javascript">
         #evaluate(js ?? "")
         #($system.variables["frontend.site.js"] ?? "")
-        #(head.js ?? "")
+        #(metadata.js ?? "")
     </script>
 </body>
 </html>

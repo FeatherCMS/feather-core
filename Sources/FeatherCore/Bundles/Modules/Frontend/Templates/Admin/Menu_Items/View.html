@@ -2,15 +2,12 @@
 
 #let(detail = [
     "title": "Menu item",
+    "key": "frontend.menu.items",
     "list": [
         "title": "Menu items",
         "url": "/admin/frontend/menus/" + menuId + "/items/"
     ]
 ])
-
-#define(toolbarRightBefore):
-    <a href="/admin/frontend/menus/#(menuId)/">#svg("compass")</a>
-#enddefine
 
 #define(details):
     <dl class="t:center">

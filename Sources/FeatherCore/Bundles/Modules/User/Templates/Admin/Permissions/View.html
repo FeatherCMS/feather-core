@@ -1,10 +1,12 @@
 #let(detail = [
     "title": "Permission",
+    "key": "user.permissions",
     "list": [
         "title": "Permissions",
         "url": "/admin/user/permissions/"
     ]
 ])
+
 #define(details):
     <dl class="t:center">
         <dt>Id</dt>
@@ -29,4 +31,5 @@
         <dd class="m:h:zero m:b">#(model.notes)</dd>
     </dl>
 #enddefine
+
 #inline("Admin/Detail")

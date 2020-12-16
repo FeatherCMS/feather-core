@@ -1,30 +1,9 @@
 #let(table = [
     "title": "Users",
-    "key": "user.users"
+    "key": "user.users",
+    "field": [
+        "key": "email"
+    ]
 ])
-
-#define(css):
-tr {
-    grid-template-columns: 1fr 1fr;
-}
-@media (min-width: 600px) {
-    tr {
-        grid-template-columns: 1fr 64px 96px;
-    }
-}
-#enddefine
-
-#define(th):
-    <th class="td:left m:h:s td:compact:col2">#let(link = ["key": "email", "default": true])#inline("Admin/SortLink")</th>
-    #inline("Admin/TableActionLabels")
-#enddefine
-#define(tr):
-    #for(item in list.items):
-<tr>
-    <td class="td:left m:h:s td:compact:col2 td:compact:separator"><a href="#($req.url.path)#(item.id)/">#(item.email)</a></td>
-    #inline("Admin/TableActionButtons")
-</tr>
-    #endfor
-#enddefine
 
 #inline("Admin/Table")

@@ -37,7 +37,7 @@ public extension ViperAdminViewController where  Model.IDValue == UUID  {
     }
 
     private func viperAccess(_ key: String, req: Request) -> EventLoopFuture<Bool> {
-        let name = [Module.name, Model.name, key].joined(separator: ".")
+        let name = [Module.name, Model.name, key].joined(separator: ".").replacingOccurrences(of: "_", with: ".")
         return req.checkUserAccess(name)
     }
 

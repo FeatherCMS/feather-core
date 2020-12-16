@@ -1,13 +1,19 @@
 #define(toolbarCenter):
     #if(form.modelId != nil):Edit#else:Create#endif #(form.title)
 #enddefine
-#define(breadcrumb):
-    <li><a href="#(form.list.url)">#(form.list.title)</a></li>
-#enddefine
-#define(toolbarLeft):
-    <button type="submit" form="#(form.key)-form">#svg("save")</button>
 
-    #if(form.view ?? true):
+#define(breadcrumb):
+    #if(UserHasPermission(form.key + ".list")):
+    <li><a href="#(form.list.url)">#(form.list.title)</a></li>
+    #endif
+#enddefine
+
+#define(toolbarLeft):
+    #if(form.saveButton ?? true):
+    <button type="submit" form="#(form.key)-form">#svg("save")</button>
+    #endif
+
+    #if((form.modelId != nil) && (form.view ?? true) && UserHasPermission(form.key + ".get")):
     <a href="#($req.url.path.trimLast())">#svg("eye")</a>
     #endif
 
@@ -16,12 +22,9 @@
 
 #define(toolbarRight):
     #evaluate(toolbarRightBefore ?? "")
-    #if(form.modelId != nil):
-    #if(form.delete ?? true):
-        #if(UserHasPermission(form.key + ".delete")):
-        <a href="#($req.url.path.trimLast())delete/?cancel=#($req.url.path)">#svg("trash")</a>
-        #endif
-    #endif
+
+    #if((form.modelId != nil) && (form.delete ?? true) && UserHasPermission(form.key + ".delete")):
+    <a href="#($req.url.path.trimLast())delete/?cancel=#($req.url.path)">#svg("trash")</a>
     #endif
 #enddefine
 

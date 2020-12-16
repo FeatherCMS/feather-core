@@ -1,0 +1,44 @@
+#define(toolbarCenter):
+    #(table.title ?? "List")
+#enddefine
+
+#define(toolbarLeft):
+    #if((table.create ?? true) && UserHasPermission(table.key + ".create")):
+    <a href="#($req.url.path)create/">#svg("plus-circle")</a>
+    #endif
+#enddefine
+
+#define(body):
+    #if(table.search ?? true):
+    <form id="search-form" class="m" action="#($req.url.path)" method="get">
+        #if(Request(query: "sort") != nil):
+        <input type="hidden" id="sort" name="sort" value="#Request(query: "sort")">
+        #endif
+        #if(Request(query: "order") != nil):
+        <input type="hidden" id="order" name="order" value="#Request(query: "order")">
+        #endif
+        <input type="text" id="search" name="search" placeholder="Search..." value="#Request(query: "search")">
+    </form>
+    #endif
+
+    #if(list.items.isEmpty()):
+        #inline("Admin/Empty")
+    #else:
+    <table class="m">
+        <thead>
+            <tr>
+                #th()
+            </tr>
+        </thead>
+        <tbody>
+            #tr()
+        </tbody>
+    </table>
+
+    <div id="pagination" class="m t:center">
+    #inline("Admin/Pagination")
+    </div>
+    #endif
+#enddefine
+
+#inline("Admin/Index")

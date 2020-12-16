@@ -49,7 +49,6 @@ public extension FileFormField {
         var future: EventLoopFuture<String?> = req.eventLoop.future(nil)
         /// if there is a delete flag we simply remove the original file
         if value.delete {
-            value.delete = false
             future = updateOriginalKey(nil, req: req)
         }
         else if let file = value.temporaryFile {

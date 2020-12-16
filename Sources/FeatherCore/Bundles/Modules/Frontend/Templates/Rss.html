@@ -11,10 +11,10 @@
         <atom:link href="#($app.baseUrl)/rss.xml" rel="self" type="application/rss+xml" />
         #for(item in list):
         <item>
-            <guid isPermaLink="true">#($app.baseUrl)#(item.slug.safePath())</guid>
+            <guid isPermaLink="true">#(item.slug.absoluteUrl())</guid>
             <title><![CDATA[#(item.title)]]></title>
             <description><![CDATA[#(item.excerpt)]]></description>
-            <link>#($app.baseUrl)#(item.slug.safePath())</link>
+            <link>#(item.slug.absoluteUrl())</link>
             <pubDate>#Date(timeStamp: item.date, fixedFormat: "EEE, dd MMM y HH:mm:ss Z", timeZone: $app.timezone)</pubDate>
         </item>
         #endfor

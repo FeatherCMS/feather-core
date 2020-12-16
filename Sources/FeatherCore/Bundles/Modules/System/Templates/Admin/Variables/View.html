@@ -1,10 +1,12 @@
 #let(detail = [
     "title": "Variable",
+    "key": "system.variables",
     "list": [
         "title": "Variables",
         "url": "/admin/system/variables/"
     ]
 ])
+
 #define(details):
     <dl class="t:center">
         <dt>Id</dt>
@@ -23,4 +25,5 @@
         <dd class="m:h:zero m:b">#(model.notes)</dd>
     </dl>
 #enddefine
+
 #inline("Admin/Detail")
