@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  EventLoopFuture+Response.swift
+//  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 11. 21..
 //

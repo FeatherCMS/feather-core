@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  MinMaxEntities.swift
+//  AbsoluteUrlEntity
 //
 //  Created by Tibor Bodecs on 2020. 12. 16..
 //

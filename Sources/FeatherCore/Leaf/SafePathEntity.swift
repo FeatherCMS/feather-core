@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  SafePathEntity.swift
+//  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 12. 14..
 //

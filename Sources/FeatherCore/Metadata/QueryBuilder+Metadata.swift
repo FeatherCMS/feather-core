@@ -1,61 +1,40 @@
 //
-//  File.swift
-//  
+//  QueryBuilder+Metadata.swift
+//  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 12. 11..
 //
 
+public extension QueryBuilder where Model: MetadataModel {
 
-public extension QueryBuilder where Model: ViperModel & MetadataRepresentable {
-
-    func joinPublicMetadata(req: Request) -> QueryBuilder<Model> {
-        joinMetadata(req: req)
-            .filterMetadata(status: .published, req: req)
-            .filterMetadata(before: Date(), req: req)
-            .sortMetadataByDate(req: req)
+    func joinPublicMetadata() -> QueryBuilder<Model> {
+        joinMetadata()
+            .filterMetadata(status: .published)
+            .filterMetadata(before: Date())
+            .sortMetadataByDate()
     }
 
     /// joins the metadata object on the ViperModel query, if a path is present it'll use it as a filter to return only one instance that matches the slug
-    func joinMetadata(req: Request) -> QueryBuilder<Model> {
-        let res: QueryBuilder<Model>? = req.invoke("metadata-query-join", args: [
-            "query-builder": self
-        ])
-        return res ?? self
+    func joinMetadata() -> QueryBuilder<Model> {
+        Feather.metadataDeletage?.join(queryBuilder: self) ?? self
     }
     
     /// find an object with an associated the metadata object for a given path
-    func filterMetadata(path: String, req: Request) -> QueryBuilder<Model> {
-        let res: QueryBuilder<Model>? = req.invoke("metadata-query-filter", args: [
-            "query-builder": self,
-            "path": path,
-        ])
-        return res ?? self
+    func filterMetadata(path: String) -> QueryBuilder<Model> {
+        Feather.metadataDeletage?.filter(queryBuilder: self, path: path) ?? self
     }
 
     /// find an object with associated public (status is published & date is in the past) metadatas ordered by date descending
-    func filterMetadata(status: Metadata.Status, req: Request) -> QueryBuilder<Model> {
-        let res: QueryBuilder<Model>? = req.invoke("metadata-query-filter", args: [
-            "query-builder": self,
-            "status": status,
-        ])
-        return res ?? self
+    func filterMetadata(status: Metadata.Status) -> QueryBuilder<Model> {
+        Feather.metadataDeletage?.filter(queryBuilder: self, status: status) ?? self
     }
 
     /// date earlier than x
-    func filterMetadata(before date: Date, req: Request) -> QueryBuilder<Model> {
-        let res: QueryBuilder<Model>? = req.invoke("metadata-query-filter", args: [
-            "query-builder": self,
-            "before-date": date,
-        ])
-        return res ?? self
+    func filterMetadata(before date: Date) -> QueryBuilder<Model> {
+        Feather.metadataDeletage?.filter(queryBuilder: self, before: date) ?? self
     }
 
-    func sortMetadataByDate(_ direction: DatabaseQuery.Sort.Direction = .descending, req: Request) -> QueryBuilder<Model> {
-        let res: QueryBuilder<Model>? = req.invoke("metadata-query-sort", args: [
-            "query-builder": self,
-            "order": "date",
-            "direction": direction,
-        ])
-        return res ?? self
+    func sortMetadataByDate(_ direction: DatabaseQuery.Sort.Direction = .descending) -> QueryBuilder<Model> {
+        Feather.metadataDeletage?.sortByDate(queryBuilder: self, direction: direction) ?? self
     }
 }

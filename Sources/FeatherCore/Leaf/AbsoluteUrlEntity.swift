@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  AbsoluteUrlEntity.swift
+//  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 12. 16..
 //

@@ -18,6 +18,8 @@ public struct Feather {
     /// application reference
     public let app: Application
 
+    public static var metadataDeletage: MetadataDeletgate?
+
     ///
     /// Designated initializer
     ///
@@ -45,9 +47,7 @@ public struct Feather {
         let base = URL(fileURLWithPath: Application.Paths.base)
         for item in items {
             let dest = base.appendingPathComponent(item)
-            if FileManager.default.fileExists(atPath: dest.path) {
-                try FileManager.default.removeItem(at: dest)
-            }
+            try FileManager.default.removeFile(at: dest)
         }
     }
 
@@ -63,16 +63,13 @@ public struct Feather {
         for item in ["Public", "Resources"] {
             let source = core.appendingPathComponent(item)
             let dest = base.appendingPathComponent(item)
-            if !FileManager.default.fileExists(atPath: dest.path) {
-                try FileManager.default.copyItem(at: source, to: dest)
-            }
+            try FileManager.default.copy(at: source, to: dest)
         }
 
         /// copy bundled templates
         let tpl = URL(fileURLWithPath: Application.Paths.resources).appendingPathComponent("Templates")
-        if !FileManager.default.fileExists(atPath: tpl.path) {
-            try FileManager.default.createDirectory(at: tpl, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o744])
-        }
+        try FileManager.default.createDirectory(at: tpl)
+
         for module in app.viper.modules {
             guard let bundle = module.bundleUrl else {
                 continue
@@ -80,11 +77,11 @@ public struct Feather {
             #warning("copy bundled public files & resources too")
             let source = bundle.appendingPathComponent("Templates")
             let dest = tpl.appendingPathComponent(module.name.lowercased().capitalized)
-            if !FileManager.default.fileExists(atPath: dest.path) {
-                try FileManager.default.copyItem(at: source, to: dest)
-            }
+            try FileManager.default.copy(at: source, to: dest)
+
+            let pubSources = bundle.appendingPathComponent("Public")
         }
-        
+
         /// process and minify css files using the public/css folder
         let cssDir = base.appendingPathComponent("Public").appendingPathComponent("css")
         if FileManager.default.fileExists(atPath: cssDir.path) {

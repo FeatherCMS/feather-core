@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Application+Config.swift
+//  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 11. 20..
 //
