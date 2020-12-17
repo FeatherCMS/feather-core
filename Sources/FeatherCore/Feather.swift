@@ -114,6 +114,39 @@ public struct Feather {
         app.shutdown()
     }
 
+    /// @NOTE: work in progress, do not use this method yet
+    ///
+    /// Big thanks to [Lopdo](https://github.com/Lopdo) for the plugin loader sample code. 🙏
+    ///
+    private func loadDynamicModuleBuilder(named name: String) -> ViperBuilder {
+        let moduleName = name.lowercased().capitalized
+        let path = app.directory.resourcesDirectory + "Modules/libDynamic\(moduleName)Module.dylib"
+
+        guard let dylibReference = dlopen(path, RTLD_NOW|RTLD_LOCAL) else {
+            if let err = dlerror() {
+                fatalError(String(format: "dlopen error - %s", err))
+            }
+            else {
+                fatalError("unknown dlopen error")
+            }
+        }
+        defer {
+            dlclose(dylibReference)
+        }
+        let symbolName = "create\(moduleName)Module"
+        
+        
+        guard let symbol = dlsym(dylibReference, symbolName) else {
+            fatalError("dlsym error - create module symbol not found")
+        }
+
+        typealias InitFunction = @convention(c) () -> UnsafeMutableRawPointer
+        let f: InitFunction = unsafeBitCast(symbol, to: InitFunction.self)
+        let pointer = f()
+        let builder = Unmanaged<ViperBuilder>.fromOpaque(pointer).takeRetainedValue()
+        return builder
+    }
+
     ///
     /// This function will configure the instance
     ///
