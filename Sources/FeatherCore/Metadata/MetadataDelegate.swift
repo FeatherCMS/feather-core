@@ -18,6 +18,9 @@ public protocol MetadataDelegate {
     /// viper model
     func joinedMetadata<T: MetadataModel>(_ model: T) -> Metadata?
     func find<T: MetadataModel>(_ model: T.Type, reference: UUID, on db: Database) -> EventLoopFuture<Metadata?>
+    
+    func create(_ metadata: Metadata, on db: Database) -> EventLoopFuture<Void>
     func update(_ metadata: Metadata, on db: Database) -> EventLoopFuture<Void>
+    func delete(_ metadata: Metadata, on db: Database) -> EventLoopFuture<Void>
     
 }
