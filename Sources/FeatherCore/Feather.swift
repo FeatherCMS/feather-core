@@ -15,14 +15,6 @@
 /// - Available public [Feather CMS modules ](https://github.com/feather-modules).
 public struct Feather {
 
-    private let coreModules = [
-        UserBuilder(),
-        SystemBuilder(),
-        AdminBuilder(),
-        ApiBuilder(),
-        FrontendBuilder(),
-    ]
-
     /// application reference
     public let app: Application
 
@@ -58,13 +50,13 @@ public struct Feather {
             }
         }
     }
-    
+
     /// copies the bundled resources from the modules & feather core to the Public & Resources folders
     private func copyBundledResources() throws {
         guard let resources = Bundle.module.resourceURL else {
             return
         }
-        let core = resources.appendingPathComponent("Bundles").appendingPathComponent("Core")
+        let core = resources.appendingPathComponent("Bundle")
         let base = URL(fileURLWithPath: Application.Paths.base)
 
         /// copy bundled public and resource files if needed
@@ -75,34 +67,35 @@ public struct Feather {
                 try FileManager.default.copyItem(at: source, to: dest)
             }
         }
-        
-        /// process and minify css files using the public/css folder
-        let cssDir = base.appendingPathComponent("Public").appendingPathComponent("css")
-        let contents = try FileManager.default.contentsOfDirectory(atPath: cssDir.path)
-        let cssFiles = contents.map { cssDir.appendingPathComponent($0) }
-            .filter { $0.pathExtension == "css" && !$0.lastPathComponent.contains(".min.css") }
-        
-        for file in cssFiles {
-            let cssString = try String(contentsOf: file)
-            let newFile = file.deletingPathExtension().appendingPathExtension("min").appendingPathExtension("css")
-            try cssString.minifiedCss.write(to: newFile, atomically: true, encoding: .utf8)
-        }
-        
+
         /// copy bundled templates
         let tpl = URL(fileURLWithPath: Application.Paths.resources).appendingPathComponent("Templates")
-        
         if !FileManager.default.fileExists(atPath: tpl.path) {
             try FileManager.default.createDirectory(at: tpl, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o744])
         }
-
         for module in app.viper.modules {
             guard let bundle = module.bundleUrl else {
                 continue
             }
+            #warning("copy bundled public files & resources too")
             let source = bundle.appendingPathComponent("Templates")
             let dest = tpl.appendingPathComponent(module.name.lowercased().capitalized)
             if !FileManager.default.fileExists(atPath: dest.path) {
                 try FileManager.default.copyItem(at: source, to: dest)
+            }
+        }
+        
+        /// process and minify css files using the public/css folder
+        let cssDir = base.appendingPathComponent("Public").appendingPathComponent("css")
+        if FileManager.default.fileExists(atPath: cssDir.path) {
+            let contents = try FileManager.default.contentsOfDirectory(atPath: cssDir.path)
+            let cssFiles = contents.map { cssDir.appendingPathComponent($0) }
+                .filter { $0.pathExtension == "css" && !$0.lastPathComponent.contains(".min.css") }
+            
+            for file in cssFiles {
+                let cssString = try String(contentsOf: file)
+                let newFile = file.deletingPathExtension().appendingPathExtension("min").appendingPathExtension("css")
+                try cssString.minifiedCss.write(to: newFile, atomically: true, encoding: .utf8)
             }
         }
     }
@@ -197,7 +190,7 @@ public struct Feather {
         let multipleSources = LeafSources()
         try multipleSources.register(using: defaultSource)
 
-        let modules = (coreModules + userModules).map { $0.build() }
+        let modules = userModules.map { $0.build() }
         for module in modules {
             guard let url = module.bundleUrl else { continue }
 

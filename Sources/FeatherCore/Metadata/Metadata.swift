@@ -54,8 +54,7 @@ public struct Metadata: LeafDataRepresentable {
         self.css = css
         self.js = js
     }
-    
-    
+
     public var leafData: LeafData {
         .dictionary([
             "id": id,
@@ -70,39 +69,6 @@ public struct Metadata: LeafDataRepresentable {
             "css": css,
             "js": js,
         ])
-    }
-}
-
-extension FrontendMetadataModel {
-
-    /// update the model using a metadata object, we never update the id
-    func use(_ metadata: Metadata, updateSlug: Bool) {
-        if updateSlug {
-            slug = metadata.slug
-        }
-        status = metadata.status ?? status
-        title = metadata.title ?? title
-        excerpt = metadata.excerpt ?? excerpt
-        imageKey = metadata.imageKey ?? imageKey
-        date = metadata.date ?? date
-        feedItem = metadata.feedItem ?? feedItem
-        canonicalUrl = metadata.canonicalUrl ?? canonicalUrl
-        css = metadata.css ?? css
-        js = metadata.js ?? js
-    }
-
-    var metadata: Metadata {
-        .init(id: id,
-              slug: slug,
-              status: status,
-              title: title,
-              excerpt: excerpt,
-              imageKey: imageKey,
-              date: date,
-              feedItem: feedItem,
-              canonicalUrl: canonicalUrl,
-              css: css,
-              js: js)
     }
 }
 
