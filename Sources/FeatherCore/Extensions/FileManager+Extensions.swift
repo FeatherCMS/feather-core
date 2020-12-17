@@ -8,7 +8,7 @@
 import Foundation
 
 public extension FileManager {
-
+    
     /// check if directory exists
     func directoryExists(at path: String) -> Bool {
         var isDir: ObjCBool = false
@@ -26,6 +26,9 @@ public extension FileManager {
     /// check if a directory exists and is empty
     func isEmptyDirectory(at path: String) -> Bool {
         do {
+            guard directoryExists(at: path) else {
+                return false
+            }
             return try contentsOfDirectory(atPath: path).isEmpty
         }
         catch {
@@ -43,7 +46,7 @@ public extension FileManager {
     
     /// copy file if not exists
     func copy(at source: String, to destination: String) throws {
-        guard !fileExists(at: source) else {
+        guard !fileExists(atPath: source) else {
             return
         }
         try copyItem(atPath: source, toPath: destination)
@@ -51,7 +54,7 @@ public extension FileManager {
 
     /// copy file if not exists
     func copy(at source: URL, to destination: URL) throws {
-        guard !fileExists(at: source.path) else {
+        guard !fileExists(atPath: source.path) else {
             return
         }
         try copyItem(at: source, to: destination)
@@ -59,7 +62,7 @@ public extension FileManager {
 
     /// remove file if exists
     func removeFile(at url: URL) throws {
-        guard fileExists(at: url.path) else {
+        guard fileExists(atPath: url.path) else {
             return
         }
         try removeItem(at: url)
