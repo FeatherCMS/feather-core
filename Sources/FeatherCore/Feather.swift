@@ -18,7 +18,7 @@ public struct Feather {
     /// application reference
     public let app: Application
 
-    public static var metadataDeletage: MetadataDeletgate?
+    public static var metadataDeletage: MetadataDelegate?
 
     ///
     /// Designated initializer

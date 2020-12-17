@@ -40,15 +40,15 @@ public extension ViperModel where Self: MetadataRepresentable {
 
     // MARK: - find metadata info
 
-    static func findMetadata(id: UUID, on db: Database) -> EventLoopFuture<Metadata?> {
-        Feather.metadataDeletage?.find(id: id, on: db) ?? db.eventLoop.future(nil)
+    static func findMetadata(reference: UUID, on db: Database) -> EventLoopFuture<Metadata?> {
+        Feather.metadataDeletage?.find(self, reference: reference, on: db) ?? db.eventLoop.future(nil)
     }
 
     // MARK: - joined metadata api
     
     /// returns the joined metadata model as a dictionary or an empty dictionary
     var joinedMetadata: Metadata? {
-        Feather.metadataDeletage?.joinedMetadata
+        Feather.metadataDeletage?.joinedMetadata(self)
     }
 
     /// joins the metadata object on the ViperModel query, if a path is present it'll use it as a filter to return only one instance that matches the slug
