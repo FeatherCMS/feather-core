@@ -42,12 +42,6 @@ let package = Package(
         ], resources: [
             .copy("Bundle"),
         ]),
-        .target(name: "Feather", dependencies: [
-            .target(name: "FeatherCore"),
-
-            .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
-            .product(name: "LiquidLocalDriver", package: "liquid-local-driver"),
-        ]),
         .testTarget(name: "FeatherCoreTests", dependencies: [
             .target(name: "FeatherCore"),
 
