@@ -74,12 +74,31 @@ public struct Feather {
             guard let bundle = module.bundleUrl else {
                 continue
             }
-            #warning("copy bundled public files & resources too")
+
+            /// @NOTE: this is quite a hack, need to solve this in a more elegant way later on...
             let source = bundle.appendingPathComponent("Templates")
             let dest = tpl.appendingPathComponent(module.name.lowercased().capitalized)
             try FileManager.default.copy(at: source, to: dest)
 
-            let pubSources = bundle.appendingPathComponent("Public")
+            for folder in ["Public"] {
+                let publicPath = bundle.appendingPathComponent(folder)
+                if FileManager.default.isExistingDirectory(at: publicPath.path) {
+                    let publicSources = try FileManager.default.contentsOfDirectory(atPath: publicPath.path)
+                    for publicSource in publicSources {
+                        let sourceDir = publicPath.appendingPathComponent(publicSource)
+                        if FileManager.default.isExistingDirectory(at: sourceDir.path) {
+                            let srcs = try FileManager.default.contentsOfDirectory(atPath: sourceDir.path)
+                            for src in srcs {
+                                let srcFile = sourceDir.appendingPathComponent(src)
+                                let targetDir = base.appendingPathComponent(folder).appendingPathComponent(publicSource)
+                                let targetFile = targetDir.appendingPathComponent(src)
+                                try FileManager.default.createDirectory(at: targetDir)
+                                try FileManager.default.copy(at: srcFile, to: targetFile)
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         /// process and minify css files using the public/css folder

@@ -10,14 +10,14 @@ import Foundation
 public extension FileManager {
     
     /// check if directory exists
-    func directoryExists(at path: String) -> Bool {
+    func isExistingDirectory(at path: String) -> Bool {
         var isDir: ObjCBool = false
         let exist = fileExists(atPath: path, isDirectory: &isDir)
         return exist && isDir.boolValue
     }
 
     /// check if file exists
-    func fileExists(at path: String) -> Bool {
+    func isExistingFile(at path: String) -> Bool {
         var isDir: ObjCBool = false
         let exist = fileExists(atPath: path, isDirectory: &isDir)
         return exist && !isDir.boolValue
@@ -26,7 +26,7 @@ public extension FileManager {
     /// check if a directory exists and is empty
     func isEmptyDirectory(at path: String) -> Bool {
         do {
-            guard directoryExists(at: path) else {
+            guard isExistingDirectory(at: path) else {
                 return false
             }
             return try contentsOfDirectory(atPath: path).isEmpty
@@ -38,7 +38,7 @@ public extension FileManager {
 
     /// create directory with intermediate directories and posix permissions 0o744
     func createDirectory(at url: URL) throws {
-        guard !directoryExists(at: url.path) else {
+        guard !isExistingDirectory(at: url.path) else {
             return
         }
         try createDirectory(at: url, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o744])
@@ -46,7 +46,7 @@ public extension FileManager {
     
     /// copy file if not exists
     func copy(at source: String, to destination: String) throws {
-        guard fileExists(atPath: source) else {
+        guard fileExists(atPath: source), !fileExists(atPath: destination) else {
             return
         }
         try copyItem(atPath: source, toPath: destination)
@@ -54,7 +54,7 @@ public extension FileManager {
 
     /// copy file if not exists
     func copy(at source: URL, to destination: URL) throws {
-        guard fileExists(atPath: source.path) else {
+        guard fileExists(atPath: source.path), !fileExists(atPath: destination.path) else {
             return
         }
         try copyItem(at: source, to: destination)
