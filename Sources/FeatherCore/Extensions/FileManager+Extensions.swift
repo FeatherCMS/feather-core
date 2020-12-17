@@ -46,7 +46,7 @@ public extension FileManager {
     
     /// copy file if not exists
     func copy(at source: String, to destination: String) throws {
-        guard !fileExists(atPath: source) else {
+        guard fileExists(atPath: source) else {
             return
         }
         try copyItem(atPath: source, toPath: destination)
@@ -54,7 +54,7 @@ public extension FileManager {
 
     /// copy file if not exists
     func copy(at source: URL, to destination: URL) throws {
-        guard !fileExists(atPath: source.path) else {
+        guard fileExists(atPath: source.path) else {
             return
         }
         try copyItem(at: source, to: destination)
