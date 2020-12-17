@@ -33,7 +33,7 @@ public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware
         next.update(model, on: db).flatMap {
             var metadata = model.metadata
             metadata.slug = nil
-            Feather.metadataDelegate?.update(metadata, on: db) ?? db.eventLoop.future()
+            return Feather.metadataDelegate?.update(metadata, on: db) ?? db.eventLoop.future()
         }
     }
     
@@ -44,7 +44,7 @@ public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware
             metadata.module = T.Module.name
             metadata.model = T.name
             metadata.reference = model.id
-            Feather.metadataDelegate?.delete(metadata, on: db) ?? db.eventLoop.future()
+            return Feather.metadataDelegate?.delete(metadata, on: db) ?? db.eventLoop.future()
         }
     }
 }
