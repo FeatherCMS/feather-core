@@ -24,7 +24,7 @@ public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware
             metadata.module = T.Module.name
             metadata.model = T.name
             metadata.reference = model.id
-            return Feather.metadataDelegate?.create(model.metadata, on: db) ?? db.eventLoop.future()
+            return Feather.metadataDelegate?.create(metadata, on: db) ?? db.eventLoop.future()
         }
     }
     
