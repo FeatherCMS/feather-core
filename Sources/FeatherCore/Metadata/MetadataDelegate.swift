@@ -12,6 +12,7 @@ public protocol MetadataDelegate {
     func join<T: MetadataModel>(queryBuilder: QueryBuilder<T>) -> QueryBuilder<T>
     func filter<T: MetadataModel>(queryBuilder: QueryBuilder<T>, path: String) -> QueryBuilder<T>
     func filter<T: MetadataModel>(queryBuilder: QueryBuilder<T>, before: Date) -> QueryBuilder<T>
+    func filterVisible<T: MetadataModel>(queryBuilder: QueryBuilder<T>) -> QueryBuilder<T>
     func filter<T: MetadataModel>(queryBuilder: QueryBuilder<T>, status: Metadata.Status) -> QueryBuilder<T>
     func sortByDate<T: MetadataModel>(queryBuilder: QueryBuilder<T>, direction: DatabaseQuery.Sort.Direction) -> QueryBuilder<T>
     

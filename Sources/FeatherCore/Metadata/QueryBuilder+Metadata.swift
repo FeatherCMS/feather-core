@@ -7,6 +7,14 @@
 
 public extension QueryBuilder where Model: MetadataModel {
 
+    /// join metadata and filter by draft and published status ordered by date
+    func joinVisibleMetadata() -> QueryBuilder<Model> {
+        joinMetadata()
+            .filterVisible()
+            .sortMetadataByDate()
+    }
+
+    /// join metadata and filter by published status, after the current date and order by date
     func joinPublicMetadata() -> QueryBuilder<Model> {
         joinMetadata()
             .filterMetadata(status: .published)
@@ -24,9 +32,14 @@ public extension QueryBuilder where Model: MetadataModel {
         Feather.metadataDelegate?.filter(queryBuilder: self, path: path) ?? self
     }
 
-    /// find an object with associated public (status is published & date is in the past) metadatas ordered by date descending
+    /// find an object with a given status
     func filterMetadata(status: Metadata.Status) -> QueryBuilder<Model> {
         Feather.metadataDelegate?.filter(queryBuilder: self, status: status) ?? self
+    }
+    
+    /// find an object with associated draft or published status
+    func filterVisible() -> QueryBuilder<Model> {
+        Feather.metadataDelegate?.filterVisible(queryBuilder: self) ?? self
     }
 
     /// date earlier than x
@@ -34,6 +47,7 @@ public extension QueryBuilder where Model: MetadataModel {
         Feather.metadataDelegate?.filter(queryBuilder: self, before: date) ?? self
     }
 
+    /// sort metadata by date in a given direction
     func sortMetadataByDate(_ direction: DatabaseQuery.Sort.Direction = .descending) -> QueryBuilder<Model> {
         Feather.metadataDelegate?.sortByDate(queryBuilder: self, direction: direction) ?? self
     }

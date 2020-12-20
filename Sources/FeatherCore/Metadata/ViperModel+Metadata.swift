@@ -61,6 +61,16 @@ public extension ViperModel where Self: MetadataRepresentable {
         queryJoinPublicMetadata(on: db).filterMetadata(path: path)
     }
     
+    /// find an object with an associated published or draft metadata
+    static func queryJoinVisibleMetadata(on db: Database) -> QueryBuilder<Self> {
+        query(on: db).joinVisibleMetadata()
+    }
+    
+    /// find an object with an associated published or draft metadata for a given path
+    static func queryJoinVisibleMetadata(path: String, on db: Database) -> QueryBuilder<Self> {
+        queryJoinVisibleMetadata(on: db).filterMetadata(path: path)
+    }
+    
     // MARK: - update associated metadata
 
     /// update metadata object
