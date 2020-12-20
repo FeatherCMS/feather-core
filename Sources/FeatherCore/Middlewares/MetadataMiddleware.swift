@@ -32,6 +32,9 @@ public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware
     public func update(model: T, on db: Database, next: AnyModelResponder) -> EventLoopFuture<Void> {
         next.update(model, on: db).flatMap {
             var metadata = model.metadata
+            metadata.module = T.Module.name
+            metadata.model = T.name
+            metadata.reference = model.id
             metadata.slug = nil
             return Feather.metadataDelegate?.update(metadata, on: db) ?? db.eventLoop.future()
         }
