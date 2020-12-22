@@ -1,5 +1,5 @@
 //
-//  MetadataMiddleware.swift
+//  MetadataModelMiddleware.swift
 //  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 08. 29..
@@ -30,14 +30,15 @@ public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware
     
     /// on update action we call the willUpdate method using the delegate
     public func update(model: T, on db: Database, next: AnyModelResponder) -> EventLoopFuture<Void> {
-        next.update(model, on: db).flatMap {
-            var metadata = model.metadata
-            metadata.module = T.Module.name
-            metadata.model = T.name
-            metadata.reference = model.id
-            metadata.slug = nil
-            return Feather.metadataDelegate?.update(metadata, on: db) ?? db.eventLoop.future()
-        }
+        // NOTE: we don't want to update metadata info on model update
+        next.update(model, on: db)//.flatMap {
+//            var metadata = model.metadata
+//            metadata.module = T.Module.name
+//            metadata.model = T.name
+//            metadata.reference = model.id
+//            metadata.slug = nil
+//            return Feather.metadataDelegate?.update(metadata, on: db) ?? db.eventLoop.future()
+//        }
     }
     
     /// on delete action, we remove the associated metadata
