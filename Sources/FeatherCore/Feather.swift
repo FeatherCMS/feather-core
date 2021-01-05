@@ -11,8 +11,7 @@
 ///
 /// # Reference:
 /// - More details about [Vapor 4](https://docs.vapor.codes/4.0/environment).
-/// - More details about [Feather CMS](https://github.com/BinaryBirds/feather).
-/// - Available public [Feather CMS modules ](https://github.com/feather-modules).
+/// - More details about [Feather CMS](https://github.com/FeatherCMS/feather).
 public struct Feather {
 
     /// application reference
@@ -155,48 +154,60 @@ public struct Feather {
         let builder = Unmanaged<ViperBuilder>.fromOpaque(pointer).takeRetainedValue()
         return builder
     }
-
+    
     ///
-    /// This function will configure the instance
-    ///
-    /// - Throws: `Error` due to `modules` registration
+    /// Use a given database driver for a provided database identifier
     ///
     /// - parameters:
     ///     - database: An instance of Type [DatabaseConfigurationFactory](https://docs.vapor.codes/4.0/fluent/overview)
     ///     - databaseId: An Instance of Type [DatabaseID](https://docs.vapor.codes/4.0/fluent/overview)
+    public func use(database: DatabaseConfigurationFactory, databaseId: DatabaseID) {
+        app.databases.use(database, as: databaseId)
+    }
+
+    ///
+    /// Use a given file storage for a provided identifier
+    ///
+    /// - parameters:
     ///     - fileStorage: An Instance of Type [FileStorageConfigurationFactory](https://github.com/BinaryBirds/liquid-kit)
     ///     - fileStorageId: File storage Type [FileStorageID](https://github.com/BinaryBirds/liquid-kit)
+    public func use(fileStorage: FileStorageConfigurationFactory, fileStorageId: FileStorageID) {
+        app.fileStorages.use(fileStorage, as: fileStorageId)
+    }
+
+    /// Use the public file middleware
+    public func usePublicFileMiddleware() {
+        app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+    }
+
+    /// Set the default max body size for the routes
     ///     - maxUploadSize: (Optional)  An Instance of Type **ByteCount** - Required format: **XXmb** - Default: 10mb
-    ///     - modules: An Array containing intances of type [ViperBuilder](https://github.com/BinaryBirds/viper-kit)
-    ///     - usePublicFileMiddleware: (Optional) A **Bool** to deactivate the MiddleWare, if you implemented your own -  Default **true**
+    public func setMaxUploadSize(_ maxUploadSize: ByteCount = "10mb") {
+        /// set the default max body size for the routes
+        app.routes.defaultMaxBodySize = maxUploadSize
+    }
+
     ///
-    public func configure(database: DatabaseConfigurationFactory,
-                      databaseId: DatabaseID,
-                      fileStorage: FileStorageConfigurationFactory,
-                      fileStorageId: FileStorageID,
-                      maxUploadSize: ByteCount = "10mb",
-                      modules userModules: [ViperBuilder] = [],
-                      usePublicFileMiddleware: Bool = true) throws {
- 
+    /// This function will configure the system using the given modules
+    ///
+    /// - parameters:
+    ///     - builders: An Array containing intances of [ViperBuilder](https://github.com/BinaryBirds/viper-kit) objects
+    ///
+    public func configure(_ builders: [ViperBuilder] = []) throws {
+        /// use Vapor session
+        app.sessions.use(.fluent)
+        app.migrations.add(SessionRecord.migration)
+        app.middleware.use(app.sessions.middleware)
+        
+        /// add  custom middlewares
+        app.middleware.use(SlashMiddleware())
+        app.middleware.use(RequestCacheMiddleware())
+        app.middleware.use(LeafFoundationMiddleware())
+        
         /// override views directory name with templates
         app.directory.viewsDirectory = app.directory.resourcesDirectory + "Templates/"
         
-        if usePublicFileMiddleware {
-            app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
-        }
-        
-        app.databases.use(database, as: databaseId)
-        app.fileStorages.use(fileStorage, as: fileStorageId)
-
-        app.routes.defaultMaxBodySize = maxUploadSize
-        
-        app.sessions.use(.fluent)
-        app.migrations.add(SessionRecord.migration)
-        app.middleware.use(SlashMiddleware())
-        app.middleware.use(RequestCacheMiddleware())
-        app.middleware.use(app.sessions.middleware)
-        app.middleware.use(LeafFoundationMiddleware())
-        
+        /// configure Leaf sources using the modules
         let defaultSource = NIOLeafFiles(fileio: app.fileio,
                                          limits: [.requireExtensions],
                                          sandboxDirectory: app.directory.resourcesDirectory,
@@ -205,8 +216,7 @@ public struct Feather {
         
         let multipleSources = LeafSources()
         try multipleSources.register(using: defaultSource)
-
-        let modules = userModules.map { $0.build() }
+        let modules = builders.map { $0.build() }
         for module in modules {
             guard let url = module.bundleUrl else { continue }
 
@@ -220,34 +230,36 @@ public struct Feather {
         }
         
         LeafEngine.sources = multipleSources
+        
+        /// register custom leaf entities
         LeafEngine.useLeafFoundation()
         LeafEngine.entities.use(ResolveLeafEntity(), asMethod: "resolve")
         LeafEngine.entities.use(SafePathEntity(), asMethod: "safePath")
         LeafEngine.entities.use(AbsoluteUrlEntity(), asMethod: "absoluteUrl")
-//        LeafEngine.entities.use(TranslationLeafEntity(), asMethod: "t")
-
         LeafEngine.entities.use(MinEntity(), asFunction: "min")
         LeafEngine.entities.use(MaxEntity(), asFunction: "max")
         LeafEngine.entities.use(InlineSvg(iconset: "feather-icons"), asFunction: "svg")
-
-        
         LeafEngine.entities.use(InvokeHookLeafEntity(), asFunction: "InvokeHook")
         LeafEngine.entities.use(InvokeAllHooksLeafEntity(), asFunction: "InvokeAllHooks")
-        
-        
         LeafEngine.entities.use(UserHasPermissionLeafEntity(), asFunction: "UserHasPermission")
-        LeafRenderer.Option.timeout = 1.000 // 1000ms
+//        LeafEngine.entities.use(TranslationLeafEntity(), asMethod: "t")
         
+        /// configure LeafRenderer
+        LeafRenderer.Option.timeout = 1.000 // 1000ms
         if app.isDebug {
             LeafRenderer.Option.caching = .bypass
         }
+        /// usse leaf
         app.views.use(.leaf)
 
+        /// use the modules
         try app.viper.use(modules)
 
+        /// register other leaf related core middlewares
         app.middleware.use(FeatherCoreLeafExtensionMiddleware())
         app.middleware.use(ViperLeafScopesMiddleware())
 
+        /// run auto-migration process before start
         try app.autoMigrate().wait()
     }
 }

@@ -10,11 +10,11 @@ final class FeatherCoreTests: XCTestCase {
     
     private func featherInstall() throws -> Feather {
         let feather = try Feather(env: .testing)
-        try feather.configure(database: .sqlite(.memory),
-                              databaseId: .sqlite,
-                              fileStorage: .local(publicUrl: Application.baseUrl, publicPath: Application.Paths.public, workDirectory: "assets"),
-                              fileStorageId: .local,
-                              modules: [])
+        feather.setMaxUploadSize("10mb")
+        feather.usePublicFileMiddleware()
+        feather.use(database: .sqlite(.memory), databaseId: .sqlite)
+        feather.use(fileStorage: .local(publicUrl: Application.baseUrl, publicPath: Application.Paths.public, workDirectory: "assets"), fileStorageId: .local)
+        try feather.configure()
 
         try feather.app.describe("System install must succeed")
             .get("/system/install/")
