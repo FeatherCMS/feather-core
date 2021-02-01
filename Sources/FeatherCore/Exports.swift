@@ -8,7 +8,7 @@
 @_exported import Vapor
 @_exported import Fluent
 @_exported import Leaf
-@_exported import JWT
+//@_exported import JWT
 @_exported import ContentApi
 @_exported import ViewKit
 @_exported import Liquid
