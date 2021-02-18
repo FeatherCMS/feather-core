@@ -11,7 +11,7 @@ public extension Application {
 
         fileprivate struct KeyValueStorage: Codable {
             
-            static var url: URL { URL(fileURLWithPath: Application.Paths.resources + "config.json") }
+            static var url: URL { Application.Paths.resources.appendingPathComponent("config").appendingPathExtension("json") }
 
             static var current: [String: String] {
                 do {

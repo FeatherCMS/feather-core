@@ -13,114 +13,219 @@
 /// - More details about [Vapor 4](https://docs.vapor.codes/4.0/environment).
 /// - More details about [Feather CMS](https://github.com/FeatherCMS/feather).
 public struct Feather {
+    
+    public static var metadataDelegate: MetadataDelegate?
+    
+    // MARK: - application management
 
     /// application reference
     public let app: Application
-
-    public static var metadataDelegate: MetadataDelegate?
 
     ///
     /// Designated initializer
     ///
     public init(env: Environment) throws {
         app = Application(env)
+        
+        setMaxUploadSize()
     }
 
     ///
     /// Start the application and bind the listening port
     ///
-    /// - Throws: `Error` due to `FileManager` error when copying default "Public", "Resources"
+    /// - Throws: Simply rethrows the error object from the Vapor `try app.run()` call.
     ///
     public func start() throws {
-        try copyBundledResources()
-        /// run the application
         try app.run()
     }
     
-    /// Removes the Public & Resources folders
-    public func reset(resourcesOnly: Bool = false) throws {
-        var items = ["Resources"]
-        if !resourcesOnly {
-            items.append("Public")
-        }
-        let base = URL(fileURLWithPath: Application.Paths.base)
-        for item in items {
-            let dest = base.appendingPathComponent(item)
-            try FileManager.default.removeFile(at: dest)
-        }
-    }
-
-    /// copies the bundled resources from the modules & feather core to the Public & Resources folders
-    private func copyBundledResources() throws {
-        guard let resources = Bundle.module.resourceURL else {
-            return
-        }
-        let core = resources.appendingPathComponent("Bundle")
-        let base = URL(fileURLWithPath: Application.Paths.base)
-
-        /// copy bundled public and resource files if needed
-        for item in ["Public", "Resources"] {
-            let source = core.appendingPathComponent(item)
-            let dest = base.appendingPathComponent(item)
-            try FileManager.default.copy(at: source, to: dest)
-        }
-
-        /// copy bundled templates
-        let tpl = URL(fileURLWithPath: Application.Paths.resources).appendingPathComponent("Templates")
-        try FileManager.default.createDirectory(at: tpl)
-
-        for module in app.viper.modules {
-            guard let bundle = module.bundleUrl else {
-                continue
-            }
-
-            /// @NOTE: this is quite a hack, need to solve this in a more elegant way later on...
-            let source = bundle.appendingPathComponent("Templates")
-            let dest = tpl.appendingPathComponent(module.name.lowercased().capitalized)
-            try FileManager.default.copy(at: source, to: dest)
-
-            for folder in ["Public"] {
-                let publicPath = bundle.appendingPathComponent(folder)
-                if FileManager.default.isExistingDirectory(at: publicPath.path) {
-                    let publicSources = try FileManager.default.contentsOfDirectory(atPath: publicPath.path)
-                    for publicSource in publicSources {
-                        let sourceDir = publicPath.appendingPathComponent(publicSource)
-                        if FileManager.default.isExistingDirectory(at: sourceDir.path) {
-                            let srcs = try FileManager.default.contentsOfDirectory(atPath: sourceDir.path)
-                            for src in srcs {
-                                let srcFile = sourceDir.appendingPathComponent(src)
-                                let targetDir = base.appendingPathComponent(folder).appendingPathComponent(publicSource)
-                                let targetFile = targetDir.appendingPathComponent(src)
-                                try FileManager.default.createDirectory(at: targetDir)
-                                try FileManager.default.copy(at: srcFile, to: targetFile)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        /// process and minify css files using the public/css folder
-        let cssDir = base.appendingPathComponent("Public").appendingPathComponent("css")
-        if FileManager.default.fileExists(atPath: cssDir.path) {
-            let contents = try FileManager.default.contentsOfDirectory(atPath: cssDir.path)
-            let cssFiles = contents.map { cssDir.appendingPathComponent($0) }
-                .filter { $0.pathExtension == "css" && !$0.lastPathComponent.contains(".min.css") }
-            
-            for file in cssFiles {
-                let cssString = try String(contentsOf: file)
-                let newFile = file.deletingPathExtension().appendingPathExtension("min").appendingPathExtension("css")
-                try cssString.minifiedCss.write(to: newFile, atomically: true, encoding: .utf8)
-            }
-        }
-    }
-
     ///
     /// Stop the application and unbind the listening port
     ///
     public func stop() {
         app.shutdown()
     }
+    
+    // MARK: - resource management
+    
+    /// Recreates the `Public` folder based on the bundled public files
+    ///
+    /// Call this method after modules are configured, otherwise module bundled CSS files won't be processed.
+    ///
+    public func resetPublicFiles() throws {
+        try FileManager.default.removeFile(at: Application.Paths.public)
+        try copyPublicFiles()
+        try processCssFiles()
+    }
+
+    /// Recreates the `Resources` folder based on the bundled resources
+    public func resetResources() throws {
+        try FileManager.default.removeFile(at: Application.Paths.resources)
+        try copyBundleResources()
+    }
+    
+    /// Recreates the `Templates` folder based on the bundled templates
+    public func resetTemplates() throws {
+        try FileManager.default.removeFile(at: Application.Paths.templates)
+        try copyTemplatesIfNeeded()
+    }
+    
+    /// copies the bundled resources from the modules & feather core to the Public & Resources folders
+    private func copyPublicFiles() throws {
+        let publicUrl = Application.Paths.public
+        
+        for module in app.viper.modules {
+            guard
+                /// check if public files directory exists for the module
+                let publicFilesUrl = module.bundleUrl?.appendingPathComponent(Application.Directories.public),
+                FileManager.default.isExistingDirectory(at: publicFilesUrl.path)
+            else {
+                continue
+            }
+
+            /// @NOTE: needs a better solution for recursively merging files & directories
+            let publicSources = try FileManager.default.contentsOfDirectory(atPath: publicFilesUrl.path)
+            for publicSource in publicSources {
+                let sourceDir = publicFilesUrl.appendingPathComponent(publicSource)
+                guard FileManager.default.isExistingDirectory(at: sourceDir.path) else {
+                    continue
+                }
+                let srcs = try FileManager.default.contentsOfDirectory(atPath: sourceDir.path)
+                for src in srcs {
+                    let srcFile = sourceDir.appendingPathComponent(src)
+                    let targetDir = publicUrl.appendingPathComponent(publicSource)
+                    let targetFile = targetDir.appendingPathComponent(src)
+                    try FileManager.default.createDirectory(at: targetDir)
+                    try FileManager.default.copy(at: srcFile, to: targetFile)
+                }
+            }
+        }
+    }
+
+    /// copy FeatherCore resource files from the Bundle folder to the app base folder
+    private func copyBundleResources() throws {
+        let bundleDir = "Bundle"
+        
+        guard let bundleUrl = Bundle.module.resourceURL?.appendingPathComponent(bundleDir) else {
+            app.logger.warning("Missing FeatherCore bundle resources.")
+            return
+        }
+        let baseUrl = Application.Paths.base
+        let bundleResources = try FileManager.default.contentsOfDirectory(atPath: bundleUrl.path)
+
+        /// copy bundled public and resource files if needed
+        for resource in bundleResources {
+            let source = bundleUrl.appendingPathComponent(resource)
+            let destination = baseUrl.appendingPathComponent(resource)
+            try FileManager.default.copy(at: source, to: destination)
+        }
+    }
+
+    /// copy bundled module templates to the resources folder
+    public func copyTemplatesIfNeeded() throws {
+        let templatesUrl = Application.Paths.templates
+        try FileManager.default.createDirectory(at: templatesUrl)
+
+        for module in app.viper.modules {
+            guard let bundleUrl = module.bundleUrl else {
+                continue
+            }
+            let source = bundleUrl.appendingPathComponent(Application.Directories.templates)
+            let destination = templatesUrl.appendingPathComponent(module.name.lowercased().capitalized)
+            try FileManager.default.copy(at: source, to: destination)
+        }
+    }
+
+    // MARK: - css processing
+    
+    fileprivate struct Css {
+        enum `Type` {
+            case inline
+            case link
+        }
+        let name: String
+        let priority: Int
+        let fileName: String?
+        let snippet: String?
+        
+        /// use name if fileName was not provided
+        var file: String {
+            fileName ?? name
+        }
+        
+        /// shortcut for css file url
+        var fileUrl: URL {
+            Application.Paths.css.appendingPathComponent(file).appendingPathExtension("css")
+        }
+    }
+    
+    /// invokes cssHooks and returns the merged dictionary as a Css array sorted by priority
+    private func invokeCssHooks() -> [Css] {
+        let cssHookResult: [[[String: Any]]] = app.invokeAll("css")
+        let cssArray = cssHookResult.flatMap { $0 }
+
+        return cssArray.compactMap { item -> Css? in
+            /// skip css if name is missing...
+            guard let name = item["name"] as? String else {
+                return nil
+            }
+            /// skip css if name is reserved by the system (style)
+            guard name != "style" else {
+                return nil
+            }
+            let priority = item["priority"] as? Int ?? 0
+            let fileName = item["file"] as? String
+            let snippet = item["snippet"] as? String
+
+            return Css(name: name, priority: priority, fileName: fileName, snippet: snippet)
+        }
+        .sorted { $0.priority > $1.priority }
+    }
+
+    /// process and minify all the css files using the public css folder
+    private func minifyExistingCssFiles() throws {
+        let cssUrl = Application.Paths.css
+
+        guard FileManager.default.fileExists(atPath: cssUrl.path) else {
+            return
+        }
+        let unminifiedCssFiles = try FileManager.default.contentsOfDirectory(atPath: cssUrl.path)
+            .map { cssUrl.appendingPathComponent($0) }
+            .filter { $0.pathExtension == "css" && !$0.lastPathComponent.contains(".min.css") }
+
+        for file in unminifiedCssFiles {
+            let cssString = try String(contentsOf: file)
+            let newFile = file.deletingPathExtension().appendingPathExtension("min").appendingPathExtension("css")
+            try cssString.minifiedCss.write(to: newFile, atomically: true, encoding: .utf8)
+        }
+    }
+
+    /// create a complete style.css file, based on the css hook then save it minified
+    private func processCssFiles() throws {
+        let cssUrl = Application.Paths.css
+        let cssFiles = invokeCssHooks()
+        
+        var fullCss: [String] = []
+        for css in cssFiles {
+            /// if the css is a snippet we also save it as a file...
+            if let snippet = css.snippet {
+                try snippet.write(to: css.fileUrl, atomically: true, encoding: .utf8)
+                fullCss.append(snippet)
+            }
+            if let cssString = try? String(contentsOf: css.fileUrl) {
+                fullCss.append(cssString)
+            }
+            else {
+                app.logger.notice("Missing CSS file: `\(css.file)`")
+            }
+        }
+
+        let fullCssString = fullCss.joined()
+        let fullCssName = cssUrl.appendingPathComponent("style").appendingPathExtension("min").appendingPathExtension("css")
+        try fullCssString.minifiedCss.write(to: fullCssName, atomically: true, encoding: .utf8)
+    }
+
+    // MARK: - experimental dylib
 
     /// @NOTE: work in progress, do not use this method yet
     ///
@@ -154,6 +259,8 @@ public struct Feather {
         let builder = Unmanaged<ViperBuilder>.fromOpaque(pointer).takeRetainedValue()
         return builder
     }
+    
+    // MARK: - configuration
     
     ///
     /// Use a given database driver for a provided database identifier
@@ -205,8 +312,8 @@ public struct Feather {
         app.middleware.use(LeafFoundationMiddleware())
         
         /// override views directory name with templates
-        app.directory.viewsDirectory = app.directory.resourcesDirectory + "Templates/"
-        
+        app.directory.viewsDirectory = app.directory.resourcesDirectory + Application.Directories.templates.withTrailingSlash
+
         /// configure Leaf sources using the modules
         let defaultSource = NIOLeafFiles(fileio: app.fileio,
                                          limits: [.requireExtensions],
@@ -222,7 +329,7 @@ public struct Feather {
 
             let moduleSource = ViperBundledLeafSource(module: module.name,
                                                       rootDirectory: url.path.withTrailingSlash,
-                                                      templatesDirectory: "Templates",
+                                                      templatesDirectory: Application.Directories.templates,
                                                       fileExtension: "html",
                                                       fileio: app.fileio)
             
@@ -245,7 +352,7 @@ public struct Feather {
 //        LeafEngine.entities.use(TranslationLeafEntity(), asMethod: "t")
         
         /// configure LeafRenderer
-        LeafRenderer.Option.timeout = 1.000 // 1000ms
+        LeafRenderer.Option.timeout = 1.500 // 1500ms
         if app.isDebug {
             LeafRenderer.Option.caching = .bypass
         }
@@ -256,6 +363,23 @@ public struct Feather {
         try app.viper.use(modules)
 
         /// register other leaf related core middlewares
+        
+        /// core bundle & public files are required
+        try copyBundleResources()
+        try copyPublicFiles()
+        try processCssFiles()
+
+        let files = invokeCssHooks().map { css -> LeafData in
+            .string(css.file)
+        }
+
+        var generators: [String: LeafDataGenerator] {
+            [
+                "css": .immediate(LeafData.array(files)),
+            ]
+        }
+
+        app.middleware.use(LeafScopeMiddleware(scope: "app", generators: generators))
         app.middleware.use(FeatherCoreLeafExtensionMiddleware())
         app.middleware.use(ViperLeafScopesMiddleware())
 
@@ -263,3 +387,7 @@ public struct Feather {
         try app.autoMigrate().wait()
     }
 }
+
+
+
+

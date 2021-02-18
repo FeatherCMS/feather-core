@@ -22,9 +22,14 @@ public struct InlineSvg: LeafNonMutatingMethod, Invariant, StringReturn {
 
     public func evaluate(_ params: LeafCallValues) -> LeafData {
         let name = params[0].string!
-        let path = Application.Paths.public + Application.Locations.images + iconset + "/" + name + ".svg"
+        
+        let path = Application.Paths.images
+            .appendingPathComponent(iconset)
+            .appendingPathComponent(name)
+            .appendingPathExtension("svg")
+
         do {
-            var svg = try String(contentsOf: URL(fileURLWithPath: path), encoding: .utf8)
+            var svg = try String(contentsOf: path, encoding: .utf8)
             let cls = params[1].string!
             if !cls.isEmpty {
                 svg = svg.replacingOccurrences(of: "<svg", with: "<svg class=\"\(cls)\" ")
