@@ -38,7 +38,7 @@ public struct Feather {
     public func start() throws {
         try app.run()
     }
-    
+
     ///
     /// Stop the application and unbind the listening port
     ///
@@ -50,10 +50,27 @@ public struct Feather {
     
     /// Recreates the `Public` folder based on the bundled public files
     ///
-    /// Call this method after modules are configured, otherwise module bundled CSS files won't be processed.
+    /// - parameters:
+    ///     - resetAssets: If true, the entire Public folder will be removed, otherwise assets will be kept, default value is *false*
     ///
-    public func resetPublicFiles() throws {
-        try FileManager.default.removeFile(at: Application.Paths.public)
+    /// **NOTE:** The method will keep the assets folder by default, you can reset those as well by setting the resetAssets property to true.
+    ///
+    /// **WARNING:**  Call this method after modules are configured, otherwise module bundled CSS files won't be processed.
+    ///
+    public func resetPublicFiles(resetAssets: Bool = false) throws {
+        let publicUrl = Application.Paths.public
+        if resetAssets {
+            try FileManager.default.removeFile(at: publicUrl)
+        }
+        else {
+            for item in try FileManager.default.contentsOfDirectory(atPath: publicUrl.path) {
+                if item == Application.Directories.assets {
+                    continue
+                }
+                let url = publicUrl.appendingPathComponent(item)
+                try FileManager.default.removeFile(at: url)
+            }
+        }
         try copyPublicFiles()
         try processCssFiles()
     }
@@ -83,20 +100,23 @@ public struct Feather {
                 continue
             }
 
-            /// @NOTE: needs a better solution for recursively merging files & directories
+            /// @NOTE: need a better solution for recursively merging files & directories
             let publicSources = try FileManager.default.contentsOfDirectory(atPath: publicFilesUrl.path)
             for publicSource in publicSources {
                 let sourceDir = publicFilesUrl.appendingPathComponent(publicSource)
-                guard FileManager.default.isExistingDirectory(at: sourceDir.path) else {
-                    continue
+                if FileManager.default.isExistingDirectory(at: sourceDir.path) {
+                    let srcs = try FileManager.default.contentsOfDirectory(atPath: sourceDir.path)
+                    for src in srcs {
+                        let srcFile = sourceDir.appendingPathComponent(src)
+                        let targetDir = publicUrl.appendingPathComponent(publicSource)
+                        let targetFile = targetDir.appendingPathComponent(src)
+                        try FileManager.default.createDirectory(at: targetDir)
+                        try FileManager.default.copy(at: srcFile, to: targetFile)
+                    }
                 }
-                let srcs = try FileManager.default.contentsOfDirectory(atPath: sourceDir.path)
-                for src in srcs {
-                    let srcFile = sourceDir.appendingPathComponent(src)
-                    let targetDir = publicUrl.appendingPathComponent(publicSource)
-                    let targetFile = targetDir.appendingPathComponent(src)
-                    try FileManager.default.createDirectory(at: targetDir)
-                    try FileManager.default.copy(at: srcFile, to: targetFile)
+                else {
+                    let targetFile = publicUrl.appendingPathComponent(publicSource)
+                    try FileManager.default.copy(at: sourceDir, to: targetFile)
                 }
             }
         }
