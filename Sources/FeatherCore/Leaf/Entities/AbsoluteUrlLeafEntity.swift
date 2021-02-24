@@ -1,11 +1,11 @@
 //
-//  AbsoluteUrlEntity.swift
+//  AbsoluteUrlLeafEntity.swift
 //  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 12. 16..
 //
 
-public struct AbsoluteUrlEntity: LeafNonMutatingMethod, Invariant, StringReturn {
+public struct AbsoluteUrlLeafEntity: LeafNonMutatingMethod, Invariant, StringReturn {
 
     public static var callSignature: [LeafCallParameter] { [.string] }
     

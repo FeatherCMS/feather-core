@@ -1,12 +1,9 @@
 //
 //  File.swift
-//  
+//  FeatherCore
 //
 //  Created by Tibor Bodecs on 2021. 02. 18..
 //
-
-import Foundation
-import Leaf
 
 public struct LeafScopeMiddleware: Middleware {
     

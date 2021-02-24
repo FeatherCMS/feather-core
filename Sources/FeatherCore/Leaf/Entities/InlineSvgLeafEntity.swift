@@ -1,11 +1,11 @@
 //
-//  InlineSvg.swift
+//  InlineSvgLeafEntity.swift
 //  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 11. 21..
 //
 
-public struct InlineSvg: LeafNonMutatingMethod, Invariant, StringReturn {
+public struct InlineSvgLeafEntity: LeafNonMutatingMethod, Invariant, StringReturn {
 
     let iconset: String
 

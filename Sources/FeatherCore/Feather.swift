@@ -361,11 +361,13 @@ public struct Feather {
         /// register custom leaf entities
         LeafEngine.useLeafFoundation()
         LeafEngine.entities.use(ResolveLeafEntity(), asMethod: "resolve")
-        LeafEngine.entities.use(SafePathEntity(), asMethod: "safePath")
-        LeafEngine.entities.use(AbsoluteUrlEntity(), asMethod: "absoluteUrl")
-        LeafEngine.entities.use(MinEntity(), asFunction: "min")
-        LeafEngine.entities.use(MaxEntity(), asFunction: "max")
-        LeafEngine.entities.use(InlineSvg(iconset: "feather-icons"), asFunction: "svg")
+        LeafEngine.entities.use(ReplaceYearLeafEntity(), asMethod: "replaceYear")
+        LeafEngine.entities.use(SafePathLeafEntity(), asMethod: "safePath")
+        LeafEngine.entities.use(AbsoluteUrlLeafEntity(), asMethod: "absoluteUrl")
+
+        LeafEngine.entities.use(IntMinLeafEntity(), asFunction: "min")
+        LeafEngine.entities.use(IntMaxLeafEntity(), asFunction: "max")
+        LeafEngine.entities.use(InlineSvgLeafEntity(iconset: "feather-icons"), asFunction: "svg")
         LeafEngine.entities.use(InvokeHookLeafEntity(), asFunction: "InvokeHook")
         LeafEngine.entities.use(InvokeAllHooksLeafEntity(), asFunction: "InvokeAllHooks")
         LeafEngine.entities.use(UserHasPermissionLeafEntity(), asFunction: "UserHasPermission")
