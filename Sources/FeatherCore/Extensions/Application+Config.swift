@@ -63,7 +63,14 @@ public extension Application {
             }
             return .autoupdatingCurrent
         }
-        
+
+        public static var filters: [String] {
+            if let filterValue = Application.Config.get("frontend.site.filters") {
+                return filterValue.split(separator: ",").map(String.init)
+            }
+            return []
+        }
+
         public static func dateFormatter(dateStyle: DateFormatter.Style = .short, timeStyle: DateFormatter.Style = .short) -> DateFormatter {
             let formatter = DateFormatter()
             formatter.timeZone = Application.Config.timezone
