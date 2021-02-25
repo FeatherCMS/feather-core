@@ -11,7 +11,7 @@ let package = Package(
         .library(name: "DynamicFeatherCore", type: .dynamic, targets: ["FeatherCore"])
     ],
     dependencies: [
-        .package(url: "https://github.com/vapor/vapor", from: "4.34.0"),
+        .package(url: "https://github.com/vapor/vapor", from: "4.41.0"),
         .package(url: "https://github.com/vapor/leaf", .exact("4.0.0-tau.1")),
         .package(url: "https://github.com/vapor/leaf-kit", .exact("1.0.0-tau.1.1")),
         .package(url: "https://github.com/vapor/fluent", from: "4.0.0"),
