@@ -5,15 +5,15 @@
 //  Created by Tibor Bodecs on 2020. 12. 16..
 //
 
-struct TranslationLeafEntity: LeafUnsafeEntity, LeafNonMutatingMethod, StringReturn {
+struct TranslationEntity: UnsafeEntity, NonMutatingMethod, StringReturn {
 
     public var unsafeObjects: UnsafeObjects? = nil
 
-    public static var callSignature: [LeafCallParameter] { [.string] }
+    public static var callSignature: [CallParameter] { [.string] }
 
     public init() {}
     
-    public func evaluate(_ params: LeafCallValues) -> LeafData {
+    public func evaluate(_ params: CallValues) -> TemplateData {
 
         guard let app = app else { return .error("Needs unsafe access to Application") }
 

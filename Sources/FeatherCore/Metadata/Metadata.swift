@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 12. 11..
 //
 
-public struct Metadata: LeafDataRepresentable {
+public struct Metadata: TemplateDataRepresentable {
     
     public enum Status: String, CaseIterable, Codable {
         case draft
@@ -72,11 +72,11 @@ public struct Metadata: LeafDataRepresentable {
         self.js = js
     }
 
-    public var leafData: LeafData {
+    public var templateData: TemplateData {
         .dictionary([
             "id": id,
             "slug": slug,
-            "status": status?.encodeToLeafData(),
+            "status": status?.encodeToTemplateData(),
             "title": title,
             "excerpt": excerpt,
             "imageKey": imageKey,

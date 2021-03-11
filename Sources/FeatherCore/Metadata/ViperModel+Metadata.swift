@@ -97,12 +97,12 @@ public extension ViperModel where Self: MetadataRepresentable {
     }
 }
 
-public extension ViperModel where Self: MetadataRepresentable, Self: LeafDataRepresentable {
+public extension ViperModel where Self: MetadataRepresentable, Self: TemplateDataRepresentable {
 
-    /// returns the default leaf data object coinaining the metadata leaf data (metadata info must be already joined / present)
-    var leafDataWithJoinedMetadata: LeafData {
-        var data: [String: LeafData] = leafData.dictionary!
-        data["metadata"] = joinedMetadata?.leafData ?? .dictionary(nil)
+    /// returns the default template data object coinaining the metadata template data (metadata info must be already joined / present)
+    var templateDataWithJoinedMetadata: TemplateData {
+        var data: [String: TemplateData] = templateData.dictionary!
+        data["metadata"] = joinedMetadata?.templateData ?? .dictionary(nil)
         return .dictionary(data)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  ReplaceYearLeafEntity.swift
+//  ReplaceYearEntity.swift
 //  FeatherCore
 //
 //  Created by Tibor Bodecs on 2021. 02. 24..
@@ -7,13 +7,13 @@
 
 import Foundation
 
-public struct ReplaceYearLeafEntity: LeafFunction, Invariant, LeafNonMutatingMethod, StringReturn {
+public struct ReplaceYearEntity: Function, Invariant, NonMutatingMethod, StringReturn {
 
-    public static var callSignature: [LeafCallParameter] { [.string] }
+    public static var callSignature: [CallParameter] { [.string] }
     
     public init() {}
 
-    public func evaluate(_ params: LeafCallValues) -> LeafData {
+    public func evaluate(_ params: CallValues) -> TemplateData {
         let input = params[0].string!
         let calendar = Calendar(identifier: .gregorian)
         let now = Date()

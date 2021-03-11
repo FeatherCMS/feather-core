@@ -329,81 +329,81 @@ public struct Feather {
         /// add  custom middlewares
         app.middleware.use(SlashMiddleware())
         app.middleware.use(RequestCacheMiddleware())
-        app.middleware.use(LeafFoundationMiddleware())
+        app.middleware.use(TauFoundationMiddleware())
         
         /// override views directory name with templates
         app.directory.viewsDirectory = app.directory.resourcesDirectory + Application.Directories.templates.withTrailingSlash
 
-        /// configure Leaf sources using the modules
-        let defaultSource = NIOLeafFiles(fileio: app.fileio,
-                                         limits: [.requireExtensions],
-                                         sandboxDirectory: app.directory.resourcesDirectory,
-                                         viewDirectory: app.directory.viewsDirectory,
-                                         defaultExtension: "html")
+        /// configure template sources using the modules
+        let defaultSource = FileSource(fileio: app.fileio,
+                                       limits: [.requireExtensions],
+                                       sandboxDirectory: app.directory.resourcesDirectory,
+                                       viewDirectory: app.directory.viewsDirectory,
+                                       defaultExtension: "html")
         
-        let multipleSources = LeafSources()
+        let multipleSources = TemplateSources()
         try multipleSources.register(using: defaultSource)
         let modules = builders.map { $0.build() }
         for module in modules {
             guard let url = module.bundleUrl else { continue }
 
-            let moduleSource = ViperBundledLeafSource(module: module.name,
-                                                      rootDirectory: url.path.withTrailingSlash,
-                                                      templatesDirectory: Application.Directories.templates,
-                                                      fileExtension: "html",
-                                                      fileio: app.fileio)
+            let moduleSource = ViperBundledTemplateSource(module: module.name,
+                                                          rootDirectory: url.path.withTrailingSlash,
+                                                          templatesDirectory: Application.Directories.templates,
+                                                          fileExtension: "html",
+                                                          fileio: app.fileio)
             
             try multipleSources.register(source: "\(module.name)-module-bundle", using: moduleSource)
         }
         
-        LeafEngine.sources = multipleSources
+        TemplateEngine.sources = multipleSources
         
-        /// register custom leaf entities
-        LeafEngine.useLeafFoundation()
-        LeafEngine.entities.use(ResolveLeafEntity(), asMethod: "resolve")
-        LeafEngine.entities.use(ReplaceYearLeafEntity(), asMethod: "replaceYear")
-        LeafEngine.entities.use(SafePathLeafEntity(), asMethod: "safePath")
-        LeafEngine.entities.use(AbsoluteUrlLeafEntity(), asMethod: "absoluteUrl")
+        /// register custom template entities
+        TemplateEngine.useTauFoundation()
+        TemplateEngine.entities.use(ResolveEntity(), asMethod: "resolve")
+        TemplateEngine.entities.use(ReplaceYearEntity(), asMethod: "replaceYear")
+        TemplateEngine.entities.use(SafePathEntity(), asMethod: "safePath")
+        TemplateEngine.entities.use(AbsoluteUrlEntity(), asMethod: "absoluteUrl")
 
-        LeafEngine.entities.use(IntMinLeafEntity(), asFunction: "min")
-        LeafEngine.entities.use(IntMaxLeafEntity(), asFunction: "max")
-        LeafEngine.entities.use(InlineSvgLeafEntity(iconset: "feather-icons"), asFunction: "svg")
-        LeafEngine.entities.use(InvokeHookLeafEntity(), asFunction: "InvokeHook")
-        LeafEngine.entities.use(InvokeAllHooksLeafEntity(), asFunction: "InvokeAllHooks")
-        LeafEngine.entities.use(UserHasPermissionLeafEntity(), asFunction: "UserHasPermission")
-//        LeafEngine.entities.use(TranslationLeafEntity(), asMethod: "t")
+        TemplateEngine.entities.use(IntMinEntity(), asFunction: "min")
+        TemplateEngine.entities.use(IntMaxEntity(), asFunction: "max")
+        TemplateEngine.entities.use(InlineSvgEntity(iconset: "feather-icons"), asFunction: "svg")
+        TemplateEngine.entities.use(InvokeHookEntity(), asFunction: "InvokeHook")
+        TemplateEngine.entities.use(InvokeAllHooksEntity(), asFunction: "InvokeAllHooks")
+        TemplateEngine.entities.use(UserHasPermissionEntity(), asFunction: "UserHasPermission")
+//        TemplateEngine.entities.use(TranslationEntity(), asMethod: "t")
         
-        /// configure LeafRenderer
-        LeafRenderer.Option.timeout = 1.500 // 1500ms
+        /// configure renderer
+        Renderer.Option.timeout = 1.500 // 1500ms
         if app.isDebug {
-            LeafRenderer.Option.caching = .bypass
+            Renderer.Option.caching = .bypass
         }
-        /// usse leaf
-        app.views.use(.leaf)
+        /// use tau
+        app.views.use(.tau)
 
         /// use the modules
         try app.viper.use(modules)
 
-        /// register other leaf related core middlewares
+        /// register other template related core middlewares
         
         /// core bundle & public files are required
         try copyBundleResources()
         try copyPublicFiles()
         try processCssFiles()
 
-        let files = invokeCssHooks().map { css -> LeafData in
+        let files = invokeCssHooks().map { css -> TemplateData in
             .string(css.file)
         }
 
-        var generators: [String: LeafDataGenerator] {
+        var generators: [String: TemplateDataGenerator] {
             [
-                "css": .immediate(LeafData.array(files)),
+                "css": .immediate(TemplateData.array(files)),
             ]
         }
 
-        app.middleware.use(LeafScopeMiddleware(scope: "app", generators: generators))
-        app.middleware.use(FeatherCoreLeafExtensionMiddleware())
-        app.middleware.use(ViperLeafScopesMiddleware())
+        app.middleware.use(TemplateScopeMiddleware(scope: "app", generators: generators))
+        app.middleware.use(TemplateExtensionMiddleware())
+        app.middleware.use(ViperTemplateScopesMiddleware())
 
         /// run auto-migration process before start
         try app.autoMigrate().wait()

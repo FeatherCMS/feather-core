@@ -1,15 +1,15 @@
 //
-//  InlineSvgLeafEntity.swift
+//  InlineSvgEntity.swift
 //  FeatherCore
 //
 //  Created by Tibor Bodecs on 2020. 11. 21..
 //
 
-public struct InlineSvgLeafEntity: LeafNonMutatingMethod, Invariant, StringReturn {
+public struct InlineSvgEntity: NonMutatingMethod, Invariant, StringReturn {
 
     let iconset: String
 
-    public static var callSignature: [LeafCallParameter] {
+    public static var callSignature: [CallParameter] {
         [
             .string,
             .string(labeled: "class", optional: true, defaultValue: "")
@@ -20,7 +20,7 @@ public struct InlineSvgLeafEntity: LeafNonMutatingMethod, Invariant, StringRetur
         self.iconset = iconset
     }
 
-    public func evaluate(_ params: LeafCallValues) -> LeafData {
+    public func evaluate(_ params: CallValues) -> TemplateData {
         let name = params[0].string!
         
         let path = Application.Paths.images
