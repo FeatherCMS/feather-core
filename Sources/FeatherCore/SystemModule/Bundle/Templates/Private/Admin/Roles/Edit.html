@@ -1,0 +1,52 @@
+#let(form = [
+    "id": formId,
+    "token": formToken,
+    "title": "Role",
+    "key": "user.roles",
+    "modelId": modelId,
+    "list": [
+        "title": "Roles",
+        "url": "/admin/user/roles/"
+    ]
+])
+
+
+#define(fields):
+    #var(field = nil)
+
+    #(field = ["id": "key", "required": true, "data": fields.key])
+    #inline("System/Common/Form/Fields/Text")
+
+    #(field = ["id": "name", "required": true, "data": fields.name])
+    #inline("System/Common/Form/Fields/Text")
+
+    #(field = ["id": "notes", "size": "s", "data": fields.notes])
+    #inline("System/Common/Form/Fields/Textarea")
+
+    <section>
+        <label>Permissions</label>
+        #for(option in fields.permissions.options):
+        <fieldset>
+            <legend>#(option.module)</legend>
+
+            <div>
+            #for(group in option.groups):
+                <section>
+                    <label>#(group.name)</label>
+                    #for(p in group.permissions):
+                    <input type="checkbox" name="permissions[]" value="#(p.key)" id="#(p.key)" #if(fields.permissions.values.contains(p.key)):checked#endif>
+                    <label for="#(p.key)">#(p.label)</label><br>
+                    #endfor
+                </section>
+            #endfor
+            </div>
+        </fieldset>
+        #endfor
+        #if(fields.permissions.error != nil):
+        <span class="error">#(fields.permissions.error)</span>
+        #endif
+    </section>
+
+#enddefine
+
+#inline("System/Admin/Form")

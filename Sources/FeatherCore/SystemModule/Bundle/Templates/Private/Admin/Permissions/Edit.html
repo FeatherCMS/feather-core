@@ -1,0 +1,33 @@
+#let(form = [
+    "id": formId,
+    "token": formToken,
+    "title": "Permission",
+    "key": "user.permissions",
+    "modelId": modelId,
+    "list": [
+        "title": "Permissions",
+        "url": "/admin/user/permissions/"
+    ]
+])
+
+#define(fields):
+    #var(field = nil)
+
+    #(field = ["id": "module", "required": true, "data": fields.module])
+    #inline("System/Common/Form/Fields/Text")
+
+    #(field = ["id": "context", "required": true, "data": fields.context])
+    #inline("System/Common/Form/Fields/Text")
+
+    #(field = ["id": "action", "required": true, "data": fields.action])
+    #inline("System/Common/Form/Fields/Text")
+
+    #(field = ["id": "name", "required": true, "data": fields.name])
+    #inline("System/Common/Form/Fields/Text")
+
+    #(field = ["id": "notes", "size": "s", "data": fields.notes])
+    #inline("System/Common/Form/Fields/Textarea")
+
+#enddefine
+
+#inline("System/Admin/Form")

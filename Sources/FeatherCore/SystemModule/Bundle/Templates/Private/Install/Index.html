@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+
+    <title>Install - Feather CMS</title>
+    
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/binarybirds/peacock-css@1.0.0-beta.5/peacock.min.css">
+        
+    #if($app.isDebug ?? false):
+        #for(file in $app.css ?? []):
+            <link rel="stylesheet" href="/css/#(file).css">
+        #endfor
+    #else:
+        <link rel="stylesheet" href="/css/style.min.css">
+    #endif
+
+    <style>
+        #navigation {
+            grid-template-columns: 1fr;
+        }
+        
+   </style>
+
+</head>
+
+<body>
+    <div id="navigation" class="center">
+        <a href="/" id="site-logo">
+            <img src="/images/logo-text.png" alt="Logo of Feather CMS" title="Feather CMS">
+        </a>
+    </div>
+
+    <div>
+        <main>
+            <div class="lead container center">
+                #body()
+            </div>
+        </main>
+    </div>
+    
+</body>
+</html>

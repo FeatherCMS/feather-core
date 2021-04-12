@@ -1,0 +1,14 @@
+#let(menuId = Request(parameter: "id"))
+
+#let(table = [
+    "title": "Menu items",
+    "key": "system.menuItems",
+    "fields": [
+        ["key": "label", "default": true]
+    ],
+    "nav": [
+        ["label": "Menu", "link": "/admin/frontend/menus/" + menuId]
+    ]
+])
+
+#inline("System/Admin/Table")

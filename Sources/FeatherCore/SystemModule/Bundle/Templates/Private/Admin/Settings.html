@@ -1,0 +1,94 @@
+#define(title):
+Site settings
+#enddefine
+#define(body):
+<div class="lead container">
+    <div class="segment">
+        <a href="/" target="_blank">View site</a>
+    </div>
+
+    <h1>Site settings</h1>
+</div>
+<div class="container">
+    
+    <form id="site-settings-form" method="post" action="#($req.url.path)" enctype="multipart/form-data">
+        #var(field = nil)
+
+        #(field = ["id": "formId", "value": formId])
+        #inline("System/Common/Form/Fields/Hidden")
+
+        <fieldset>
+            <legend>General</legend>
+            
+            #(field = ["id": "formToken", "value": formToken])
+            #inline("System/Common/Form/Fields/Hidden")
+
+            #(field = ["id": "image", "label": "Logo", "class": "small", "data": fields.image, "accept": "image/png"])
+            #inline("System/Common/Form/Fields/File")
+
+            #(field = ["id": "title", "required": true, "data": fields.title])
+            #inline("System/Common/Form/Fields/Text")
+
+            #(field = ["id": "excerpt", "size": "s", "data": fields.excerpt])
+            #inline("System/Common/Form/Fields/Textarea")
+            
+            #(field = ["id": "noindex", "label": "Site index", "placeholder": "Disable site indexing by search engines", "data": fields.noindex])
+            #inline("System/Common/Form/Fields/Checkmark")
+
+        </fieldset>
+
+        #if(!fields.filters.options.isEmpty()):
+        <fieldset>
+            <legend><a id="content">Content</a></legend>
+        
+            #(field = ["id": "filters", "data": fields.filters])
+            #inline("System/Common/Form/Fields/Checkbox")
+        
+        </fieldset>
+        #endif
+
+        <fieldset>
+            <legend>Localization</legend>
+            
+            #(field = ["id": "locale", "label": "Locale", "required": true, "data": fields.locale])
+            #inline("System/Common/Form/Fields/Selection")
+            
+            #(field = ["id": "timezone", "required": true, "data": fields.timezone])
+            #inline("System/Common/Form/Fields/Selection")
+        
+        </fieldset>
+
+        <fieldset>
+            <legend>Code injection</legend>
+            
+            #(field = ["id": "css", "label": "CSS", "size": "xl", "data": fields.css])
+            #inline("System/Common/Form/Fields/Textarea")
+            
+            #(field = ["id": "js", "label": "JavaScript", "size": "xl", "data": fields.js])
+            #inline("System/Common/Form/Fields/Textarea")
+        
+        </fieldset>
+
+        <fieldset>
+            <legend>Footer</legend>
+
+            #(field = ["id": "footerTop", "label": "Top area", "size": "s", "data": fields.footerTop])
+            #inline("System/Common/Form/Fields/Textarea")
+            
+            #(field = ["id": "footerBottom", "label": "Bottom area", "size": "s", "data": fields.footerBottom])
+            #inline("System/Common/Form/Fields/Textarea")
+
+        </fieldset>
+
+        #(field = ["label": "Save"])
+        #inline("System/Common/Form/Fields/Button")
+    </form>
+
+    #if(notification != nil):
+    <section id="notification">
+        <span>#(notification)</span>
+    </section>
+    #endif
+</div>
+#enddefine
+#inline("System/Admin/Index")

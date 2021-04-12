@@ -29,15 +29,6 @@
         }
       },
       {
-        "package": "content-api",
-        "repositoryURL": "https://github.com/binarybirds/content-api",
-        "state": {
-          "branch": null,
-          "revision": "89432f0a1fc4e1418d626acfdb371b38deee5244",
-          "version": "1.1.0-rc.1"
-        }
-      },
-      {
         "package": "fluent",
         "repositoryURL": "https://github.com/vapor/fluent",
         "state": {
@@ -62,6 +53,15 @@
           "branch": null,
           "revision": "6f29f6f182c812075f09c7575c18ac5535c26824",
           "version": "4.0.1"
+        }
+      },
+      {
+        "package": "hook-kit",
+        "repositoryURL": "https://github.com/binarybirds/hook-kit",
+        "state": {
+          "branch": null,
+          "revision": "29ef8a262f66b1b840a955727ed96c7d43896682",
+          "version": "1.0.0"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/vapor/routing-kit.git",
         "state": {
           "branch": null,
-          "revision": "4cf052b78aebaf1b23f2264ce04d57b4b6eb5254",
-          "version": "4.2.0"
+          "revision": "dab93b6b90caa6501a2d30f81bad8052c18d97fb",
+          "version": "4.2.1"
         }
       },
       {
@@ -159,8 +159,8 @@
         "repositoryURL": "https://github.com/apple/swift-crypto.git",
         "state": {
           "branch": null,
-          "revision": "0141f53dd525706c803b0c20aa8ad36f9ecd45e5",
-          "version": "1.1.5"
+          "revision": "3bea268b223651c4ab7b7b9ad62ef9b2d4143eb6",
+          "version": "1.1.6"
         }
       },
       {
@@ -186,8 +186,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "6d3ca7e54e06a69d0f2612c2ce8bb8b7319085a4",
-          "version": "2.26.0"
+          "revision": "3be4e0980075de10a4bc8dee07491d49175cfd7a",
+          "version": "2.27.0"
         }
       },
       {
@@ -213,8 +213,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-ssl.git",
         "state": {
           "branch": null,
-          "revision": "bbb38fbcbbe9dc4665b2c638dfa5681b01079bfb",
-          "version": "2.10.4"
+          "revision": "07c160b8724ee53a4b776328122be6338ff12bf2",
+          "version": "2.11.0"
         }
       },
       {
@@ -236,21 +236,12 @@
         }
       },
       {
-        "package": "tau-foundation",
-        "repositoryURL": "https://github.com/binarybirds/tau-foundation",
-        "state": {
-          "branch": null,
-          "revision": "ff5429d511cc3c877bb9f0554ded4c0ebd2dd205",
-          "version": "1.0.0-rc.1"
-        }
-      },
-      {
         "package": "tau-kit",
         "repositoryURL": "https://github.com/binarybirds/tau-kit",
         "state": {
           "branch": null,
-          "revision": "907a31cb6e2937db0a7aba6f5d90a634d30f26cd",
-          "version": "1.0.0"
+          "revision": "71e14868c88d16e32fc355a894398f7f877e58ee",
+          "version": "1.1.0"
         }
       },
       {
@@ -258,26 +249,17 @@
         "repositoryURL": "https://github.com/vapor/vapor",
         "state": {
           "branch": null,
-          "revision": "4ba5c2d2112005e4a07cedb43ec52b47175d67ce",
-          "version": "4.41.3"
+          "revision": "eef16e1a56c04f05d55e775ccf7bfd512edd7d58",
+          "version": "4.43.2"
         }
       },
       {
-        "package": "view-kit",
-        "repositoryURL": "https://github.com/binarybirds/view-kit",
+        "package": "vapor-hooks",
+        "repositoryURL": "https://github.com/binarybirds/vapor-hooks",
         "state": {
           "branch": null,
-          "revision": "f44a4a7ee5e56d8cff2273d7ecb4fb0a4b60d2e9",
-          "version": "1.3.0-rc.1"
-        }
-      },
-      {
-        "package": "viper-kit",
-        "repositoryURL": "https://github.com/binarybirds/viper-kit",
-        "state": {
-          "branch": null,
-          "revision": "ae82618b8fc668838bcbaedba516d368e8318d06",
-          "version": "1.5.0-rc.1"
+          "revision": "d83712795fb6710edc574a703da9d48b60aa564c",
+          "version": "1.0.0"
         }
       },
       {

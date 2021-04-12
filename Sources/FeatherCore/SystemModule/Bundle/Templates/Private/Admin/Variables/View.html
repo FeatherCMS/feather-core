@@ -1,0 +1,17 @@
+#let(detail = [
+    "title": "Variable",
+    "key": "system.variables",
+    "list": [
+        "title": "Variables",
+        "url": "/admin/system/variables/"
+    ],
+    "fields": [
+        ["label": "Id", "value": model.id],
+        ["label": "Key", "value": model.key],
+        ["label": "Name", "value": model.name],
+        ["label": "Value", "value": model.value],
+        ["label": "Notes", "value": model.notes],
+    ]
+])
+
+#inline("System/Admin/Detail")

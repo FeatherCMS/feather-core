@@ -1,0 +1,30 @@
+#let(form = [
+    "id": formId,
+    "token": formToken,
+    "title": "Variable",
+    "key": "system.variables",
+    "modelId": modelId,
+    "list": [
+        "title": "Variables",
+        "url": "/admin/system/variables/"
+    ]
+])
+
+#define(fields):
+    #var(field = nil)
+
+    #(field = ["id": "key", "required": true, "data": fields.key])
+    #inline("System/Common/Form/Fields/Text")
+
+    #(field = ["id": "name", "required": true, "data": fields.name])
+    #inline("System/Common/Form/Fields/Text")
+
+    #(field = ["id": "value", "size": "s", "data": fields.value])
+    #inline("System/Common/Form/Fields/Textarea")
+
+    #(field = ["id": "notes", "size": "s", "data": fields.notes])
+    #inline("System/Common/Form/Fields/Textarea")
+
+#enddefine
+
+#inline("System/Admin/Form")

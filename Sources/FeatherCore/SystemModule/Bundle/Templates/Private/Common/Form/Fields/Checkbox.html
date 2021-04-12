@@ -1,0 +1,10 @@
+<section>
+    #inline("System/Common/Form/Fields/Label")
+
+    #for(item in field.data.options):
+    <input type="checkbox" name="#(field.id)[]" value="#(item.key)" id="#(field.id)-#(item.key)" #if(field.data.values.contains(item.key)):checked#endif>
+    <label for="#(field.id)-#(item.key)">#(item.label)</label><br>
+    #endfor
+    
+    #inline("System/Common/Form/Fields/Error")
+</section>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="#($app.locale)">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  
+    <title>#($variables.siteTitle ?? "")</title>
+    
+    <link rel="manifest" href="/manifest.json">
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/binarybirds/peacock-css@1.0.0-beta.5/peacock.min.css">
+    #if($app.isDebug):
+    <link rel="stylesheet" href="/css/web.css">
+    #else:
+    <link rel="stylesheet" href="/css/web.min.css">
+    #endif
+
+    <style type="text/css">
+        #evaluate(css ?? "")
+        #($vars.siteCss ?? "")
+        #(metadata.css ?? "")
+    </style>
+</head>
+
+<body>
+    
+    <header>
+        <div id="navigation">
+            <a id="site-logo" href="/">
+                <img src="#($variables.siteLogo.resolve() ?? "/images/logo-text.png")" alt="Logo of #($variables.siteTitle ?? "")" title="#($variables.siteTitle ?? "")">
+            </a>
+
+            <nav id="primary-menu">
+                <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+                <label for="primary-menu-button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </label>
+                <div class="menu-items">
+                    #for(item in $menus.main ?? []):
+                        #if(UserHasPermission(item.permission) ?? true):
+                        <a href="#(item.url)" #if($req.url.path == item.url): class="selected"#endif#if(item.targetBlank): target="_blank"#endif>
+                            #if(item.icon != nil):#svg(item.icon)#endif #(item.label)
+                        </a>
+                        #endif
+                    #endfor
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        #body()
+    </main>
+    
+    <footer>
+        <section>
+
+            <nav>
+                #if($user.isAuthenticated):
+                    #if(UserHasPermission("admin.module.access")):
+                    <a href="/admin/">Admin</a> &middot;
+                    #endif
+                <a href="/logout/">Logout</a>
+                #else:
+                <a href="/login/">Login</a>
+                #endif
+
+                #for(item in $menus.footer ?? []):
+                    #if(UserHasPermission(item.permission) ?? true):
+                    &middot;
+                    <a href="#(item.url)" #if($req.url.path == item.url): class="selected"#endif#if(item.targetBlank): target="_blank"#endif>
+                        #if(item.icon != nil):#svg(item.icon)#endif #(item.label)
+                    </a>
+                    #endif
+                #endfor
+            </nav>
+
+        </section>
+    </footer>
+
+    <script type="text/javascript">
+        #evaluate(js ?? "")
+        #($variables.siteJs ?? "")
+        #(metadata.js ?? "")
+    </script>
+</body>
+</html>

@@ -15,6 +15,7 @@ public extension Application {
 
         public static let resources = base.appendingPathComponent(Directories.resources)
         public static let templates = resources.appendingPathComponent(Directories.templates)
+        public static let defaultTemplate = templates.appendingPathComponent(Directories.defaultTemplate)
         
         public static let `public` = base.appendingPathComponent(Directories.public)
         public static let assets = `public`.appendingPathComponent(Directories.assets)
@@ -27,11 +28,12 @@ public extension Application {
     struct Directories {
         public static let resources: String = "Resources"
         public static let templates: String = "Templates"
+        public static let defaultTemplate: String = "Default"
         
         public static let `public`: String = "Public"
         public static let assets: String = "assets"
         public static let css: String = "css"
         public static let images: String = "images"
-        public static let javascript: String = "javascript"
+        public static let javascript: String = "js"
     }
 }

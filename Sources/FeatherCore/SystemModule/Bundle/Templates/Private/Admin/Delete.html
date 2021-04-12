@@ -1,0 +1,41 @@
+#define(js):
+document.onkeydown=function(evt){
+    var keyCode = evt ? (evt.which ? evt.which : evt.keyCode) : event.keyCode;
+    if ( keyCode == 13 ) {
+        document.forms["delete-form"].submit();
+    }
+}
+#enddefine
+
+#define(title):
+#(delete.title ?? "Confirm deletion")
+#enddefine
+
+#define(breadcrumb):
+    <a href="#(delete.list.url)">#(delete.list.title)</a>
+#enddefine
+
+#define(body):
+<div class="lead container center">
+    <span class="icon">🗑</span>
+    <h1>#(delete.title ?? "Confirm deletion")</h1>
+    <p>You are about to permanently delete the<br>`#(delete.context ?? "current")` #(delete.type ?? "object").</p>
+
+    <form id="delete-form" action="#($req.url.path)" method="post">
+        <input type="hidden" name="formId" value="#(delete.id ?? "")">
+        <input type="hidden" name="formToken" value="#(delete.token ?? "")">
+
+        #if(delete.key != nil):
+        <input type="hidden" name="key" value="#(delete.key ?? "")">
+        #endif
+        <input type="hidden" name="redirect" value="#(delete.list.url ?? $req.url.path.trimLast(2))">
+
+        <input type="submit" value="#(delete.confirm ?? "Delete")" class="button destructive" style="display: inline;"> &nbsp;
+        <a href="#(Request(query: "cancel") ?? delete.list.url)" class="button cancel" >#(delete.cancel ?? "Cancel")</a>
+    </form>
+</div>
+
+#enddefine
+
+#inline("System/Admin/Index")
+

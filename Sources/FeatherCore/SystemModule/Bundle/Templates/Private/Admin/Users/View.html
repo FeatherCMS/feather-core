@@ -1,0 +1,30 @@
+#let(detail = [
+    "title": "User",
+    "key": "user.users",
+    "list": [
+        "title": "Users",
+        "url": "/admin/user/users/"
+    ]
+])
+
+#define(details):
+    <dl>
+        <dt>Id</dt>
+        <dd>#(model.id)</dd>
+
+        <dt>Email</dt>
+        <dd>#(model.email)</dd>
+        
+        <dt>Has root access?</dt>
+        <dd>#(model.root)</dd>
+        
+        <dt>Roles</dt>
+        <dd>
+            #for(role in model.roles):
+                #(role.name)<br>
+            #endfor
+        </dd>
+    </dl>
+#enddefine
+
+#inline("System/Admin/Detail")

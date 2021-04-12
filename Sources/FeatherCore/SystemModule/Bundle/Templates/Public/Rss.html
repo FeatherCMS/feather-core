@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>#($system.variables["frontend.site.title"])</title>
+        <description>#($system.variables["frontend.site.excerpt"])</description>
+        <link></link>
+        <language>#($app.locale)</language>
+        <lastBuildDate>#Date(timeStamp: Timestamp(), fixedFormat: "EEE, dd MMM y HH:mm:ss Z", timeZone: $app.timezone)</lastBuildDate>
+        <pubDate>#Date(timeStamp: Timestamp(), fixedFormat: "EEE, dd MMM y HH:mm:ss Z", timeZone: $app.timezone)</pubDate>
+        <ttl>250</ttl>
+        <atom:link href="#($app.baseUrl)/rss.xml" rel="self" type="application/rss+xml" />
+        #for(item in list):
+        <item>
+            <guid isPermaLink="true">#(item.slug.absoluteUrl())</guid>
+            <title><![CDATA[#(item.title)]]></title>
+            <description><![CDATA[#(item.excerpt)]]></description>
+            <link>#(item.slug.absoluteUrl())</link>
+            <pubDate>#Date(timeStamp: item.date, fixedFormat: "EEE, dd MMM y HH:mm:ss Z", timeZone: $app.timezone)</pubDate>
+        </item>
+        #endfor
+    </channel>
+</rss>

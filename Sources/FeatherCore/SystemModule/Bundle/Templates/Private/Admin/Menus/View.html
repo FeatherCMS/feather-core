@@ -1,0 +1,19 @@
+#let(detail = [
+    "title": "Menu",
+    "key": "frontend.menus",
+    "list": [
+        "title": "Menus",
+        "url": "/admin/frontend/menus/"
+    ],
+    "nav": [
+        ["label": "Menu items", "link": "/admin/frontend/menus/" + model.id + "/items/"]
+    ],
+    fields: [
+        ["label": "Id", "value": model.id],
+        ["label": "Key", "value": model.key],
+        ["label": "Name", "value": model.name],
+        ["label": "Notes", "value": model.notes]
+    ]
+])
+
+#inline("System/Admin/Detail")

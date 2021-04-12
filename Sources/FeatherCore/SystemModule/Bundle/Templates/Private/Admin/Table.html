@@ -1,0 +1,142 @@
+#define(title):
+#(table.title ?? "List")
+#enddefine
+
+#var(actions = [] + table.actions ?? [])
+
+#if((table.edit ?? true) && UserHasPermission(table.key + ".update")):
+    #(actions.append(["link": "/update/", "label": "Edit", "icon": "edit-2", "width": "4rem"]))
+#endif
+
+#if((table.delete ?? true) && UserHasPermission(table.key + ".delete")):
+    #(actions.append(["link": "/delete/", "label": "Delete", "icon": "trash", "width": "4rem"]))
+#endif
+
+#define(css):
+tr {
+    grid-template-columns: repeat(#max(1, actions.count()), 1fr);
+}
+td.field {
+    grid-column: span #(actions.count());
+}
+@media (min-width: 600px) {
+    tr {
+        grid-template-columns:#for(f in table.fields ?? []): #(f.width ?? "1fr")#endfor #for(a in actions): #(a.width ?? "1fr")#endfor;
+    }
+    td.field {
+        grid-column: span 1;
+    }
+}
+#enddefine
+
+#define(breadcrumb):
+    <a href="#($req.url.path)" class="current">#(table.title ?? "List")</a>
+#enddefine
+
+
+#define(body):
+<div class="lead">
+    <h1>#(table.title ?? "List")</h1>
+    <p>
+        #var(navItems = [])
+        #if((table.create ?? true) && UserHasPermission(table.key + ".create")):
+            #(navItems.append(["link": $req.url.path + "create/", "label": "Create new"]))
+        #endif
+        #for(navItem in navItems + table.nav ?? []):
+            #if(!isFirst): &middot; #endif<a href="#(navItem.link)"#if(navItem.targetBlank ?? false): target="_blank"#endif>#(navItem.label)</a>
+        #endfor
+    </p>
+</div>
+
+
+#if(table.search ?? true):
+<form id="search-form" action="#($req.url.path)" method="get">
+    #if(Request(query: "sort") != nil):
+    <input type="hidden" id="sort" name="sort" value="#Request(query: "sort")">
+    #endif
+    #if(Request(query: "order") != nil):
+    <input type="hidden" id="order" name="order" value="#Request(query: "order")">
+    #endif
+    <input type="text" id="search" name="search" placeholder="Search..." value="#Request(query: "search")">
+</form>
+#endif
+
+#if(list.items.isEmpty()):
+    #inline("System/Admin/Empty")
+#else:
+<table>
+    <thead>
+        <tr>
+            #for(field in table.fields ?? []):
+            <td class="field#if(isLast): last#endif">
+                #let(link = [
+                     "key": field.property ?? field.key,
+                     "default": field.default ?? false,
+                     "sort": field.sort ?? "asc",
+                     "label": field.label ?? field.property.capitalized() ?? field.key.capitalized()
+                ])
+                #inline("System/Admin/SortLink")
+            </td>
+            #endfor
+            #for(action in actions):
+            <td class="action">#(action.label)</td>
+            #endfor
+        </tr>
+    </thead>
+    <tbody>
+        #for(item in list.items):
+            #let(canView = (table.view ?? true) && UserHasPermission(table.key + ".get"))
+        <tr>
+
+            #for(field in table.fields ?? []):
+            
+            <td class="field#if(isLast): last#endif">
+
+                #let(fieldType = field.type ?? "string")
+
+                #var(value = "")
+                #if(field.property ?? "" != ""):
+                    #var(value = item[field.key][field.property ?? ""])
+                #else:
+                    #var(value = item[field.key])
+                #endif
+
+                #if(fieldType == "date"):
+                    #var(value = Date(timeStamp: value, fixedFormat: $app.dateFormats.full, timeZone: $app.timezone))
+                #elseif(fieldType == "image"):
+                    #var(value = "<img src='" + value.resolve() + "'>")
+                #endif
+
+                #if(value.isEmpty()):
+                    #var(value = field.placeholder ?? "")
+                #endif
+
+                
+                #if(canView):
+                    <a href="#($req.url.path)#(item.id)/">#(value)</a>
+                #else:
+                    #(value)
+                #endif
+                
+            </td>
+            #endfor
+
+            #for(action in actions):
+            <td class="action">
+                <a href="#($req.url.path)#(item.id)#(action.link)">#svg(action.icon)</a>
+            </td>
+            #endfor
+        </tr>
+        #endfor
+    </tbody>
+</table>
+
+<div id="pagination">
+    #inline("System/Common/Pagination")
+</div>
+
+#endif
+
+#enddefine
+
+#inline("System/Admin/Index")

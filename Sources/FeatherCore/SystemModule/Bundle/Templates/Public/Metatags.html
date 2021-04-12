@@ -1,0 +1,11 @@
+#if(metadata != nil):
+<meta property="og:title" content="#(metadata.title ?? "") - #($system.variables["frontend.site.title"])">
+<meta property="og:description" content="#(metadata.excerpt ?? "")">
+<meta property="og:url" content="#($req.url.path.absoluteUrl())">
+<meta property="og:image" content="#(metadata.imageKey.resolve() ?? "/images/placeholder.jpg".absoluteUrl())">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="#(metadata.title ?? "") - #($system.variables["frontend.site.title"])">
+<meta name="twitter:description" content="#(metadata.excerpt ?? "")">
+<meta name="twitter:image" content="#(metadata.imageKey.resolve() ?? "/images/placeholder.jpg".absoluteUrl())">
+#endif

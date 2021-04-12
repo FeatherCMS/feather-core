@@ -16,8 +16,12 @@ public struct UserHasPermissionEntity: UnsafeEntity, NonMutatingMethod, BoolRetu
 
     public func evaluate(_ params: CallValues) -> TemplateData {
         guard let req = req else { return .error("Needs unsafe access to Request") }
-        let permission = params[0].string!
-        let hasPermission: Bool? = req.invoke("template-permission-hook", args: ["key": permission])
+        let rawPermission = params[0].string!
+        let components = rawPermission.components(separatedBy: ".")
+        guard components.count == 3 else { return .error("Invalid permission components: `\(rawPermission)`.") }
+        
+        let permission =  Permission(namespace: components[0], context: components[1], action: .init(identifier: components[2]))
+        let hasPermission: Bool? = req.invoke("permission", args: ["permission": permission])
         return .bool(hasPermission ?? false)
     }
 }

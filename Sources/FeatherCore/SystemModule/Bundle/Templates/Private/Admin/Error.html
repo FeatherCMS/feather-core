@@ -1,0 +1,12 @@
+#define(title):
+#(error.code) - #(error.reason)
+#enddefine
+#define(body):
+<div class="lead container center">
+    <span class="icon">⚠️</span>
+    <h1>#(error.code) - #(error.reason)</h1>
+    <p>Something went wrong with your request</p>
+    <a href="#($req.url.path)">Please try again →</a>
+</div>
+#enddefine
+#inline("System/Admin/Index")

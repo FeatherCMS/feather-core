@@ -1,0 +1,43 @@
+#let(head = [
+    "title": "Login",
+    "description": "Sign in with your existing account"
+])
+#define(body):
+<div class="lead container">
+    <h1>Login</h1>
+    <p>Sign in with your existing account</p>
+</div>
+
+<form method="post" class="container">
+
+    #if(notification != nil):
+    <section id="notification" class="center">
+        <span class="error">#(notification)</span>
+    </section>
+    #endif
+
+    <section>
+        <label for="email">Email<span class="required">*</span></label>
+        <input type="email" id="email" name="email" value="#(fields.email.value)" placeholder="root@feathercms.com" class="field" aria-required="true">
+        #if(fields.email.error != nil):
+        <span class="error">#(fields.email.error)</span>
+        #endif
+    </section>
+
+    <section>
+        <label for="password">Password<span class="required">*</span></label>
+        <input type="password" id="password" name="password" class="field" aria-required="true">
+        #if(fields.password.error != nil):
+        <span class="error">#(fields.passwords.error)</span>
+        #endif
+    </section>
+
+    <section>
+        <input type="submit" value="Sign in" />
+    </section>
+    
+    
+</form>
+
+#enddefine
+#inline("System/Index")

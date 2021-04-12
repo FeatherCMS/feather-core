@@ -1,0 +1,71 @@
+#define(title):
+#if(form.modelId != nil):Edit#else:Create#endif #(form.title.lowercased())
+#enddefine
+
+#define(breadcrumb):
+    #if(UserHasPermission(form.key + ".list")):
+    <a href="#(form.list.url)">#(form.list.title)</a>
+    #endif
+    <a href="#($req.url.path)" class="current">#if(form.modelId != nil):Edit#else:Create#endif</a>
+#enddefine
+
+#define(body):
+<div class="lead container">
+
+    #var(navItems = [])
+    #if((form.modelId != nil) && (form.view ?? true) && UserHasPermission(form.key + ".get")):
+        #(navItems.append(["link": $req.url.path.trimLast(), "label": "View"]))
+    #endif
+    #let(segmentItems = navItems + form.nav ?? [])
+    
+    #if(!segmentItems.isEmpty()):
+    <div class="segment grid-#(segmentItems.count())">
+        #for(navItem in segmentItems):
+            <a href="#(navItem.link)"#if(navItem.targetBlank ?? false): target="_blank"#endif>#(navItem.label)</a>
+        #endfor
+    </div>
+    #endif
+    
+    <h1>#if(form.modelId != nil):Edit#else:Create#endif #(form.title.lowercased())</h1>
+</div>
+
+<div class="container">
+
+    <form id="#(form.key)-form" method="post" action="#($req.url.path)"#if(form.multipart ?? false): enctype="multipart/form-data"#endif>
+
+    #if(form.modelId != nil):
+        #let(field = ["id": "modelId", "value": form.modelId])
+        #inline("System/Common/Form/Fields/Hidden")
+    #endif
+
+    #var(field = nil)
+    
+    #(field = ["id": "formId", "value": form.id])
+    #inline("System/Common/Form/Fields/Hidden")
+
+    #(field = ["id": "formToken", "value": form.token])
+    #inline("System/Common/Form/Fields/Hidden")
+
+    #fields()
+
+    #(field = ["label": "Save", "class": "shadow"])
+    #inline("System/Common/Form/Fields/Button")
+    
+    #if(notification != nil):
+    <section id="notification">
+        <span>#(notification)</span>
+    </section>
+    #endif
+
+    </form>
+
+    <section>
+        #if((form.modelId != nil) && (form.delete ?? true) && UserHasPermission(form.key + ".delete")):
+        <a href="#($req.url.path.trimLast())delete/?cancel=#($req.url.path)" class="destructive">Delete</a>
+        #endif
+    </section>
+    
+</div>
+#enddefine
+
+#inline("System/Admin/Index")

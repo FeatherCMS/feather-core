@@ -1,0 +1,32 @@
+#(let pages = list.info ?? page.info ?? nil)
+
+#if(pages.total > 1 && pages.current < pages.total + 1):
+    <hr>
+
+    #if(pages.current > 1):
+        <a href="#Request(setQuery: ["page": 1])">#svg("chevrons-left")</a>
+    #else:
+        #svg("chevrons-left")
+    #endif
+
+    #if(pages.current > 1):
+        <a href="#Request(setQuery: ["page": pages.current - 1])">#svg("chevron-left")</a>
+    #else:
+        #svg("chevron-left")
+    #endif
+
+    <span>Page #(pages.current) of #(pages.total)</span>
+
+    #if(pages.current < pages.total):
+        <a href="#Request(setQuery: ["page": pages.current + 1])">#svg("chevron-right")</a>
+    #else:
+        #svg("chevron-right")
+    #endif
+
+    #if(pages.current < pages.total):
+        <a href="#Request(setQuery: ["page": pages.total])">#svg("chevrons-right")</a>
+    #else:
+        #svg("chevrons-right")
+    #endif
+
+#endif

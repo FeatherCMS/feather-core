@@ -5,12 +5,6 @@
 //  Created by Tibor Bodecs on 2020. 08. 29..
 //
 
-/// a viper model extension that can return a metadata object
-public protocol MetadataRepresentable: ViperModel where Self.IDValue == UUID {
-
-    var metadata: Metadata { get }
-}
-
 /// monitors model changes and calls the MetadataChangeDelegate if the metadata needs to be updated
 public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware {
 
@@ -24,7 +18,9 @@ public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware
             metadata.module = T.Module.name
             metadata.model = T.name
             metadata.reference = model.id
-            return Feather.metadataDelegate?.create(metadata, on: db) ?? db.eventLoop.future()
+            let model = SystemMetadataModel()
+            model.use(metadata)
+            return model.create(on: db)
         }
     }
     
@@ -48,7 +44,12 @@ public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware
             metadata.module = T.Module.name
             metadata.model = T.name
             metadata.reference = model.id
-            return Feather.metadataDelegate?.delete(metadata, on: db) ?? db.eventLoop.future()
+            
+            return SystemMetadataModel.query(on: db)
+                .filter(\.$module == metadata.module!)
+                .filter(\.$model == metadata.model!)
+                .filter(\.$reference == metadata.reference!)
+                .delete()
         }
     }
 }

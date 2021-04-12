@@ -1,0 +1,34 @@
+#define(title):
+Dashboard
+#enddefine
+
+#define(css):
+.card .content svg {
+    width: var(--font-size-3xl);
+    height: var(--font-size-3xl);
+    color: var(--color-1);
+    position: absolute;
+    top: var(--space);
+    right: var(--space);
+}
+.card .content nav a {
+    display: block;
+}
+#enddefine
+
+#define(body):
+
+<div class="lead">
+    <h1>Dashboard</h1>
+    <p>Overview of the system.</p>
+</div>
+
+<section class="grid-321">
+    #for(widget in widgets ?? []):
+        #(widget)
+    #endfor
+</section>
+
+#enddefine
+
+#inline("System/Admin/Index")

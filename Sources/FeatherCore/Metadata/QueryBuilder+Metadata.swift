@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 12. 11..
 //
 
-public extension QueryBuilder where Model: MetadataModel {
+public extension QueryBuilder where Model: FeatherModel & MetadataRepresentable {
 
     /// join metadata and filter by draft and published status ordered by date
     func joinVisibleMetadata() -> QueryBuilder<Model> {
@@ -24,31 +24,33 @@ public extension QueryBuilder where Model: MetadataModel {
 
     /// joins the metadata object on the ViperModel query, if a path is present it'll use it as a filter to return only one instance that matches the slug
     func joinMetadata() -> QueryBuilder<Model> {
-        Feather.metadataDelegate?.join(queryBuilder: self) ?? self
+        join(SystemMetadataModel.self, on: \SystemMetadataModel.$reference == \Model._$id)
+                    .filter(SystemMetadataModel.self, \.$module == Model.Module.name)
+                    .filter(SystemMetadataModel.self, \.$model == Model.name)
     }
     
     /// find an object with an associated the metadata object for a given path
     func filterMetadata(path: String) -> QueryBuilder<Model> {
-        Feather.metadataDelegate?.filter(queryBuilder: self, path: path) ?? self
+        filter(SystemMetadataModel.self, \.$slug == path.trimmingSlashes())
     }
 
     /// find an object with a given status
     func filterMetadata(status: Metadata.Status) -> QueryBuilder<Model> {
-        Feather.metadataDelegate?.filter(queryBuilder: self, status: status) ?? self
+        filter(SystemMetadataModel.self, \.$status == status)
     }
     
     /// find an object with associated draft or published status
     func filterVisible() -> QueryBuilder<Model> {
-        Feather.metadataDelegate?.filterVisible(queryBuilder: self) ?? self
+        filter(SystemMetadataModel.self, \.$status != .archived)
     }
 
     /// date earlier than x
     func filterMetadata(before date: Date) -> QueryBuilder<Model> {
-        Feather.metadataDelegate?.filter(queryBuilder: self, before: date) ?? self
+        filter(SystemMetadataModel.self, \.$date <= date)
     }
 
     /// sort metadata by date in a given direction
     func sortMetadataByDate(_ direction: DatabaseQuery.Sort.Direction = .descending) -> QueryBuilder<Model> {
-        Feather.metadataDelegate?.sortByDate(queryBuilder: self, direction: direction) ?? self
+        sort(SystemMetadataModel.self, \.$date, direction)
     }
 }

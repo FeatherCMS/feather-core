@@ -1,0 +1,5 @@
+<section>
+    #inline("System/Common/Form/Fields/Label")
+    <input type="#(field.type ?? "text")" id="#(field.id)" name="#(field.id)" value="#(field.data.value)" placeholder="#(field.placeholder ?? "")" class="field"#if(field.required ?? false): aria-required="true"#endif>
+    #inline("System/Common/Form/Fields/Error")
+</section>

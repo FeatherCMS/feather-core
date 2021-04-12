@@ -1,0 +1,14 @@
+#let(table = [
+    "title": "Menus",
+    "key": "frontend.menus",
+    "fields": [
+        ["key": "name", "default": true]
+    ],
+    "actions": []
+])
+
+#if(UserHasPermission("system.menuItems.list")):
+    #(table.actions.append(["link": "/items/", "label": "Items", "icon": "link", "width": "4rem"]))
+#endif
+
+#inline("System/Admin/Table")
