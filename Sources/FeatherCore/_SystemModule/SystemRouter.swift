@@ -27,7 +27,7 @@ struct SystemRouter: RouteCollection {
     let itemAdmin = FrontendMenuItemAdminController()
     let pageAdmin = FrontendPageAdminController()
 
-//    let siteAdmin = FrontendSiteAdminController()
+    let siteAdmin = FrontendSiteAdminController()
 
     func boot(routes: RoutesBuilder) throws {
         routes.get("login", use: usrfrontend.loginView)
@@ -88,9 +88,9 @@ struct SystemRouter: RouteCollection {
 //
 //        metadataAdmin.setupRoutes(on: modulePath, as: SystemMetadataModel.pathComponent)
 //
-//        modulePath.get("settings", use: siteAdmin.settingsView)
-//        modulePath.post("settings", use: siteAdmin.updateSettings)
-//
+        modulePath.get("settings", use: siteAdmin.settingsView)
+        modulePath.post("settings", use: siteAdmin.updateSettings)
+
         menuAdmin.setupRoutes(on: modulePath, as: SystemMenuModel.pathComponent)
 
         let itemPath = modulePath.grouped(SystemMenuModel.pathComponent, menuAdmin.idPathComponent)
