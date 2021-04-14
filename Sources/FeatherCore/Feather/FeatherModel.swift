@@ -30,6 +30,8 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
 }
 
 public extension FeatherModel {
+    
+    var identifier: String { id!.uuidString }
 
     /// schema is always prefixed with the module name
     static var schema: String { Module.name + "_" + Self.name }

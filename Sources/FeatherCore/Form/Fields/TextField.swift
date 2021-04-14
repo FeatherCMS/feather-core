@@ -20,7 +20,7 @@ class TextField: FormField {
         if required {
             validation.validators.append(ContentValidator<String>.required(key: key))
         }
-        output = TextFieldView(key: key, required: required, error: nil, value: nil, label: nil, placeholder: nil, more: nil, format: nil)
+        output = .init(key: key, required: required)
     }
     
     func process(req: Request) {

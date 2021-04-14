@@ -7,6 +7,13 @@
 
 public struct TextFieldView: FormFieldView {
     
+    public enum Format: String, Codable {
+        case normal
+        case secure
+        case email
+        case number
+    }
+    
     public let type: FormFieldType = .text
 
     public var key: String
@@ -19,6 +26,24 @@ public struct TextFieldView: FormFieldView {
     public var placeholder: String?
     public var more: String?
     
-    public var format: String? // email|password|number, etc.
+    public var format: Format
+    
+    public init(key: String,
+                required: Bool = false,
+                error: String? = nil,
+                value: String? = nil,
+                label: String? = nil,
+                placeholder: String? = nil,
+                more: String? = nil,
+                format: Format = .normal) {
+        self.key = key
+        self.required = required
+        self.error = error
+        self.value = value
+        self.label = label
+        self.placeholder = placeholder
+        self.more = more
+        self.format = format
+    }
 }
 

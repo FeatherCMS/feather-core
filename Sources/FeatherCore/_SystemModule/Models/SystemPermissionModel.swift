@@ -47,6 +47,27 @@ final class SystemPermissionModel: FeatherModel {
         self.name = name
         self.notes = notes
     }
+    
+    // MARK: - query
+
+    static func allowedOrders() -> [FieldKey] {
+        [
+            FieldKeys.namespace,
+            FieldKeys.context,
+            FieldKeys.action,
+            FieldKeys.name,
+        ]
+    }
+    
+    static func search(_ term: String) -> [ModelValueFilter<SystemPermissionModel>] {
+        [
+            \.$namespace ~~ term,
+            \.$action ~~ term,
+            \.$context ~~ term,
+            \.$name ~~ term,
+            \.$notes ~~ term,
+        ]
+    }
 }
 
 extension SystemPermissionModel {
@@ -73,7 +94,7 @@ extension SystemPermissionModel: TemplateDataRepresentable {
 extension SystemPermissionModel: FormFieldOptionRepresentable {
 
     var formFieldOption: FormFieldOption {
-        .init(key: id!.uuidString, label: name)
+        .init(key: identifier, label: name)
     }
 }
 

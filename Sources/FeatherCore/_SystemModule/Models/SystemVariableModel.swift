@@ -49,10 +49,6 @@ final class SystemVariableModel: FeatherModel {
         ]
     }
     
-    static func defaultSort() -> FieldSort {
-        .asc
-    }
-    
     static func search(_ term: String) -> [ModelValueFilter<SystemVariableModel>] {
         [
             \.$name ~~ term,

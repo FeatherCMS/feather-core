@@ -5,13 +5,13 @@
 //  Created by Tibor Bodecs on 2021. 04. 14..
 //
 
-class MultiselectionField: FormField {
+class CheckboxField: FormField {
 
     let key: String
 
-    var input: GenericFormFieldInput<String>
+    var input: GenericFormFieldInput<[String]>
     var validation: InputValidator
-    var output: MultiselectionFieldView
+    var output: CheckboxFieldView
     
     init(key: String, required: Bool = false) {
         self.key = key

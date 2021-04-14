@@ -14,7 +14,7 @@ final class SystemVariableEditForm: EditForm {
     var key = TextField(key: "key", required: true)
     var name = TextField(key: "name", required: true)
     var value = TextField(key: "value")
-    var notes = TextField(key: "notes")
+    var notes = TextareaField(key: "notes")
     var notification: String?
 
     var fields: [FormFieldRepresentable] {

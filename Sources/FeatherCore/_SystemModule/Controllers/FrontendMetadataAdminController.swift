@@ -57,7 +57,7 @@
 //                .init(label: "Reference", url: "/admin/" + model.module + "/" + model.model + "/" + model.reference.uuidString + "/"),
 //              ],
 //              fields: [
-//                .init(label: "Id", value: model.id!.uuidString),
+//                .init(label: "Id", value: model.identifier),
 //                .init(label: "Image", value: model.imageKey ?? ""),
 //                .init(label: "Title", value: model.title ?? ""),
 //                .init(label: "Excerpt", value: model.excerpt ?? ""),

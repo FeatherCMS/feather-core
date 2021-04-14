@@ -5,15 +5,15 @@
 //  Created by Tibor Bodecs on 2021. 04. 14..
 //
 
-public struct SelectionFieldView: FormFieldView {
+public struct CheckboxFieldView: FormFieldView {
 
-    public let type: FormFieldType = .selection
+    public let type: FormFieldType = .checkbox
 
     public var key: String
     public var required: Bool
     public var error: String?
 
-    public var value: String?
+    public var values: [String]
 
     public var options: [FormFieldOption]
 
@@ -23,17 +23,17 @@ public struct SelectionFieldView: FormFieldView {
     public init(key: String,
                 required: Bool = false,
                 error: String? = nil,
-                value: String? = nil,
+                values: [String] = [],
                 options: [FormFieldOption] = [],
                 label: String? = nil,
                 more: String? = nil) {
         self.key = key
         self.required = required
         self.error = error
-        self.value = value
+        self.values = values
         self.options = options
         self.label = label
-        self.more = more        
+        self.more = more
     }
 }
 

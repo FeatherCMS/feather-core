@@ -14,7 +14,7 @@ struct SystemVariableAdminController: AdminViewController {
     
     func listTable(_ models: [Model]) -> Table {
         Table(columns: ["name"], rows: models.map { model in
-            TableRow(id: model.id!.uuidString, cells: [TableCell(model.name)])
+            TableRow(id: model.identifier, cells: [TableCell(model.name)])
         })
     }
 
@@ -24,7 +24,7 @@ struct SystemVariableAdminController: AdminViewController {
               list: .init(label: "Variables", url: "/admin/system/variables/"),
               nav: [],
               fields: [
-                .init(label: "Id", value: model.id!.uuidString),
+                .init(label: "Id", value: model.identifier),
                 .init(label: "Key", value: model.key),
                 .init(label: "Name", value: model.name),
                 .init(label: "Value", value: model.value ?? ""),

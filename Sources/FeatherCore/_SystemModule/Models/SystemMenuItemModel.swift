@@ -53,6 +53,23 @@ final class SystemMenuItemModel: FeatherModel {
         self.permission = permission
         self.$menu.id = menuId
     }
+    
+    // MARK: - query
+
+    static func allowedOrders() -> [FieldKey] {
+        [
+            FieldKeys.label,
+            FieldKeys.url,
+            FieldKeys.priority,
+        ]
+    }
+    
+    static func search(_ term: String) -> [ModelValueFilter<SystemMenuItemModel>] {
+        [
+            \.$label ~~ term,
+            \.$url ~~ term,
+        ]
+    }
 }
 
 // MARK: - view

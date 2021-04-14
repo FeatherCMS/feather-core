@@ -44,10 +44,15 @@
         #inline("System/Common/Form/Fields/Hidden")
 
 
-
         #for(field in form.fields):
-            #if(field.type == "text"):           #inline("System/Common/Form/Fields/Text")
-            
+            #if(field.type == "hidden"):                #inline("System/Common/Form/Fields/Hidden")
+            #elseif(field.type == "text"):              #inline("System/Common/Form/Fields/Text")
+            #elseif(field.type == "textarea"):          #inline("System/Common/Form/Fields/Textarea")
+            #elseif(field.type == "toggle"):            #inline("System/Common/Form/Fields/Toggle")
+            #elseif(field.type == "checkbox"):          #inline("System/Common/Form/Fields/Checkbox")
+            #elseif(field.type == "radio"):             #inline("System/Common/Form/Fields/Radio")
+            #elseif(field.type == "selection"):         #inline("System/Common/Form/Fields/Selection")
+            #elseif(field.type == "multiselection"):    #inline("System/Common/Form/Fields/Multiselection")
             #endif
         #endfor
         

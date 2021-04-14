@@ -20,6 +20,6 @@ class SelectionField: FormField {
         if required {
             validation.validators.append(ContentValidator<String>.required(key: key))
         }
-        output = .init(key: key, required: required, error: nil, value: nil, options: [], label: nil, more: nil)
+        output = .init(key: key, required: required)
     }
 }

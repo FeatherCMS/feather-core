@@ -1,5 +1,5 @@
 <section>
     #inline("System/Common/Form/Fields/Label")
-    <textarea name="#(field.id)" class="#(field.size)"#if(field.required ?? false): aria-required="true"#endif>#(field.data.value)</textarea>
+    <textarea name="#(field.id)" class="#(field.size)"#if(field.required ?? false): aria-required="true"#endif>#(field.value ?? "")</textarea>
     #inline("System/Common/Form/Fields/Error")
 </section>

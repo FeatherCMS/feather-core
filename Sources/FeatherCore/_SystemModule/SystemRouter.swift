@@ -9,10 +9,10 @@ struct SystemRouter: RouteCollection {
 
     let adminController = AdminController()
     let usrfrontend = UserFrontendController()
-//
-//    let userAdmin = UserAdminController()
+
+    let userAdmin = UserAdminController()
 //    let roleAdmin = UserRoleAdminController()
-//    let permissionAdmin = UserPermissionAdminController()
+    let permissionAdmin = UserPermissionAdminController()
     
     let userApi = UserApiContentController()
     let roleApi = UserRoleApiContentController()
@@ -23,10 +23,10 @@ struct SystemRouter: RouteCollection {
     
     let frontend = FrontendController()
 //    var metadataAdmin = FrontendMetadataModelAdminController()
-//    let menuAdmin = FrontendMenuAdminController()
-//    let itemAdmin = FrontendMenuItemAdminController()
+    let menuAdmin = FrontendMenuAdminController()
+    let itemAdmin = FrontendMenuItemAdminController()
     let pageAdmin = FrontendPageAdminController()
-//
+
 //    let siteAdmin = FrontendSiteAdminController()
 
     func boot(routes: RoutesBuilder) throws {
@@ -81,22 +81,21 @@ struct SystemRouter: RouteCollection {
 
         let modulePath = routes.grouped(SystemModule.pathComponent)
         sysAdminController.setupRoutes(on: modulePath, as: SystemVariableModel.pathComponent)
-//
-//
-//        userAdmin.setupRoutes(on: modulePath, as: SystemUserModel.pathComponent)
+
+        userAdmin.setupRoutes(on: modulePath, as: SystemUserModel.pathComponent)
 //        roleAdmin.setupRoutes(on: modulePath, as: SystemRoleModel.pathComponent)
-//        permissionAdmin.setupRoutes(on: modulePath, as: SystemPermissionModel.pathComponent)
+        permissionAdmin.setupRoutes(on: modulePath, as: SystemPermissionModel.pathComponent)
 //
 //        metadataAdmin.setupRoutes(on: modulePath, as: SystemMetadataModel.pathComponent)
 //
 //        modulePath.get("settings", use: siteAdmin.settingsView)
 //        modulePath.post("settings", use: siteAdmin.updateSettings)
 //
-//        menuAdmin.setupRoutes(on: modulePath, as: SystemMenuModel.pathComponent)
-//
-//        let itemPath = modulePath.grouped(SystemMenuModel.pathComponent, menuAdmin.idPathComponent)
-//        itemAdmin.setupRoutes(on: itemPath, as: SystemMenuItemModel.pathComponent)
-//
+        menuAdmin.setupRoutes(on: modulePath, as: SystemMenuModel.pathComponent)
+
+        let itemPath = modulePath.grouped(SystemMenuModel.pathComponent, menuAdmin.idPathComponent)
+        itemAdmin.setupRoutes(on: itemPath, as: SystemMenuItemModel.pathComponent)
+
         pageAdmin.setupRoutes(on: modulePath, as: SystemPageModel.pathComponent)
     }
     

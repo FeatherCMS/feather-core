@@ -6,15 +6,21 @@
 //
 
 public enum FormFieldType: String, Encodable {
+
+    case hidden
+    
     case text
+    case textarea
+    
+    case selection
+    case multiselection
+    
+    case toggle
     case checkbox
-    case checkmark
+    case radio
+    
     case file
     case image
-    case hidden
-    case multiselection
-    case radio
-    case selection
-    case textarea
-//    case submit
+    
+    case submit
 }

@@ -36,6 +36,22 @@ final class SystemMenuModel: FeatherModel {
         self.name = name
         self.notes = notes
     }
+
+    // MARK: - query
+    
+    static func allowedOrders() -> [FieldKey] {
+        [
+            FieldKeys.key,
+            FieldKeys.name,
+        ]
+    }
+
+    static func search(_ term: String) -> [ModelValueFilter<SystemMenuModel>] {
+        [
+            \.$key ~~ term,
+            \.$name ~~ term,
+        ]
+    }
 }
 
 // MARK: - view

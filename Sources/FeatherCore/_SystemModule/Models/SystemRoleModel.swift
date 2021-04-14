@@ -59,7 +59,7 @@ extension SystemRoleModel: TemplateDataRepresentable {
 extension SystemRoleModel: FormFieldOptionRepresentable {
 
     var formFieldOption: FormFieldOption {
-        .init(key: id!.uuidString, label: name)
+        .init(key: identifier, label: name)
     }
 }
 

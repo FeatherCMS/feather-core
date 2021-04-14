@@ -37,7 +37,7 @@ public extension AdminViewController {
 
     /// after we create a new viper model we can redirect the user to the edit screen using the unique id and replace the last path component
     func createResponse(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Response> {
-        let path = req.url.path.replacingLastPath(model.id!.uuidString)
+        let path = req.url.path.replacingLastPath(model.identifier)
         return req.eventLoop.future(req.redirect(to: path + "/update/"))
     }
 

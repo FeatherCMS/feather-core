@@ -70,7 +70,7 @@
 //
 //        var data: [ModulePermission] = []
 //        for permission in permissions {
-//            let ffo = FormFieldOption(key: permission.id!.uuidString, label: permission.action.capitalized)
+//            let ffo = FormFieldOption(key: permission.identifier, label: permission.action.capitalized)
 //            let module = permission.namespace.lowercased().capitalized
 //
 //            /// if there is no module with the permission, we create it...

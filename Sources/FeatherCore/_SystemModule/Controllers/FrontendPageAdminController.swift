@@ -14,7 +14,7 @@ struct FrontendPageAdminController: AdminViewController {
     
     func listTable(_ models: [Model]) -> Table {
         Table(columns: ["title"], rows: models.map { model in
-            TableRow(id: model.id!.uuidString, cells: [TableCell(model.title)])
+            TableRow(id: model.identifier, cells: [TableCell(model.title)])
         })
     }
         
@@ -24,7 +24,7 @@ struct FrontendPageAdminController: AdminViewController {
               list: .init(label: "Pages", url: "/admin/system/pages"),
               nav: [],
               fields: [
-                .init(label: "Id", value: model.id!.uuidString),
+                .init(label: "Id", value: model.identifier),
                 .init(label: "Title", value: model.title),
                 .init(label: "Content", value: model.content),
               ])

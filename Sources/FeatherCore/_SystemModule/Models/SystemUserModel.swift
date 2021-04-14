@@ -92,7 +92,7 @@ extension SystemUserModel: TemplateDataRepresentable {
 extension SystemUserModel: FormFieldOptionRepresentable {
 
     var formFieldOption: FormFieldOption {
-        .init(key: id!.uuidString, label: email)
+        .init(key: identifier, label: email)
     }
 }
 
