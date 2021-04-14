@@ -7,9 +7,9 @@
 
 public struct InputValidator {
 
-    public let validators: [AsyncValidator]
+    public var validators: [AsyncValidator]
     
-    public init(_ validators: [AsyncValidator]) {
+    public init(_ validators: [AsyncValidator] = []) {
         self.validators = validators
     }
     

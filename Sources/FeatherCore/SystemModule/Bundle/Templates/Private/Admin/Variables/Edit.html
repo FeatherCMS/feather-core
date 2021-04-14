@@ -1,30 +1,41 @@
-#let(form = [
-    "id": formId,
-    "token": formToken,
-    "title": "Variable",
-    "key": "system.variables",
-    "modelId": modelId,
-    "list": [
-        "title": "Variables",
-        "url": "/admin/system/variables/"
-    ]
-])
 
-#define(fields):
-    #var(field = nil)
+#define(body):
+<div class="lead container">
+    <h1>#(form.label ?? "")</h1>
+    <p>#(form.description ?? "")</p>
+</div>
 
-    #(field = ["id": "key", "required": true, "data": fields.key])
-    #inline("System/Common/Form/Fields/Text")
+<form
+    #if(form.id ?? false): id="#(form.id)"#endif
+    #if(form.class ?? false): class="#(form.class)"#endif
+    #if(form.action.method ?? false): method="#(form.action.method)"#endif
+    #if(form.action.url ?? false): action="#(form.action.url)"#endif
+    #if(form.action.multipart ?? false): enctype="multipart/form-data"#endif
+    >
 
-    #(field = ["id": "name", "required": true, "data": fields.name])
-    #inline("System/Common/Form/Fields/Text")
+    #if(form.notification ?? false):
+    <div id="notification" class="#(form.notification.type ?? "info")">
+        #if(form.notification.icon ?? false): #svg(form.notification.icon) #endif
+        #if(form.notification.title ?? false): <h3>#(form.notification.title)</h3>#endif
+        <p>#(form.notification.message)</p>
+    </div>
+    #endif
 
-    #(field = ["id": "value", "size": "s", "data": fields.value])
-    #inline("System/Common/Form/Fields/Textarea")
+    #if(form.error ?? false):
+    <section>
+        <p class="error">#(form.error)</p>
+    </section>
+    #endif
 
-    #(field = ["id": "notes", "size": "s", "data": fields.notes])
-    #inline("System/Common/Form/Fields/Textarea")
-
+    
+        
+        #for(field in form.fields):
+            #if(field.type == "text"):           #inline("System/Common/Form/Fields/Text")
+            
+            #endif
+        #endfor
+        
+</form>
 #enddefine
 
-#inline("System/Admin/Form")
+#inline("System/Admin/Index")

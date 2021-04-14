@@ -8,11 +8,11 @@
 struct SystemRouter: RouteCollection {
 
     let adminController = AdminController()
-    let usrfrontend = UserFrontendController()
-    
-    let userAdmin = UserAdminController()
-    let roleAdmin = UserRoleAdminController()
-    let permissionAdmin = UserPermissionAdminController()
+//    let usrfrontend = UserFrontendController()
+//
+//    let userAdmin = UserAdminController()
+//    let roleAdmin = UserRoleAdminController()
+//    let permissionAdmin = UserPermissionAdminController()
     
     let userApi = UserApiContentController()
     let roleApi = UserRoleApiContentController()
@@ -22,17 +22,17 @@ struct SystemRouter: RouteCollection {
     let sysApiController = SystemVariableApiContentController()
     
     let frontend = FrontendController()
-    var metadataAdmin = FrontendMetadataModelAdminController()
-    let menuAdmin = FrontendMenuAdminController()
-    let itemAdmin = FrontendMenuItemAdminController()
-    let pageAdmin = FrontendPageAdminController()
-    
-    let siteAdmin = FrontendSiteAdminController()
+//    var metadataAdmin = FrontendMetadataModelAdminController()
+//    let menuAdmin = FrontendMenuAdminController()
+//    let itemAdmin = FrontendMenuItemAdminController()
+//    let pageAdmin = FrontendPageAdminController()
+//
+//    let siteAdmin = FrontendSiteAdminController()
 
     func boot(routes: RoutesBuilder) throws {
-        routes.get("login", use: usrfrontend.loginView)
-        routes.grouped(SystemUserCredentialsAuthenticator()).post("login", use: usrfrontend.login)
-        routes.get("logout", use: usrfrontend.logout)
+//        routes.get("login", use: usrfrontend.loginView)
+//        routes.grouped(SystemUserCredentialsAuthenticator()).post("login", use: usrfrontend.login)
+//        routes.get("logout", use: usrfrontend.logout)
         
         routes.get("sitemap.xml", use: frontend.sitemap)
         routes.get("rss.xml", use: frontend.rss)
@@ -81,23 +81,23 @@ struct SystemRouter: RouteCollection {
 
         let modulePath = routes.grouped(SystemModule.pathComponent)
         sysAdminController.setupRoutes(on: modulePath, as: SystemVariableModel.pathComponent)
-        
-
-        userAdmin.setupRoutes(on: modulePath, as: SystemUserModel.pathComponent)
-        roleAdmin.setupRoutes(on: modulePath, as: SystemRoleModel.pathComponent)
-        permissionAdmin.setupRoutes(on: modulePath, as: SystemPermissionModel.pathComponent)
-        
-        metadataAdmin.setupRoutes(on: modulePath, as: SystemMetadataModel.pathComponent)
-
-        modulePath.get("settings", use: siteAdmin.settingsView)
-        modulePath.post("settings", use: siteAdmin.updateSettings)
-        
-        menuAdmin.setupRoutes(on: modulePath, as: SystemMenuModel.pathComponent)
-
-        let itemPath = modulePath.grouped(SystemMenuModel.pathComponent, menuAdmin.idPathComponent)
-        itemAdmin.setupRoutes(on: itemPath, as: SystemMenuItemModel.pathComponent)
-        
-        pageAdmin.setupRoutes(on: modulePath, as: SystemPageModel.pathComponent)
+//
+//
+//        userAdmin.setupRoutes(on: modulePath, as: SystemUserModel.pathComponent)
+//        roleAdmin.setupRoutes(on: modulePath, as: SystemRoleModel.pathComponent)
+//        permissionAdmin.setupRoutes(on: modulePath, as: SystemPermissionModel.pathComponent)
+//
+//        metadataAdmin.setupRoutes(on: modulePath, as: SystemMetadataModel.pathComponent)
+//
+//        modulePath.get("settings", use: siteAdmin.settingsView)
+//        modulePath.post("settings", use: siteAdmin.updateSettings)
+//
+//        menuAdmin.setupRoutes(on: modulePath, as: SystemMenuModel.pathComponent)
+//
+//        let itemPath = modulePath.grouped(SystemMenuModel.pathComponent, menuAdmin.idPathComponent)
+//        itemAdmin.setupRoutes(on: itemPath, as: SystemMenuItemModel.pathComponent)
+//
+//        pageAdmin.setupRoutes(on: modulePath, as: SystemPageModel.pathComponent)
     }
     
     func publicApiRoutesHook(args: HookArguments) {

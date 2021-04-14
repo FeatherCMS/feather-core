@@ -30,7 +30,7 @@ public protocol Form: AnyObject, TemplateDataRepresentable {
     func processAfterFields(req: Request) -> EventLoopFuture<Void>
 
     /// validate form fields
-    func validateFields() -> Bool
+    func validateFields(req: Request) -> EventLoopFuture<Bool>
     /// validate after field validation happened
     func validateAfterFields(req: Request) -> EventLoopFuture<Bool>
     /// validate the entire form
@@ -44,7 +44,8 @@ public extension Form {
     var fields: [FormFieldRepresentable] { [] }
 
     var fieldsTemplateData: TemplateData {
-        .dictionary(fields.reduce(into: [String: TemplateData]()) { $0[$1.key] = $1.templateData })
+        .array(fields.map(\.templateData))
+//        .dictionary(fields.reduce(into: [String: TemplateData]()) { $0[$1.key] = $1.templateData })
     }
 
     var templateData: TemplateData {
@@ -73,13 +74,9 @@ public extension Form {
         return processAfterFields(req: req)
     }
     
-    func validateFields() -> Bool {
-        var isValid = true
-        for field in fields {
-            let isFieldValid = field.validate()
-            isValid = isValid && isFieldValid
-        }
-        return isValid
+    func validateFields(req: Request) -> EventLoopFuture<Bool> {
+        let futures = fields.map { $0.validate(req: req) }
+        return req.eventLoop.mergeTrueFutures(futures)
     }
 
     func validateAfterFields(req: Request) -> EventLoopFuture<Bool> {
@@ -87,10 +84,12 @@ public extension Form {
     }
 
     func validate(req: Request) -> EventLoopFuture<Bool> {
-        guard validateFields() else {
-            return req.eventLoop.future(false)
+        return validateFields(req: req).flatMap { [unowned self] result in
+            guard result else {
+                return req.eventLoop.future(false)
+            }
+            return validateAfterFields(req: req)
         }
-        return validateAfterFields(req: req)
     }
 
     func save(req: Request) -> EventLoopFuture<Void> {

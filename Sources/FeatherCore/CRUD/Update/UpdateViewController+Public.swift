@@ -15,15 +15,27 @@ public extension UpdateViewController {
         req.eventLoop.future()
     }
 
+    func createContext(req: Request, formId: String, formToken: String) -> FormContext {
+        .init(id: formId,
+              token: formToken,
+              title: "",
+              key: "",
+              modelId: "",
+              list: .init(label: "", url: ""),
+              nav: [],
+              notification: nil)
+    }
+
+    
     func renderUpdateForm(req: Request, form: UpdateForm) -> EventLoopFuture<View> {
         let formId = UUID().uuidString
         let nonce = req.generateNonce(for: "update-form", id: formId)
 
         return beforeUpdateFormRender(req: req, form: form).flatMap {
-            var templateData = form.templateData.dictionary!
-            templateData["formId"] = .string(formId)
-            templateData["formToken"] = .string(nonce)
-            return render(req: req, template: updateView, context: .init(templateData))
+            var ctx = createContext(req: req, formId: formId, formToken: nonce).encodeToTemplateData().dictionary!
+            ctx["fields"] = form.templateData.dictionary!["fields"]
+
+            return render(req: req, template: updateView, context: ["form": .dictionary(ctx)])
         }
     }
 

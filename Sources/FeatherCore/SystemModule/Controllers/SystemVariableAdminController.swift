@@ -4,7 +4,7 @@
 //
 //  Created by Tibor Bödecs on 2020. 06. 10..
 //
-
+//
 struct SystemVariableAdminController: AdminViewController {
 
     typealias Module = SystemModule

@@ -23,8 +23,7 @@ public extension CreateViewController {
               modelId: "",
               list: .init(label: "", url: ""),
               nav: [],
-              notification: "",
-              fields: [])
+              notification: nil)
     }
 
     func renderCreateForm(req: Request, form: CreateForm) -> EventLoopFuture<View> {
@@ -32,9 +31,11 @@ public extension CreateViewController {
         let nonce = req.generateNonce(for: "create-form", id: formId)
 
         return beforeCreateFormRender(req: req, form: form).flatMap {
-            let ctx = createContext(req: req, formId: formId, formToken: nonce)
-            var templateData = form.templateData.dictionary!
-            return render(req: req, template: createView, context: .init(templateData))
+            var ctx = createContext(req: req, formId: formId, formToken: nonce).encodeToTemplateData().dictionary!
+            ctx["fields"] = form.templateData.dictionary!["fields"]
+
+            return render(req: req, template: createView, context: ["form": .dictionary(ctx)])
+            
         }
     }
 

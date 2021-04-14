@@ -16,6 +16,5 @@ public struct FormContext: Codable {
     public let list: Link
     public let nav: [Link]
     public let notification: String?
-    public let fields: [Context]
 }
 
