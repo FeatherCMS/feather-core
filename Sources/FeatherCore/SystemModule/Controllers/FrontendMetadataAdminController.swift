@@ -26,6 +26,16 @@ struct FrontendMetadataModelAdminController: AdminViewController {
 //        queryBuilder.filter(\.$title ~~ search)
 //    }
     
+    
+//        "title": "Metadatas",
+//        "key": "frontend.metadatas",
+//        "create": false,
+//        "delete": false,
+//        "fields": [
+//            ["key": "slug", "default": true, "placeholder": "home"]
+//        ]
+    
+    
     func listTable(_ models: [Model]) -> Table {
         Table(columns: [])
     }

@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 04. 23..
 //
 
+
 public final class FormField<Value: TemplateDataRepresentable & Decodable>: FormFieldRepresentable {
 
     public var key: String
@@ -30,9 +31,18 @@ public final class FormField<Value: TemplateDataRepresentable & Decodable>: Form
     public var templateData: TemplateData {
         .dictionary([
             "key": key,
+            
             "name": name,
             "value": value,
             "error": error,
+            
+            "type": "text",
+            "required": true,
+            
+            "label": "text",
+            "placeholder": "text",
+            "more": "text",
+            //... other
         ])
     }
 

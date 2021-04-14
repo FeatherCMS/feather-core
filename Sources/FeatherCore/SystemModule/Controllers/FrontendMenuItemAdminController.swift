@@ -15,6 +15,14 @@ struct FrontendMenuItemAdminController: AdminViewController {
 
     var idParamKey: String { "itemId" }
     
+//    "title": "Menu items",
+//    "key": "system.menuItems",
+//    "fields": [
+//        ["key": "label", "default": true]
+//    ],
+//    "nav": [
+//        ["label": "Menu", "link": "/admin/frontend/menus/" + menuId]
+//    ]
     func listTable(_ models: [Model]) -> Table {
         Table(columns: [])
     }

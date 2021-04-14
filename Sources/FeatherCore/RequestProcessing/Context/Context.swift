@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 03. 25..
 //
 
- enum Context {
+ public enum Context {
 
     case null
     case bool(Bool)
@@ -15,7 +15,7 @@
     case array([Context])
     case object([String: Context])
 
-     init?(_ value: Any?) {
+    public init?(_ value: Any?) {
         guard let value = value else {
             self = nil
             return
@@ -44,49 +44,49 @@
     
     // MARK: - value getters
 
-     var isNull: Bool {
+    public var isNull: Bool {
         if case .null = self {
             return true
         }
         return false
     }
 
-     var bool: Bool? {
+    public var bool: Bool? {
         if case .bool(let value) = self {
             return value
         }
         return nil
     }
 
-     var int: Int? {
+    public var int: Int? {
         if case .int(let value) = self {
             return value
         }
         return nil
     }
 
-     var double: Double? {
+    public var double: Double? {
         if case .double(let value) = self {
             return value
         }
         return nil
     }
 
-     var string: String? {
+    public var string: String? {
         if case .string(let value) = self {
             return value
         }
         return nil
     }
 
-     var array: [Context]? {
+    public var array: [Context]? {
         if case .array(let value) = self {
             return value
         }
         return nil
     }
 
-     var object: [String: Context]? {
+    public var object: [String: Context]? {
         get {
             if case .object(let value) = self {
                 return value
@@ -99,7 +99,7 @@
     }
 
 
-     subscript(key: String) -> Context? {
+    public subscript(key: String) -> Context? {
         get {
             if case .object(let dict) = self {
                 return dict[key]
@@ -114,7 +114,7 @@
         }
     }
     
-     func merged(with new: Context?) -> Context {
+    public func merged(with new: Context?) -> Context {
         guard let new = new else {
             return self
         }
@@ -134,7 +134,7 @@
         return .object(merged)
     }
     
-     func decode<T: Decodable>(_ type: T.Type) -> T?  {
+    public func decode<T: Decodable>(_ type: T.Type) -> T?  {
         guard let encoded = try? JSONEncoder().encode(self) else {
             return nil
         }
@@ -142,7 +142,7 @@
     }
 }
 
- extension Encodable {
+public extension Encodable {
     
     func encode() -> Context? {
         guard let encoded = try? JSONEncoder().encode(self) else {
@@ -154,7 +154,7 @@
 
 extension Context: Codable {
 
-     func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
         case .null:
@@ -174,7 +174,7 @@ extension Context: Codable {
         }
     }
 
-     init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if container.decodeNil() {
             self = .null
@@ -205,7 +205,7 @@ extension Context: Codable {
 
 extension Context: CustomDebugStringConvertible {
 
-     var debugDescription: String {
+     public var debugDescription: String {
         switch self {
         case .null:
             return "null"
@@ -230,49 +230,49 @@ extension Context: CustomDebugStringConvertible {
 
 extension Context: ExpressibleByNilLiteral {
 
-     init(nilLiteral: ()) {
+    public init(nilLiteral: ()) {
         self = .null
     }
 }
 
 extension Context: ExpressibleByBooleanLiteral {
 
-     init(booleanLiteral value: Bool) {
+    public init(booleanLiteral value: Bool) {
         self = .bool(value)
     }
 }
 
 extension Context: ExpressibleByIntegerLiteral {
 
-     init(integerLiteral value: Int) {
+    public init(integerLiteral value: Int) {
         self = .int(value)
     }
 }
 
 extension Context: ExpressibleByFloatLiteral {
 
-     init(floatLiteral value: Double) {
+    public init(floatLiteral value: Double) {
         self = .double(value)
     }
 }
 
 extension Context: ExpressibleByStringLiteral {
 
-     init(stringLiteral value: String) {
+    public init(stringLiteral value: String) {
         self = .string(value)
     }
 }
 
 extension Context: ExpressibleByArrayLiteral {
 
-     init(arrayLiteral elements: Context...) {
+    public init(arrayLiteral elements: Context...) {
         self = .array(elements)
     }
 }
 
 extension Context: ExpressibleByDictionaryLiteral {
 
-     init(dictionaryLiteral elements: (String, Context)...) {
+    public init(dictionaryLiteral elements: (String, Context)...) {
         var object: [String: Context] = [:]
         for (k, v) in elements {
             object[k] = v

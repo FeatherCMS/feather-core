@@ -15,14 +15,25 @@ public extension CreateViewController {
         req.eventLoop.future()
     }
 
+    func createContext(req: Request, formId: String, formToken: String) -> FormContext {
+        .init(id: formId,
+              token: formToken,
+              title: "",
+              key: "",
+              modelId: "",
+              list: .init(label: "", url: ""),
+              nav: [],
+              notification: "",
+              fields: [])
+    }
+
     func renderCreateForm(req: Request, form: CreateForm) -> EventLoopFuture<View> {
         let formId = UUID().uuidString
         let nonce = req.generateNonce(for: "create-form", id: formId)
 
         return beforeCreateFormRender(req: req, form: form).flatMap {
+            let ctx = createContext(req: req, formId: formId, formToken: nonce)
             var templateData = form.templateData.dictionary!
-            templateData["formId"] = .string(formId)
-            templateData["formToken"] = .string(nonce)
             return render(req: req, template: createView, context: .init(templateData))
         }
     }
