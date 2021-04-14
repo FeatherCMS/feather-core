@@ -6,7 +6,7 @@
 //
 
 /// pagination metadata info
-public struct ListPageInfo: TemplateDataRepresentable {
+public struct Pagination: TemplateDataRepresentable {
 
     /// current page
     public let current: Int

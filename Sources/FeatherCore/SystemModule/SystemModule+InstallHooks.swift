@@ -8,7 +8,7 @@
 extension SystemModule {
         
     func installModelsHook(args: HookArguments) -> EventLoopFuture<Void> {
-        let req = args["req"] as! Request
+        let req = args.req
         
         let mainId = UUID()
         let mainMenu = SystemMenuModel(id: mainId, key: "main", name: "Main menu")

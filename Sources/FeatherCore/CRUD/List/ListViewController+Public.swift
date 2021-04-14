@@ -13,21 +13,32 @@ public extension ListViewController {
     var listLimitKey: String { "limit" }
     var listPageKey: String { "page" }
     var listDefaultLimit: Int { 10 }
+
+    var listTitle: String { Model.name.lowercased().capitalized }
+    
+    var listIsSearchable: Bool { true }
     
     func accessList(req: Request) -> EventLoopFuture<Bool> {
-        req.eventLoop.future(true)
+        let hasPermission = req.checkPermission(for: Model.permission(for: .list))
+        return req.eventLoop.future(hasPermission)
     }
-
-    func beforeListQuery(req: Request, queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
+    
+    func listQueryBuilder(req: Request, queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
         queryBuilder
     }
 
-    func listQuery(order: FieldKey, sort: FieldSort, queryBuilder qb: QueryBuilder<Model>, req: Request) -> QueryBuilder<Model> {
-        qb.sort(order, sort.direction)
-    }
-
-    func beforeListPageRender(page: ListPage<Model>) -> TemplateData {
-        page.templateData
+    func listContext(req: Request) -> ListControllerContext {
+        .init(module: Model.Module.name,
+              model: Model.name,
+              title: listTitle,
+              searchable: listIsSearchable,
+              create: req.checkPermission(for: Model.permission(for: .create)),
+              view: req.checkPermission(for: Model.permission(for: .create)),
+              update: req.checkPermission(for: Model.permission(for: .create)),
+              delete: req.checkPermission(for: Model.permission(for: .create)),
+              allowedOrders: Model.allowedOrders().map(\.description),
+              defaultOrder: Model.allowedOrders().first?.description,
+              defaultSort: Model.defaultSort().rawValue)
     }
 
     func listView(req: Request) throws -> EventLoopFuture<View> {
@@ -35,56 +46,14 @@ public extension ListViewController {
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
-            /// first we need a QueryBuilder instance, we apply the beforeList method on the default query
-            var qb = beforeListQuery(req: req, queryBuilder: Model.query(on: req.db))
-                    
-            /// next we get the sort from the query, if there was no sort key we use the default sort
-            
-            var sort = Model.defaultSort()
-            if let sortQuery: String = req.query[listSortKey], let sortValue = FieldSort(rawValue: sortQuery) {
-                sort = sortValue
-            }
-            /// if custom ordering is allowed
-            if !Model.allowedOrders().isEmpty {
-                /// we check for a new order using the query, otherwise we use the first element of the allowed orders
-                let orderValue: String = req.query[listOrderKey] ?? Model.allowedOrders()[0].description
-                let order = FieldKey(stringLiteral: orderValue)
-                /// only allow ordering if the order value is in the allowed orders array
-                if Model.allowedOrders().contains(order) {
-                    qb = listQuery(order: order, sort: sort, queryBuilder: qb, req: req)
+            return ListLoader<Model>().paginate(req)
+                .flatMap { pc in
+                    return render(req: req, template: listView, context: [
+                        "table": listTable(pc.items).encodeToTemplateData(),
+                        "pages": pc.info.templateData,
+                        "list": listContext(req: req).encodeToTemplateData(),
+                    ])
                 }
-            }
-
-            /// check if there is a non-empty search term and apply the search term using the custom search method
-            if let searchTerm: String = req.query[listSearchKey], !searchTerm.isEmpty {
-                qb = qb.group(.or) { qb in
-                    for v in Model.search(searchTerm) {
-                        qb.filter(v)
-                    }
-                }
-            }
-
-            /// apply the limit and page properties
-            let limit: Int = req.query[listLimitKey] ?? listDefaultLimit
-            let page: Int = max((req.query[listPageKey] ?? 1), 1)
-            
-            /// calculate the start and end position
-            let start: Int = (page - 1) * limit
-            let end: Int = page * limit
-            
-            /// count the total number of elements for the page info
-            let count = qb.count()
-            /// set the range filter and request all the elements in the given range
-            let items = qb.copy().range(start..<end).all()
-            
-            ///query both the total count and the models for the requested page
-            return items.and(count).map { (models, total) -> ListPage<Model> in
-                let totalPages = Int(ceil(Float(total) / Float(limit)))
-                return ListPage(models, info: .init(current: page, limit: limit, total: totalPages))
-            }
-            /// map the page elements to template values & render the list view
-            .map { beforeListPageRender(page: $0) }
-            .flatMap { render(req: req, template: listView, context: ["list": $0]) }
         }
     }
 

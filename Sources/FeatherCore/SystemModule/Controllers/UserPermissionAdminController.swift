@@ -8,7 +8,7 @@
 
 
 
-struct UserPermissionAdminController: FeatherAdminViewController {
+struct UserPermissionAdminController: AdminViewController {
     
     typealias Module = SystemModule
     typealias Model = SystemPermissionModel
@@ -25,5 +25,20 @@ struct UserPermissionAdminController: FeatherAdminViewController {
 //        queryBuilder.filter(\.$context ~~ search)
 //        queryBuilder.filter(\.$action ~~ search)
 //    }
+    
+    func listTable(_ models: [Model]) -> Table {
+        Table(columns: ["name"], rows: models.map { model in
+            TableRow(id: model.id!.uuidString, cells: [TableCell(model.name)])
+        })
+    }
+    
+    func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {
+        .init(id: formId,
+              token: formToken,
+              context: model.name,
+              type: "metadata",
+              list: .init(title: "Metadatas", url: "/admin/system/metadatas")
+        )
+    }
 }
 

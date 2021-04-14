@@ -1,6 +1,6 @@
 <div class="lead container center">
-    <span class="icon">#($system.variables["empty.list.icon"])</span>
-    <h2>#($system.variables["empty.list.title"])</h2>
-    <p>#($system.variables["empty.list.description"])</p>
-    <a href="#($req.url.path)" class="button-1">#($system.variables["empty.list.link"])</a>
+    <span class="icon">#($variables.emptyListIcon ?? "")</span>
+    <h2>#($variables.emptyListTitle ?? "")</h2>
+    <p>#($variables.emptyListDescription ?? "")</p>
+    <a href="#($req.url.path)" class="button-1">#($variables.emptyListLinkLabel ?? "")</a>
 </div>

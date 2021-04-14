@@ -29,6 +29,39 @@ public protocol AdminViewController:
  */
 public extension AdminViewController {
 
+    var listView: String { "System/Admin/List" }
+    var getView: String { "\(Model.Module.name.capitalized)/Admin/\(Model.name.capitalized)/View" }
+    var createView: String { "\(Model.Module.name.capitalized)/Admin/\(Model.name.capitalized)/Edit" }
+    var updateView: String { "\(Model.Module.name.capitalized)/Admin/\(Model.name.capitalized)/Edit" }
+    var deleteView: String { "System/Admin/Delete" }
+
+    /// after we create a new viper model we can redirect the user to the edit screen using the unique id and replace the last path component
+    func createResponse(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Response> {
+        let path = req.url.path.replacingLastPath(model.id!.uuidString)
+        return req.eventLoop.future(req.redirect(to: path + "/update/"))
+    }
+
+    /// after we delete a model, we can redirect back to the list, using the current path component, but trimming the final uuid/delete part.
+    func deleteResponse(req: Request, model: Model) -> EventLoopFuture<Response> {
+        // /[model]/:id/delete -> /[model]/
+        var url = req.url.path.trimmingLastPathComponents(2)
+        if let redirect = try? req.content.get(String.self, at: "redirect") {
+            url = redirect
+        }
+        return req.eventLoop.future(req.redirect(to: url))
+    }
+
+    private func viperAccess(_ key: String, req: Request) -> EventLoopFuture<Bool> {
+        let permission = Permission(namespace: Model.Module.name, context: Model.name, action: .custom(key))
+        return req.checkAccess(for: permission)
+    }
+
+    func accessList(req: Request) -> EventLoopFuture<Bool> { viperAccess("list", req: req) }
+    func accessGet(req: Request) -> EventLoopFuture<Bool> { viperAccess("get", req: req) }
+    func accessCreate(req: Request) -> EventLoopFuture<Bool> { viperAccess("create", req: req) }
+    func accessUpdate(req: Request) -> EventLoopFuture<Bool> { viperAccess("update", req: req) }
+    func accessDelete(req: Request) -> EventLoopFuture<Bool> { viperAccess("delete", req: req) }
+    
     func setupRoutes(on builder: RoutesBuilder,
                      as pathComponent: PathComponent,
                      createPath: PathComponent = "create",

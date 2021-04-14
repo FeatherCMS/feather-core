@@ -27,4 +27,6 @@ public protocol DeleteViewController: IdentifiableController {
     
     /// setup the get and post routes for the delete controller
     func setupDeleteRoutes(on: RoutesBuilder, as: PathComponent)
+    
+    func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext
 }

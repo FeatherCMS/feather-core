@@ -7,7 +7,9 @@
 
 
 
-struct UserRoleApiContentController: FeatherApiContentController {
+struct UserRoleApiContentController: ApiContentController {
     typealias Module = SystemModule
     typealias Model = SystemRoleModel
+
+    
 }

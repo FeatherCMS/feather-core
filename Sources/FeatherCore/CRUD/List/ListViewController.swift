@@ -27,22 +27,26 @@ public protocol ListViewController: ViewController {
     
     /// default list limit
     var listDefaultLimit: Int { get }
-
+    
+    var listTitle: String { get }
+    
+    var listIsSearchable: Bool { get }
+    
     /// check if there is access to list objects, if the future the server will respond with a forbidden status
     func accessList(req: Request) -> EventLoopFuture<Bool>
     
     /// builds the query in order to list objects in the admin interface
-    func beforeListQuery(req: Request, queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model>
+    func listQueryBuilder(req: Request, queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model>
     
-    /// implement this method if you want to alter the sort or order function for a given field (e.g order by a joined field)
-    func listQuery(order: FieldKey, sort: FieldSort, queryBuilder: QueryBuilder<Model>, req: Request) -> QueryBuilder<Model>
+    func listTable(_ models: [Model]) -> Table
     
-    /// this method is used before a page object gets rendered, you can alter the returned TemplateData as needed
-    func beforeListPageRender(page: ListPage<Model>) -> TemplateData
+    func listContext(req: Request) -> ListControllerContext
     
     /// renders the list view
     func listView(req: Request) throws -> EventLoopFuture<View>
-    
+
+
     /// setup list related routes
     func setupListRoute(on: RoutesBuilder)
+    
 }

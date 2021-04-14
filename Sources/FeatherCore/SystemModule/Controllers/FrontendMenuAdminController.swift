@@ -8,8 +8,8 @@
 
 
 
-struct FrontendMenuAdminController: FeatherAdminViewController {
-
+struct FrontendMenuAdminController: AdminViewController {
+//
     typealias Module = SystemModule
     typealias Model = SystemMenuModel
     typealias CreateForm = SystemMenuEditForm
@@ -24,7 +24,20 @@ struct FrontendMenuAdminController: FeatherAdminViewController {
 //        queryBuilder.filter(\.$name ~~ search)
 //    }
     
+    func listTable(_ models: [Model]) -> Table {
+        Table(columns: [])
+    }
+    
     func beforeDelete(req: Request, model: SystemMenuModel) -> EventLoopFuture<SystemMenuModel> {
         SystemMenuItemModel.query(on: req.db).filter(\.$menu.$id == model.id!).delete().map { model }
+    }
+    
+    func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {
+        .init(id: formId,
+              token: formToken,
+              context: model.name,
+              type: "metadata",
+              list: .init(title: "Metadatas", url: "/admin/system/metadatas")
+        )
     }
 }

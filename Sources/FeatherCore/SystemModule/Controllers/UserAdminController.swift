@@ -8,7 +8,7 @@
 
 
 
-struct UserAdminController: FeatherAdminViewController {
+struct UserAdminController: AdminViewController {
 
     typealias Module = SystemModule
     typealias Model = SystemUserModel
@@ -42,6 +42,22 @@ struct UserAdminController: FeatherAdminViewController {
             }
             return SystemTokenModel.query(on: req.db).filter(\.$user.$id == model.id!).delete().map { model }
         }
+    }
+
+    
+    func listTable(_ models: [Model]) -> Table {
+        Table(columns: ["email"], rows: models.map { model in
+            TableRow(id: model.id!.uuidString, cells: [TableCell(model.email)])
+        })
+    }
+    
+    func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {
+        .init(id: formId,
+              token: formToken,
+              context: model.email,
+              type: "user",
+              list: .init(title: "Users", url: "/admin/system/users")
+        )
     }
 
 }

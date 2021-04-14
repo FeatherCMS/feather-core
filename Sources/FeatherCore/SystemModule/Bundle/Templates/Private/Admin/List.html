@@ -1,0 +1,118 @@
+#var(actions = [])
+
+#if(list.update):
+    #(actions.append(["link": "/update/", "label": "Edit", "icon": "edit", "width": "4rem"]))
+#endif
+
+#if(list.delete):
+    #(actions.append(["link": "/delete/", "label": "Delete", "icon": "delete", "width": "4rem"]))
+#endif
+
+#define(css):
+tr {
+    grid-template-columns: repeat(#max(1, actions.count()), 1fr);
+}
+td.field {
+    grid-column: span #(actions.count());
+}
+@media (min-width: 600px) {
+    tr {
+        grid-template-columns:#for(f in table.columns ?? []): #(f.width ?? "1fr")#endfor #for(a in actions): #(a.width ?? "1fr")#endfor;
+    }
+    td.field {
+        grid-column: span 1;
+    }
+}
+#enddefine
+
+#define(breadcrumb):
+    <a href="#($req.url.path.trimLast())">#(list.module.capitalized())</a>
+    <a href="#($req.url.path)" class="current">#(list.title ?? "List")</a>
+#enddefine
+
+#define(body):
+<div class="lead">
+    <h1>#(list.title ?? "List")</h1>
+    <p>
+        #var(nav = [])
+        #if(list.create):
+            #(nav.append(["link": $req.url.path + "create/", "label": "Create new"]))
+        #endif
+        #for(item in nav):
+            #if(!isFirst): &middot; #endif<a href="#(item.link)"#if(item.targetBlank ?? false): target="_blank"#endif>#(item.label)</a>
+        #endfor
+    </p>
+</div>
+
+#if(list.searchable):
+<form id="search-form" action="#($req.url.path)" method="get">
+    #if(Request(query: "sort") != nil):
+    <input type="hidden" id="sort" name="sort" value="#Request(query: "sort")">
+    #endif
+    #if(Request(query: "order") != nil):
+    <input type="hidden" id="order" name="order" value="#Request(query: "order")">
+    #endif
+    <input type="text" id="search" name="search" placeholder="Search..." value="#Request(query: "search")">
+</form>
+#endif
+
+
+#if(table.rows.isEmpty()):
+    #inline("System/Admin/Empty")
+#else:
+<table>
+    <thead>
+        <tr>
+            #for(column in table.columns):
+            <td class="field#if(isLast): last#endif">
+                #if(list.allowedOrders.contains(column.id)):
+                    #let(link = [
+                         "key": column.id,
+                         "default": list.defaultOrder == column.id,
+                         "sort": list.defaultSort,
+                         "label": column.label
+                    ])
+                    #inline("System/Admin/SortLink")
+                #else:
+                    #(column.label)
+                #endif
+            </td>
+            #endfor
+            #for(action in actions):
+            <td class="action">#(action.label)</td>
+            #endfor
+        </tr>
+    </thead>
+    <tbody>
+        #for(row in table.rows):
+        <tr>
+            #for(cell in row.cells):
+            <td class="field#if(isLast): last#endif">
+
+                #var(value = cell.value)
+                #if(cell.type == "image"): #var(value = "<img src='" + cell.value +"'>") #endif
+
+                #if(list.view):
+                    <a href="#($req.url.path)#(row.id)/">#(value)</a>
+                #else:
+                    #(value)
+                #endif
+            </td>
+            #endfor
+            #for(action in actions):
+            <td class="action">
+                <a href="#($req.url.path)#(row.id)#(action.link)">#svg(action.icon)</a>
+            </td>
+            #endfor
+        </tr>
+        #endfor
+    </tbody>
+</table>
+
+
+
+#endif
+
+#enddefine
+
+#inline("System/Admin/Index")

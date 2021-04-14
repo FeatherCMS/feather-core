@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 04. 09..
 //
 
+
 final class SystemModule: FeatherModule {
 
     static var name: String = "system"
@@ -44,21 +45,22 @@ final class SystemModule: FeatherModule {
         app.hooks.register("public-api-routes", use: router.publicApiRoutesHook)
         app.hooks.register("api-routes", use: router.apiRoutesHook)
         /// pages
-        app.hooks.register("frontend-route", use: frontendRouteHook)
+        app.hooks.register("response", use: responseHook)
         app.hooks.register("home-page", use: homePageHook)
     }
   
     // MARK: - hooks
+    
+    func responseHook(args: HookArguments) -> EventLoopFuture<Response?> {
+        let req = args.req
 
-    func frontendRouteHook(args: HookArguments) -> EventLoopFuture<Response?> {
-        let req = args["req"] as! Request
-
-        /// check if system is already installed, if yes we don't do anything
+        /// if system is not installed yet, perform install process
         guard Application.Config.installed else {
             return performInstall(req: req).encodeOptionalResponse(for: req)
         }
-
-        return SystemPageModel.queryJoinVisibleMetadata(path: req.url.path, on: req.db)
+        
+        return SystemPageModel
+            .queryJoinVisibleMetadata(path: req.url.path, on: req.db)
             .first()
             .flatMap { page -> EventLoopFuture<Response?> in
                 guard let page = page else {
@@ -80,6 +82,18 @@ final class SystemModule: FeatherModule {
                     return req.tau.render(template: "System/Page", context: .init(ctx)).encodeOptionalResponse(for: req)
                 }
             }
+    }
+    
+    /// renders the [home-page] content
+    func homePageHook(args: HookArguments) -> EventLoopFuture<Response?> {
+        let req = args.req
+        
+        let metadata = args["page-metadata"] as! Metadata
+
+        return req.tau.render(template: "System/Home", context: [
+            "metadata": metadata.templateData,
+        ])
+        .encodeOptionalResponse(for: req)
     }
     
     // MARK: - perform install steps
@@ -197,10 +211,9 @@ final class SystemModule: FeatherModule {
     }
 
     func permissionHook(args: HookArguments) -> Bool {
-        let req = args["req"] as! Request
         let permission = args["permission"] as! Permission
         
-        guard let user = req.auth.get(SystemUserModel.self) else {
+        guard let user = args.req.auth.get(SystemUserModel.self) else {
             return false
         }
         if user.root {
@@ -209,10 +222,9 @@ final class SystemModule: FeatherModule {
         return user.permissions.contains(permission.identifier)
     }
     
+    /// by default return the permission as an access...
     func accessHook(args: HookArguments) -> EventLoopFuture<Bool> {
-        /// by default return the permission as an access...
-        let req = args["req"] as! Request
-        return req.eventLoop.future(permissionHook(args: args))
+        args.req.eventLoop.future(permissionHook(args: args))
     }
 
 //    func systemVariablesAccessHook(args: HookArguments) -> EventLoopFuture<Bool> {
@@ -234,16 +246,5 @@ final class SystemModule: FeatherModule {
      }
  */
         
-    /// renders the [frontend-home-page] content
-    func homePageHook(args: HookArguments) -> EventLoopFuture<Response?> {
-        let req = args["req"] as! Request
-        let metadata = args["page-metadata"] as! Metadata
-
-        return req.tau.render(template: "System/Home", context: [
-            "metadata": metadata.templateData,
-        ])
-        .encodeOptionalResponse(for: req)
-    }
-
     
 }

@@ -8,7 +8,7 @@
 
 
 
-struct FrontendMetadataModelAdminController: FeatherAdminViewController {
+struct FrontendMetadataModelAdminController: AdminViewController {
     
     typealias Module = SystemModule
     typealias Model = SystemMetadataModel
@@ -26,11 +26,24 @@ struct FrontendMetadataModelAdminController: FeatherAdminViewController {
 //        queryBuilder.filter(\.$title ~~ search)
 //    }
     
+    func listTable(_ models: [Model]) -> Table {
+        Table(columns: [])
+    }
+    
     func beforeDelete(req: Request, model: Model) -> EventLoopFuture<Model> {
         var future = req.eventLoop.future(model)
         if let key = model.imageKey {
             future = req.fs.delete(key: key).map { model }
         }
         return future
+    }
+    
+    func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {
+        .init(id: formId,
+              token: formToken,
+              context: model.title ?? "",
+              type: "metadata",
+              list: .init(title: "Metadatas", url: "/admin/system/metadatas")
+        )
     }
 }

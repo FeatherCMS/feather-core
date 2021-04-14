@@ -87,10 +87,11 @@ public final class Feather {
         /// setup custom template sources based on the modules
         let templateSources = TemplateSources()
         
+        /// Resources/Templates/[Default]/
         try templateSources.register(using: FileSource(fileio: app.fileio,
                                                        limits: [.requireExtensions],
                                                        sandboxDirectory: app.directory.resourcesDirectory,
-                                                       viewDirectory: app.directory.viewsDirectory,
+                                                       viewDirectory: app.directory.viewsDirectory + Application.Config.template.withTrailingSlash,
                                                        defaultExtension: "html"))
 
         for module in app.feather.modules {

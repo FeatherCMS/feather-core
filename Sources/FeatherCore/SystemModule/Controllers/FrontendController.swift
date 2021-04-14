@@ -10,7 +10,7 @@
 struct FrontendController {
     
     func catchAllView(req: Request) throws -> EventLoopFuture<Response> {
-        let futures: [EventLoopFuture<Response?>] = req.invokeAll("frontend-route")
+        let futures: [EventLoopFuture<Response?>] = req.invokeAll("response")
         return req.eventLoop.findFirstValue(futures).unwrap(or: Abort(.notFound))
     }
 

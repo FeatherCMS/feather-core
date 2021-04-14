@@ -6,9 +6,7 @@
 //
 
 
-
-
-struct FrontendMenuItemAdminController: FeatherAdminViewController {
+struct FrontendMenuItemAdminController: AdminViewController {
 
     typealias Module = SystemModule
     typealias Model = SystemMenuItemModel
@@ -17,6 +15,9 @@ struct FrontendMenuItemAdminController: FeatherAdminViewController {
 
     var idParamKey: String { "itemId" }
     
+    func listTable(_ models: [Model]) -> Table {
+        Table(columns: [])
+    }
 //    var listAllowedOrders: [FieldKey] = [
 //        Model.FieldKeys.label,
 //        Model.FieldKeys.url,
@@ -33,5 +34,16 @@ struct FrontendMenuItemAdminController: FeatherAdminViewController {
             return queryBuilder
         }
         return queryBuilder.filter(\.$menu.$id == uuid)
+    }
+    
+    func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {
+        //req.parameters.get("id")
+        // "/admin/frontend/menus/" + menuId + "/items/"
+        .init(id: formId,
+              token: formToken,
+              context: model.label,
+              type: "metadata",
+              list: .init(title: "Metadatas", url: "/admin/system/metadatas")
+        )
     }
 }

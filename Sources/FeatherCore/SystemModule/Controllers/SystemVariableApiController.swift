@@ -7,7 +7,7 @@
 
 
 
-struct SystemVariableApiContentController: FeatherApiContentController {
+struct SystemVariableApiContentController: ApiContentController {
     typealias Module = SystemModule
     typealias Model = SystemVariableModel    
 }

@@ -11,6 +11,7 @@ public extension DeleteViewController {
         req.eventLoop.future(true)
     }
 
+    
     func deleteView(req: Request) throws -> EventLoopFuture<View>  {
         accessDelete(req: req).throwingFlatMap { hasAccess in
             guard hasAccess else {
@@ -21,10 +22,9 @@ public extension DeleteViewController {
             let nonce = req.generateNonce(for: "delete-form", id: formId)
 
             return findBy(id, on: req.db).flatMap { model in
-                render(req: req, template: deleteView, context: [
-                    "formId": .string(formId),
-                    "formToken": .string(nonce),
-                    "model": model.templateData,
+                let ctx = deleteContext(req: req, model: model, formId: formId, formToken: nonce)
+                return render(req: req, template: deleteView, context: [
+                    "delete": ctx.encodeToTemplateData()
                 ])
             }
         }
