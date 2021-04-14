@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 03. 30..
 //
 
-public final class TableColumn: Codable {
+public final class TableColumn: Encodable {
 
     public let id: String
     public let label: String?

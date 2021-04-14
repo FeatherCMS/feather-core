@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 03. 31..
 //
 
-public final class TableRow: Codable {
+public final class TableRow: Encodable {
 
     public let id: String
     public let cells: [TableCell]

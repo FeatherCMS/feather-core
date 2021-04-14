@@ -5,7 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 04. 02..
 //
 
-//public final class FormFieldGroup: Codable {
+// NOTE: unused for now
+//public final class FormFieldGroup: Encodable {
 //
 //    public var label: String?
 //    public var fields: [FormField]

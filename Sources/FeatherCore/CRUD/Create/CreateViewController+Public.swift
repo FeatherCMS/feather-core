@@ -15,7 +15,7 @@ public extension CreateViewController {
         req.eventLoop.future()
     }
 
-    func createContext(req: Request, formId: String, formToken: String) -> FormContext {
+    func createContext(req: Request, formId: String, formToken: String) -> FormView {
         .init(id: formId,
               token: formToken,
               title: "",

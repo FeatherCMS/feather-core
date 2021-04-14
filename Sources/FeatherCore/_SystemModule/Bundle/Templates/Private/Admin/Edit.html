@@ -1,0 +1,61 @@
+
+#define(body):
+<div class="lead container">
+    <h1>#(form.label ?? "")</h1>
+    <p>#(form.description ?? "")</p>
+</div>
+
+#(self)
+
+<form
+    #if(form.id ?? false): id="#(form.id)"#endif
+    #if(form.class ?? false): class="#(form.class)"#endif
+    method="#(form.action.method ?? "post")"
+    #if(form.action.url ?? false): action="#(form.action.url)"#endif
+    #if(form.action.multipart ?? false): enctype="multipart/form-data"#endif
+    class="container"
+    >
+
+    #if(form.notification ?? false):
+    <div id="notification" class="#(form.notification.type ?? "info")">
+        #if(form.notification.icon ?? false): #svg(form.notification.icon) #endif
+        #if(form.notification.title ?? false): <h3>#(form.notification.title)</h3>#endif
+        <p>#(form.notification.message)</p>
+    </div>
+    #endif
+
+    #if(form.error ?? false):
+    <section>
+        <p class="error">#(form.error)</p>
+    </section>
+    #endif
+
+        #if(form.modelId != nil):
+            #let(field = ["id": "modelId", "value": form.modelId])
+            #inline("System/Common/Form/Fields/Hidden")
+        #endif
+
+        #var(field = nil)
+
+        #(field = ["id": "formId", "value": form.id])
+        #inline("System/Common/Form/Fields/Hidden")
+
+        #(field = ["id": "formToken", "value": form.token])
+        #inline("System/Common/Form/Fields/Hidden")
+
+
+
+        #for(field in form.fields):
+            #if(field.type == "text"):           #inline("System/Common/Form/Fields/Text")
+            
+            #endif
+        #endfor
+        
+    <section>
+        <input type="submit" value="Save">
+    </section>
+
+</form>
+#enddefine
+
+#inline("System/Admin/Index")

@@ -31,8 +31,8 @@ public extension AdminViewController {
 
     var listView: String { "System/Admin/List" }
     var getView: String { "System/Admin/Detail" }
-    var createView: String { "\(Model.Module.name.capitalized)/Admin/\(Model.name.capitalized)/Edit" }
-    var updateView: String { "\(Model.Module.name.capitalized)/Admin/\(Model.name.capitalized)/Edit" }
+    var createView: String { "System/Admin/Edit" }
+    var updateView: String { "System/Admin/Edit" }
     var deleteView: String { "System/Admin/Delete" }
 
     /// after we create a new viper model we can redirect the user to the edit screen using the unique id and replace the last path component

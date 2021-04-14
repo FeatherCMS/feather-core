@@ -5,9 +5,9 @@
 //  Created by Tibor Bodecs on 2021. 03. 30..
 //
 
-public final class TableCell: Codable {
+public final class TableCell: Encodable {
     
-    public enum `Type`: String, Codable {
+    public enum `Type`: String, Encodable {
         case text
         case image
     }

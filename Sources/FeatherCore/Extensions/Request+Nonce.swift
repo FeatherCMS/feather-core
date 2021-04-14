@@ -7,6 +7,15 @@
 
 public extension Request {
 
+    /// used to validate form token (nonce) values
+    fileprivate struct FormIdTokenInput: Decodable {
+
+        /// identifier of the form
+        let formId: String
+        /// associated token for the form
+        let formToken: String
+    }
+
     /// returns a nonce session key for a given type and identifier
     private func getNonceSessionKey(for type: String, id: String) -> String {
         "\(type)-\(id)-nonce"
@@ -32,7 +41,7 @@ public extension Request {
     }
 
     func validateFormToken(for key: String) throws {
-        let context = try content.decode(FormInput.self)
+        let context = try content.decode(FormIdTokenInput.self)
         try useNonce(for: key, id: context.formId, token: context.formToken)
     }
 }
