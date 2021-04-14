@@ -21,17 +21,19 @@ final class SystemVariableEditForm: EditForm {
         [key, name, value, notes]
     }
 
-    init() {}
-    
-//    func validateAfterFields(req: Request) -> EventLoopFuture<Bool> {
-//        SystemVariableModel.query(on: req.db).filter(\.$key == key.value!).first().map { [unowned self] model in
-//            if (modelId == nil && model != nil) || (modelId != nil && model != nil && modelId! != model!.id) {
-//                key.error = "Key is already in use"
-//                return false
-//            }
-//            return true
-//        }
-//    }
+    func uniqueKeyValidator(optional: Bool = false) -> ContentValidator<String> {
+        return ContentValidator<String>(key: "key", message: "Key must be unique", asyncValidation: { value, req in
+            var query = SystemVariableModel.query(on: req.db).filter(\.$key == value)
+            if let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) {
+                query = query.filter(\.$id != uuid)
+            }
+            return query.count().map { $0 == 0  }
+        })
+    }
+
+    init() {
+        key.validation.validators.append(uniqueKeyValidator())
+    }
 
     func read(from input: Model)  {
         key.output.value = input.key
