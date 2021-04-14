@@ -5,11 +5,11 @@
 #var(actions = [] + table.actions ?? [])
 
 #if((table.edit ?? true) && UserHasPermission(table.key + ".update")):
-    #(actions.append(["link": "/update/", "label": "Edit", "icon": "edit-2", "width": "4rem"]))
+    #(actions.append(["link": "/update/", "label": "Edit", "icon": "edit", "width": "4rem"]))
 #endif
 
 #if((table.delete ?? true) && UserHasPermission(table.key + ".delete")):
-    #(actions.append(["link": "/delete/", "label": "Delete", "icon": "trash", "width": "4rem"]))
+    #(actions.append(["link": "/delete/", "label": "Delete", "icon": "delete", "width": "4rem"]))
 #endif
 
 #define(css):

@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 11. 18..
 //
 
+// NOTE: this should be moved to Tau
 public protocol NonBlockingFileIOSource: Source {
 
     var fileio: NonBlockingFileIO { get }

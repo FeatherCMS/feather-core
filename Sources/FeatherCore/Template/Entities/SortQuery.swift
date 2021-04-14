@@ -15,11 +15,11 @@ fileprivate extension String {
     }
 }
 
-public struct SortQuery: UnsafeEntity, StringReturn {
+struct SortQuery: UnsafeEntity, StringReturn {
 
-    public var unsafeObjects: UnsafeObjects? = nil
+    var unsafeObjects: UnsafeObjects? = nil
     
-    public static var callSignature: [CallParameter] {
+    static var callSignature: [CallParameter] {
         [
             /// field key
             .init(label: "for", types: [.string]),
@@ -28,7 +28,7 @@ public struct SortQuery: UnsafeEntity, StringReturn {
         ]
     }
     
-    public func evaluate(_ params: CallValues) -> TemplateData {
+    func evaluate(_ params: CallValues) -> TemplateData {
         guard let req = req else { return .error("Needs unsafe access to Request") }
         /// we split the query items and store them in a dictionary
         var queryItems = req.queryDictionary

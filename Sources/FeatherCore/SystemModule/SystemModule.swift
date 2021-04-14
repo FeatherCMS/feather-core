@@ -14,46 +14,38 @@ final class SystemModule: FeatherModule {
     }
 
     func boot(_ app: Application) throws {
+        /// database
         app.databases.middleware.use(SystemUserModelSafeEmailMiddleware())
         app.databases.middleware.use(MetadataModelMiddleware<SystemPageModel>())
         app.migrations.add(SystemMigration_v1())
-
+        /// middlewares
         app.middleware.use(SystemTemplateScopeMiddleware())
         app.middleware.use(SystemSafePathMiddleware())
         app.middleware.use(SystemInstallGuardMiddleware())
         app.middleware.use(SystemUserSessionAuthenticator())
-        
-        
         /// install
         app.hooks.register("install-models", use: installModelsHook)
         app.hooks.register("install-permissions", use: installPermissionsHook)
         app.hooks.register("install-variables", use: installVariablesHook)
-        
         /// acl
         app.hooks.register("permission", use: permissionHook)
         app.hooks.register("access", use: accessHook)
-        
         /// auth
         app.hooks.register("admin-auth-middlewares", use: adminAuthMiddlewaresHook)
         app.hooks.register("api-auth-middlewares", use: apiAuthMiddlewaresHook)
-        
+        //app.hooks.register("system-variables-list-access", use: systemVariablesAccessHook)
         /// admin menus
         app.hooks.register("admin-menus", use: adminMenusHook)
-        
         /// routes
         let router = SystemRouter()
         try router.boot(routes: app.routes)
         app.hooks.register("routes", use: router.routesHook)
-        app.hooks.register("frontend-route", use: frontendRouteHook)
         app.hooks.register("admin-routes", use: router.adminRoutesHook)
         app.hooks.register("public-api-routes", use: router.publicApiRoutesHook)
         app.hooks.register("api-routes", use: router.apiRoutesHook)
-
-        
+        /// pages
         app.hooks.register("frontend-route", use: frontendRouteHook)
-        app.hooks.register("frontend-home-page", use: frontendHomePageHook)
-        
-        //app.hooks.register("system-variables-list-access", use: systemVariablesAccessHook)
+        app.hooks.register("home-page", use: homePageHook)
     }
   
     // MARK: - hooks
@@ -243,7 +235,7 @@ final class SystemModule: FeatherModule {
  */
         
     /// renders the [frontend-home-page] content
-    func frontendHomePageHook(args: HookArguments) -> EventLoopFuture<Response?> {
+    func homePageHook(args: HookArguments) -> EventLoopFuture<Response?> {
         let req = args["req"] as! Request
         let metadata = args["page-metadata"] as! Metadata
 

@@ -7,16 +7,43 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
   
+    #if(metadata ?? false):
+    <meta property="og:title" content="#(metadata.title ?? "") - #($variables.siteTitle)">
+    <meta property="og:description" content="#(metadata.excerpt ?? "")">
+    <meta property="og:url" content="#($req.url.path.absoluteUrl())">
+    <meta property="og:image" content="#(metadata.imageKey.resolve() ?? "/images/placeholder.jpg".absoluteUrl())">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="#(metadata.title ?? "") - #($variables.siteTitle)">
+    <meta name="twitter:description" content="#(metadata.excerpt ?? "")">
+    <meta name="twitter:image" content="#(metadata.imageKey.resolve() ?? "/images/placeholder.jpg".absoluteUrl())">
+    #endif
+
     <title>#($variables.siteTitle ?? "")</title>
     
     <link rel="manifest" href="/manifest.json">
     
+    <link rel="mask-icon" sizes="any" href="/images/icons/icon.svg">
+    
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon.png" type="image/png">
+        
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/binarybirds/peacock-css@1.0.0-beta.5/peacock.min.css">
+
     #if($app.isDebug):
-    <link rel="stylesheet" href="/css/web.css">
+    <link rel="stylesheet" href="/css/style.css">
     #else:
-    <link rel="stylesheet" href="/css/web.min.css">
+    <link rel="stylesheet" href="/css/style.min.css">
     #endif
 
     <style type="text/css">

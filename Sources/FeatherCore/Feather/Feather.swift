@@ -75,7 +75,7 @@ public final class Feather {
         TemplateEngine.entities.use(AbsoluteUrlEntity(), asMethod: "absoluteUrl")
         TemplateEngine.entities.use(IntMinEntity(), asFunction: "min")
         TemplateEngine.entities.use(IntMaxEntity(), asFunction: "max")
-        TemplateEngine.entities.use(InlineSvgEntity(iconset: "feather-icons"), asFunction: "svg")
+        TemplateEngine.entities.use(InlineSvgEntity(), asFunction: "svg")
         TemplateEngine.entities.use(UserHasPermissionEntity(), asFunction: "UserHasPermission")
 //        TemplateEngine.entities.use(TranslationEntity(), asMethod: "t")
     }
@@ -203,10 +203,8 @@ public final class Feather {
             guard let bundleUrl = module.bundleUrl else {
                 continue
             }
-
             let source = bundleUrl.appendingPathComponent(Application.Directories.templates).appendingPathComponent("Public")
             let destination = templatesUrl.appendingPathComponent(module.name.lowercased().capitalized)
-            try FileManager.default.createDirectory(at: destination)
             try FileManager.default.copy(at: source, to: destination)
         }
     }

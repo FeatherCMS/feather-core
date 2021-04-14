@@ -5,14 +5,11 @@
 //  Created by Tibor Bodecs on 2020. 12. 16..
 //
 
+struct IntMinEntity: NonMutatingMethod, Invariant, IntReturn {
 
-public struct IntMinEntity: NonMutatingMethod, Invariant, IntReturn {
+    static var callSignature: [CallParameter] { [.int, .int] }
 
-    public static var callSignature: [CallParameter] { [.int, .int] }
-    
-    public init() {}
-
-    public func evaluate(_ params: CallValues) -> TemplateData {
+    func evaluate(_ params: CallValues) -> TemplateData {
         .int(min(params[0].int!, params[1].int!))
     }
 }

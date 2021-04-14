@@ -1,10 +1,9 @@
 #define(body):
 <div class="lead container center">
-    <span class="icon">#($system.variables["frontend.home.page.icon"])</span>
-    <h1>#($system.variables["frontend.home.page.title"])</h1>
-    <p>#($system.variables["frontend.home.page.excerpt"])</p>
-    <a href="#($system.variables["frontend.home.page.link.url"])">#($system.variables["frontend.home.page.link.label"])</a>
+    <span class="icon">#($variables.homePageIcon ?? "🪶")</span>
+    <h1>#($variables.homePageTitle ?? "Welcome")</h1>
+    <p>#($variables.homePageExcerpt ?? "This is your brand new Feather CMS powered website")</p>
+    <a href="#($variables.homePageLinkUrl ?? "/admin/")">#($variables.homePageLinkLabel ?? "Start customizing →")</a>
 </div>
 #enddefine
-
 #inline("System/Index")

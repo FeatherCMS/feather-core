@@ -5,11 +5,11 @@
 //  Created by Tibor Bodecs on 2020. 10. 23..
 //
 
-public struct SortIndicator: UnsafeEntity, NonMutatingMethod, StringReturn {
+struct SortIndicator: UnsafeEntity, NonMutatingMethod, StringReturn {
 
-    public var unsafeObjects: UnsafeObjects? = nil
+    var unsafeObjects: UnsafeObjects? = nil
     
-    public static var callSignature: [CallParameter] {
+    static var callSignature: [CallParameter] {
         [
             /// field key
             .init(label: "for", types: .string),
@@ -20,7 +20,7 @@ public struct SortIndicator: UnsafeEntity, NonMutatingMethod, StringReturn {
         ]
     }
     
-    public func evaluate(_ params: CallValues) -> TemplateData {
+    func evaluate(_ params: CallValues) -> TemplateData {
         guard let req = req else { return .error("Needs unsafe access to Request") }
 
         let isSortedAscending = (req.query["sort"] ?? params[2].string!) == "asc"

@@ -6,15 +6,13 @@
 //
 
 /// check if the current user has permission to a given action (User meaning is not UserModule, but the end-user instead)
-public struct UserHasPermissionEntity: UnsafeEntity, NonMutatingMethod, BoolReturn {
+struct UserHasPermissionEntity: UnsafeEntity, NonMutatingMethod, BoolReturn {
 
-    public var unsafeObjects: UnsafeObjects? = nil
+    var unsafeObjects: UnsafeObjects? = nil
     
-    public static var callSignature: [CallParameter] { [.string] }
-    
-    public init() {}
+    static var callSignature: [CallParameter] { [.string] }
 
-    public func evaluate(_ params: CallValues) -> TemplateData {
+    func evaluate(_ params: CallValues) -> TemplateData {
         guard let req = req else { return .error("Needs unsafe access to Request") }
         let rawPermission = params[0].string!
         let components = rawPermission.components(separatedBy: ".")
