@@ -5,12 +5,15 @@
     <p>#(form.description ?? "")</p>
 </div>
 
+#(self)
+
 <form
     #if(form.id ?? false): id="#(form.id)"#endif
     #if(form.class ?? false): class="#(form.class)"#endif
-    #if(form.action.method ?? false): method="#(form.action.method)"#endif
+    method="#(form.action.method ?? "post")"
     #if(form.action.url ?? false): action="#(form.action.url)"#endif
     #if(form.action.multipart ?? false): enctype="multipart/form-data"#endif
+    class="container"
     >
 
     #if(form.notification ?? false):
@@ -27,14 +30,31 @@
     </section>
     #endif
 
-    
-        
+        #if(form.modelId != nil):
+            #let(field = ["id": "modelId", "value": form.modelId])
+            #inline("System/Common/Form/Fields/Hidden")
+        #endif
+
+        #var(field = nil)
+
+        #(field = ["id": "formId", "value": form.id])
+        #inline("System/Common/Form/Fields/Hidden")
+
+        #(field = ["id": "formToken", "value": form.token])
+        #inline("System/Common/Form/Fields/Hidden")
+
+
+
         #for(field in form.fields):
             #if(field.type == "text"):           #inline("System/Common/Form/Fields/Text")
             
             #endif
         #endfor
         
+    <section>
+        <input type="submit" value="Save">
+    </section>
+
 </form>
 #enddefine
 
