@@ -4,7 +4,7 @@
 
 #define(breadcrumb):
     #if(UserHasPermission(detail.key + ".list")):
-    <a href="#(detail.list.url)">#(detail.list.title)</a>
+    <a href="#(detail.list.url)">#(detail.list.label)</a>
     #endif
     <a href="#($req.url.path)" class="selected">View</a>
 #enddefine

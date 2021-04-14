@@ -8,9 +8,9 @@
 public extension DeleteViewController {
 
     func accessDelete(req: Request) -> EventLoopFuture<Bool> {
-        req.eventLoop.future(true)
+        let hasPermission = req.checkPermission(for: Model.permission(for: .delete))
+        return req.eventLoop.future(hasPermission)
     }
-
     
     func deleteView(req: Request) throws -> EventLoopFuture<View>  {
         accessDelete(req: req).throwingFlatMap { hasAccess in

@@ -30,7 +30,7 @@ public protocol AdminViewController:
 public extension AdminViewController {
 
     var listView: String { "System/Admin/List" }
-    var getView: String { "\(Model.Module.name.capitalized)/Admin/\(Model.name.capitalized)/View" }
+    var getView: String { "System/Admin/Detail" }
     var createView: String { "\(Model.Module.name.capitalized)/Admin/\(Model.name.capitalized)/Edit" }
     var updateView: String { "\(Model.Module.name.capitalized)/Admin/\(Model.name.capitalized)/Edit" }
     var deleteView: String { "System/Admin/Delete" }

@@ -28,7 +28,9 @@ public extension GetViewController {
     }
     
     func getResponse(req: Request, model: Model) -> EventLoopFuture<Response> {
-        render(req: req, template: getView, context: ["model": model.templateData]).encodeResponse(for: req)
+        render(req: req, template: getView, context: [
+            "detail": getContext(req: req, model: model).encodeToTemplateData()
+        ]).encodeResponse(for: req)
     }
     
     func setupGetRoute(on builder: RoutesBuilder) {

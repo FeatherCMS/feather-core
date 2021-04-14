@@ -32,12 +32,28 @@ struct UserPermissionAdminController: AdminViewController {
         })
     }
     
+    func getContext(req: Request, model: Model) -> GetViewContext {
+        .init(title: "Permissions",
+              key: "system.permissions",
+              list: .init(label: "Permissions", url: "/admin/system/permissions/"),
+              nav: [],
+              fields: [
+                .init(label: "Id", value: model.id!.uuidString),
+                .init(label: "Key", value: model.key),
+                .init(label: "Name", value: model.name),
+                .init(label: "Namespace", value: model.namespace),
+                .init(label: "Context", value: model.context),
+                .init(label: "Action", value: model.action),
+                .init(label: "Notes", value: model.notes ?? ""),
+              ])
+    }
+    
     func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {
         .init(id: formId,
               token: formToken,
               context: model.name,
-              type: "metadata",
-              list: .init(title: "Metadatas", url: "/admin/system/metadatas")
+              type: "permission",
+              list: .init(label: "Permissions", url: "/admin/system/permissoins")
         )
     }
 }

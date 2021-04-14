@@ -5,10 +5,8 @@
 //  Created by Tibor Bodecs on 2020. 03. 23..
 //
 
-
 struct UserRoleAdminController: AdminViewController {
-    
-    
+        
     typealias Module = SystemModule
     typealias Model = SystemRoleModel
     typealias CreateForm = SystemRoleEditForm
@@ -33,12 +31,26 @@ struct UserRoleAdminController: AdminViewController {
         })
     }
     
+    func getContext(req: Request, model: Model) -> GetViewContext {
+        .init(title: "Role",
+              key: "system.roles",
+              list: .init(label: "Roles", url: "/admin/system/roles/"),
+              nav: [],
+              fields: [
+                .init(label: "Id", value: model.id!.uuidString),
+                .init(label: "Key", value: model.key),
+                .init(label: "Name", value: model.name),
+                .init(label: "Notes", value: model.notes ?? ""),
+                .init(label: "Permissions", value: model.permissions.map(\.name).joined(separator: "<br>")),
+              ])
+    }
+    
     func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {
         .init(id: formId,
               token: formToken,
               context: model.name,
-              type: "metadata",
-              list: .init(title: "Metadatas", url: "/admin/system/metadatas")
+              type: "role",
+              list: .init(label: "Roles", url: "/admin/system/roles")
         )
     }
 }

@@ -19,6 +19,8 @@ public protocol GetViewController: IdentifiableController {
     /// renders the get view
     func get(req: Request) throws -> EventLoopFuture<Response>
 
+    func getContext(req: Request, model: Model) -> GetViewContext
+    
     /// returns a response after the get request
     func getResponse(req: Request, model: Model) -> EventLoopFuture<Response>
 
