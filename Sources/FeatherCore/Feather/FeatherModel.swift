@@ -20,6 +20,10 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
     /// path component
     static var pathComponent: PathComponent { get }
     
+    static var createPathComponent: PathComponent { get }
+    static var updatePathComponent: PathComponent { get }
+    static var deletePathComponent: PathComponent { get }
+    
     static func allowedOrders() -> [FieldKey]
     static func defaultSort() -> FieldSort
     static func search(_ term: String) -> [ModelValueFilter<Self>]
@@ -41,6 +45,10 @@ public extension FeatherModel {
     
     /// path component based on the model name
     static var pathComponent: PathComponent { .init(stringLiteral: name) }
+    
+    static var createPathComponent: PathComponent { "create" }
+    static var updatePathComponent: PathComponent { "update" }
+    static var deletePathComponent: PathComponent { "delete" }
     
     static func allowedOrders() -> [FieldKey] { [] }
     static func defaultSort() -> FieldSort { .asc }

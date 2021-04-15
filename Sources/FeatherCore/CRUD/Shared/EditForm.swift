@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 11. 19..
 //
 
-/// a form used to edit a model
+/// a form used to edit a model (EditModelForm?)
 public protocol EditForm: Form {
     
     associatedtype Model: FeatherModel

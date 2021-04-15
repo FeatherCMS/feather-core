@@ -19,7 +19,7 @@ public struct DeleteControllerContext: Codable {
 }
 
 
-public protocol DeleteViewController: IdentifiableController {
+public protocol DeleteController: IdentifiableController {
  
     /// the view used to render the delete form
     var deleteView: String { get }
@@ -39,13 +39,17 @@ public protocol DeleteViewController: IdentifiableController {
     /// returns a response after completing the delete request
     func deleteResponse(req: Request, model: Model) -> EventLoopFuture<Response>
     
+    func deleteApi(_ req: Request) throws -> EventLoopFuture<HTTPStatus>
+
     /// setup the get and post routes for the delete controller
     func setupDeleteRoutes(on: RoutesBuilder, as: PathComponent)
+    
+    func setupDeleteApiRoute(on builder: RoutesBuilder)
     
     func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext
 }
 
-public extension DeleteViewController {
+public extension DeleteController {
 
     var deleteView: String { "System/Admin/Delete" }
 
@@ -91,7 +95,7 @@ public extension DeleteViewController {
     }
 
     
-    func apiDelete(_ req: Request) throws -> EventLoopFuture<HTTPStatus> {
+    func deleteApi(_ req: Request) throws -> EventLoopFuture<HTTPStatus> {
         accessDelete(req: req).throwingFlatMap { hasAccess in
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
@@ -125,7 +129,9 @@ public extension DeleteViewController {
     func setupDeleteRoutes(on builder: RoutesBuilder, as pathComponent: PathComponent) {
         builder.get(idPathComponent, pathComponent, use: deleteView)
         builder.post(idPathComponent, pathComponent, use: delete)
-        
-//        builder.delete(idPathComponent, use: delete)
+    }
+    
+    func setupDeleteApiRoute(on builder: RoutesBuilder) {
+        builder.delete(idPathComponent, use: deleteApi)
     }
 }

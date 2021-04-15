@@ -29,7 +29,7 @@ extension CreateApiRepresentable {
 
 
 
-public protocol CreateViewController: ViewController {
+public protocol CreateController: ModelController {
 
     associatedtype CreateApi: CreateApiRepresentable & GetApiRepresentable
     associatedtype CreateForm: EditForm
@@ -63,12 +63,16 @@ public protocol CreateViewController: ViewController {
 
     /// returns a response after the create flow
     func createResponse(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Response>
+    
+    func createApi(_ req: Request) throws -> EventLoopFuture<CreateApi.GetObject>
 
     /// setup the get and post create routes using the given builder
     func setupCreateRoutes(on: RoutesBuilder, as: PathComponent)
+    
+    func setupCreateApiRoute(on builder: RoutesBuilder)
 }
 
-public extension CreateViewController {
+public extension CreateController {
 
     var createView: String { "System/Admin/Edit" }
 
@@ -190,10 +194,10 @@ public extension CreateViewController {
     /// after we create a new viper model we can redirect the user to the edit screen using the unique id and replace the last path component
     func createResponse(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Response> {
         let path = req.url.path.replacingLastPath(model.identifier)
-        return req.eventLoop.future(req.redirect(to: path + "/update/"))
+        return req.eventLoop.future(req.redirect(to: path + "/" + Model.updatePathComponent.description + "/"))
     }
 
-    func apiCreate(_ req: Request) throws -> EventLoopFuture<CreateApi.GetObject> {
+    func createApi(_ req: Request) throws -> EventLoopFuture<CreateApi.GetObject> {
         accessCreate(req: req).throwingFlatMap { hasAccess in
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
@@ -215,7 +219,7 @@ public extension CreateViewController {
                 }
             }
             .flatMap { m in m.create(on: req.db).map { m } }
-            .flatMap { api.getOutput(req, model: $0) }
+            .map { api.mapGet(model: $0) }
         }
     }
 
@@ -224,8 +228,8 @@ public extension CreateViewController {
         builder.on(.POST, pathComponent, use: create)
     }
     
-    func setupApiCreateRoute(on builder: RoutesBuilder) {
-        builder.post(use: create)
+    func setupCreateApiRoute(on builder: RoutesBuilder) {
+        builder.post(use: createApi)
     }
 }
 

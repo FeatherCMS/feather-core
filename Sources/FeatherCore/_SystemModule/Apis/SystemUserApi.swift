@@ -23,6 +23,10 @@ struct SystemUserApi: FeatherApiRepresentable {
     func mapList(model: Model) -> ListObject {
         .init(id: model.id!, email: model.email)
     }
+    
+    func mapGet(model: Model) -> GetObject {
+        .init(id: model.id!, email: model.email, root: model.root)
+    }
 }
 
 

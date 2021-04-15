@@ -7,7 +7,7 @@
 
 public protocol PatchApiRepresentable: ModelApi {
     
-    associatedtype PatchObject: Codable
+    associatedtype PatchObject: Content
     
     func validatePatchInput(_ req: Request) -> EventLoopFuture<Bool>
     func processPatchInput(_ req: Request, model: Model, input: PatchObject) -> EventLoopFuture<Model>
@@ -22,20 +22,21 @@ extension PatchApiRepresentable {
     func processPatchInput(_ req: Request, model: Model, input: PatchObject) -> EventLoopFuture<Model> {
         return req.eventLoop.future(model)
     }
-    
 }
 
 
-public protocol PatchContentController: IdentifiableController {
+public protocol PatchController: IdentifiableController {
+    
+    associatedtype PatchApi: PatchApiRepresentable & GetApiRepresentable
     
     func accessPatch(req: Request) -> EventLoopFuture<Bool>
 //    func beforePatch(req: Request, model: Model, content: Model.PatchContent) -> EventLoopFuture<Model>
-//    func patch(_: Request) throws -> EventLoopFuture<Model.GetContent>
+    func patchApi(_ req: Request) throws -> EventLoopFuture<PatchApi.GetObject>
     func afterPatch(req: Request, model: Model) -> EventLoopFuture<Void>
-    func setupPatchRoute(on: RoutesBuilder)
+    func setupPatchApiRoute(on: RoutesBuilder)
 }
 
-public extension PatchContentController {
+public extension PatchController {
 
     func accessPatch(req: Request) -> EventLoopFuture<Bool> {
         req.checkAccess(for: Model.permission(for: .patch))
@@ -45,11 +46,13 @@ public extension PatchContentController {
 //        req.eventLoop.future(model)
 //    }
 //
-//    func patch(_ req: Request) throws -> EventLoopFuture<Model.GetContent> {
-//        accessPatch(req: req).throwingFlatMap { hasAccess in
-//            guard hasAccess else {
-//                return req.eventLoop.future(error: Abort(.forbidden))
-//            }
+    func patchApi(_ req: Request) throws -> EventLoopFuture<PatchApi.GetObject> {
+        accessPatch(req: req).throwingFlatMap { hasAccess in
+            guard hasAccess else {
+                return req.eventLoop.future(error: Abort(.forbidden))
+            }
+            return req.eventLoop.future(error: Abort(.forbidden))
+            
 //            try Model.PatchContent.validate(content: req)
 //            let patch = try req.content.decode(Model.PatchContent.self)
 //            return try findBy(identifier(req), on: req.db)
@@ -63,14 +66,14 @@ public extension PatchContentController {
 //                        .flatMap { afterPatch(req: req, model: model) }
 //                        .transform(to: model.getContent)
 //                }
-//        }
-//    }
+        }
+    }
 
     func afterPatch(req: Request, model: Model) -> EventLoopFuture<Void> {
         req.eventLoop.future()
     }
 
-    func setupPatchRoute(on builder: RoutesBuilder) {
-//        builder.patch(idPathComponent, use: patch)
+    func setupPatchApiRoute(on builder: RoutesBuilder) {
+        builder.patch(idPathComponent, use: patchApi)
     }
 }

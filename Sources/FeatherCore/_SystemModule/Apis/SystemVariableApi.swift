@@ -24,6 +24,9 @@ struct SystemVariableApi: FeatherApiRepresentable {
         .init(id: model.id!, key: model.key, value: model.value)
     }
 
+    func mapGet(model: Model) -> GetObject {
+        .init(id: model.id!, key: model.key, name: model.name, value: model.value, notes: model.notes)
+    }
 }
 
 

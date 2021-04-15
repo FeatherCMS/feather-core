@@ -23,6 +23,13 @@ struct SystemRoleApi: FeatherApiRepresentable {
     func mapList(model: Model) -> ListObject {
         .init(id: model.id!, name: model.name)
     }
+    
+    func mapGet(model: Model) -> GetObject {
+        .init(id: model.id!,
+              key: model.key,
+              name: model.name,
+              notes: model.notes)
+    }
 }
 
 

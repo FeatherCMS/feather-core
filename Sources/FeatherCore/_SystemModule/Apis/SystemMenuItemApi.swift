@@ -23,5 +23,16 @@ struct SystemMenuItemApi: FeatherApiRepresentable {
     func mapList(model: Model) -> ListObject {
         .init(id: model.id!, label: model.label, url: model.url, menuId: model.$menu.id)
     }
+    
+    func mapGet(model: Model) -> GetObject {
+        .init(id: model.id!,
+              label: model.label,
+              url: model.url,
+              icon: model.icon,
+              isBlank: model.isBlank,
+              priority: model.priority,
+              permission: model.permission,
+              menuId: model.$menu.id)
+    }
 }
 

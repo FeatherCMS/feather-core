@@ -23,5 +23,9 @@ struct SystemPageApi: FeatherApiRepresentable {
     func mapList(model: Model) -> ListObject {
         .init(id: model.id!, title: model.title)
     }
+    
+    func mapGet(model: Model) -> GetObject {
+        .init(id: model.id!, title: model.title, content: model.content)
+    }
 }
 

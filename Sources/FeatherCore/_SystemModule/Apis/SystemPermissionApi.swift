@@ -23,16 +23,21 @@ struct SystemPermissionApi: FeatherApiRepresentable {
     func mapList(model: Model) -> ListObject {
         .init(id: model.id!, name: model.name)
     }
+    
+    func mapGet(model: Model) -> GetObject {
+        .init(id: model.id!,
+              namespace: model.namespace,
+              context: model.context,
+              action: model.action,
+              name: model.name,
+              notes: model.notes)
+    }
 }
 
 
 // MARK: - api
 
 extension SystemPermissionModel {
-
-    var getContent: PermissionGetObject {
-        .init(id: id!, module: namespace, context: context, action: action, name: name, notes: notes)
-    }
 
     func create(_ input: PermissionCreateObject) throws {
         namespace = input.module
@@ -58,11 +63,6 @@ extension SystemPermissionModel {
         notes = input.notes ?? notes
     }
 }
-
-
-// MARK: - api validation
-
-
 
 extension PermissionCreateObject {
 

@@ -24,7 +24,7 @@ extension UpdateApiRepresentable {
     }
 }
     
-public protocol UpdateViewController: IdentifiableController {
+public protocol UpdateController: IdentifiableController {
     
     associatedtype UpdateApi: UpdateApiRepresentable & GetApiRepresentable
     associatedtype UpdateForm: EditForm
@@ -59,11 +59,15 @@ public protocol UpdateViewController: IdentifiableController {
     /// returns a response after the update flow
     func updateResponse(req: Request, form: UpdateForm, model: Model) -> EventLoopFuture<Response>
     
+    func updateApi(_ req: Request) throws -> EventLoopFuture<UpdateApi.GetObject>
+    
     /// setup update routes using the route builder
     func setupUpdateRoutes(on builder: RoutesBuilder, as: PathComponent)
+    
+    func setupUpdateApiRoute(on builder: RoutesBuilder)
 }
 
-public extension UpdateViewController {
+public extension UpdateController {
     
     var updateView: String { "System/Admin/Edit" }
 
@@ -179,7 +183,7 @@ public extension UpdateViewController {
         }
     }
     
-    func apiUpdate(_ req: Request) throws -> EventLoopFuture<UpdateApi.GetObject> {
+    func updateApi(_ req: Request) throws -> EventLoopFuture<UpdateApi.GetObject> {
         accessUpdate(req: req).throwingFlatMap { hasAccess in
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
@@ -213,7 +217,9 @@ public extension UpdateViewController {
     func setupUpdateRoutes(on builder: RoutesBuilder, as pathComponent: PathComponent) {
         builder.get(idPathComponent, pathComponent, use: updateView)
         builder.on(.POST, idPathComponent, pathComponent, use: update)
-        
-//        builder.put(idPathComponent, use: update)
+    }
+    
+    func setupUpdateApiRoute(on builder: RoutesBuilder) {
+        builder.put(idPathComponent, use: updateApi)
     }
 }

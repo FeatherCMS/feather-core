@@ -10,22 +10,8 @@
 public protocol ListApiRepresentable: ModelApi {
     associatedtype ListObject: Content
     
-    func listOutput(_ req: Request, model: Model) -> EventLoopFuture<ListObject>
-    
     func mapList(model: Model) -> ListObject
 }
-
-extension ListApiRepresentable {
-
-    func listOutput(_ req: Request, model: Model) -> EventLoopFuture<ListObject> {
-        req.eventLoop.future(error: Abort(.noContent))
-    }
-    
-    func mapList(model: Model) -> ListObject {
-        fatalError("implement me")
-    }
-}
-
 
 
 public struct ListControllerContext: Codable {
@@ -45,7 +31,7 @@ public struct ListControllerContext: Codable {
     public let defaultSort: String
 }
 
-public protocol ListViewController: ViewController {
+public protocol ListController: ModelController {
     
     associatedtype ListApi: ListApiRepresentable
 
@@ -87,6 +73,7 @@ public protocol ListViewController: ViewController {
     /// renders the list view
     func listView(req: Request) throws -> EventLoopFuture<View>
 
+    func listApi(_ req: Request) throws -> EventLoopFuture<PaginationContainer<ListApi.ListObject>>
 
     /// setup list related routes
     func setupListRoute(on: RoutesBuilder)
@@ -96,7 +83,7 @@ public protocol ListViewController: ViewController {
 }
 
 
-public extension ListViewController {
+public extension ListController {
 
     var listOrderKey: String { "order" }
     var listSortKey: String { "sort" }
@@ -125,9 +112,9 @@ public extension ListViewController {
               title: listTitle,
               searchable: listIsSearchable,
               create: req.checkPermission(for: Model.permission(for: .create)),
-              view: req.checkPermission(for: Model.permission(for: .create)),
-              update: req.checkPermission(for: Model.permission(for: .create)),
-              delete: req.checkPermission(for: Model.permission(for: .create)),
+              view: req.checkPermission(for: Model.permission(for: .get)),
+              update: req.checkPermission(for: Model.permission(for: .update)),
+              delete: req.checkPermission(for: Model.permission(for: .delete)),
               allowedOrders: Model.allowedOrders().map(\.description),
               defaultOrder: Model.allowedOrders().first?.description,
               defaultSort: Model.defaultSort().rawValue)

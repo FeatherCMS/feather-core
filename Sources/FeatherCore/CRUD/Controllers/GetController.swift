@@ -9,14 +9,7 @@
 public protocol GetApiRepresentable: ModelApi {
     associatedtype GetObject: Content
     
-    func getOutput(_ req: Request, model: Model) -> EventLoopFuture<GetObject>
-}
-
-extension GetApiRepresentable {
-
-    func getOutput(_ req: Request, model: Model) -> EventLoopFuture<GetObject> {
-        req.eventLoop.future(error: Abort(.noContent))
-    }
+    func mapGet(model: Model) -> GetObject
 }
 
 public struct GetViewContext: Codable {
@@ -34,7 +27,7 @@ public struct GetViewContext: Codable {
 }
 
 
-public protocol GetViewController: IdentifiableController {
+public protocol GetController: IdentifiableController {
 
     associatedtype GetApi: GetApiRepresentable
     
@@ -55,13 +48,15 @@ public protocol GetViewController: IdentifiableController {
     /// returns a response after the get request
     func getResponse(req: Request, model: Model) -> EventLoopFuture<Response>
 
+    func getApi(_ req: Request) throws -> EventLoopFuture<GetApi.GetObject>
+
     /// setup get related route
     func setupGetRoute(on: RoutesBuilder)
 
     func setupGetApiRoute(on builder: RoutesBuilder)
 }
 
-public extension GetViewController {
+public extension GetController {
     
     var getView: String { "System/Admin/Detail" }
 
@@ -91,8 +86,8 @@ public extension GetViewController {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
             let id = try identifier(req)
-            return findBy(id, on: req.db).flatMap { model in
-                return GetApi().getOutput(req, model: model as! GetApi.Model)
+            return findBy(id, on: req.db).map { model in
+                GetApi().mapGet(model: model as! GetApi.Model)
             }
         }
     }

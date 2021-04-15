@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 04. 26..
 //
 
-public protocol IdentifiableController: ViewController {
+public protocol IdentifiableController: ModelController {
 
     /// name of the identifier key
     var idParamKey: String { get }

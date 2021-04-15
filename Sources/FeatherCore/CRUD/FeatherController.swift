@@ -6,11 +6,12 @@
 //
 
 public protocol FeatherController:
-    ListViewController,
-    GetViewController,
-    CreateViewController,
-    UpdateViewController,
-    DeleteViewController
+    ListController,
+    GetController,
+    CreateController,
+    UpdateController,
+    PatchController,
+    DeleteController
 {}
 
 public protocol FeatherApiRepresentable:
@@ -37,30 +38,23 @@ public protocol FeatherApiRepresentable:
 fileprivate extension FeatherController {
 
     
-    func setupRoutes(on builder: RoutesBuilder,
-                     createPath: PathComponent = "create",
-                     updatePath: PathComponent = "update",
-                     deletePath: PathComponent = "delete")
-    {
+    func setupRoutes(on builder: RoutesBuilder) {
         let base = builder.grouped(Model.Module.pathComponent).grouped(Model.pathComponent)
         setupListRoute(on: base)
         setupGetRoute(on: base)
-        setupCreateRoutes(on: base, as: createPath)
-        setupUpdateRoutes(on: base, as: updatePath)
-        setupDeleteRoutes(on: base, as: deletePath)
+        setupCreateRoutes(on: base, as: Model.createPathComponent)
+        setupUpdateRoutes(on: base, as: Model.updatePathComponent)
+        setupDeleteRoutes(on: base, as: Model.deletePathComponent)
     }
     
-    func setupApiRoutes(on builder: RoutesBuilder,
-                        createPath: PathComponent = "create",
-                        updatePath: PathComponent = "update",
-                        deletePath: PathComponent = "delete")
-    {
+    func setupApiRoutes(on builder: RoutesBuilder) {
         let base = builder.grouped(Model.Module.pathComponent).grouped(Model.pathComponent)
         setupListApiRoute(on: base)
         setupGetApiRoute(on: base)
-//        setupCreateRoutes(on: base, as: createPath)
-//        setupUpdateRoutes(on: base, as: updatePath)
-//        setupDeleteRoutes(on: base, as: deletePath)
+        setupCreateApiRoute(on: base)
+        setupUpdateApiRoute(on: base)
+        setupPatchApiRoute(on: base)
+        setupDeleteApiRoute(on: base)
     }
 }
 
