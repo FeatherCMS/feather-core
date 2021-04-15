@@ -11,11 +11,11 @@ extension VariableCreateObject: Content {}
 extension VariableUpdateObject: Content {}
 extension VariablePatchObject: Content {}
 
-struct SystemVariableApi: GetApiRepresentable, ListApiRepresentable, CreateApiRepresentable, UpdateApiRepresentable, PatchApiRepresentable, DeleteApiRepresentable {
+struct SystemVariableApi: FeatherApiRepresentable {
     typealias Model = SystemVariableModel
     
-    typealias GetObject = VariableGetObject
     typealias ListObject = VariableListObject
+    typealias GetObject = VariableGetObject
     typealias CreateObject = VariableCreateObject
     typealias UpdateObject = VariableUpdateObject
     typealias PatchObject = VariablePatchObject
@@ -23,6 +23,7 @@ struct SystemVariableApi: GetApiRepresentable, ListApiRepresentable, CreateApiRe
     func mapList(model: Model) -> ListObject {
         .init(id: model.id!, key: model.key, value: model.value)
     }
+
 }
 
 

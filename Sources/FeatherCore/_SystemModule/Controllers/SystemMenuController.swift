@@ -5,7 +5,6 @@
 //  Created by Tibor Bodecs on 2020. 11. 15..
 //
 
-
 struct SystemMenuController: FeatherController {
 
     typealias Module = SystemModule
@@ -14,13 +13,13 @@ struct SystemMenuController: FeatherController {
     typealias CreateForm = SystemMenuEditForm
     typealias UpdateForm = SystemMenuEditForm
     
-    typealias GetApi = SystemVariableApi
-    typealias ListApi = SystemVariableApi
-    typealias CreateApi = SystemVariableApi
-    typealias UpdateApi = SystemVariableApi
-    typealias PatchApi = SystemVariableApi
-    typealias DeleteApi = SystemVariableApi
-       
+    typealias GetApi = SystemMenuApi
+    typealias ListApi = SystemMenuApi
+    typealias CreateApi = SystemMenuApi
+    typealias UpdateApi = SystemMenuApi
+    typealias PatchApi = SystemMenuApi
+    typealias DeleteApi = SystemMenuApi
+
     
 //        "title": "Menus",
 //        "key": "frontend.menus",

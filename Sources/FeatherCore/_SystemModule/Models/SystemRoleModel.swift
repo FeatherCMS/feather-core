@@ -41,78 +41,12 @@ final class SystemRoleModel: FeatherModel {
     }
 }
 
-
-
 extension SystemRoleModel: FormFieldOptionRepresentable {
 
     var formFieldOption: FormFieldOption {
         .init(key: identifier, label: name)
     }
 }
-
-
-// MARK: - api
-
-extension SystemRoleModel {
-
-    var listContent: RoleListObject {
-        .init(id: id!, name: name)
-    }
-
-    var getContent: RoleGetObject {
-        .init(id: id!, key: key, name: name, notes: notes)
-    }
-
-    func create(_ input: RoleCreateObject) throws {
-        key = input.key
-        name = input.name
-        notes = input.notes
-    }
-
-    func update(_ input: RoleUpdateObject) throws {
-        key = input.key
-        name = input.name
-        notes = input.notes
-    }
-
-    func patch(_ input: RolePatchObject) throws {
-        key = input.key ?? key
-        name = input.name ?? name
-        notes = input.notes ?? notes
-    }
-}
-
-
-// MARK: - api validation
-
-
-extension RoleListObject: Content {}
-extension RoleGetObject: Content {}
-extension RoleCreateObject {
-
-    public static func validations(_ validations: inout Validations) {
-        validations.add("key", as: String.self, is: !.empty && .count(...250))
-        validations.add("name", as: String.self, is: !.empty && .count(...250))
-    }
-}
-
-extension RoleUpdateObject {
-
-    public static func validations(_ validations: inout Validations) {
-        validations.add("key", as: String.self, is: !.empty && .count(...250))
-        validations.add("name", as: String.self, is: !.empty && .count(...250))
-    }
-}
-
-extension RolePatchObject {
-
-    public static func validations(_ validations: inout Validations) {
-        validations.add("key", as: String.self, is: !.empty && .count(...250), required: false)
-        validations.add("name", as: String.self, is: !.empty && .count(...250), required: false)
-    }
-}
-
-// MARK: - helpers
 
 extension SystemRoleModel {
     

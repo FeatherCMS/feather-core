@@ -11,9 +11,16 @@ public protocol FeatherController:
     CreateViewController,
     UpdateViewController,
     DeleteViewController
-{
-    
-}
+{}
+
+public protocol FeatherApiRepresentable:
+    ListApiRepresentable,
+    GetApiRepresentable,
+    CreateApiRepresentable,
+    UpdateApiRepresentable,
+    PatchApiRepresentable,
+    DeleteApiRepresentable
+{}
 
 /*
  Routes & controller methods:

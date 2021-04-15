@@ -18,8 +18,6 @@ final class SystemMenuEditForm: EditForm {
         [key, name, notes]
     }
 
-    init() {}
-    
     func validateAfterFields(req: Request) -> EventLoopFuture<Bool> {
         SystemMenuModel.query(on: req.db).filter(\.$key == key.input.value!).first().map { [unowned self] model -> Bool in
             if (modelId == nil && model != nil) || (modelId != nil && model != nil && modelId! != model!.id) {
