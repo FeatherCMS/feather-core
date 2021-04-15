@@ -41,20 +41,7 @@ final class SystemRoleModel: FeatherModel {
     }
 }
 
-// MARK: - view
 
-extension SystemRoleModel: TemplateDataRepresentable {
-
-    var templateData: TemplateData {
-        .dictionary([
-            "id": id,
-            "key": key,
-            "name": name,
-            "notes": notes,
-            "permissions": $permissions.value != nil ? permissions.map(\.templateData) : [],
-        ])
-    }
-}
 
 extension SystemRoleModel: FormFieldOptionRepresentable {
 
@@ -66,7 +53,7 @@ extension SystemRoleModel: FormFieldOptionRepresentable {
 
 // MARK: - api
 
-extension SystemRoleModel: ApiContentRepresentable {
+extension SystemRoleModel {
 
     var listContent: RoleListObject {
         .init(id: id!, name: name)
@@ -101,7 +88,7 @@ extension SystemRoleModel: ApiContentRepresentable {
 
 extension RoleListObject: Content {}
 extension RoleGetObject: Content {}
-extension RoleCreateObject: ValidatableContent {
+extension RoleCreateObject {
 
     public static func validations(_ validations: inout Validations) {
         validations.add("key", as: String.self, is: !.empty && .count(...250))
@@ -109,7 +96,7 @@ extension RoleCreateObject: ValidatableContent {
     }
 }
 
-extension RoleUpdateObject: ValidatableContent {
+extension RoleUpdateObject {
 
     public static func validations(_ validations: inout Validations) {
         validations.add("key", as: String.self, is: !.empty && .count(...250))
@@ -117,7 +104,7 @@ extension RoleUpdateObject: ValidatableContent {
     }
 }
 
-extension RolePatchObject: ValidatableContent {
+extension RolePatchObject {
 
     public static func validations(_ validations: inout Validations) {
         validations.add("key", as: String.self, is: !.empty && .count(...250), required: false)

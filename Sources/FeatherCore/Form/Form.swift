@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 04. 22..
 //
 
-public protocol Form: AnyObject, TemplateDataRepresentable {
+public protocol Form: AnyObject {
 
     /// form fields
     var fields: [FormFieldRepresentable] { get }

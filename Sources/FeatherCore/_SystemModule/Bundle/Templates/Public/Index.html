@@ -73,7 +73,7 @@
                 <div class="menu-items">
                     #for(item in $menus.main ?? []):
                         #if(UserHasPermission(item.permission) ?? true):
-                        <a href="#(item.url)" #if($req.url.path == item.url): class="selected"#endif#if(item.targetBlank): target="_blank"#endif>
+                        <a href="#(item.url)" #if($req.url.path == item.url): class="selected"#endif#if(item.isBlank): target="_blank"#endif>
                             #if(item.icon != nil):#svg(item.icon)#endif #(item.label)
                         </a>
                         #endif
@@ -103,7 +103,7 @@
                 #for(item in $menus.footer ?? []):
                     #if(UserHasPermission(item.permission) ?? true):
                     &middot;
-                    <a href="#(item.url)" #if($req.url.path == item.url): class="selected"#endif#if(item.targetBlank): target="_blank"#endif>
+                    <a href="#(item.url)" #if($req.url.path == item.url): class="selected"#endif#if(item.isBlank): target="_blank"#endif>
                         #if(item.icon != nil):#svg(item.icon)#endif #(item.label)
                     </a>
                     #endif

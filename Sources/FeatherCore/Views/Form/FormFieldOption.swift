@@ -5,7 +5,6 @@
 //  Created by Tibor Bodecs on 2020. 04. 26..
 //
 
-
 /// selectable option
 public struct FormFieldOption: Encodable {
 

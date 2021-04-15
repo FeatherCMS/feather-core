@@ -13,19 +13,19 @@ final class SystemMenuItemEditForm: EditForm {
     var label = TextField(key: "label", required: true)
     var url = TextField(key: "url", required: true)
     var priority = TextField(key: "priority", required: true)
-    var targetBlank = ToggleField(key: "targetBlank")
+    var isBlank = ToggleField(key: "isBlank")
     var permission = TextField(key: "permission")
     var menuId = TextField(key: "menuId")
     var notification: String?
     
     var fields: [FormFieldRepresentable] {
-        [icon, label, url, priority, targetBlank, permission, menuId]
+        [icon, label, url, priority, isBlank, permission, menuId]
     }
 
     init() {}
 
     func initialize(req: Request) -> EventLoopFuture<Void> {
-        targetBlank.output.value = false
+        isBlank.output.value = false
         priority.output.value = "100"
         return req.eventLoop.future()
     }
@@ -35,7 +35,7 @@ final class SystemMenuItemEditForm: EditForm {
         label.output.value = input.label
         url.output.value = input.url
         priority.output.value = String(input.priority)
-        targetBlank.output.value = input.isBlank
+        isBlank.output.value = input.isBlank
         permission.output.value = input.permission
         menuId.output.value = input.$menu.id.uuidString
     }
@@ -46,7 +46,7 @@ final class SystemMenuItemEditForm: EditForm {
         output.label = label.input.value!
         output.url = url.input.value!
         output.priority = Int(priority.input.value!)!
-        output.isBlank = targetBlank.input.value!
+        output.isBlank = isBlank.input.value!
         output.permission = permission.input.value?.emptyToNil
         output.$menu.id = UUID(uuidString: menuId.input.value!)!
     }

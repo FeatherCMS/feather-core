@@ -6,23 +6,16 @@
 //
 
 /// represents a file data value
-public final class FileValue: TemplateDataRepresentable {
+public final class FileValue: Encodable {
 
-    public struct TemporaryFile: TemplateDataRepresentable {
+    public struct TemporaryFile: Encodable {
         public let key: String
         public let name: String
         
         public init(key: String, name: String) {
             self.key = key
             self.name = name
-        }
-
-        public var templateData: TemplateData {
-            .dictionary([
-                "key": key,
-                "name": name,
-            ])
-        }
+        }   
     }
 
     public var file: File?
@@ -35,15 +28,6 @@ public final class FileValue: TemplateDataRepresentable {
         self.originalKey = originalKey
         self.delete = delete
         self.temporaryFile = temporaryFile
-    }
-
-    public var templateData: TemplateData {
-        .dictionary([
-            "key": .string(temporaryFile?.key ?? originalKey),
-            "originalKey": .string(originalKey),
-            "temporaryFile": temporaryFile.templateData,
-            "delete": .bool(delete),
-        ])
     }
 }
 

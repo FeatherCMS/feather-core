@@ -47,7 +47,7 @@ struct SystemTemplateScopeMiddleware: Middleware {
             SystemMenuModel.query(on: req.db).with(\.$items).all().map { menus -> [String: [String: TemplateDataGenerator]] in
                 var items: [String: TemplateDataGenerator] = [:]
                 for menu in menus {
-                    items[menu.key] = .lazy(menu.items.sorted { $0.priority > $1.priority }.map(\.templateData))
+                    items[menu.key] = .lazy(menu.items.sorted { $0.priority > $1.priority }.map { $0.encodeToTemplateData() })
                 }
                 return ["menus": items]
             },

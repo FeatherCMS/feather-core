@@ -43,7 +43,7 @@ td.field {
             #(navItems.append(["link": $req.url.path + "create/", "label": "Create new"]))
         #endif
         #for(navItem in navItems + table.nav ?? []):
-            #if(!isFirst): &middot; #endif<a href="#(navItem.link)"#if(navItem.targetBlank ?? false): target="_blank"#endif>#(navItem.label)</a>
+            #if(!isFirst): &middot; #endif<a href="#(navItem.link)"#if(navItem.isBlank ?? false): target="_blank"#endif>#(navItem.label)</a>
         #endfor
     </p>
 </div>

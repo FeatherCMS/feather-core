@@ -51,7 +51,7 @@ extension SystemTokenModel: ModelTokenAuthenticatable {
 
 // MARK: - api
 
-extension SystemTokenModel: GetContentRepresentable {
+extension SystemTokenModel {
 
     var getContent: TokenObject {
         .init(id: id!, value: value, userId: $user.id)

@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 04. 14..
 //
 
-public struct MultiselectionFieldView: FormFieldView {
+public struct MultiSelectionFieldView: FormFieldView {
 
     public let type: FormFieldType = .multiselection
 

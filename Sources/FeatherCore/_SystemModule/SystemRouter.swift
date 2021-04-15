@@ -11,18 +11,12 @@ struct SystemRouter: RouteCollection {
     let usrfrontend = UserFrontendController()
 
     let userAdmin = UserAdminController()
-//    let roleAdmin = UserRoleAdminController()
+    let roleAdmin = UserRoleAdminController()
     let permissionAdmin = UserPermissionAdminController()
-    
-    let userApi = UserApiContentController()
-    let roleApi = UserRoleApiContentController()
-    let permissionApi = UserPermissionApiContentController()
-
     let sysAdminController = SystemVariableAdminController()
-    let sysApiController = SystemVariableApiContentController()
-    
+
     let frontend = FrontendController()
-//    var metadataAdmin = FrontendMetadataModelAdminController()
+    var metadataAdmin = FrontendMetadataModelAdminController()
     let menuAdmin = FrontendMenuAdminController()
     let itemAdmin = FrontendMenuItemAdminController()
     let pageAdmin = FrontendPageAdminController()
@@ -83,11 +77,11 @@ struct SystemRouter: RouteCollection {
         sysAdminController.setupRoutes(on: modulePath, as: SystemVariableModel.pathComponent)
 
         userAdmin.setupRoutes(on: modulePath, as: SystemUserModel.pathComponent)
-//        roleAdmin.setupRoutes(on: modulePath, as: SystemRoleModel.pathComponent)
+        roleAdmin.setupRoutes(on: modulePath, as: SystemRoleModel.pathComponent)
         permissionAdmin.setupRoutes(on: modulePath, as: SystemPermissionModel.pathComponent)
-//
-//        metadataAdmin.setupRoutes(on: modulePath, as: SystemMetadataModel.pathComponent)
-//
+
+        metadataAdmin.setupRoutes(on: modulePath, as: SystemMetadataModel.pathComponent)
+
         modulePath.get("settings", use: siteAdmin.settingsView)
         modulePath.post("settings", use: siteAdmin.updateSettings)
 
@@ -103,17 +97,17 @@ struct SystemRouter: RouteCollection {
         let routes = args["routes"] as! RoutesBuilder
 
         let modulePath = routes.grouped(SystemModule.pathComponent)
-        modulePath.grouped(SystemUserCredentialsAuthenticator()).post("login", use: userApi.login)
+//        modulePath.grouped(SystemUserCredentialsAuthenticator()).post("login", use: userApi.login)
     }
     
     func apiRoutesHook(args: HookArguments) {
         let routes = args["routes"] as! RoutesBuilder
 
         let modulePath = routes.grouped(SystemModule.pathComponent)
-        sysApiController.setupRoutes(on: modulePath, as: SystemVariableModel.pathComponent)
-
-        userApi.setupRoutes(on: modulePath, as: SystemUserModel.pathComponent)
-        roleApi.setupRoutes(on: modulePath, as: SystemRoleModel.pathComponent)
-        permissionApi.setupRoutes(on: modulePath, as: SystemPermissionModel.pathComponent)
+        
+//        sysApiController.setupRoutes(on: modulePath, as: SystemVariableModel.pathComponent)
+//        userApi.setupRoutes(on: modulePath, as: SystemUserModel.pathComponent)
+//        roleApi.setupRoutes(on: modulePath, as: SystemRoleModel.pathComponent)
+//        permissionApi.setupRoutes(on: modulePath, as: SystemPermissionModel.pathComponent)
     }
 }

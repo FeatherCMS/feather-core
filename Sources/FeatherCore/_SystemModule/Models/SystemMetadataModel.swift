@@ -111,6 +111,22 @@ final class SystemMetadataModel: FeatherModel {
 
         self.filters = filters
     }
+    
+    // MARK: - query
+
+    static func allowedOrders() -> [FieldKey] {
+        [
+            FieldKeys.slug,
+            FieldKeys.title,
+        ]
+    }
+    
+    static func search(_ term: String) -> [ModelValueFilter<SystemMetadataModel>] {
+        [
+            \.$slug ~~ term,
+            \.$title ~~ term,
+        ]
+    }
 }
 
 // MARK: - view
@@ -119,34 +135,6 @@ extension Metadata.Status: FormFieldOptionRepresentable {
 
     public var formFieldOption: FormFieldOption {
         .init(key: rawValue, label: localized)
-    }
-}
-
-extension SystemMetadataModel: TemplateDataRepresentable {
-
-    /// returns the TemplateData types for a metadata
-    var templateData: TemplateData {
-        .dictionary([
-            "id": .string(id?.uuidString),
-            "module": .string(module),
-            "model": .string(model),
-            "reference": .string(reference.uuidString),
-            
-            "title": .string(title),
-            "excerpt": .string(excerpt),
-            "imageKey": .string(imageKey),
-            "date": .double(date.timeIntervalSinceReferenceDate),
-            
-            "slug": .string(slug),
-            "status": .string(status.rawValue),
-            "feedItem": .bool(feedItem),
-            "canonicalUrl": .string(canonicalUrl),
-            
-            "filters": .array(filters),
-
-            "css": .string(css),
-            "js": .string(js),
-        ])
     }
 }
 

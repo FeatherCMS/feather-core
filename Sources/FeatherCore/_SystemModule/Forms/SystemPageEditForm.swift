@@ -24,7 +24,7 @@ final class SystemPageEditForm: EditForm {
             "modelId": modelId?.encodeToTemplateData() ?? .string(nil),
             "fields": fieldsTemplateData,
             "notification": .string(notification),
-            "metadata": metadata?.templateData ?? .dictionary(nil)
+            "metadata": metadata?.encodeToTemplateData() ?? .dictionary(nil)
         ])
     }
 

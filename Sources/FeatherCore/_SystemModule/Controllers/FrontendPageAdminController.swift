@@ -5,12 +5,20 @@
 //  Created by Tibor Bodecs on 2020. 06. 09..
 //
 
-struct FrontendPageAdminController: AdminViewController {
+struct FrontendPageAdminController: FeatherController {
     
     typealias Module = SystemModule
     typealias Model = SystemPageModel
+    
     typealias CreateForm = SystemPageEditForm
     typealias UpdateForm = SystemPageEditForm
+    
+    typealias GetApi = SystemVariableApi
+    typealias ListApi = SystemVariableApi
+    typealias CreateApi = SystemVariableApi
+    typealias UpdateApi = SystemVariableApi
+    typealias PatchApi = SystemVariableApi
+    typealias DeleteApi = SystemVariableApi
     
     func listTable(_ models: [Model]) -> Table {
         Table(columns: ["title"], rows: models.map { model in

@@ -53,19 +53,3 @@ final class SystemMenuModel: FeatherModel {
         ]
     }
 }
-
-// MARK: - view
-
-extension SystemMenuModel: TemplateDataRepresentable {
-
-    var templateData: TemplateData {
-        .dictionary([
-            "id": id,
-            "key": key,
-            "name": name,
-            "notes": notes,
-            "items": $items.value != nil ? items.sorted(by: { $0.priority > $1.priority }) : [],
-        ])
-    }
-}
-

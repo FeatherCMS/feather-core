@@ -21,7 +21,7 @@
     #if(!segmentItems.isEmpty()):
     <div class="segment grid-#(segmentItems.count())">
         #for(navItem in navItems + detail.nav ?? []):
-            <a href="#(navItem.link)"#if(navItem.targetBlank ?? false): target="_blank"#endif>#(navItem.label)</a>
+            <a href="#(navItem.link)"#if(navItem.isBlank ?? false): target="_blank"#endif>#(navItem.label)</a>
         #endfor
     </div>
     #endif

@@ -6,12 +6,20 @@
 //
 
 
-struct UserAdminController: AdminViewController {
+struct UserAdminController: FeatherController {
 
     typealias Module = SystemModule
     typealias Model = SystemUserModel
+    
     typealias CreateForm = SystemUserEditForm
     typealias UpdateForm = SystemUserEditForm
+    
+    typealias GetApi = SystemVariableApi
+    typealias ListApi = SystemVariableApi
+    typealias CreateApi = SystemVariableApi
+    typealias UpdateApi = SystemVariableApi
+    typealias PatchApi = SystemVariableApi
+    typealias DeleteApi = SystemVariableApi
 
     func findBy(_ id: UUID, on db: Database) -> EventLoopFuture<Model> {
         Model.findWithRolesBy(id: id, on: db).unwrap(or: Abort(.notFound, reason: "User not found"))

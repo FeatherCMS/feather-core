@@ -77,7 +77,7 @@ final class SystemModule: FeatherModule {
                 }
                 /// render the page with the filtered content
                 return page.filter(content, req: req).flatMap {
-                    var ctx = page.templateDataWithJoinedMetadata.dictionary!
+                    var ctx = page.encodeToTemplateData().dictionary!
                     ctx["content"] = .string($0)
                     return req.tau.render(template: "System/Page", context: .init(ctx)).encodeOptionalResponse(for: req)
                 }
@@ -91,7 +91,7 @@ final class SystemModule: FeatherModule {
         let metadata = args["page-metadata"] as! Metadata
 
         return req.tau.render(template: "System/Home", context: [
-            "metadata": metadata.templateData,
+            "metadata": metadata.encodeToTemplateData(),
         ])
         .encodeOptionalResponse(for: req)
     }

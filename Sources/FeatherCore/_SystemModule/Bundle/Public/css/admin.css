@@ -1,7 +1,12 @@
 body > footer img {
     width: 64px;
 }
-
+label {
+    display: inline-block;
+}
+.block {
+    display: block;
+}
 
 #site-logo {
     text-align: left;

@@ -99,12 +99,12 @@ public extension FeatherModel where Self: MetadataRepresentable {
     }
 }
 
-public extension FeatherModel where Self: MetadataRepresentable, Self: TemplateDataRepresentable {
+public extension FeatherModel where Self: MetadataRepresentable {
 
     /// returns the default template data object coinaining the metadata template data (metadata info must be already joined / present)
     var templateDataWithJoinedMetadata: TemplateData {
-        var data: [String: TemplateData] = templateData.dictionary!
-        data["metadata"] = joinedMetadata?.templateData ?? .dictionary(nil)
+        var data: [String: TemplateData] = encodeToTemplateData().dictionary!
+        data["metadata"] = joinedMetadata?.encodeToTemplateData() ?? .dictionary(nil)
         return .dictionary(data)
     }
 }

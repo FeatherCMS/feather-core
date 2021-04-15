@@ -28,7 +28,7 @@
 
 
 /// a custom paged list with metadata information
-public struct PaginationContainer<T>: TemplateDataRepresentable where T: TemplateDataRepresentable {
+public struct PaginationContainer<T>: Encodable where T: Encodable {
 
     /// paged generic encodable items
     public let items: [T]
@@ -43,15 +43,8 @@ public struct PaginationContainer<T>: TemplateDataRepresentable where T: Templat
     }
 
     /// NOTE: we can only nest metadata if we init a new object...
-    public func map<U>(_ transform: (T) throws -> (U)) rethrows -> PaginationContainer<U> where U: TemplateDataRepresentable {
+    public func map<U>(_ transform: (T) throws -> (U)) rethrows -> PaginationContainer<U> where U: Encodable {
         try .init(items.map(transform), info: info)
-    }
-   
-    public var templateData: TemplateData {
-        .dictionary([
-            "items": .array(items.map(\.templateData)),
-            "info": info.templateData
-        ])
     }
 }
 

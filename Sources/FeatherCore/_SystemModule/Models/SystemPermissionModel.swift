@@ -76,21 +76,6 @@ extension SystemPermissionModel {
 
 // MARK: - view
 
-extension SystemPermissionModel: TemplateDataRepresentable {
-
-    var templateData: TemplateData {
-        .dictionary([
-            "id": id,
-            "key": key,
-            "module": namespace,
-            "context": context,
-            "action": action,
-            "name": name,
-            "notes": notes,
-        ])
-    }
-}
-
 extension SystemPermissionModel: FormFieldOptionRepresentable {
 
     var formFieldOption: FormFieldOption {
@@ -101,7 +86,7 @@ extension SystemPermissionModel: FormFieldOptionRepresentable {
 
 // MARK: - api
 
-extension SystemPermissionModel: ApiContentRepresentable {
+extension SystemPermissionModel {
 
     var listContent: PermissionListObject {
         .init(id: id!, name: name)
@@ -140,9 +125,8 @@ extension SystemPermissionModel: ApiContentRepresentable {
 // MARK: - api validation
 
 
-extension PermissionListObject: Content {}
-extension PermissionGetObject: Content {}
-extension PermissionCreateObject: ValidatableContent {
+
+extension PermissionCreateObject {
 
     public static func validations(_ validations: inout Validations) {
         validations.add("module", as: String.self, is: !.empty && .count(...250))
@@ -152,7 +136,7 @@ extension PermissionCreateObject: ValidatableContent {
     }
 }
 
-extension PermissionUpdateObject: ValidatableContent {
+extension PermissionUpdateObject {
 
     public static func validations(_ validations: inout Validations) {
         validations.add("module", as: String.self, is: !.empty && .count(...250))
@@ -162,7 +146,7 @@ extension PermissionUpdateObject: ValidatableContent {
     }
 }
 
-extension PermissionPatchObject: ValidatableContent {
+extension PermissionPatchObject {
 
     public static func validations(_ validations: inout Validations) {
         validations.add("module", as: String.self, is: !.empty && .count(...250), required: false)

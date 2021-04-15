@@ -19,7 +19,7 @@
 //}
 
 /// pagination metadata info
-public struct Pagination: TemplateDataRepresentable {
+public struct Pagination: Encodable {
 
     /// current page
     public let current: Int
@@ -33,13 +33,5 @@ public struct Pagination: TemplateDataRepresentable {
         self.current = current
         self.limit = limit
         self.total = total
-    }
-    
-    public var templateData: TemplateData {
-        .dictionary([
-            "current": .int(current),
-            "limit": .int(limit),
-            "total": .int(total),
-        ])
     }
 }

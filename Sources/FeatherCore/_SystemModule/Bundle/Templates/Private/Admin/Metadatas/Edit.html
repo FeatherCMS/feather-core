@@ -14,7 +14,7 @@
 ])
 
 #if(modelId != nil):
-    #(form.nav.append(["label": "Preview", "link": fields.slug.value.safePath(), "targetBlank": true]))
+    #(form.nav.append(["label": "Preview", "link": fields.slug.value.safePath(), "isBlank": true]))
     #(form.nav.append(["label": "Reference", "link": "/admin/" + fields.module.value + "/" + fields.model.value + "/" + fields.reference.value + "/update/"]))
 #endif
 

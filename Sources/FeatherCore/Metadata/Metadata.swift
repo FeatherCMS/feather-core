@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 12. 11..
 //
 
-public struct Metadata: TemplateDataRepresentable {
+public struct Metadata: Codable {
     
     public enum Status: String, CaseIterable, Codable {
         case draft
@@ -14,7 +14,9 @@ public struct Metadata: TemplateDataRepresentable {
         /// archives are not visible nor indexed
         case archived
  
-        public var localized: String { rawValue.capitalized }
+        public var localized: String {
+            rawValue.capitalized
+        }
     }
 
     public var id: UUID?
@@ -70,22 +72,6 @@ public struct Metadata: TemplateDataRepresentable {
         self.filters = filters
         self.css = css
         self.js = js
-    }
-
-    public var templateData: TemplateData {
-        .dictionary([
-            "id": id,
-            "slug": slug,
-            "status": status?.encodeToTemplateData(),
-            "title": title,
-            "excerpt": excerpt,
-            "imageKey": imageKey,
-            "date": date,
-            "feedItem": feedItem,
-            "canonicalUrl": canonicalUrl,
-            "css": css,
-            "js": js,
-        ])
     }
 }
 

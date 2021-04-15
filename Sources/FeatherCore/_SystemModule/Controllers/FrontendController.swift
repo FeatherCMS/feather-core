@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 2020. 03. 27..
 //
 
-
-
 struct FrontendController {
     
     func catchAllView(req: Request) throws -> EventLoopFuture<Response> {
@@ -27,7 +25,7 @@ struct FrontendController {
             qb = filter(qb)
         }
         return qb.all()
-        .mapEach(\.templateData)
+        .mapEach { $0.encodeToTemplateData() }
         .flatMap { req.tau.render(template: template, context: ["list": .array($0)]) }
         .encodeResponse(status: .ok, headers: ["Content-Type": "text/xml; charset=utf-8"], for: req)
     }

@@ -71,21 +71,3 @@ final class SystemMenuItemModel: FeatherModel {
         ]
     }
 }
-
-// MARK: - view
-
-extension SystemMenuItemModel: TemplateDataRepresentable {
-
-    var templateData: TemplateData {
-        .dictionary([
-            "id": id,
-            "icon": icon,
-            "label": label,
-            "url": url,
-            "priority": priority,
-            "targetBlank": isBlank,
-            "permission": permission,
-        ])
-    }
-}
-

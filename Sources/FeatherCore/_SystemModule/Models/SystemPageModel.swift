@@ -52,19 +52,6 @@ final class SystemPageModel: FeatherModel {
     }
 }
 
-// MARK: - view
-
-extension SystemPageModel: TemplateDataRepresentable {
-
-    var templateData: TemplateData {
-        .dictionary([
-            "id": id,
-            "title": title,
-            "content": content,
-        ])
-    }
-}
-
 // MARK: - metadata
 
 extension SystemPageModel: MetadataRepresentable {

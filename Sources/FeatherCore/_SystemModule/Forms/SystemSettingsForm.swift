@@ -12,7 +12,7 @@ final class SystemSettingsForm: Form {
     var noindex = ToggleField(key: "noindex")
     var locale = SelectionField(key: "locale")
     var timezone = SelectionField(key: "timezone")
-    var filters = MultiselectionField(key: "filters")
+    var filters = MultiSelectionField(key: "filters")
     var css = TextareaField(key: "css")
     var js = TextareaField(key: "js")
     var footerTop = TextareaField(key: "footerTop")

@@ -5,12 +5,20 @@
 //  Created by Tibor Bodecs on 2020. 11. 15..
 //
 
-struct FrontendMenuItemAdminController: AdminViewController {
+struct FrontendMenuItemAdminController: FeatherController {
 
     typealias Module = SystemModule
     typealias Model = SystemMenuItemModel
+    
     typealias CreateForm = SystemMenuItemEditForm
     typealias UpdateForm = SystemMenuItemEditForm
+    
+    typealias GetApi = SystemVariableApi
+    typealias ListApi = SystemVariableApi
+    typealias CreateApi = SystemVariableApi
+    typealias UpdateApi = SystemVariableApi
+    typealias PatchApi = SystemVariableApi
+    typealias DeleteApi = SystemVariableApi
 
     var idParamKey: String { "itemId" }
     

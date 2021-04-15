@@ -18,6 +18,7 @@ public enum FormFieldType: String, Encodable {
     case toggle
     case checkbox
     case radio
+    case multigroupoption
     
     case file
     case image

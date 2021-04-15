@@ -5,12 +5,20 @@
 //  Created by Tibor Bödecs on 2020. 06. 10..
 //
 //
-struct SystemVariableAdminController: AdminViewController {
+struct SystemVariableAdminController: FeatherController {
 
     typealias Module = SystemModule
     typealias Model = SystemVariableModel
+    
     typealias CreateForm = SystemVariableEditForm
     typealias UpdateForm = SystemVariableEditForm
+    
+    typealias GetApi = SystemVariableApi
+    typealias ListApi = SystemVariableApi
+    typealias CreateApi = SystemVariableApi
+    typealias UpdateApi = SystemVariableApi
+    typealias PatchApi = SystemVariableApi
+    typealias DeleteApi = SystemVariableApi
     
     func listTable(_ models: [Model]) -> Table {
         Table(columns: ["name"], rows: models.map { model in

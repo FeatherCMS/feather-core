@@ -73,22 +73,6 @@ extension SystemUserModel: SessionAuthenticatable {
     var sessionID: SessionID { id! }
 }
 
-
-
-// MARK: - view
-
-extension SystemUserModel: TemplateDataRepresentable {
-
-    var templateData: TemplateData {
-        .dictionary([
-            "id": id,
-            "email": email,
-            "root": root,
-            "roles": $roles.value != nil ? roles.map(\.templateData) : [],
-        ])
-    }
-}
-
 extension SystemUserModel: FormFieldOptionRepresentable {
 
     var formFieldOption: FormFieldOption {
@@ -99,7 +83,7 @@ extension SystemUserModel: FormFieldOptionRepresentable {
 
 // MARK: - api
 
-extension SystemUserModel: ApiContentRepresentable {
+extension SystemUserModel {
 
     var listContent: UserListObject {
         .init(id: id!, email: email)
@@ -133,7 +117,7 @@ extension SystemUserModel: ApiContentRepresentable {
 
 extension UserListObject: Content {}
 extension UserGetObject: Content {}
-extension UserCreateObject: ValidatableContent {
+extension UserCreateObject {
 
     public static func validations(_ validations: inout Validations) {
         validations.add("email", as: String.self, is: .email)
@@ -141,7 +125,7 @@ extension UserCreateObject: ValidatableContent {
     }
 }
 
-extension UserUpdateObject: ValidatableContent {
+extension UserUpdateObject {
 
     public static func validations(_ validations: inout Validations) {
         validations.add("email", as: String.self, is: .email)
@@ -149,7 +133,7 @@ extension UserUpdateObject: ValidatableContent {
     }
 }
 
-extension UserPatchObject: ValidatableContent {
+extension UserPatchObject {
 
     public static func validations(_ validations: inout Validations) {
         validations.add("email", as: String.self, is: .email, required: false)

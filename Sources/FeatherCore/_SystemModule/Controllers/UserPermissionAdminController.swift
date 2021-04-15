@@ -5,12 +5,19 @@
 //  Created by Tibor Bodecs on 2020. 03. 23..
 //
 
-struct UserPermissionAdminController: AdminViewController {
+struct UserPermissionAdminController: FeatherController {
     
     typealias Module = SystemModule
     typealias Model = SystemPermissionModel
     typealias CreateForm = SystemPermissionEditForm
     typealias UpdateForm = SystemPermissionEditForm
+    
+    typealias GetApi = SystemVariableApi
+    typealias ListApi = SystemVariableApi
+    typealias CreateApi = SystemVariableApi
+    typealias UpdateApi = SystemVariableApi
+    typealias PatchApi = SystemVariableApi
+    typealias DeleteApi = SystemVariableApi
     
     func listTable(_ models: [Model]) -> Table {
         Table(columns: ["name"], rows: models.map { model in

@@ -6,13 +6,20 @@
 //
 
 
-struct FrontendMenuAdminController: AdminViewController {
+struct FrontendMenuAdminController: FeatherController {
 //
     typealias Module = SystemModule
     typealias Model = SystemMenuModel
+
     typealias CreateForm = SystemMenuEditForm
     typealias UpdateForm = SystemMenuEditForm
-
+    
+    typealias GetApi = SystemVariableApi
+    typealias ListApi = SystemVariableApi
+    typealias CreateApi = SystemVariableApi
+    typealias UpdateApi = SystemVariableApi
+    typealias PatchApi = SystemVariableApi
+    typealias DeleteApi = SystemVariableApi
 //   
     
     
