@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 11. 15..
 //
 
-struct FrontendMenuItemAdminController: FeatherController {
+struct SystemMenuItemController: FeatherController {
 
     typealias Module = SystemModule
     typealias Model = SystemMenuItemModel
@@ -20,8 +20,15 @@ struct FrontendMenuItemAdminController: FeatherController {
     typealias PatchApi = SystemVariableApi
     typealias DeleteApi = SystemVariableApi
 
-    var idParamKey: String { "itemId" }
-    
+    func setupRoutes(on: RoutesBuilder, createPath: PathComponent = "create", updatePath: PathComponent = "update", deletePath: PathComponent = "delete") {
+        let base = on.grouped(SystemMenuModel.pathComponent).grouped(":menuId").grouped(Model.pathComponent)
+        setupListRoute(on: base)
+        setupGetRoute(on: base)
+        setupCreateRoutes(on: base, as: createPath)
+        setupUpdateRoutes(on: base, as: updatePath)
+        setupDeleteRoutes(on: base, as: deletePath)
+    }
+
 //    "title": "Menu items",
 //    "key": "system.menuItems",
 //    "fields": [
@@ -37,7 +44,7 @@ struct FrontendMenuItemAdminController: FeatherController {
     }
 
     func beforeListQuery(req: Request, queryBuilder: QueryBuilder<SystemMenuItemModel>) -> QueryBuilder<SystemMenuItemModel> {
-        guard let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) else {
+        guard let id = req.parameters.get("menuId"), let uuid = UUID(uuidString: id) else {
             return queryBuilder
         }
         return queryBuilder.filter(\.$menu.$id == uuid)
@@ -67,4 +74,6 @@ struct FrontendMenuItemAdminController: FeatherController {
               list: .init(label: "Menu items", url: "/admin/frontend/menus/" + model.$menu.id.uuidString + "/items/")
         )
     }
+
+    
 }

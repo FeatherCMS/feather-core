@@ -70,6 +70,8 @@ public protocol CreateViewController: ViewController {
 
 public extension CreateViewController {
 
+    var createView: String { "System/Admin/Edit" }
+
     func beforeInvalidCreateFormRender(req: Request, form: CreateForm) -> EventLoopFuture<CreateForm> {
         req.eventLoop.future(form)
     }
@@ -103,7 +105,7 @@ public extension CreateViewController {
     }
 
     func accessCreate(req: Request) -> EventLoopFuture<Bool> {
-        req.eventLoop.future(true)
+        req.checkAccess(for: Model.permission(for: .create))
     }
 
     func createView(req: Request) throws -> EventLoopFuture<View>  {
@@ -180,9 +182,15 @@ public extension CreateViewController {
     func afterCreate(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Model> {
         req.eventLoop.future(model)
     }
-
+//
+//    func createResponse(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Response> {
+//        renderCreateForm(req: req, form: form).encodeResponse(for: req)
+//    }
+    
+    /// after we create a new viper model we can redirect the user to the edit screen using the unique id and replace the last path component
     func createResponse(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Response> {
-        renderCreateForm(req: req, form: form).encodeResponse(for: req)
+        let path = req.url.path.replacingLastPath(model.identifier)
+        return req.eventLoop.future(req.redirect(to: path + "/update/"))
     }
 
     func apiCreate(_ req: Request) throws -> EventLoopFuture<CreateApi.GetObject> {

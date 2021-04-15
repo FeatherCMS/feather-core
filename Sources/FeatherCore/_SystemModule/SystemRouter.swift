@@ -7,30 +7,26 @@
 
 struct SystemRouter: RouteCollection {
 
-    let adminController = AdminController()
-    let usrfrontend = UserFrontendController()
+    let adminController = SystemAdminController()
+    let frontendController = SystemFrontendController()
 
-    let userAdmin = UserAdminController()
-    let roleAdmin = UserRoleAdminController()
-    let permissionAdmin = UserPermissionAdminController()
-    let sysAdminController = SystemVariableAdminController()
-
-    let frontend = FrontendController()
-    var metadataAdmin = FrontendMetadataModelAdminController()
-    let menuAdmin = FrontendMenuAdminController()
-    let itemAdmin = FrontendMenuItemAdminController()
-    let pageAdmin = FrontendPageAdminController()
-
-    let siteAdmin = FrontendSiteAdminController()
+    let userController = SystemUserController()
+    let roleController = SystemRoleController()
+    let permissionController = SystemPermissionController()
+    let variableController = SystemVariableController()
+    var metadataController = SystemMetadataController()
+    let menuController = SystemMenuController()
+    let menuItemController = SystemMenuItemController()
+    let pageController = SystemPageController()
 
     func boot(routes: RoutesBuilder) throws {
-        routes.get("login", use: usrfrontend.loginView)
-        routes.grouped(SystemUserCredentialsAuthenticator()).post("login", use: usrfrontend.login)
-        routes.get("logout", use: usrfrontend.logout)
+        routes.get("login", use: frontendController.loginView)
+        routes.grouped(SystemUserCredentialsAuthenticator()).post("login", use: frontendController.login)
+        routes.get("logout", use: frontendController.logout)
         
-        routes.get("sitemap.xml", use: frontend.sitemap)
-        routes.get("rss.xml", use: frontend.rss)
-        routes.get("robots.txt", use: frontend.robots)
+        routes.get("sitemap.xml", use: frontendController.sitemap)
+        routes.get("rss.xml", use: frontendController.rss)
+        routes.get("robots.txt", use: frontendController.robots)
     }
     
     func routesHook(args: HookArguments) {
@@ -65,49 +61,44 @@ struct SystemRouter: RouteCollection {
 
         let frontendRoutes = routes.grouped(frontendMiddlewares)
         /// handle root path and everything else via the controller method
-        frontendRoutes.get(use: frontend.catchAllView)
-        frontendRoutes.get(.catchall, use: frontend.catchAllView)
+        frontendRoutes.get(use: frontendController.catchAllView)
+        frontendRoutes.get(.catchall, use: frontendController.catchAllView)
     }
     
     
     func adminRoutesHook(args: HookArguments) {
-        let routes = args["routes"] as! RoutesBuilder
+        let adminRoutes = args["routes"] as! RoutesBuilder
 
-        let modulePath = routes.grouped(SystemModule.pathComponent)
-        sysAdminController.setupRoutes(on: modulePath, as: SystemVariableModel.pathComponent)
-
-        userAdmin.setupRoutes(on: modulePath, as: SystemUserModel.pathComponent)
-        roleAdmin.setupRoutes(on: modulePath, as: SystemRoleModel.pathComponent)
-        permissionAdmin.setupRoutes(on: modulePath, as: SystemPermissionModel.pathComponent)
-
-        metadataAdmin.setupRoutes(on: modulePath, as: SystemMetadataModel.pathComponent)
-
-        modulePath.get("settings", use: siteAdmin.settingsView)
-        modulePath.post("settings", use: siteAdmin.updateSettings)
-
-        menuAdmin.setupRoutes(on: modulePath, as: SystemMenuModel.pathComponent)
-
-        let itemPath = modulePath.grouped(SystemMenuModel.pathComponent, menuAdmin.idPathComponent)
-        itemAdmin.setupRoutes(on: itemPath, as: SystemMenuItemModel.pathComponent)
-
-        pageAdmin.setupRoutes(on: modulePath, as: SystemPageModel.pathComponent)
+        adminRoutes.get("settings", use: adminController.settingsView)
+        adminRoutes.post("settings", use: adminController.updateSettings)
+        
+        
+        adminRoutes.register(userController)
+        adminRoutes.register(roleController)
+        adminRoutes.register(permissionController)
+        adminRoutes.register(pageController)
+        adminRoutes.register(variableController)
+        adminRoutes.register(metadataController)
+        adminRoutes.register(menuController)
+        adminRoutes.register(menuItemController)
     }
     
     func publicApiRoutesHook(args: HookArguments) {
-        let routes = args["routes"] as! RoutesBuilder
+        let publicApiRoutes = args["routes"] as! RoutesBuilder
 
-        let modulePath = routes.grouped(SystemModule.pathComponent)
-//        modulePath.grouped(SystemUserCredentialsAuthenticator()).post("login", use: userApi.login)
+        publicApiRoutes.grouped(SystemUserCredentialsAuthenticator()).post("login", use: userController.login)
     }
-    
-    func apiRoutesHook(args: HookArguments) {
-        let routes = args["routes"] as! RoutesBuilder
 
-        let modulePath = routes.grouped(SystemModule.pathComponent)
-        
-//        sysApiController.setupRoutes(on: modulePath, as: SystemVariableModel.pathComponent)
-//        userApi.setupRoutes(on: modulePath, as: SystemUserModel.pathComponent)
-//        roleApi.setupRoutes(on: modulePath, as: SystemRoleModel.pathComponent)
-//        permissionApi.setupRoutes(on: modulePath, as: SystemPermissionModel.pathComponent)
+    func apiRoutesHook(args: HookArguments) {
+        let apiRoutes = args["routes"] as! RoutesBuilder
+
+        apiRoutes.registerApi(userController)
+        apiRoutes.registerApi(roleController)
+        apiRoutes.registerApi(permissionController)
+        apiRoutes.registerApi(pageController)
+        apiRoutes.registerApi(variableController)
+        apiRoutes.registerApi(metadataController)
+        apiRoutes.registerApi(menuController)
+        apiRoutes.registerApi(menuItemController)
     }
 }

@@ -6,8 +6,8 @@
 //
 
 
-struct FrontendMenuAdminController: FeatherController {
-//
+struct SystemMenuController: FeatherController {
+
     typealias Module = SystemModule
     typealias Model = SystemMenuModel
 
@@ -20,8 +20,7 @@ struct FrontendMenuAdminController: FeatherController {
     typealias UpdateApi = SystemVariableApi
     typealias PatchApi = SystemVariableApi
     typealias DeleteApi = SystemVariableApi
-//   
-    
+       
     
 //        "title": "Menus",
 //        "key": "frontend.menus",

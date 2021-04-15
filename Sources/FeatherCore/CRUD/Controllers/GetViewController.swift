@@ -7,7 +7,7 @@
 
 
 public protocol GetApiRepresentable: ModelApi {
-    associatedtype GetObject: Codable
+    associatedtype GetObject: Content
     
     func getOutput(_ req: Request, model: Model) -> EventLoopFuture<GetObject>
 }
@@ -57,12 +57,16 @@ public protocol GetViewController: IdentifiableController {
 
     /// setup get related route
     func setupGetRoute(on: RoutesBuilder)
+
+    func setupGetApiRoute(on builder: RoutesBuilder)
 }
 
 public extension GetViewController {
     
+    var getView: String { "System/Admin/Detail" }
+
     func accessGet(req: Request) -> EventLoopFuture<Bool> {
-        req.eventLoop.future(true)
+        req.checkAccess(for: Model.permission(for: .get))
     }
 
     func beforeGet(req: Request, model: Model) -> EventLoopFuture<Model> {
@@ -81,7 +85,7 @@ public extension GetViewController {
         }
     }
     
-    func apiGet(_ req: Request) throws -> EventLoopFuture<GetApi.GetObject> {
+    func getApi(_ req: Request) throws -> EventLoopFuture<GetApi.GetObject> {
         accessGet(req: req).throwingFlatMap { hasAccess in
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
@@ -101,7 +105,9 @@ public extension GetViewController {
     
     func setupGetRoute(on builder: RoutesBuilder) {
         builder.get(idPathComponent, use: get)
-        
-//        builder.get(idPathComponent, use: get)
+    }
+    
+    func setupGetApiRoute(on builder: RoutesBuilder) {
+        builder.get(idPathComponent, use: getApi)
     }
 }

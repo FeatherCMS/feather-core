@@ -5,14 +5,24 @@
 //  Created by Tibor Bodecs on 2021. 04. 15..
 //
 
+extension VariableListObject: Content {}
+extension VariableGetObject: Content {}
+extension VariableCreateObject: Content {}
+extension VariableUpdateObject: Content {}
+extension VariablePatchObject: Content {}
+
 struct SystemVariableApi: GetApiRepresentable, ListApiRepresentable, CreateApiRepresentable, UpdateApiRepresentable, PatchApiRepresentable, DeleteApiRepresentable {
     typealias Model = SystemVariableModel
     
-    typealias GetObject = String
-    typealias ListObject = String
-    typealias CreateObject = String
-    typealias UpdateObject = String
-    typealias PatchObject = String
+    typealias GetObject = VariableGetObject
+    typealias ListObject = VariableListObject
+    typealias CreateObject = VariableCreateObject
+    typealias UpdateObject = VariableUpdateObject
+    typealias PatchObject = VariablePatchObject
+    
+    func mapList(model: Model) -> ListObject {
+        .init(id: model.id!, key: model.key, value: model.value)
+    }
 }
 
 
@@ -51,7 +61,7 @@ extension SystemVariableModel {
     }
 }
 
-extension VariableCreateObject: Content {
+extension VariableCreateObject{
 
     public static func validations(_ validations: inout Validations) {
         validations.add("key", as: String.self, is: !.empty && .count(...250))
@@ -59,7 +69,7 @@ extension VariableCreateObject: Content {
     }
 }
 
-extension VariableUpdateObject: Content {
+extension VariableUpdateObject {
 
     public static func validations(_ validations: inout Validations) {
         validations.add("key", as: String.self, is: !.empty && .count(...250))
@@ -67,7 +77,7 @@ extension VariableUpdateObject: Content {
     }
 }
 
-extension VariablePatchObject: Content {
+extension VariablePatchObject {
 
     public static func validations(_ validations: inout Validations) {
         validations.add("key", as: String.self, is: !.empty && .count(...250), required: false)

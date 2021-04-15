@@ -1,16 +1,17 @@
 //
-//  UserPermissionAdminController.swift
+//  UserRoleAdminController.swift
 //  UserModule
 //
 //  Created by Tibor Bodecs on 2020. 03. 23..
 //
 
-struct UserPermissionAdminController: FeatherController {
-    
+struct SystemRoleController: FeatherController {
+        
     typealias Module = SystemModule
-    typealias Model = SystemPermissionModel
-    typealias CreateForm = SystemPermissionEditForm
-    typealias UpdateForm = SystemPermissionEditForm
+    typealias Model = SystemRoleModel
+    
+    typealias CreateForm = SystemRoleEditForm
+    typealias UpdateForm = SystemRoleEditForm
     
     typealias GetApi = SystemVariableApi
     typealias ListApi = SystemVariableApi
@@ -18,6 +19,19 @@ struct UserPermissionAdminController: FeatherController {
     typealias UpdateApi = SystemVariableApi
     typealias PatchApi = SystemVariableApi
     typealias DeleteApi = SystemVariableApi
+
+    
+    func findBy(_ id: UUID, on db: Database) -> EventLoopFuture<Model> {
+        Model.findWithPermissionsBy(id: id, on: db).unwrap(or: Abort(.notFound, reason: "User role not found"))
+    }
+
+    func afterCreate(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Model> {
+        findBy(model.id!, on: req.db)
+    }
+
+    func afterUpdate(req: Request, form: UpdateForm, model: Model) -> EventLoopFuture<Model> {
+        findBy(model.id!, on: req.db)
+    }
     
     func listTable(_ models: [Model]) -> Table {
         Table(columns: ["name"], rows: models.map { model in
@@ -26,18 +40,16 @@ struct UserPermissionAdminController: FeatherController {
     }
     
     func getContext(req: Request, model: Model) -> GetViewContext {
-        .init(title: "Permissions",
-              key: "system.permissions",
-              list: .init(label: "Permissions", url: "/admin/system/permissions/"),
+        .init(title: "Role",
+              key: "system.roles",
+              list: .init(label: "Roles", url: "/admin/system/roles/"),
               nav: [],
               fields: [
                 .init(label: "Id", value: model.identifier),
                 .init(label: "Key", value: model.key),
                 .init(label: "Name", value: model.name),
-                .init(label: "Namespace", value: model.namespace),
-                .init(label: "Context", value: model.context),
-                .init(label: "Action", value: model.action),
                 .init(label: "Notes", value: model.notes ?? ""),
+                .init(label: "Permissions", value: model.permissions.map(\.name).joined(separator: "<br>")),
               ])
     }
     
@@ -45,8 +57,8 @@ struct UserPermissionAdminController: FeatherController {
         .init(id: formId,
               token: formToken,
               context: model.name,
-              type: "permission",
-              list: .init(label: "Permissions", url: "/admin/system/permissoins")
+              type: "role",
+              list: .init(label: "Roles", url: "/admin/system/roles")
         )
     }
 }

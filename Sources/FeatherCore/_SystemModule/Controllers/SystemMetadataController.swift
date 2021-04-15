@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 06. 09..
 //
 
-struct FrontendMetadataModelAdminController: FeatherController {
+struct SystemMetadataController: FeatherController {
     
     typealias Module = SystemModule
     typealias Model = SystemMetadataModel

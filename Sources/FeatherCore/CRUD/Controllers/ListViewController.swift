@@ -8,15 +8,21 @@
 
 
 public protocol ListApiRepresentable: ModelApi {
-    associatedtype ListObject: Codable
+    associatedtype ListObject: Content
     
     func listOutput(_ req: Request, model: Model) -> EventLoopFuture<ListObject>
+    
+    func mapList(model: Model) -> ListObject
 }
 
 extension ListApiRepresentable {
 
     func listOutput(_ req: Request, model: Model) -> EventLoopFuture<ListObject> {
         req.eventLoop.future(error: Abort(.noContent))
+    }
+    
+    func mapList(model: Model) -> ListObject {
+        fatalError("implement me")
     }
 }
 
@@ -41,6 +47,8 @@ public struct ListControllerContext: Codable {
 
 public protocol ListViewController: ViewController {
     
+    associatedtype ListApi: ListApiRepresentable
+
     /// the name of the list view template
     var listView: String { get }
     
@@ -83,6 +91,8 @@ public protocol ListViewController: ViewController {
     /// setup list related routes
     func setupListRoute(on: RoutesBuilder)
     
+    func setupListApiRoute(on builder: RoutesBuilder)
+    
 }
 
 
@@ -94,14 +104,15 @@ public extension ListViewController {
     var listLimitKey: String { "limit" }
     var listPageKey: String { "page" }
     var listDefaultLimit: Int { 10 }
+    
+    var listView: String { "System/Admin/List" }
 
     var listTitle: String { Model.name.lowercased().capitalized }
     
     var listIsSearchable: Bool { true }
     
     func accessList(req: Request) -> EventLoopFuture<Bool> {
-        let hasPermission = req.checkPermission(for: Model.permission(for: .list))
-        return req.eventLoop.future(hasPermission)
+        req.checkAccess(for: Model.permission(for: .list))
     }
     
     func listQueryBuilder(req: Request, queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
@@ -138,21 +149,25 @@ public extension ListViewController {
         }
     }
 
-//    func apiList(_ req: Request) throws -> EventLoopFuture<Page<Model.ListItem>> {
-//        accessList(req: req).throwingFlatMap { hasAccess in
-//            guard hasAccess else {
-//                return req.eventLoop.future(error: Abort(.forbidden))
-//            }
-//            return Model
-//                .query(on: req.db)
-//                .paginate(for: req)
-//                .map { $0.map(\.listContent) }
-//        }
-//    }
+    func listApi(_ req: Request) throws -> EventLoopFuture<PaginationContainer<ListApi.ListObject>> {
+        accessList(req: req).throwingFlatMap { hasAccess in
+            guard hasAccess else {
+                return req.eventLoop.future(error: Abort(.forbidden))
+            }
+            #warning("llprops, key, order, sort, etc.")
+            return ListLoader<Model>().paginate(req).map { pc -> PaginationContainer<ListApi.ListObject> in
+                let api = ListApi()
+                let items = pc.map { api.mapList(model: $0 as! ListApi.Model) }
+                return items
+            }
+        }
+    }
     
     func setupListRoute(on builder: RoutesBuilder) {
         builder.get(use: listView)
-        
-//        builder.get(use: list)
+    }
+
+    func setupListApiRoute(on builder: RoutesBuilder) {
+        builder.get(use: listApi)
     }
 }

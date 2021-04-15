@@ -6,7 +6,7 @@
 //
 
 
-struct UserAdminController: FeatherController {
+struct SystemUserController: FeatherController {
 
     typealias Module = SystemModule
     typealias Model = SystemUserModel
@@ -21,6 +21,19 @@ struct UserAdminController: FeatherController {
     typealias PatchApi = SystemVariableApi
     typealias DeleteApi = SystemVariableApi
 
+    // MARK: - login
+
+    func login(req: Request) throws -> EventLoopFuture<TokenObject> {
+        guard let user = req.auth.get(SystemUserModel.self) else {
+            throw Abort(.unauthorized)
+        }
+        let tokenValue = [UInt8].random(count: 16).base64
+        let token = SystemTokenModel(value: tokenValue, userId: user.id!)
+        return token.create(on: req.db).map { token.getContent }
+    }
+    
+    // MARK: - api
+    
     func findBy(_ id: UUID, on db: Database) -> EventLoopFuture<Model> {
         Model.findWithRolesBy(id: id, on: db).unwrap(or: Abort(.notFound, reason: "User not found"))
     }

@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 06. 09..
 //
 
-struct FrontendPageAdminController: FeatherController {
+struct SystemPageController: FeatherController {
     
     typealias Module = SystemModule
     typealias Model = SystemPageModel

@@ -65,6 +65,8 @@ public protocol UpdateViewController: IdentifiableController {
 
 public extension UpdateViewController {
     
+    var updateView: String { "System/Admin/Edit" }
+
     func beforeInvalidUpdateFormRender(req: Request, form: UpdateForm) -> EventLoopFuture<UpdateForm> {
         req.eventLoop.future(form)
     }
@@ -98,7 +100,7 @@ public extension UpdateViewController {
     }
 
     func accessUpdate(req: Request) -> EventLoopFuture<Bool> {
-        req.eventLoop.future(true)
+        req.checkAccess(for: Model.permission(for: .update))
     }
     
     func updateView(req: Request) throws -> EventLoopFuture<View>  {

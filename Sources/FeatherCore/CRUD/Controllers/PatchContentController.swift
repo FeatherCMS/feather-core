@@ -38,7 +38,7 @@ public protocol PatchContentController: IdentifiableController {
 public extension PatchContentController {
 
     func accessPatch(req: Request) -> EventLoopFuture<Bool> {
-        req.eventLoop.future(true)
+        req.checkAccess(for: Model.permission(for: .patch))
     }
 
 //    func beforePatch(req: Request, model: Model, content: Model.PatchContent) -> EventLoopFuture<Model> {

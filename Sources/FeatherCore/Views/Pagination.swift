@@ -5,21 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 03. 26..
 //
 
-//public final class Pagination: Codable {
-//
-//    public let current: Int
-//    public let limit: Int
-//    public let total: Int
-//
-//    public init(current: Int = 0, limit: Int = 10, total: Int = 0) {
-//        self.current = current
-//        self.limit = limit
-//        self.total = total
-//    }
-//}
-
 /// pagination metadata info
-public struct Pagination: Encodable {
+public struct Pagination: Codable {
 
     /// current page
     public let current: Int
@@ -34,4 +21,8 @@ public struct Pagination: Encodable {
         self.limit = limit
         self.total = total
     }
+}
+
+extension Pagination: Content {
+    
 }

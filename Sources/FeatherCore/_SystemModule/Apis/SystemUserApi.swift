@@ -10,13 +10,6 @@ struct SystemUserApi: CreateApiRepresentable, GetApiRepresentable {
     typealias CreateObject = String
     typealias GetObject = String
     
-    func login(req: Request) throws -> EventLoopFuture<TokenObject> {
-        guard let user = req.auth.get(SystemUserModel.self) else {
-            throw Abort(.unauthorized)
-        }
-        let tokenValue = [UInt8].random(count: 16).base64
-        let token = SystemTokenModel(value: tokenValue, userId: user.id!)
-        return token.create(on: req.db).map { token.getContent }
-    }
+    
 }
 

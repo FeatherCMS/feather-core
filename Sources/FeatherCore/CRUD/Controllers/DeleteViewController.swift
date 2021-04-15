@@ -7,20 +7,10 @@
 
 
 
-public protocol DeleteApiRepresentable: ModelApi {
-
-    
-    
-}
-
-extension DeleteApiRepresentable {
-
-    
-}
-
+public protocol DeleteApiRepresentable: ModelApi {}
 
 public struct DeleteControllerContext: Codable {
-    
+
     let id: String
     let token: String
     let context: String
@@ -57,9 +47,10 @@ public protocol DeleteViewController: IdentifiableController {
 
 public extension DeleteViewController {
 
+    var deleteView: String { "System/Admin/Delete" }
+
     func accessDelete(req: Request) -> EventLoopFuture<Bool> {
-        let hasPermission = req.checkPermission(for: Model.permission(for: .delete))
-        return req.eventLoop.future(hasPermission)
+        req.checkAccess(for: Model.permission(for: .delete))
     }
     
     func deleteView(req: Request) throws -> EventLoopFuture<View>  {
@@ -117,8 +108,18 @@ public extension DeleteViewController {
         req.eventLoop.future(model)
     }
 
+//    func deleteResponse(req: Request, model: Model) -> EventLoopFuture<Response> {
+//        req.eventLoop.future(Response(status: .ok, version: req.version))
+//    }
+    
+    /// after we delete a model, we can redirect back to the list, using the current path component, but trimming the final uuid/delete part.
     func deleteResponse(req: Request, model: Model) -> EventLoopFuture<Response> {
-        req.eventLoop.future(Response(status: .ok, version: req.version))
+        // /[model]/:id/delete -> /[model]/
+        var url = req.url.path.trimmingLastPathComponents(2)
+        if let redirect = try? req.content.get(String.self, at: "redirect") {
+            url = redirect
+        }
+        return req.eventLoop.future(req.redirect(to: url))
     }
     
     func setupDeleteRoutes(on builder: RoutesBuilder, as pathComponent: PathComponent) {
