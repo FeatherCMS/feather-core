@@ -6,6 +6,13 @@
 //
 
 
+public protocol ModelApi {
+    associatedtype Model: FeatherModel
+    
+    init()
+}
+
+
 public protocol ModelController {
     
     associatedtype Model: FeatherModel

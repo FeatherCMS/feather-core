@@ -27,64 +27,46 @@ struct SystemVariableApi: FeatherApiRepresentable {
     func mapGet(model: Model) -> GetObject {
         .init(id: model.id!, key: model.key, name: model.name, value: model.value, notes: model.notes)
     }
-}
-
-
-
-// MARK: - api
-
-extension SystemVariableModel {
-
-    var listContent: VariableListObject {
-        .init(id: id!, key: key, value: value)
+    
+    func mapCreate(model: Model, input: CreateObject) {
+        model.key = input.key
+        model.name = input.name
+        model.value = input.value
+        model.notes = input.notes
+    }
+    
+    func mapUpdate(model: Model, input: UpdateObject) {
+        model.key = input.key
+        model.name = input.name
+        model.value = input.value ?? model.value
+        model.notes = input.notes ?? model.notes
     }
 
-    var getContent: VariableGetObject {
-        .init(id: id!, key: key, name: name, value: value, notes: notes)
+    func mapPatch(model: Model, input: PatchObject) {
+        model.key = input.key ?? model.key
+        model.name = input.name ?? model.name
+        model.value = input.value ?? model.value
+        model.notes = input.notes ?? model.notes
     }
 
-    func create(_ input: VariableCreateObject) throws {
-        key = input.key
-        name = input.name
-        value = input.value
-        notes = input.notes
+    func validateCreate(_ req: Request) -> EventLoopFuture<Bool> {
+//        validations.add("key", as: String.self, is: !.empty && .count(...250))
+//        validations.add("name", as: String.self, is: !.empty && .count(...250))
+
+        req.eventLoop.future(true)
     }
+    
+    func validateUpdate(_ req: Request) -> EventLoopFuture<Bool> {
+//        validations.add("key", as: String.self, is: !.empty && .count(...250))
+//        validations.add("name", as: String.self, is: !.empty && .count(...250))
 
-    func update(_ input: VariableUpdateObject) throws {
-        key = input.key
-        name = input.name
-        value = input.value ?? value
-        notes = input.notes ?? notes
+        req.eventLoop.future(true)
     }
+    
+    func validatePatch(_ req: Request) -> EventLoopFuture<Bool> {
+//        validations.add("key", as: String.self, is: !.empty && .count(...250), required: false)
+//        validations.add("name", as: String.self, is: !.empty && .count(...250), required: false)
 
-    func patch(_ input: VariablePatchObject) throws {
-        key = input.key ?? key
-        name = input.name ?? name
-        value = input.value ?? value
-        notes = input.notes ?? notes
-    }
-}
-
-extension VariableCreateObject{
-
-    public static func validations(_ validations: inout Validations) {
-        validations.add("key", as: String.self, is: !.empty && .count(...250))
-        validations.add("name", as: String.self, is: !.empty && .count(...250))
-    }
-}
-
-extension VariableUpdateObject {
-
-    public static func validations(_ validations: inout Validations) {
-        validations.add("key", as: String.self, is: !.empty && .count(...250))
-        validations.add("name", as: String.self, is: !.empty && .count(...250))
-    }
-}
-
-extension VariablePatchObject {
-
-    public static func validations(_ validations: inout Validations) {
-        validations.add("key", as: String.self, is: !.empty && .count(...250), required: false)
-        validations.add("name", as: String.self, is: !.empty && .count(...250), required: false)
+        req.eventLoop.future(true)
     }
 }

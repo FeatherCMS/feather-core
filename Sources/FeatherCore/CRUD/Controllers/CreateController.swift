@@ -11,23 +11,9 @@ public protocol CreateApiRepresentable: ModelApi {
     
     associatedtype CreateObject: Codable
     
-    func validateCreateInput(_ req: Request) -> EventLoopFuture<Bool>
-    func processCreateInput(_ req: Request, model: Model, input: CreateObject) -> EventLoopFuture<Model>
+    func validateCreate(_ req: Request) -> EventLoopFuture<Bool>
+    func mapCreate(model: Model, input: CreateObject)
 }
-
-extension CreateApiRepresentable {
-
-    func validateCreateInput(_ req: Request) -> EventLoopFuture<Bool> {
-        req.eventLoop.future(true)
-    }
-
-    func processCreateInput(_ req: Request, model: Model, input: CreateObject) -> EventLoopFuture<Model> {
-        return req.eventLoop.future(model)
-    }
-    
-}
-
-
 
 public protocol CreateController: ModelController {
 
@@ -204,21 +190,22 @@ public extension CreateController {
             }
 
             let api = CreateApi()
-            let model = Model() as! CreateApi.Model
 
-            return api.validateCreateInput(req).flatMap { isValid -> EventLoopFuture<CreateApi.Model> in
+            return api.validateCreate(req).flatMap { isValid -> EventLoopFuture<CreateApi.Model> in
                 guard isValid else {
                     return req.eventLoop.future(error: Abort(.badRequest))
                 }
                 do {
                     let input = try req.content.decode(CreateApi.CreateObject.self)
-                    return api.processCreateInput(req, model: model, input: input)
+                    let model = Model() as! CreateApi.Model
+                    api.mapCreate(model: model, input: input)
+                    return req.eventLoop.future(model)
                 }
                 catch {
                     return req.eventLoop.future(error: Abort(.badRequest))
                 }
             }
-            .flatMap { m in m.create(on: req.db).map { m } }
+            .flatMap { model in model.create(on: req.db).map { model } }
             .map { api.mapGet(model: $0) }
         }
     }

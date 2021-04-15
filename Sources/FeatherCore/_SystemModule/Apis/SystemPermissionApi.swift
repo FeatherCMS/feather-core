@@ -32,65 +32,52 @@ struct SystemPermissionApi: FeatherApiRepresentable {
               name: model.name,
               notes: model.notes)
     }
-}
-
-
-// MARK: - api
-
-extension SystemPermissionModel {
-
-    func create(_ input: PermissionCreateObject) throws {
-        namespace = input.module
-        context = input.context
-        action = input.action
-        name = input.name
-        notes = input.notes
+    
+    func mapCreate(model: Model, input: CreateObject) {
+        model.namespace = input.module
+        model.context = input.context
+        model.action = input.action
+        model.name = input.name
+        model.notes = input.notes
+    }
+    
+    func mapUpdate(model: Model, input: UpdateObject) {
+        model.namespace = input.module
+        model.context = input.context
+        model.action = input.action
+        model.name = input.name
+        model.notes = input.notes
     }
 
-    func update(_ input: PermissionUpdateObject) throws {
-        namespace = input.module
-        context = input.context
-        action = input.action
-        name = input.name
-        notes = input.notes
+    func mapPatch(model: Model, input: PatchObject) {
+        model.namespace = input.module ?? model.namespace
+        model.context = input.context ?? model.context
+        model.action = input.action ?? model.action
+        model.name = input.name ?? model.name
+        model.notes = input.notes ?? model.notes
     }
-
-    func patch(_ input: PermissionPatchObject) throws {
-        namespace = input.module ?? namespace
-        context = input.context ?? context
-        action = input.action ?? action
-        name = input.name ?? name
-        notes = input.notes ?? notes
+    
+    func validateCreate(_ req: Request) -> EventLoopFuture<Bool> {
+//        validations.add("module", as: String.self, is: !.empty && .count(...250))
+//        validations.add("context", as: String.self, is: !.empty && .count(...250))
+//        validations.add("action", as: String.self, is: !.empty && .count(...250))
+//        validations.add("name", as: String.self, is: !.empty && .count(...250))
+        req.eventLoop.future(true)
     }
-}
-
-extension PermissionCreateObject {
-
-    public static func validations(_ validations: inout Validations) {
-        validations.add("module", as: String.self, is: !.empty && .count(...250))
-        validations.add("context", as: String.self, is: !.empty && .count(...250))
-        validations.add("action", as: String.self, is: !.empty && .count(...250))
-        validations.add("name", as: String.self, is: !.empty && .count(...250))
+    
+    func validateUpdate(_ req: Request) -> EventLoopFuture<Bool> {
+//        validations.add("module", as: String.self, is: !.empty && .count(...250))
+//        validations.add("context", as: String.self, is: !.empty && .count(...250))
+//        validations.add("action", as: String.self, is: !.empty && .count(...250))
+//        validations.add("name", as: String.self, is: !.empty && .count(...250))
+        req.eventLoop.future(true)
     }
-}
-
-extension PermissionUpdateObject {
-
-    public static func validations(_ validations: inout Validations) {
-        validations.add("module", as: String.self, is: !.empty && .count(...250))
-        validations.add("context", as: String.self, is: !.empty && .count(...250))
-        validations.add("action", as: String.self, is: !.empty && .count(...250))
-        validations.add("name", as: String.self, is: !.empty && .count(...250))
+    
+    func validatePatch(_ req: Request) -> EventLoopFuture<Bool> {
+//        validations.add("module", as: String.self, is: !.empty && .count(...250), required: false)
+//        validations.add("context", as: String.self, is: !.empty && .count(...250), required: false)
+//        validations.add("action", as: String.self, is: !.empty && .count(...250), required: false)
+//        validations.add("name", as: String.self, is: !.empty && .count(...250), required: false)
+        req.eventLoop.future(true)
     }
 }
-
-extension PermissionPatchObject {
-
-    public static func validations(_ validations: inout Validations) {
-        validations.add("module", as: String.self, is: !.empty && .count(...250), required: false)
-        validations.add("context", as: String.self, is: !.empty && .count(...250), required: false)
-        validations.add("action", as: String.self, is: !.empty && .count(...250), required: false)
-        validations.add("name", as: String.self, is: !.empty && .count(...250), required: false)
-    }
-}
-

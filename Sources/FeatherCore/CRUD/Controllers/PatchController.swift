@@ -10,7 +10,7 @@ public protocol PatchApiRepresentable: ModelApi {
     associatedtype PatchObject: Content
     
     func validatePatchInput(_ req: Request) -> EventLoopFuture<Bool>
-    func processPatchInput(_ req: Request, model: Model, input: PatchObject) -> EventLoopFuture<Model>
+    func mapPatch(model: Model, input: PatchObject)
 }
 
 extension PatchApiRepresentable {

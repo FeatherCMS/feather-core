@@ -27,5 +27,30 @@ struct SystemPageApi: FeatherApiRepresentable {
     func mapGet(model: Model) -> GetObject {
         .init(id: model.id!, title: model.title, content: model.content)
     }
+    
+    func mapCreate(model: Model, input: CreateObject) {
+        
+    }
+    
+    func mapUpdate(model: Model, input: UpdateObject) {
+        
+    }
+
+    func mapPatch(model: Model, input: PatchObject) {
+        
+    }
+    
+    func validateCreate(_ req: Request) -> EventLoopFuture<Bool> {
+        req.eventLoop.future(true)
+    }
+    
+    func validateUpdate(_ req: Request) -> EventLoopFuture<Bool> {
+        req.eventLoop.future(true)
+    }
+    
+    func validatePatch(_ req: Request) -> EventLoopFuture<Bool> {
+        req.eventLoop.future(true)
+    }
+
 }
 

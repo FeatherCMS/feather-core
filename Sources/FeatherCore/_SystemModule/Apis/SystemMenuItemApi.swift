@@ -34,5 +34,29 @@ struct SystemMenuItemApi: FeatherApiRepresentable {
               permission: model.permission,
               menuId: model.$menu.id)
     }
+    
+    func mapCreate(model: Model, input: CreateObject) {
+        
+    }
+    
+    func mapUpdate(model: Model, input: UpdateObject) {
+        
+    }
+
+    func mapPatch(model: Model, input: PatchObject) {
+        
+    }
+    
+    func validateCreate(_ req: Request) -> EventLoopFuture<Bool> {
+        req.eventLoop.future(true)
+    }
+    
+    func validateUpdate(_ req: Request) -> EventLoopFuture<Bool> {
+        req.eventLoop.future(true)
+    }
+    
+    func validatePatch(_ req: Request) -> EventLoopFuture<Bool> {
+        req.eventLoop.future(true)
+    }
 }
 

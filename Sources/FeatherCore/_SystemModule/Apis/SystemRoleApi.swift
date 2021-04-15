@@ -30,62 +30,40 @@ struct SystemRoleApi: FeatherApiRepresentable {
               name: model.name,
               notes: model.notes)
     }
-}
-
-
-// MARK: - api
-
-extension SystemRoleModel {
-
-    var getContent: RoleGetObject {
-        .init(id: id!, key: key, name: name, notes: notes)
+    
+    func mapCreate(model: Model, input: CreateObject) {
+        key = input.key
+        name = input.name
+        notes = input.notes
     }
-
-    func create(_ input: RoleCreateObject) throws {
+    
+    func mapUpdate(model: Model, input: UpdateObject) {
         key = input.key
         name = input.name
         notes = input.notes
     }
 
-    func update(_ input: RoleUpdateObject) throws {
-        key = input.key
-        name = input.name
-        notes = input.notes
-    }
-
-    func patch(_ input: RolePatchObject) throws {
+    func mapPatch(model: Model, input: PatchObject) {
         key = input.key ?? key
         name = input.name ?? name
         notes = input.notes ?? notes
     }
-}
-
-
-// MARK: - api validation
-
-
-
-extension RoleCreateObject {
-
-    public static func validations(_ validations: inout Validations) {
-        validations.add("key", as: String.self, is: !.empty && .count(...250))
-        validations.add("name", as: String.self, is: !.empty && .count(...250))
+    
+    func validateCreate(_ req: Request) -> EventLoopFuture<Bool> {
+//        validations.add("key", as: String.self, is: !.empty && .count(...250))
+//        validations.add("name", as: String.self, is: !.empty && .count(...250))
+        req.eventLoop.future(true)
+    }
+    
+    func validateUpdate(_ req: Request) -> EventLoopFuture<Bool> {
+//        validations.add("key", as: String.self, is: !.empty && .count(...250))
+//        validations.add("name", as: String.self, is: !.empty && .count(...250))
+        req.eventLoop.future(true)
+    }
+    
+    func validatePatch(_ req: Request) -> EventLoopFuture<Bool> {
+//        validations.add("key", as: String.self, is: !.empty && .count(...250), required: false)
+//        validations.add("name", as: String.self, is: !.empty && .count(...250), required: false)
+        req.eventLoop.future(true)
     }
 }
-
-extension RoleUpdateObject {
-
-    public static func validations(_ validations: inout Validations) {
-        validations.add("key", as: String.self, is: !.empty && .count(...250))
-        validations.add("name", as: String.self, is: !.empty && .count(...250))
-    }
-}
-
-extension RolePatchObject {
-
-    public static func validations(_ validations: inout Validations) {
-        validations.add("key", as: String.self, is: !.empty && .count(...250), required: false)
-        validations.add("name", as: String.self, is: !.empty && .count(...250), required: false)
-    }
-}
-

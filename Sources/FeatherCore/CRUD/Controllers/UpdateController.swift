@@ -9,20 +9,10 @@ public protocol UpdateApiRepresentable: ModelApi {
     
     associatedtype UpdateObject: Codable
     
-    func validateUpdateInput(_ req: Request) -> EventLoopFuture<Bool>
-    func processUpdateInput(_ req: Request, model: Model, input: UpdateObject) -> EventLoopFuture<Model>
+    func validateUpdate(_ req: Request) -> EventLoopFuture<Bool>
+    func mapUpdate(model: Model, input: UpdateObject)
 }
 
-extension UpdateApiRepresentable {
-
-    func validateUpdateInput(_ req: Request) -> EventLoopFuture<Bool> {
-        req.eventLoop.future(true)
-    }
-
-    func processUpdateInput(_ req: Request, model: Model, input: UpdateObject) -> EventLoopFuture<Model> {
-        return req.eventLoop.future(model)
-    }
-}
     
 public protocol UpdateController: IdentifiableController {
     

@@ -23,21 +23,21 @@ public protocol FeatherApiRepresentable:
     DeleteApiRepresentable
 {}
 
-/*
- Routes & controller methods:
- ----------------------------------------
- GET /[model]/              listView
- GET /[model]/:id           getView
- GET /[model]/create        createView
-    + POST                  create
- GET /[model]/:id/update    updateView
-    + POST                  update
- GET /[model]/:id/delete    deleteView
-    + POST                  delete
- */
+
 fileprivate extension FeatherController {
 
-    
+    /*
+     Routes & associated controller methods:
+     --------------------------------------------------
+     GET /[module]/[model]/              listView
+     GET /[module]/[model]/:id           getView
+     GET /[module]/[model]/create        createView
+        + POST                           create
+     GET /[module]/[model]/:id/update    updateView
+        + POST                           update
+     GET /[module]/[model]/:id/delete    deleteView
+        + POST                           delete
+     */
     func setupRoutes(on builder: RoutesBuilder) {
         let base = builder.grouped(Model.Module.pathComponent).grouped(Model.pathComponent)
         setupListRoute(on: base)
@@ -47,6 +47,16 @@ fileprivate extension FeatherController {
         setupDeleteRoutes(on: base, as: Model.deletePathComponent)
     }
     
+    /*
+     Routes & associated controller methods:
+     --------------------------------------------------
+     GET    /[module]/[model]/          listApi
+     GET    /[module]/[model]/:id       getApi
+     POST   /[module]/[model]/:id       createApi
+     PUT    /[module]/[model]/:id       updateApi
+     PATCH  /[module]/[model]/:id       patchApi
+     DELETE /[module]/[model]/:id       deleteApi
+     */
     func setupApiRoutes(on builder: RoutesBuilder) {
         let base = builder.grouped(Model.Module.pathComponent).grouped(Model.pathComponent)
         setupListApiRoute(on: base)
@@ -68,7 +78,4 @@ public extension RoutesBuilder {
         controller.setupApiRoutes(on: self)
     }
 }
-
-
-
 
