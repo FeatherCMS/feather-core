@@ -1,19 +1,24 @@
+#let(id = Request(parameter: "id"))
+
 #define(title):
-#if(form.modelId != nil):Edit#else:Create#endif #(form.title.lowercased())
+#if(id != nil):Edit#else:Create#endif #(form.title.lowercased())
 #enddefine
 
 #define(breadcrumb):
-    #if(UserHasPermission(form.key + ".list")):
-    <a href="#(form.list.url)">#(form.list.title)</a>
+    <a href="#(form.model.module.path)">#(form.model.module.title.capitalized())</a>
+
+    #if(form.model.permissions.list ?? false):
+    <a href="#(form.model.urls.list)">#(form.model.title.capitalized())</a>
     #endif
-    <a href="#($req.url.path)" class="current">#if(form.modelId != nil):Edit#else:Create#endif</a>
+    <a href="#($req.url.path)" class="current">#if(id != nil):Edit#else:Create#endif</a>
 #enddefine
+
 
 #define(body):
 <div class="lead container">
 
     #var(navItems = [])
-    #if((form.modelId != nil) && (form.view ?? true) && UserHasPermission(form.key + ".get")):
+    #if((id != nil) && (form.model.permissions.get ?? false)):
         #(navItems.append(["link": $req.url.path.trimLast(), "label": "View"]))
     #endif
     #let(segmentItems = navItems + form.nav ?? [])
@@ -26,46 +31,63 @@
     </div>
     #endif
     
-    <h1>#if(form.modelId != nil):Edit#else:Create#endif #(form.title.lowercased())</h1>
+    <h1>#if(id != nil):Edit#else:Create#endif #(form.title.lowercased())</h1>
 </div>
 
-<div class="container">
+<form
+    #if(form.id ?? false): id="#(form.id)"#endif
+    #if(form.class ?? false): class="#(form.class)"#endif
+    method="#(form.action.method ?? "post")"
+    #if(form.action.url ?? false): action="#(form.action.url)"#endif
+    #if(form.action.multipart ?? false): enctype="multipart/form-data"#endif
+    class="container"
+    >
 
-    <form id="#(form.key)-form" method="post" action="#($req.url.path)"#if(form.multipart ?? false): enctype="multipart/form-data"#endif>
-
-    #if(form.modelId != nil):
-        #let(field = ["id": "modelId", "value": form.modelId])
-        #inline("System/Common/Form/Fields/Hidden")
+    #if(form.notification ?? false):
+    <div id="notification" class="#(form.notification.type ?? "info")">
+        #if(form.notification.icon ?? false): #svg(form.notification.icon) #endif
+        #if(form.notification.title ?? false): <h3>#(form.notification.title)</h3>#endif
+        <p>#(form.notification.message)</p>
+    </div>
     #endif
 
-    #var(field = nil)
-    
-    #(field = ["id": "formId", "value": form.id])
-    #inline("System/Common/Form/Fields/Hidden")
-
-    #(field = ["id": "formToken", "value": form.token])
-    #inline("System/Common/Form/Fields/Hidden")
-
-    #fields()
-
-    #(field = ["label": "Save", "class": "shadow"])
-    #inline("System/Common/Form/Fields/Button")
-    
-    #if(notification != nil):
-    <section id="notification">
-        <span>#(notification)</span>
+    #if(form.error ?? false):
+    <section>
+        <p class="error">#(form.error)</p>
     </section>
     #endif
+        #var(field = nil)
 
-    </form>
+        #(field = ["key": "formId", "value": form.id])
+        #inline("System/Common/Form/Fields/Hidden")
 
+        #(field = ["key": "formToken", "value": form.token])
+        #inline("System/Common/Form/Fields/Hidden")
+
+        #for(field in form.fields):
+            #if(field.type == "hidden"):                #inline("System/Common/Form/Fields/Hidden")
+            #elseif(field.type == "text"):              #inline("System/Common/Form/Fields/Text")
+            #elseif(field.type == "textarea"):          #inline("System/Common/Form/Fields/Textarea")
+            #elseif(field.type == "toggle"):            #inline("System/Common/Form/Fields/Toggle")
+            #elseif(field.type == "checkbox"):          #inline("System/Common/Form/Fields/Checkbox")
+            #elseif(field.type == "radio"):             #inline("System/Common/Form/Fields/Radio")
+            #elseif(field.type == "selection"):         #inline("System/Common/Form/Fields/Selection")
+            #elseif(field.type == "multiselection"):    #inline("System/Common/Form/Fields/Multiselection")
+            #elseif(field.type == "multigroupoption"):  #inline("System/Common/Form/Fields/Multigroupoption")
+            #endif
+        #endfor
+        
     <section>
-        #if((form.modelId != nil) && (form.delete ?? true) && UserHasPermission(form.key + ".delete")):
+        <input type="submit" value="Save">
+    </section>
+    
+    <section>
+        #if((id != nil) && (form.model.permissions.delete ?? false)):
         <a href="#($req.url.path.trimLast())delete/?cancel=#($req.url.path)" class="destructive">Delete</a>
         #endif
     </section>
-    
-</div>
+
+</form>
 #enddefine
 
 #inline("System/Admin/Index")

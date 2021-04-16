@@ -14,25 +14,25 @@ Site settings
     <form id="site-settings-form" method="post" action="#($req.url.path)" enctype="multipart/form-data">
         #var(field = nil)
 
-        #(field = ["id": "formId", "value": formId])
+        #(field = ["key": "formId", "value": formId])
         #inline("System/Common/Form/Fields/Hidden")
 
         <fieldset>
             <legend>General</legend>
             
-            #(field = ["id": "formToken", "value": formToken])
+            #(field = ["key": "formToken", "value": formToken])
             #inline("System/Common/Form/Fields/Hidden")
 
-            #(field = ["id": "image", "label": "Logo", "class": "small", "data": fields.image, "accept": "image/png"])
+            #(field = ["key": "image", "label": "Logo", "class": "small", "data": fields.image, "accept": "image/png"])
             #inline("System/Common/Form/Fields/File")
 
-            #(field = ["id": "title", "required": true, "data": fields.title])
+            #(field = ["key": "title", "required": true, "data": fields.title])
             #inline("System/Common/Form/Fields/Text")
 
-            #(field = ["id": "excerpt", "size": "s", "data": fields.excerpt])
+            #(field = ["key": "excerpt", "size": "s", "data": fields.excerpt])
             #inline("System/Common/Form/Fields/Textarea")
             
-            #(field = ["id": "noindex", "label": "Site index", "placeholder": "Disable site indexing by search engines", "data": fields.noindex])
+            #(field = ["key": "noindex", "label": "Site index", "placeholder": "Disable site indexing by search engines", "data": fields.noindex])
             #inline("System/Common/Form/Fields/Toggle")
 
         </fieldset>
@@ -41,7 +41,7 @@ Site settings
         <fieldset>
             <legend><a id="content">Content</a></legend>
         
-            #(field = ["id": "filters", "data": fields.filters])
+            #(field = ["key": "filters", "data": fields.filters])
             #inline("System/Common/Form/Fields/Checkbox")
         
         </fieldset>
@@ -50,10 +50,10 @@ Site settings
         <fieldset>
             <legend>Localization</legend>
             
-            #(field = ["id": "locale", "label": "Locale", "required": true, "data": fields.locale])
+            #(field = ["key": "locale", "label": "Locale", "required": true, "data": fields.locale])
             #inline("System/Common/Form/Fields/Selection")
             
-            #(field = ["id": "timezone", "required": true, "data": fields.timezone])
+            #(field = ["key": "timezone", "required": true, "data": fields.timezone])
             #inline("System/Common/Form/Fields/Selection")
         
         </fieldset>
@@ -61,10 +61,10 @@ Site settings
         <fieldset>
             <legend>Code injection</legend>
             
-            #(field = ["id": "css", "label": "CSS", "size": "xl", "data": fields.css])
+            #(field = ["key": "css", "label": "CSS", "size": "xl", "data": fields.css])
             #inline("System/Common/Form/Fields/Textarea")
             
-            #(field = ["id": "js", "label": "JavaScript", "size": "xl", "data": fields.js])
+            #(field = ["key": "js", "label": "JavaScript", "size": "xl", "data": fields.js])
             #inline("System/Common/Form/Fields/Textarea")
         
         </fieldset>
@@ -72,10 +72,10 @@ Site settings
         <fieldset>
             <legend>Footer</legend>
 
-            #(field = ["id": "footerTop", "label": "Top area", "size": "s", "data": fields.footerTop])
+            #(field = ["key": "footerTop", "label": "Top area", "size": "s", "data": fields.footerTop])
             #inline("System/Common/Form/Fields/Textarea")
             
-            #(field = ["id": "footerBottom", "label": "Bottom area", "size": "s", "data": fields.footerBottom])
+            #(field = ["key": "footerBottom", "label": "Bottom area", "size": "s", "data": fields.footerBottom])
             #inline("System/Common/Form/Fields/Textarea")
 
         </fieldset>

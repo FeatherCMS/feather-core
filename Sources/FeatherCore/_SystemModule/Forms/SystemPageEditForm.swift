@@ -9,7 +9,6 @@ final class SystemPageEditForm: EditForm {
 
     typealias Model = SystemPageModel
 
-    var modelId: UUID? = nil
     var title = TextField(key: "title", required: true)
     var content = TextField(key: "content", required: true)
     var notification: String?
@@ -21,7 +20,6 @@ final class SystemPageEditForm: EditForm {
 
     var templateData: TemplateData {
         .dictionary([
-            "modelId": modelId?.encodeToTemplateData() ?? .string(nil),
             "fields": fieldsTemplateData,
             "notification": .string(notification),
             "metadata": metadata?.encodeToTemplateData() ?? .dictionary(nil)
@@ -31,8 +29,8 @@ final class SystemPageEditForm: EditForm {
     init() {}
     
     func initialize(req: Request) -> EventLoopFuture<Void> {
-        if let id = modelId {
-            return Model.findMetadata(reference: id, on: req.db) .map { [unowned self] in metadata = $0 }
+        if let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) {
+            return Model.findMetadata(reference: uuid, on: req.db) .map { [unowned self] in metadata = $0 }
         }
         return req.eventLoop.future()
     }

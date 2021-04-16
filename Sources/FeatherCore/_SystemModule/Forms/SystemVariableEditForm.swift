@@ -8,8 +8,6 @@
 
 final class SystemVariableEditForm: EditForm {
     typealias Model = SystemVariableModel
-
-    var modelId: UUID?
     
     var key = TextField(key: "key", required: true)
     var name = TextField(key: "name", required: true)

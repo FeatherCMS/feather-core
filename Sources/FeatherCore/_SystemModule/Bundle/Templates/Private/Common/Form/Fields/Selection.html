@@ -1,7 +1,7 @@
 <section>
     #inline("System/Common/Form/Fields/Label")
 
-    <select name="#(field.id)">
+    <select name="#(field.key)">
         #for(item in field.data.options):
         <option #if(item.key == field.data.value): selected="selected" #endif value="#(item.key)">#(item.label)</option>
         #endfor

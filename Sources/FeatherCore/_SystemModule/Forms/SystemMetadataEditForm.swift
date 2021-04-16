@@ -8,7 +8,6 @@
 final class SystemMetadataEditForm: EditForm {
     typealias Model = SystemMetadataModel
 
-    var modelId: UUID?
 //    var module = TextField(key: "module").required().length(max: 250)
 //    var model = TextField(key: "model").required().length(max: 250)
 //    var reference = TextField(key: "reference")

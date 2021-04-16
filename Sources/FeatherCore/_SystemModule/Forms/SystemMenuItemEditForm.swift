@@ -8,7 +8,6 @@
 final class SystemMenuItemEditForm: EditForm {
     typealias Model = SystemMenuItemModel
 
-    var modelId: UUID?
     var icon = TextField(key: "icon")
     var label = TextField(key: "label", required: true)
     var url = TextField(key: "url", required: true)

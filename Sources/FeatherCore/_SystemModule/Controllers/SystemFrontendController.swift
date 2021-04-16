@@ -46,14 +46,12 @@ struct SystemFrontendController {
     }
     
     func createContext(req: Request, formId: String, formToken: String) -> FormView {
-        .init(id: formId,
+        .init(action: .init(),
+              id: formId,
               token: formToken,
               title: "",
-              key: "",
-              modelId: "",
-              list: .init(label: "", url: ""),
-              nav: [],
-              notification: nil)
+              notification: nil,
+              nav: [])
     }
     
     private func render(req: Request, model: SystemUserModel? = nil, form: SystemLoginForm = .init()) -> EventLoopFuture<Response> {

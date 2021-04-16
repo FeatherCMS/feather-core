@@ -57,9 +57,10 @@ public protocol UpdateController: IdentifiableController {
     func setupUpdateApiRoute(on builder: RoutesBuilder)
 }
 
+
 public extension UpdateController {
     
-    var updateView: String { "System/Admin/Edit" }
+    var updateView: String { "System/Admin/Form" }
 
     func beforeInvalidUpdateFormRender(req: Request, form: UpdateForm) -> EventLoopFuture<UpdateForm> {
         req.eventLoop.future(form)
@@ -70,14 +71,13 @@ public extension UpdateController {
     }
 
     func createContext(req: Request, formId: String, formToken: String) -> FormView {
-        .init(id: formId,
+        .init(action: .init(),
+              id: formId,
               token: formToken,
               title: "",
-              key: "",
-              modelId: "",
-              list: .init(label: "", url: ""),
+              notification: nil,
               nav: [],
-              notification: nil)
+              model: Model.info(req))
     }
 
     
@@ -104,7 +104,6 @@ public extension UpdateController {
             }
             let id = try identifier(req)
             let form = UpdateForm()
-            form.modelId = id
             return findBy(id, on: req.db).flatMap { model in
                 return form.initialize(req: req).flatMap {
                     form.read(from: model as! UpdateForm.Model)
@@ -149,8 +148,6 @@ public extension UpdateController {
 
             let id = try identifier(req)
             let form = UpdateForm()
-            form.modelId = id
-
             return form.initialize(req: req)
                 .flatMap { form.process(req: req) }
                 .flatMap { form.validate(req: req) }

@@ -8,7 +8,6 @@
 final class SystemPermissionEditForm: EditForm {
     typealias Model = SystemPermissionModel
 
-    var modelId: UUID?
     var namespace = TextField(key: "namespace", required: true)
     var context = TextField(key: "context", required: true)
     var action = TextField(key: "action", required: true)
@@ -20,23 +19,22 @@ final class SystemPermissionEditForm: EditForm {
         [namespace, context, action, name, notes]
     }
 
-    init() {}
-    
-    func validateAfterFields(req: Request) -> EventLoopFuture<Bool> {
-        SystemPermissionModel.query(on: req.db)
-            .filter(\.$namespace == namespace.input.value!)
-            .filter(\.$context == context.input.value!)
-            .filter(\.$action == action.input.value!)
-            .first()
-            .map { [unowned self] model -> Bool in
-                if (modelId == nil && model != nil) || (modelId != nil && model != nil && modelId! != model!.id) {
-                    namespace.output.error = "This combination is already in use"
-                    context.output.error = namespace.output.error
-                    action.output.error = namespace.output.error
-                    return false
-                }
-                return true
+    func uniqueKeyValidator(optional: Bool = false) -> ContentValidator<String> {
+        return ContentValidator<String>(key: "namespace", message: "Permission must be unique", asyncValidation: { [unowned self] value, req in
+            var query = SystemPermissionModel.query(on: req.db)
+                .filter(\.$namespace == namespace.input.value!)
+                .filter(\.$context == context.input.value!)
+                .filter(\.$action == action.input.value!)
+
+            if let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) {
+                query = query.filter(\.$id != uuid)
             }
+            return query.count().map { $0 == 0  }
+        })
+    }
+
+    init() {
+        namespace.validation.validators.append(uniqueKeyValidator())
     }
 
     func read(from input: Model)  {

@@ -32,21 +32,21 @@ struct SystemRoleApi: FeatherApiRepresentable {
     }
     
     func mapCreate(model: Model, input: CreateObject) {
-        key = input.key
-        name = input.name
-        notes = input.notes
+        model.key = input.key
+        model.name = input.name
+        model.notes = input.notes
     }
     
     func mapUpdate(model: Model, input: UpdateObject) {
-        key = input.key
-        name = input.name
-        notes = input.notes
+        model.key = input.key
+        model.name = input.name
+        model.notes = input.notes
     }
 
     func mapPatch(model: Model, input: PatchObject) {
-        key = input.key ?? key
-        name = input.name ?? name
-        notes = input.notes ?? notes
+        model.key = input.key ?? model.key
+        model.name = input.name ?? model.name
+        model.notes = input.notes ?? model.notes
     }
     
     func validateCreate(_ req: Request) -> EventLoopFuture<Bool> {

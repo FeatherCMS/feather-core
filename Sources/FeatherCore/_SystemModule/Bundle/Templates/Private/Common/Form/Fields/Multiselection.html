@@ -1,6 +1,6 @@
 <section>
     #inline("System/Common/Form/Fields/Label")
-    <select name="#(field.id)[]" multiple>
+    <select name="#(field.key)[]" multiple>
         #for(item in field.data.options):
         <option #if(field.data.values.contains(item.key)): selected="selected" #endif value="#(item.key)">#(item.label)</option>
         #endfor

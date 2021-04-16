@@ -8,7 +8,7 @@
 final class SystemMenuEditForm: EditForm {
     typealias Model = SystemMenuModel
 
-    var modelId: UUID?
+    
     var key = TextField(key: "key", required: true)
     var name = TextField(key: "name", required: true)
     var notes = TextField(key: "notes")
@@ -18,16 +18,20 @@ final class SystemMenuEditForm: EditForm {
         [key, name, notes]
     }
 
-    func validateAfterFields(req: Request) -> EventLoopFuture<Bool> {
-        SystemMenuModel.query(on: req.db).filter(\.$key == key.input.value!).first().map { [unowned self] model -> Bool in
-            if (modelId == nil && model != nil) || (modelId != nil && model != nil && modelId! != model!.id) {
-                key.output.error = "Key is already in use"
-                return false
+    func uniqueKeyValidator(optional: Bool = false) -> ContentValidator<String> {
+        return ContentValidator<String>(key: "key", message: "Key must be unique", asyncValidation: { value, req in
+            var query = Model.query(on: req.db).filter(\.$key == value)
+            if let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) {
+                query = query.filter(\.$id != uuid)
             }
-            return true
-        }
+            return query.count().map { $0 == 0  }
+        })
     }
 
+    init() {
+        key.validation.validators.append(uniqueKeyValidator())
+    }
+    
     func read(from input: Model)  {
         key.output.value = input.key
         name.output.value = input.name

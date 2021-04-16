@@ -10,8 +10,6 @@ public protocol EditForm: Form {
     
     associatedtype Model: FeatherModel
 
-    var modelId: Model.IDValue? { get set }
-
     func read(from: Model)
     func write(to: Model)
 
@@ -24,7 +22,6 @@ public extension EditForm {
 
     var templateData: TemplateData {
         .dictionary([
-            "modelId": modelId?.encodeToTemplateData() ?? .string(nil),
             "fields": fieldsTemplateData,
             "notification": .string(notification)
         ])

@@ -8,7 +8,7 @@
 import Foundation
 
 public struct FormView: Encodable {
-    
+
     public struct Action: Encodable {
         public enum Method: String, Encodable {
             case get
@@ -26,14 +26,18 @@ public struct FormView: Encodable {
             self.multipart = multipart
         }
     }
+    
+    
+    public let action: Action
 
     public let id: String
     public let token: String
+    
     public let title: String
-    public let key: String
-    public let modelId: String
-    public let list: Link
-    public let nav: [Link]
     public let notification: String?
+
+    public let nav: [Link]
+
+    public var model: ModelInfo? = nil
 }
 

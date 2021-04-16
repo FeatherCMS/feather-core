@@ -67,4 +67,23 @@ public extension FeatherModel {
     static func systemPermissions() -> [SystemPermission] {
         permissions().map { SystemPermission($0) }
     }
+    
+    static func info(_ req: Request) -> ModelInfo {
+        let list = req.checkPermission(for: permission(for: .list))
+        let get = req.checkPermission(for: permission(for: .get))
+        let create = req.checkPermission(for: permission(for: .create))
+        let update = req.checkPermission(for: permission(for: .update))
+        let patch = req.checkPermission(for: permission(for: .patch))
+        let delete = req.checkPermission(for: permission(for: .delete))
+    
+        let permissions = ModelInfo.AvailablePermissions(list: list, get: get, create: create, update: update, patch: patch, delete: delete)
+        return ModelInfo(key: Self.name,
+                         title: Self.name,
+                         module: .init(key: Module.name,
+                                       title: Module.name,
+                                       path: "/admin/" + Module.path),
+                         permissions: permissions, urls: .init(list: "/admin/" + path))
+    }
 }
+
+

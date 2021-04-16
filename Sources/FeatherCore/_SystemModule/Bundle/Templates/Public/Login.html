@@ -30,20 +30,7 @@
     </section>
     #endif
 
-        #if(form.modelId != nil):
-            #let(field = ["id": "modelId", "value": form.modelId])
-            #inline("System/Common/Form/Fields/Hidden")
-        #endif
-
         #var(field = nil)
-
-        #(field = ["id": "formId", "value": form.id])
-        #inline("System/Common/Form/Fields/Hidden")
-
-        #(field = ["id": "formToken", "value": form.token])
-        #inline("System/Common/Form/Fields/Hidden")
-
-
 
         #for(field in form.fields):
             #if(field.type == "text"):           #inline("System/Common/Form/Fields/Text")

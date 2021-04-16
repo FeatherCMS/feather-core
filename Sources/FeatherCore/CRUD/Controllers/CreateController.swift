@@ -60,7 +60,7 @@ public protocol CreateController: ModelController {
 
 public extension CreateController {
 
-    var createView: String { "System/Admin/Edit" }
+    var createView: String { "System/Admin/Form" }
 
     func beforeInvalidCreateFormRender(req: Request, form: CreateForm) -> EventLoopFuture<CreateForm> {
         req.eventLoop.future(form)
@@ -71,14 +71,13 @@ public extension CreateController {
     }
 
     func createContext(req: Request, formId: String, formToken: String) -> FormView {
-        .init(id: formId,
+        .init(action: .init(),
+              id: formId,
               token: formToken,
               title: "",
-              key: "",
-              modelId: "",
-              list: .init(label: "", url: ""),
+              notification: nil,
               nav: [],
-              notification: nil)
+              model: Model.info(req))
     }
 
     func renderCreateForm(req: Request, form: CreateForm) -> EventLoopFuture<View> {
