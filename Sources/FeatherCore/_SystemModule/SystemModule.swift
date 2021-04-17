@@ -90,10 +90,7 @@ final class SystemModule: FeatherModule {
         
         let metadata = args["page-metadata"] as! Metadata
 
-        return req.tau.render(template: "System/Home", context: [
-            "metadata": metadata.encodeToTemplateData(),
-        ])
-        .encodeOptionalResponse(for: req)
+        return req.view.render("System/Home", ["metadata": metadata]).encodeOptionalResponse(for: req)
     }
     
     // MARK: - perform install steps
@@ -102,7 +99,7 @@ final class SystemModule: FeatherModule {
     func performInstall(req: Request) -> EventLoopFuture<View> {
         /// if the system path equals install, we render the start install screen
         guard req.url.path == "/install/" else {
-            return req.tau.render("System/Install/Start")
+            return req.view.render("System/Install/Start")
         }
     
         /// upload bundled images using the file storage if there are some files under the Install folder inside the module bundle
@@ -141,11 +138,7 @@ final class SystemModule: FeatherModule {
         return req.eventLoop.flatten(modelInstallFutures + fileUploadFutures)
             .map { Application.Config.installed = true }
             .flatMap { req.view.render("System/Install/Finish") }
-            .flatMapError { err in
-                req.tau.render(template: "System/Install/Error", context: [
-                    "error": .string(err.localizedDescription),
-                ])
-            }
+            .flatMapError { req.view.render("System/Install/Error", ["error": $0.localizedDescription]) }
             
     }
 

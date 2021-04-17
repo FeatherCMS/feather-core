@@ -26,10 +26,8 @@ struct SystemFrontendController {
         if let filter = filter {
             qb = filter(qb)
         }
-        return qb.all()
-        .mapEach { $0.encodeToTemplateData() }
-        .flatMap { req.tau.render(template: template, context: ["list": .array($0)]) }
-        .encodeResponse(status: .ok, headers: ["Content-Type": "text/xml; charset=utf-8"], for: req)
+        return qb.all().mapEach { $0.metadata }.flatMap { req.view.render(template, ["list": $0]) }
+            .encodeResponse(status: .ok, headers: ["Content-Type": "text/xml; charset=utf-8"], for: req)
     }
 
     func sitemap(_ req: Request) throws -> EventLoopFuture<Response> {
@@ -41,8 +39,7 @@ struct SystemFrontendController {
     }
 
     func robots(_ req: Request) throws -> EventLoopFuture<Response> {
-        req.tau.render(template: "System/Robots")
-            .encodeResponse(status: .ok, headers: ["Content-Type": "text/plain; charset=utf-8"], for: req)
+        req.view.render("System/Robots").encodeResponse(status: .ok, headers: ["Content-Type": "text/plain; charset=utf-8"], for: req)
     }
     
     func createContext(req: Request, formId: String, formToken: String) -> FormView {
@@ -54,16 +51,12 @@ struct SystemFrontendController {
               nav: [])
     }
     
-    private func render(req: Request, model: SystemUserModel? = nil, form: SystemLoginForm = .init()) -> EventLoopFuture<Response> {
+    private func render(req: Request, model: SystemUserModel? = nil, form: SystemLoginForm = .init(fields: [])) -> EventLoopFuture<Response> {
         if let model = model {
-            form.email.output.value = model.email
+//            form.email.output.value = model.email
         }
 
-        var ctx = createContext(req: req, formId: "", formToken: "").encodeToTemplateData().dictionary!
-        ctx["fields"] = form.templateData.dictionary!["fields"]
-
-        return req.tau.render(template: "System/Login", context: ["form": .dictionary(ctx)])
-            .encodeResponse(for: req)
+        return req.view.render("System/Login", ["form": form]).encodeResponse(for: req)
     }
 
     private func getCustomRedirect(req: Request) -> String {
@@ -88,12 +81,12 @@ struct SystemFrontendController {
             req.session.authenticate(user)
             return req.eventLoop.future(req.redirect(to: getCustomRedirect(req: req)))
         }
-        let form = SystemLoginForm()
+        let form = SystemLoginForm(fields: [])
         return form.initialize(req: req)
-            .flatMap { form.process(req: req) }
+            .flatMapThrowing { try form.process(req: req) }
             .flatMap { form.validate(req: req) }
             .flatMap { _ in
-                form.notification = "Invalid username or password"
+//                form.notification = "Invalid username or password"
                 return render(req: req, form: form)
             }
     }

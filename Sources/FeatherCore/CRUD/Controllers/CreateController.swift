@@ -18,7 +18,7 @@ public protocol CreateApiRepresentable: ModelApi {
 public protocol CreateController: ModelController {
 
     associatedtype CreateApi: CreateApiRepresentable & GetApiRepresentable
-    associatedtype CreateForm: EditForm
+    associatedtype CreateForm: FeatherForm
 
     /// the name of the edit view template
     var createView: String { get }
@@ -85,10 +85,11 @@ public extension CreateController {
         let nonce = req.generateNonce(for: "create-form", id: formId)
 
         return beforeCreateFormRender(req: req, form: form).flatMap {
-            var ctx = createContext(req: req, formId: formId, formToken: nonce).encodeToTemplateData().dictionary!
-            ctx["fields"] = form.templateData.dictionary!["fields"]
-
-            return render(req: req, template: createView, context: ["form": .dictionary(ctx)])
+//            var ctx = createContext(req: req, formId: formId, formToken: nonce).encodeToTemplateData().dictionary!
+//            ctx["fields"] = form.encodeToTemplateData().dictionary!["fields"]
+            
+            return req.view.render(createView, ["form": form])
+//            return render(req: req, template: createView, context: ["form": .dictionary(ctx)])
             
         }
     }
@@ -145,7 +146,7 @@ public extension CreateController {
 
             let form = CreateForm()
             return form.initialize(req: req)
-                .flatMap { form.process(req: req) }
+                .flatMapThrowing { try form.process(req: req) }
                 .flatMap { form.validate(req: req) }
                 .flatMap { isValid in
                     guard isValid else {
@@ -154,14 +155,15 @@ public extension CreateController {
                         }
                     }
                     let model = Model()
-                    form.write(to: model as! CreateForm.Model)
+                    form.model = model as? CreateForm.Model
+//                    form.write(to: model as! CreateForm.Model)
 
-                    return form.willSave(req: req, model: model as! CreateForm.Model)
+                    return form.save(req: req)
                         .flatMap { beforeCreate(req: req, model: model, form: form) }
                         .flatMap { model in model.create(on: req.db).map { model } }
-                        .flatMap { model in form.didSave(req: req, model: model as! CreateForm.Model ).map { model } }
+//                        .flatMap { model in form.didSave(req: req, model: model as! CreateForm.Model ).map { model } }
                         .flatMap { afterCreate(req: req, form: form, model: $0) }
-                        .map { model in form.read(from: model as! CreateForm.Model); return model; }
+//                        .map { model in form.read(from: model as! CreateForm.Model); return model; }
                         .flatMap { model in form.save(req: req).map { model } }
                         .flatMap { createResponse(req: req, form: form, model: $0) }
             }

@@ -13,11 +13,11 @@ public protocol UpdateApiRepresentable: ModelApi {
     func mapUpdate(model: Model, input: UpdateObject)
 }
 
-    
+
 public protocol UpdateController: IdentifiableController {
     
     associatedtype UpdateApi: UpdateApiRepresentable & GetApiRepresentable
-    associatedtype UpdateForm: EditForm
+    associatedtype UpdateForm: FeatherForm
 
     /// the name of the update view template
     var updateView: String { get }
@@ -69,27 +69,10 @@ public extension UpdateController {
     func beforeUpdateFormRender(req: Request, form: UpdateForm) -> EventLoopFuture<Void> {
         req.eventLoop.future()
     }
-
-    func createContext(req: Request, formId: String, formToken: String) -> FormView {
-        .init(action: .init(),
-              id: formId,
-              token: formToken,
-              title: "",
-              notification: nil,
-              nav: [],
-              model: Model.info(req))
-    }
-
     
     func renderUpdateForm(req: Request, form: UpdateForm) -> EventLoopFuture<View> {
-        let formId = UUID().uuidString
-        let nonce = req.generateNonce(for: "update-form", id: formId)
-
         return beforeUpdateFormRender(req: req, form: form).flatMap {
-            var ctx = createContext(req: req, formId: formId, formToken: nonce).encodeToTemplateData().dictionary!
-            ctx["fields"] = form.templateData.dictionary!["fields"]
-
-            return render(req: req, template: updateView, context: ["form": .dictionary(ctx)])
+            return req.view.render(updateView, ["form": form])
         }
     }
 
@@ -106,7 +89,7 @@ public extension UpdateController {
             let form = UpdateForm()
             return findBy(id, on: req.db).flatMap { model in
                 return form.initialize(req: req).flatMap {
-                    form.read(from: model as! UpdateForm.Model)
+//                    form.read(from: model as! UpdateForm.Model)
                     return renderUpdateForm(req: req, form: form)
                 }
             }
@@ -149,7 +132,7 @@ public extension UpdateController {
             let id = try identifier(req)
             let form = UpdateForm()
             return form.initialize(req: req)
-                .flatMap { form.process(req: req) }
+                .flatMapThrowing { try form.process(req: req) }
                 .flatMap { form.validate(req: req) }
                 .throwingFlatMap { isValid in
                     guard isValid else {
@@ -157,13 +140,13 @@ public extension UpdateController {
                             .flatMap { renderUpdateForm(req: req, form: $0).encodeResponse(for: req) }
                     }
                     return findBy(id, on: req.db)
-                        .map { form.write(to: $0 as! UpdateForm.Model); return $0; }
-                        .flatMap { model in form.willSave(req: req, model: model as! UpdateForm.Model).map { model } }
+//                        .map { form.write(to: $0 as! UpdateForm.Model); return $0; }
+//                        .flatMap { model in form.willSave(req: req, model: model as! UpdateForm.Model).map { model } }
                         .flatMap { beforeUpdate(req: req, model: $0, form: form) }
                         .flatMap { model in model.update(on: req.db).map { model } }
-                        .flatMap { model in form.didSave(req: req, model: model as! UpdateForm.Model).map { model } }
+//                        .flatMap { model in form.didSave(req: req, model: model as! UpdateForm.Model).map { model } }
                         .flatMap { afterUpdate(req: req, form: form, model: $0) }
-                        .map { form.read(from: $0 as! UpdateForm.Model); return $0; }
+//                        .map { form.read(from: $0 as! UpdateForm.Model); return $0; }
                         .flatMap { model in form.save(req: req).map { model } }
                         .flatMap { updateResponse(req: req, form: form, model: $0) }
                 }

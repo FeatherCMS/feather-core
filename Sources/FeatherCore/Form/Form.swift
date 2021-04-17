@@ -5,94 +5,139 @@
 //  Created by Tibor Bodecs on 2020. 04. 22..
 //
 
-public protocol Form: AnyObject {
 
-    /// form fields
-    var fields: [FormFieldRepresentable] { get }
-    /// template data representation of the form fields
-    var fieldsTemplateData: TemplateData { get }
-    
-    /// generic notification
-    var notification: String? { get set }
+open class Form: FormComponent {
 
-    init()
-
-    /// initialize form values asynchronously
-    func initialize(req: Request) -> EventLoopFuture<Void>
-    
-    /// process input value from an incoming request
-    func processFields(req: Request)
-
-    /// process request from an incoming request
-    func process(req: Request) -> EventLoopFuture<Void>
-
-    /// process input value from an incoming request
-    func processAfterFields(req: Request) -> EventLoopFuture<Void>
-
-    /// validate form fields
-    func validateFields(req: Request) -> EventLoopFuture<Bool>
-    /// validate after field validation happened
-    func validateAfterFields(req: Request) -> EventLoopFuture<Bool>
-    /// validate the entire form
-    func validate(req: Request) -> EventLoopFuture<Bool>
-
-    func save(req: Request) -> EventLoopFuture<Void>
-}
-
-public extension Form {
-    
-    var fields: [FormFieldRepresentable] { [] }
-
-    var fieldsTemplateData: TemplateData {
-        .array(fields.map(\.templateData))
-//        .dictionary(fields.reduce(into: [String: TemplateData]()) { $0[$1.key] = $1.templateData })
-    }
-
-    var templateData: TemplateData {
-        .dictionary([
-            "fields": fieldsTemplateData,
-            "notification": .string(notification)
-        ])
+    public struct Action: Encodable {
+        public enum Method: String, Encodable {
+            case get
+            case post
+        }
+        public let method: Method
+        public let url: String?
+        public let multipart: Bool
+        
+        public init(method: Method = .post,
+                    url: String? = nil,
+                    multipart: Bool = false) {
+            self.method = method
+            self.url = url
+            self.multipart = multipart
+        }
     }
     
-    func initialize(req: Request) -> EventLoopFuture<Void> {
-        req.eventLoop.future()
+    enum CodingKeys: CodingKey {
+        case action
+        case id
+        case token
+        case title
+        case notification
+        case fields
     }
-    
-    func processFields(req: Request) {
+
+    open var action: Action
+    open var id: String
+    open var token: String
+    open var title: String
+    open var notification: Notification?
+    open var fields: [FormComponent]
+
+    #warning("remove default params")
+    init(title: String = "form", action: Action = .init(), fields: [FormComponent] = []) {
+        self.action = action
+        self.id = UUID().uuidString
+        self.token = UUID().uuidString
+        self.title = title
+        self.fields = fields
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(action, forKey: .action)
+        try container.encodeIfPresent(id, forKey: .id)
+        try container.encodeIfPresent(token, forKey: .token)
+        try container.encodeIfPresent(title, forKey: .title)
+        try container.encodeIfPresent(notification, forKey: .notification)
+
+        var fieldsArrayContainer = container.superEncoder(forKey: .fields).unkeyedContainer()
         for field in fields {
-            field.process(req: req)
+            try field.encode(to: fieldsArrayContainer.superEncoder())
         }
     }
 
-    func processAfterFields(req: Request) -> EventLoopFuture<Void> {
-        req.eventLoop.future()
+    // MARK: - fields api
+
+    func initializeFields(req: Request) -> EventLoopFuture<Void> {
+        let futures = fields.map { $0.initialize(req: req) } + [initialize(req: req)]
+        return req.eventLoop.flatten(futures)
     }
 
-    func process(req: Request) -> EventLoopFuture<Void> {
-        processFields(req: req)
-        return processAfterFields(req: req)
+    func processFields(req: Request) throws {
+        try fields.forEach { try $0.process(req: req) }
+        try process(req: req)
     }
     
     func validateFields(req: Request) -> EventLoopFuture<Bool> {
-        let futures = fields.map { $0.validate(req: req) }
+        let futures = fields.map { $0.validate(req: req) } + [validate(req: req)]
         return req.eventLoop.mergeTrueFutures(futures)
     }
 
-    func validateAfterFields(req: Request) -> EventLoopFuture<Bool> {
+    func loadFields(req: Request) -> EventLoopFuture<Void> {
+        let futures = fields.map { $0.load(req: req) } + [load(req: req)]
+        return req.eventLoop.flatten(futures)
+    }
+
+    func saveFields(req: Request) -> EventLoopFuture<Void> {
+        let futures = fields.map { $0.save(req: req) } + [save(req: req)]
+        return req.eventLoop.flatten(futures)
+        
+    }
+    
+    func renderFields(req: Request) throws {
+        try fields.forEach { try $0.render(req: req) }
+        try render(req: req)
+    }
+    
+    // MARK: - open api
+
+    open func initialize(req: Request) -> EventLoopFuture<Void> {
+        token = req.generateNonce(for: "form", id: id)
+        return req.eventLoop.future()
+    }
+    
+    open func process(req: Request) throws {
+        
+    }
+    
+    open func validate(req: Request) -> EventLoopFuture<Bool> {
         req.eventLoop.future(true)
     }
 
-    func validate(req: Request) -> EventLoopFuture<Bool> {
-        return validateFields(req: req).flatMap { [unowned self] result in
-            guard result else {
-                return req.eventLoop.future(false)
-            }
-            return validateAfterFields(req: req)
-        }
-    }
-
-    func save(req: Request) -> EventLoopFuture<Void> {
+    open func load(req: Request) -> EventLoopFuture<Void> {
         req.eventLoop.future()
     }
+    
+    open func save(req: Request) -> EventLoopFuture<Void> {
+        req.eventLoop.future()
+    }
+    
+    open func render(req: Request) throws {
+        
+    }
 }
+
+//    func validate(req: Request) -> EventLoopFuture<Bool> {
+//        validation
+//            .validate(req)
+//            .map { [unowned self] items -> [ValidationError] in
+//                for item in items {
+//                    if item.key == output.key {
+//                        output.error = item.message
+//                    }
+//                }
+//                return items
+//            }
+//            .map { $0.isEmpty }
+//    }
+

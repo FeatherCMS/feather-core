@@ -63,6 +63,7 @@ public final class Feather {
     // MARK: - template engine
     
     private static func setupTemplateEngineEntities() {
+        TemplateEngine.entities.registerExtendedEntities()
         TemplateEngine.entities.use(RequestParameter(), asFunction: "Request")
         TemplateEngine.entities.use(RequestQuery(), asFunction: "Request")
         TemplateEngine.entities.use(RequestSetQuery(), asFunction: "Request")
@@ -73,8 +74,6 @@ public final class Feather {
         TemplateEngine.entities.use(ReplaceYearEntity(), asMethod: "replaceYear")
         TemplateEngine.entities.use(SafePathEntity(), asMethod: "safePath")
         TemplateEngine.entities.use(AbsoluteUrlEntity(), asMethod: "absoluteUrl")
-        TemplateEngine.entities.use(IntMinEntity(), asFunction: "min")
-        TemplateEngine.entities.use(IntMaxEntity(), asFunction: "max")
         TemplateEngine.entities.use(InlineSvgEntity(), asFunction: "svg")
         TemplateEngine.entities.use(UserHasPermissionEntity(), asFunction: "UserHasPermission")
 //        TemplateEngine.entities.use(TranslationEntity(), asMethod: "t")

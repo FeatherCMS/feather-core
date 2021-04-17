@@ -18,11 +18,11 @@ struct SystemAdminErrorMiddleware: Middleware {
     }
 
     func renderError(_ req: Request, error: AbortError) -> EventLoopFuture<View> {
-        req.tau.render(template: "System/Admin/Error", context: [
-            "error": [
-                "code": .int(Int(error.status.code)),
-                "reason": .string(error.reason),
-            ]
-        ])
+        struct Error: Codable {
+            let code: Int
+            let reason: String
+        }
+        let err = Error(code: Int(error.status.code), reason: error.reason)
+        return req.view.render("System/Admin/Error", ["error": err])
     }
 }

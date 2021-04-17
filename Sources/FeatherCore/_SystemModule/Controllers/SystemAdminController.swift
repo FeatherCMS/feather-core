@@ -26,30 +26,22 @@ struct SystemAdminController {
     }
     
     func settingsView(req: Request) throws -> EventLoopFuture<View> {
-        let form = SystemSettingsForm()
+        let form = SystemSettingsForm(fields: [])
         return form.initialize(req: req).flatMap {
             render(req: req, form: form)
         }
     }
 
     func render(req: Request, form: SystemSettingsForm) -> EventLoopFuture<View> {
-        let formId = UUID().uuidString
-        let nonce = req.generateNonce(for: "site-settings-form", id: formId)
- 
-        return req.tau.render(template: "System/Admin/Settings", context: [
-            "formId": .string(formId),
-            "formToken": .string(nonce),
-            "fields": form.fieldsTemplateData,
-            "notification": .string(form.notification)
-        ])
+        req.view.render("System/Admin/Settings", ["form": form])
     }
     
     func updateSettings(req: Request) throws -> EventLoopFuture<Response> {
         try req.validateFormToken(for: "site-settings-form")
 
-        let form = SystemSettingsForm()
+        let form = SystemSettingsForm(fields: [])
         return form.initialize(req: req)
-            .flatMap { form.process(req: req) }
+            .flatMapThrowing { try form.process(req: req) }
             .flatMap { form.validate(req: req) }
             .flatMap { [self] isValid -> EventLoopFuture<View> in
                 guard isValid else {

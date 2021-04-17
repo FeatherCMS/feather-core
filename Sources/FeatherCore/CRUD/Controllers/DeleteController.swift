@@ -68,9 +68,7 @@ public extension DeleteController {
 
             return findBy(id, on: req.db).flatMap { model in
                 let ctx = deleteContext(req: req, model: model, formId: formId, formToken: nonce)
-                return render(req: req, template: deleteView, context: [
-                    "delete": ctx.encodeToTemplateData()
-                ])
+                return req.view.render(deleteView, ["delete": ctx])
             }
         }
     }

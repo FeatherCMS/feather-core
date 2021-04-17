@@ -31,6 +31,12 @@ public struct ListControllerContext: Codable {
     public let defaultSort: String
 }
 
+struct ListTemplateView: Encodable {
+    let table: Table
+    let pages: Pagination
+    let list: ListControllerContext
+}
+
 public protocol ListController: ModelController {
     
     associatedtype ListApi: ListApiRepresentable
@@ -126,13 +132,7 @@ public extension ListController {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
             return ListLoader<Model>().paginate(req)
-                .flatMap { pc in
-                    return render(req: req, template: listView, context: [
-                        "table": listTable(pc.items).encodeToTemplateData(),
-                        "pages": pc.info.encodeToTemplateData(),
-                        "list": listContext(req: req).encodeToTemplateData(),
-                    ])
-                }
+                .flatMap { req.view.render(listView, ListTemplateView(table: listTable($0.items), pages: $0.info, list: listContext(req: req))) }
         }
     }
 

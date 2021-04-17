@@ -5,27 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 04. 14..
 //
 
-class ToggleField: FormField {
+class ToggleField: FormField<Bool, ToggleFieldView> {
 
-    let key: String
-
-    var input: GenericInput<Bool>
-    var validation: InputValidator
-    var output: ToggleFieldView
     
-    init(key: String, required: Bool = false) {
-        self.key = key
-        input = .init(key: key)
-        validation = InputValidator()
-        if required {
-            validation.validators.append(ContentValidator<String>.required(key: key))
-        }
-        output = .init(key: key, required: required)
-    }
-    
-    func process(req: Request) {
-        input.process(req: req)
-
-        output.value = input.value ?? false
-    }
 }

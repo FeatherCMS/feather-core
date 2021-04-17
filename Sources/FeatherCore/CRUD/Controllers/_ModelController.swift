@@ -16,13 +16,4 @@ public protocol ModelApi {
 public protocol ModelController {
     
     associatedtype Model: FeatherModel
-
-    func render(req: Request, template: String, context: Renderer.Context) -> EventLoopFuture<View>
-}
-
-public extension ModelController {
-
-    func render(req: Request, template: String, context: Renderer.Context) -> EventLoopFuture<View> {
-        req.tau.render(template: template, context: context)
-    }
 }

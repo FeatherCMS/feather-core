@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/vapor/multipart-kit.git",
         "state": {
           "branch": null,
-          "revision": "73706f1883f2ba950d41f18aec7e3a53766d4a6d",
-          "version": "4.0.0"
+          "revision": "08588dc4233ad4bea8aa91fa275342276a12ad19",
+          "version": "4.0.1"
         }
       },
       {
@@ -240,8 +240,8 @@
         "repositoryURL": "https://github.com/binarybirds/tau-kit",
         "state": {
           "branch": null,
-          "revision": "71e14868c88d16e32fc355a894398f7f877e58ee",
-          "version": "1.1.0"
+          "revision": "7420424ab77aa8f876356df56223336be26927be",
+          "version": "1.1.2"
         }
       },
       {
@@ -249,8 +249,8 @@
         "repositoryURL": "https://github.com/vapor/vapor",
         "state": {
           "branch": null,
-          "revision": "eef16e1a56c04f05d55e775ccf7bfd512edd7d58",
-          "version": "4.43.2"
+          "revision": "5c3f1703cdce2cbced837d07aae6d1a897abf0b9",
+          "version": "4.44.1"
         }
       },
       {
