@@ -10,28 +10,66 @@
 final class SystemVariableEditForm: ModelForm<SystemVariableModel> {
 
     convenience required init() {
-        self.init(fields: [
-            TextField(key: "key")
-                .onInitialize { req, field in
-                    field.output.value = "test"
-                    return req.eventLoop.future()
-                },
+        self.init(fields: [])
+
+        self.fields = [
             TextField(key: "name")
                 .onInitialize { req, field in
                     field.output.value = "test"
                     return req.eventLoop.future()
-                },
-            TextareaField(key: "notes")
+                }
+                .onLoad { [unowned self] req, field in
+                    field.output.value = model?.name ?? ""
+                    return req.eventLoop.future()
+                }
+                .onSave { [unowned self] req, field in
+                    model?.name = field.input
+                    return req.eventLoop.future()
+                }
+            ,
+            TextField(key: "key")
                 .onInitialize { req, field in
                     field.output.value = "test"
                     return req.eventLoop.future()
-                },
+                }
+                .onLoad { [unowned self] req, field in
+                    field.output.value = model?.key ?? ""
+                    return req.eventLoop.future()
+                }
+                .onSave { [unowned self] req, field in
+                    model?.key = field.input
+                    return req.eventLoop.future()
+                }
+            ,
             TextareaField(key: "value")
                 .onInitialize { req, field in
                     field.output.value = "test"
                     return req.eventLoop.future()
-                },
-        ])
+                }
+                .onLoad { [unowned self] req, field in
+                    field.output.value = model?.value ?? ""
+                    return req.eventLoop.future()
+                }
+                .onSave { [unowned self] req, field in
+                    model?.value = field.input
+                    return req.eventLoop.future()
+                }
+            ,
+            TextareaField(key: "notes")
+                .onInitialize { req, field in
+                    field.output.value = "test"
+                    return req.eventLoop.future()
+                }
+                .onLoad { [unowned self] req, field in
+                    field.output.value = model?.notes ?? ""
+                    return req.eventLoop.future()
+                }
+                .onSave { [unowned self] req, field in
+                    model?.notes = field.input
+                    return req.eventLoop.future()
+                }
+            ,
+        ]
     }
 
 //    func uniqueKeyValidator(optional: Bool = false) -> ContentValidator<String> {

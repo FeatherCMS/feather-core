@@ -70,27 +70,9 @@ public extension CreateController {
         req.eventLoop.future()
     }
 
-    func createContext(req: Request, formId: String, formToken: String) -> FormView {
-        .init(action: .init(),
-              id: formId,
-              token: formToken,
-              title: "",
-              notification: nil,
-              nav: [],
-              model: Model.info(req))
-    }
-
     func renderCreateForm(req: Request, form: CreateForm) -> EventLoopFuture<View> {
-        let formId = UUID().uuidString
-        let nonce = req.generateNonce(for: "create-form", id: formId)
-
-        return beforeCreateFormRender(req: req, form: form).flatMap {
-//            var ctx = createContext(req: req, formId: formId, formToken: nonce).encodeToTemplateData().dictionary!
-//            ctx["fields"] = form.encodeToTemplateData().dictionary!["fields"]
-            
-            return req.view.render(createView, ["form": form])
-//            return render(req: req, template: createView, context: ["form": .dictionary(ctx)])
-            
+        beforeCreateFormRender(req: req, form: form).flatMap {
+            req.view.render(createView, ["form": form])
         }
     }
 
@@ -142,7 +124,7 @@ public extension CreateController {
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
-            try req.validateFormToken(for: "create-form")
+//            try req.validateFormToken(for: "create-form")
 
             let form = CreateForm()
             return form.initialize(req: req)
@@ -156,7 +138,6 @@ public extension CreateController {
                     }
                     let model = Model()
                     form.model = model as? CreateForm.Model
-//                    form.write(to: model as! CreateForm.Model)
 
                     return form.save(req: req)
                         .flatMap { beforeCreate(req: req, model: model, form: form) }
@@ -164,7 +145,7 @@ public extension CreateController {
 //                        .flatMap { model in form.didSave(req: req, model: model as! CreateForm.Model ).map { model } }
                         .flatMap { afterCreate(req: req, form: form, model: $0) }
 //                        .map { model in form.read(from: model as! CreateForm.Model); return model; }
-                        .flatMap { model in form.save(req: req).map { model } }
+//                        .flatMap { model in form.save(req: req).map { model } }
                         .flatMap { createResponse(req: req, form: form, model: $0) }
             }
         }

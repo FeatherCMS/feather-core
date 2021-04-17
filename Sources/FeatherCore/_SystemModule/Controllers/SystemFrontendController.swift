@@ -42,15 +42,6 @@ struct SystemFrontendController {
         req.view.render("System/Robots").encodeResponse(status: .ok, headers: ["Content-Type": "text/plain; charset=utf-8"], for: req)
     }
     
-    func createContext(req: Request, formId: String, formToken: String) -> FormView {
-        .init(action: .init(),
-              id: formId,
-              token: formToken,
-              title: "",
-              notification: nil,
-              nav: [])
-    }
-    
     private func render(req: Request, model: SystemUserModel? = nil, form: SystemLoginForm = .init(fields: [])) -> EventLoopFuture<Response> {
         if let model = model {
 //            form.email.output.value = model.email

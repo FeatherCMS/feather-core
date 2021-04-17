@@ -88,9 +88,9 @@ public extension UpdateController {
             let id = try identifier(req)
             let form = UpdateForm()
             return findBy(id, on: req.db).flatMap { model in
-                return form.initialize(req: req).flatMap {
-//                    form.read(from: model as! UpdateForm.Model)
-                    return renderUpdateForm(req: req, form: form)
+                form.model = model as? UpdateForm.Model
+                return form.initialize(req: req).flatMap { form.load(req: req) }.flatMap {
+                    renderUpdateForm(req: req, form: form)
                 }
             }
         }

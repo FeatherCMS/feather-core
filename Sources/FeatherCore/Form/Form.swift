@@ -69,34 +69,31 @@ open class Form: FormComponent {
     // MARK: - fields api
 
     func initializeFields(req: Request) -> EventLoopFuture<Void> {
-        let futures = fields.map { $0.initialize(req: req) } + [initialize(req: req)]
+        let futures = fields.map { $0.initialize(req: req) }
         return req.eventLoop.flatten(futures)
     }
 
     func processFields(req: Request) throws {
         try fields.forEach { try $0.process(req: req) }
-        try process(req: req)
     }
     
     func validateFields(req: Request) -> EventLoopFuture<Bool> {
-        let futures = fields.map { $0.validate(req: req) } + [validate(req: req)]
+        let futures = fields.map { $0.validate(req: req) }
         return req.eventLoop.mergeTrueFutures(futures)
     }
 
     func loadFields(req: Request) -> EventLoopFuture<Void> {
-        let futures = fields.map { $0.load(req: req) } + [load(req: req)]
+        let futures = fields.map { $0.load(req: req) }
         return req.eventLoop.flatten(futures)
     }
 
     func saveFields(req: Request) -> EventLoopFuture<Void> {
-        let futures = fields.map { $0.save(req: req) } + [save(req: req)]
+        let futures = fields.map { $0.save(req: req) }
         return req.eventLoop.flatten(futures)
-        
     }
     
     func renderFields(req: Request) throws {
         try fields.forEach { try $0.render(req: req) }
-        try render(req: req)
     }
     
     // MARK: - open api
@@ -107,23 +104,23 @@ open class Form: FormComponent {
     }
     
     open func process(req: Request) throws {
-        
+        try processFields(req: req)
     }
     
     open func validate(req: Request) -> EventLoopFuture<Bool> {
-        req.eventLoop.future(true)
+        validateFields(req: req)
     }
 
     open func load(req: Request) -> EventLoopFuture<Void> {
-        req.eventLoop.future()
+        loadFields(req: req)
     }
     
     open func save(req: Request) -> EventLoopFuture<Void> {
-        req.eventLoop.future()
+        saveFields(req: req)
     }
     
     open func render(req: Request) throws {
-        
+        try renderFields(req: req)
     }
 }
 
