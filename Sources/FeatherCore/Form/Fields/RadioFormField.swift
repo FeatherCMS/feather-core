@@ -9,7 +9,7 @@ class RadioField: FormField {
 
     let key: String
 
-    var input: GenericFormFieldInput<String>
+    var input: GenericInput<String>
     var validation: InputValidator
     var output: RadioFieldView
     

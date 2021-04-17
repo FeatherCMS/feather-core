@@ -9,7 +9,7 @@ class ToggleField: FormField {
 
     let key: String
 
-    var input: GenericFormFieldInput<Bool>
+    var input: GenericInput<Bool>
     var validation: InputValidator
     var output: ToggleFieldView
     

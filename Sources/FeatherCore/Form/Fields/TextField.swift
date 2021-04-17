@@ -9,7 +9,7 @@ class TextField: FormField {
 
     let key: String
 
-    var input: GenericFormFieldInput<String>
+    var input: GenericInput<String>
     var validation: InputValidator
     var output: TextFieldView
     

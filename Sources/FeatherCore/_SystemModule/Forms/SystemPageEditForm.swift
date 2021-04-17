@@ -10,7 +10,7 @@ final class SystemPageEditForm: EditForm {
     typealias Model = SystemPageModel
 
     var title = TextField(key: "title", required: true)
-    var content = TextField(key: "content", required: true)
+    var content = TextareaField(key: "content", required: true)
     var notification: String?
     var metadata: Metadata?
 
@@ -45,3 +45,9 @@ final class SystemPageEditForm: EditForm {
         output.content = content.input.value!
     }
 }
+
+
+
+
+
+

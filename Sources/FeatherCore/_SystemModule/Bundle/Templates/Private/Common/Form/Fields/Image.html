@@ -1,0 +1,27 @@
+<section class="#(field.class ?? "large")-uploader uploader">
+
+    #if(field.data.value.key != nil):
+        <img id="preview" src="#(field.data.value.key.resolve())">
+    #else:
+        <div id="placeholder" class="p:l">#svg(field.placeholder ?? "image", class: "s64 block m:h:auto")</div>
+    #endif
+
+    #inline("System/Common/Form/Fields/Label")
+    <input id="#(field.key)" name="#(field.key)" type="file"#if(field.accept != nil): accept="#(field.accept)"#endif #if(field.required ?? false): aria-required="true"#endif>
+
+    #if(!field.required ?? false):
+    <input id="#(field.key)Delete" name="#(field.key)Delete" type="checkbox" value="true" #if(field.data.value.delete == true):checked#endif>
+    <label for="#(field.key)Delete">Remove</label>
+    #endif
+
+    #if(field.data.value.originalKey != nil):
+    <input id="#(field.key)OriginalKey" name="#(field.key)OriginalKey" type="hidden" value="#(field.data.value.originalKey)">
+    #endif
+
+    #if(field.data.value.temporaryFile != nil):
+    <input id="#(field.key)TemporaryKey" name="#(field.key)TemporaryKey" type="hidden" value="#(field.data.value.temporaryFile.key)">
+    <input id="#(field.key)TemporaryName" name="#(field.key)TemporaryName" type="hidden" value="#(field.data.value.temporaryFile.name)">
+    #endif
+
+    #inline("System/Common/Form/Fields/Error")
+</section>
