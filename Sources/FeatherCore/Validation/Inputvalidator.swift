@@ -14,7 +14,7 @@ public struct InputValidator {
     }
     
     /// this is magic, don't touch it
-    public func validate(_ req: Request) -> EventLoopFuture<[ValidationError]> {
+    public func validateResult(_ req: Request) -> EventLoopFuture<[ValidationError]> {
         let initial: EventLoopFuture<[ValidationError]> = req.eventLoop.future([])
         return validators.reduce(initial) { res, next -> EventLoopFuture<[ValidationError]> in
             return res.flatMap { arr -> EventLoopFuture<[ValidationError]> in
@@ -29,6 +29,10 @@ public struct InputValidator {
                 }
             }
         }
+    }
+    
+    public func validate(_ req: Request) -> EventLoopFuture<Bool> {
+        validateResult(req).map { $0.isEmpty }
     }
 
 }

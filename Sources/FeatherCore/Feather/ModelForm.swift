@@ -5,13 +5,6 @@
 //  Created by Tibor Bodecs on 2020. 11. 19..
 //
 
-public protocol FeatherForm: AnyObject, FormComponent {
-    associatedtype Model: FeatherModel
-    
-    var model: Model? { get set }
-    
-    init()
-}
 
 open class ModelForm<T: FeatherModel>: Form, FeatherForm {
         
@@ -34,17 +27,23 @@ open class ModelForm<T: FeatherModel>: Form, FeatherForm {
     
     private var modelInfo: ModelInfo?
 
-    public required init() {
-        fatalError("Form init must be implemented by a subclass")
+    public convenience required init() {
+        self.init(model: nil)
     }
 
-    init(model: T? = nil, fields: [FormComponent]) {
+    init(model: T? = nil, nav: [Link] = []) {
         self.model = model
-        self.nav = []
+        self.nav = nav
 
-        super.init(fields: fields)
-        
+        super.init()
+
         self.title = Model.name
+
+        self.initialize()
+    }
+    
+    open func initialize() {
+        
     }
     
     open override func initialize(req: Request) -> EventLoopFuture<Void> {

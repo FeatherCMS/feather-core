@@ -41,13 +41,19 @@ open class Form: FormComponent {
     open var title: String
     open var notification: Notification?
     open var fields: [FormComponent]
-
-    #warning("remove default params")
-    init(title: String = "form", action: Action = .init(), fields: [FormComponent] = []) {
+    
+    init(action: Action = .init(),
+         id: String = UUID().uuidString,
+         token: String = UUID().uuidString,
+         title: String = "form",
+         notification: Notification? = nil,
+         fields: [FormComponent] = []) {
+        
         self.action = action
-        self.id = UUID().uuidString
-        self.token = UUID().uuidString
+        self.id = id
+        self.token = token
         self.title = title
+        self.notification = notification
         self.fields = fields
     }
 
@@ -100,7 +106,7 @@ open class Form: FormComponent {
 
     open func initialize(req: Request) -> EventLoopFuture<Void> {
         token = req.generateNonce(for: "form", id: id)
-        return req.eventLoop.future()
+        return initializeFields(req: req)
     }
     
     open func process(req: Request) throws {

@@ -6,16 +6,16 @@
 //
 
 
-open class FormField<Input: Decodable, Outuput: Encodable>: FormComponent {
+open class FormField<Input: Decodable, Output: Encodable>: FormComponent {
 
-    public typealias FormFieldHandler = (Request, FormField<Input, Outuput>) throws -> Void
-    public typealias FormFieldAsyncHandler = (Request, FormField<Input, Outuput>) -> EventLoopFuture<Void>
-    public typealias FormFieldAsyncBoolHandler = (Request, FormField<Input, Outuput>) -> EventLoopFuture<Bool>
+    public typealias FormFieldHandler = (Request, FormField<Input, Output>) throws -> Void
+    public typealias FormFieldAsyncHandler = (Request, FormField<Input, Output>) -> EventLoopFuture<Void>
+    public typealias FormFieldAsyncBoolHandler = (Request, FormField<Input, Output>) -> EventLoopFuture<Bool>
     
     
     public var key: String
     public var input: Input
-    public var output: Outuput
+    public var output: Output
     
     private var initHandler: FormFieldAsyncHandler?
     private var processHandler: FormFieldHandler?
@@ -24,7 +24,7 @@ open class FormField<Input: Decodable, Outuput: Encodable>: FormComponent {
     private var saveHandler: FormFieldAsyncHandler?
     private var renderHandler: FormFieldHandler?
     
-    public init(key: String, input: Input, output: Outuput) {
+    public init(key: String, input: Input, output: Output) {
         self.key = key
         self.input = input
         self.output = output
@@ -39,6 +39,11 @@ open class FormField<Input: Decodable, Outuput: Encodable>: FormComponent {
     }
 
     // MARK: - open api
+    
+    open func config(_ block: (FormField<Input, Output>) -> Void) -> Self {
+        block(self)
+        return self
+    }
 
     open func onInitialize(_ block: @escaping FormFieldAsyncHandler) -> Self {
         initHandler = block
@@ -95,7 +100,6 @@ open class FormField<Input: Decodable, Outuput: Encodable>: FormComponent {
     public func render(req: Request) throws {
         try renderHandler?(req, self)
     }
-    
 }
 
 
