@@ -127,7 +127,7 @@ public extension UpdateController {
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
-            try req.validateFormToken(for: "update-form")
+//            try req.validateFormToken(for: "update-form")
 
             let id = try identifier(req)
             let form = UpdateForm()
@@ -140,7 +140,10 @@ public extension UpdateController {
                             .flatMap { renderUpdateForm(req: req, form: $0).encodeResponse(for: req) }
                     }
                     return findBy(id, on: req.db)
-//                        .map { form.write(to: $0 as! UpdateForm.Model); return $0; }
+                        .flatMap { model in
+                            form.model = model as? UpdateForm.Model
+                            return form.load(req: req).map { model }
+                        }
 //                        .flatMap { model in form.willSave(req: req, model: model as! UpdateForm.Model).map { model } }
                         .flatMap { beforeUpdate(req: req, model: $0, form: form) }
                         .flatMap { model in model.update(on: req.db).map { model } }

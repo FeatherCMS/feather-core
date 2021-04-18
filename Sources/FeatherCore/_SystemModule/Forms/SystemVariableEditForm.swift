@@ -18,14 +18,14 @@ final class SystemVariableEditForm: ModelForm<SystemVariableModel> {
                 }
                 .onValidation { req, field in
                     InputValidator([
-                        FormFieldValidator(field, "Name is required") { $0.input.isEmpty },
+                        FormFieldValidator(field, "Name is required") { !$0.input.isEmpty },
                     ]).validate(req)
                 }
-                .onLoad { [unowned model] req, field in
+                .onLoad { [unowned self] req, field in
                     field.output.value = model?.name
                     return req.eventLoop.future()
                 }
-                .onSave { [unowned model] req, field in
+                .onSave { [unowned self] req, field in
                     model?.name = field.input
                     return req.eventLoop.future()
                 },
@@ -36,7 +36,7 @@ final class SystemVariableEditForm: ModelForm<SystemVariableModel> {
                 }
                 .onValidation { req, field in
                     InputValidator([
-                        FormFieldValidator(field, "Key is required") { $0.input.isEmpty },
+                        FormFieldValidator(field, "Key is required") { !$0.input.isEmpty },
                         FormFieldValidator(field, "Key must be unique", nil) { field, req in
                             var query = SystemVariableModel.query(on: req.db).filter(\.$key == field.input)
                             if let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) {
@@ -46,31 +46,31 @@ final class SystemVariableEditForm: ModelForm<SystemVariableModel> {
                         }
                     ]).validate(req)
                 }
-                .onLoad { [unowned model] req, field in
+                .onLoad { [unowned self] req, field in
                     field.output.value = model?.key
                     return req.eventLoop.future()
                 }
-                .onSave { [unowned model] req, field in
+                .onSave { [unowned self] req, field in
                     model?.key = field.input
                     return req.eventLoop.future()
                 },
             
             TextareaField(key: "value")
-                .onLoad { [unowned model] req, field in
+                .onLoad { [unowned self] req, field in
                     field.output.value = model?.value
                     return req.eventLoop.future()
                 }
-                .onSave { [unowned model] req, field in
+                .onSave { [unowned self] req, field in
                     model?.value = field.input
                     return req.eventLoop.future()
                 },
             
             TextareaField(key: "notes")
-                .onLoad { [unowned model] req, field in
+                .onLoad { [unowned self] req, field in
                     field.output.value = model?.notes
                     return req.eventLoop.future()
                 }
-                .onSave { [unowned model ] req, field in
+                .onSave { [unowned self ] req, field in
                     model?.notes = field.input
                     return req.eventLoop.future()
                 },

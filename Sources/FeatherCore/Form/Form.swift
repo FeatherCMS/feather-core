@@ -130,17 +130,3 @@ open class Form: FormComponent {
     }
 }
 
-//    func validate(req: Request) -> EventLoopFuture<Bool> {
-//        validation
-//            .validate(req)
-//            .map { [unowned self] items -> [ValidationError] in
-//                for item in items {
-//                    if item.key == output.key {
-//                        output.error = item.message
-//                    }
-//                }
-//                return items
-//            }
-//            .map { $0.isEmpty }
-//    }
-

@@ -32,10 +32,7 @@ open class FormField<Input: Decodable, Output: Encodable>: FormComponent {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        
         try container.encode(output)
-//        print(output.encodeToTemplateData())
-//        try output.encode(to: encoder)
     }
 
     // MARK: - open api
