@@ -80,8 +80,8 @@ open class Form: FormComponent {
 
     // MARK: - fields api
 
-    func initializeFields(req: Request) -> EventLoopFuture<Void> {
-        let futures = fields.map { $0.initialize(req: req) }
+    func loadFields(req: Request) -> EventLoopFuture<Void> {
+        let futures = fields.map { $0.load(req: req) }
         return req.eventLoop.flatten(futures)
     }
 
@@ -94,25 +94,28 @@ open class Form: FormComponent {
         return req.eventLoop.mergeTrueFutures(futures)
     }
 
-    func loadFields(req: Request) -> EventLoopFuture<Void> {
-        let futures = fields.map { $0.load(req: req) }
-        return req.eventLoop.flatten(futures)
-    }
-
     func saveFields(req: Request) -> EventLoopFuture<Void> {
         let futures = fields.map { $0.save(req: req) }
         return req.eventLoop.flatten(futures)
     }
     
-    func renderFields(req: Request) throws {
-        try fields.forEach { try $0.render(req: req) }
+    func readFields(req: Request) -> EventLoopFuture<Void> {
+        let futures = fields.map { $0.read(req: req) }
+        return req.eventLoop.flatten(futures)
     }
+
+    func writeFields(req: Request) -> EventLoopFuture<Void> {
+        let futures = fields.map { $0.write(req: req) }
+        return req.eventLoop.flatten(futures)
+    }
+    
     
     // MARK: - open api
 
-    open func initialize(req: Request) -> EventLoopFuture<Void> {
+    
+    open func load(req: Request) -> EventLoopFuture<Void> {
         token = req.generateNonce(for: "form", id: id)
-        return initializeFields(req: req)
+        return loadFields(req: req)
     }
     
     open func process(req: Request) throws {
@@ -123,16 +126,16 @@ open class Form: FormComponent {
         validateFields(req: req)
     }
 
-    open func load(req: Request) -> EventLoopFuture<Void> {
-        loadFields(req: req)
-    }
-    
     open func save(req: Request) -> EventLoopFuture<Void> {
         saveFields(req: req)
     }
+
+    open func read(req: Request) -> EventLoopFuture<Void> {
+        readFields(req: req)
+    }
     
-    open func render(req: Request) throws {
-        try renderFields(req: req)
+    open func write(req: Request) -> EventLoopFuture<Void> {
+        writeFields(req: req)
     }
 }
 

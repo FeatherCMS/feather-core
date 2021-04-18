@@ -42,9 +42,9 @@ open class ModelForm<T: FeatherModel>: Form, FeatherForm {
         super.initialize()
     }
         
-    open override func initialize(req: Request) -> EventLoopFuture<Void> {
+    open override func load(req: Request) -> EventLoopFuture<Void> {
         modelInfo = Model.info(req)
-        return super.initialize(req: req)
+        return super.load(req: req)
     }
     
     public override func encode(to encoder: Encoder) throws {

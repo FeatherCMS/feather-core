@@ -7,45 +7,28 @@
 
 final class SystemPageEditForm: ModelForm<SystemPageModel> {
 
-//    var title = TextField(key: "title", required: true)
-//    var content = TextareaField(key: "content", required: true)
-//    var notification: String?
-//    var metadata: Metadata?
-//
-//    var fields: [FormFieldRepresentable] {
-//        [title, content]
-//    }
-//
-//    var templateData: TemplateData {
-//        .dictionary([
-//            "fields": fieldsTemplateData,
-//            "notification": .string(notification),
-//            "metadata": metadata?.encodeToTemplateData() ?? .dictionary(nil)
-//        ])
-//    }
-//
-//    init() {}
-//    
-//    func initialize(req: Request) -> EventLoopFuture<Void> {
-//        if let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) {
-//            return Model.findMetadata(reference: uuid, on: req.db) .map { [unowned self] in metadata = $0 }
-//        }
-//        return req.eventLoop.future()
-//    }
-//
-//    func read(from input: Model)  {
-//        title.output.value = input.title
-//        content.output.value = input.content
-//    }
-//    
-//    func write(to output: Model) {
-//        output.title = title.input.value!
-//        output.content = content.input.value!
-//    }
+    override func initialize() {
+        super.initialize()
+        
+        self.fields = [
+            TextField(key: "title")
+                .config { $0.output.required = true }
+                .validators { [
+                    FormFieldValidator($1, "Title is required") { !$0.input.isEmpty },
+                ] }
+                .read { [unowned self] in $1.output.value = model?.title }
+                .write { [unowned self] in model?.title = $1.input },
+
+            TextareaField(key: "content")
+                .config {
+                    $0.output.required = true
+                    $0.output.size = .xl
+                }
+                .validators { [
+                    FormFieldValidator($1, "Content is required") { !$0.input.isEmpty },
+                ] }
+                .read { [unowned self] in $1.output.value = model?.content }
+                .write { [unowned self] in model?.content = $1.input },
+        ]
+    }
 }
-
-
-
-
-
-

@@ -8,90 +8,84 @@
 
 final class SystemRoleEditForm: ModelForm<SystemRoleModel> {
 
-//    var key = TextField(key: "key")
-//    var name = TextField(key: "name")
-//    var notes = TextareaField(key: "notes")
-//    var permissions = MultiGroupOptionField(key: "permissions")
-//    var notification: String?
-//    
-//    var fields: [FormFieldRepresentable] {
-//        [key, name, notes, permissions]
-//    }
-//
-//    // MARK: - helper
-//    
-//    private func set(_ permissions: [SystemPermissionModel]) {
-//        var data: [FormFieldMultiGroupOption] = []
-//        for permission in permissions {
-//            let ffo = FormFieldOption(key: permission.identifier, label: permission.action.capitalized)
-//            let module = permission.namespace.lowercased().capitalized
-//
-//            /// if there is no module with the permission, we create it...
-//            var moduleIndex: Array<FormFieldMultiGroupOption>.Index!
-//            if let i = data.firstIndex(where: { $0.name == module }) {
-//                moduleIndex = i
-//            }
-//            else {
-//                data.append(FormFieldMultiGroupOption(name: module))
-//                moduleIndex = data.endIndex.advanced(by: -1)
-//            }
-//
-//            let ctx = permission.context.replacingOccurrences(of: ".", with: " ").lowercased().capitalized
-//            /// find an existing ctx group or create a new one...
-//            var groupIndex: Array<FormFieldOptionGroup>.Index!
-//            if let g = data[moduleIndex].groups.firstIndex(where: { $0.name == ctx }) {
-//                groupIndex = g
-//            }
-//            else {
-//                data[moduleIndex].groups.append(.init(name: ctx))
-//                groupIndex = data[moduleIndex].groups.endIndex.advanced(by: -1)
-//            }
-//            data[moduleIndex].groups[groupIndex].options.append(ffo)
-//        }
-//        self.permissions.output.options = data
-//    }
-//
-//    func initialize(req: Request) -> EventLoopFuture<Void> {
-//        SystemPermissionModel.query(on: req.db)
-//            .all()
-//            .map { [unowned self] in set($0) }
-//    }
-//
-//    func uniqueKeyValidator(optional: Bool = false) -> ContentValidator<String> {
-//        return ContentValidator<String>(key: "key", message: "Key must be unique", asyncValidation: { value, req in
-//            var query = Model.query(on: req.db).filter(\.$key == value)
-//            if let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) {
-//                query = query.filter(\.$id != uuid)
-//            }
-//            return query.count().map { $0 == 0  }
-//        })
-//    }
-//
-//    init() {
-//        key.validation.validators.append(uniqueKeyValidator())
-//    }
-//    
-//    func read(from input: Model)  {
-//        key.output.value = input.key
-//        name.output.value = input.name
-//        notes.output.value = input.notes
-//        permissions.output.values = input.permissions.compactMap { $0.identifier }
-//    }
-//
-//    func write(to output: Model) {
-//        output.key = key.input.value!
-//        output.name = name.input.value!
-//        output.notes = notes.input.value?.emptyToNil
-//    }
-//    
-//    func didSave(req: Request, model: Model) -> EventLoopFuture<Void> {
-//        var future = req.eventLoop.future()
-//        if let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) {
-//            future = FeatherRolePermissionModel.query(on: req.db).filter(\.$role.$id == uuid).delete()
-//        }
-//        return future.flatMap { [unowned self] in
-//            #warning("fixme")
-//            return (permissions.input.value ?? []).compactMap { UUID(uuidString: $0) }.map { FeatherRolePermissionModel(roleId: model.id!, permissionId: $0) }.create(on: req.db)
-//        }
-//    }
+    override func initialize() {
+        super.initialize()
+        
+        self.fields = [
+            TextField(key: "key")
+                .config { $0.output.required = true }
+                .validators { [
+                    FormFieldValidator($1, "Key is required") { !$0.input.isEmpty },
+                    FormFieldValidator($1, "Key must be unique", nil) { field, req in
+                        Model.isUniqueBy(\.$key == field.input, req: req)
+                    }
+                ] }
+                .read { [unowned self] in $1.output.value = model?.key }
+                .write { [unowned self] in model?.key = $1.input },
+            
+            TextField(key: "name")
+                .config { $0.output.required = true }
+                .validators { [
+                    FormFieldValidator($1, "Name is required") { !$0.input.isEmpty },
+                ] }
+                .read { [unowned self] in $1.output.value = model?.name }
+                .write { [unowned self] in model?.name = $1.input },
+
+            TextareaField(key: "notes")
+                .read { [unowned self] in $1.output.value = model?.notes }
+                .write { [unowned self] in model?.notes = $1.input },
+            
+            MultiGroupOptionField(key: "permissions")
+                .load { [unowned self] req, field in
+                    SystemPermissionModel.query(on: req.db)
+                        .all()
+                        .map { field.output.options = getMultiGroupOptions($0) }
+                }
+                .read { [unowned self] req, field in
+                    field.output.values = model?.permissions.compactMap { $0.identifier } ?? []
+                }
+                .save { [unowned self] req, field in
+                    let values = field.input.compactMap { UUID(uuidString: $0) }
+                    #warning("generic diff for attach / detach")
+//                    print(model?.permissions.map(\.id!.uuidString))
+//                    print(req.body.data!.getString(at: 0, length: req.body.data!.readableBytes))
+                    return model!.$permissions.detach(model!.permissions, on: req.db).flatMap {
+                        SystemPermissionModel.query(on: req.db).filter(\.$id ~~ values).all().flatMap { items in
+                            model!.$permissions.attach(items, on: req.db)
+                        }
+                    }
+                }
+        ]
+    }
+
+    private func getMultiGroupOptions(_ permissions: [SystemPermissionModel]) -> [FormFieldMultiGroupOption] {
+        var data: [FormFieldMultiGroupOption] = []
+        for permission in permissions {
+            let ffo = FormFieldOption(key: permission.identifier, label: permission.action.capitalized)
+            let module = permission.namespace.lowercased().capitalized
+
+            /// if there is no module with the permission, we create it...
+            var moduleIndex: Array<FormFieldMultiGroupOption>.Index!
+            if let i = data.firstIndex(where: { $0.name == module }) {
+                moduleIndex = i
+            }
+            else {
+                data.append(FormFieldMultiGroupOption(name: module))
+                moduleIndex = data.endIndex.advanced(by: -1)
+            }
+
+            let ctx = permission.context.replacingOccurrences(of: ".", with: " ").lowercased().capitalized
+            /// find an existing ctx group or create a new one...
+            var groupIndex: Array<FormFieldOptionGroup>.Index!
+            if let g = data[moduleIndex].groups.firstIndex(where: { $0.name == ctx }) {
+                groupIndex = g
+            }
+            else {
+                data[moduleIndex].groups.append(.init(name: ctx))
+                groupIndex = data[moduleIndex].groups.endIndex.advanced(by: -1)
+            }
+            data[moduleIndex].groups[groupIndex].options.append(ffo)
+        }
+        return data
+    }
 }

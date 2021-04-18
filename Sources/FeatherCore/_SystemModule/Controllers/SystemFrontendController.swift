@@ -70,7 +70,7 @@ struct SystemFrontendController {
             return req.eventLoop.future(req.redirect(to: getCustomRedirect(req: req)))
         }
         let form = SystemLoginForm(fields: [])
-        return form.initialize(req: req)
+        return form.load(req: req)
             .flatMapThrowing { try form.process(req: req) }
             .flatMap { form.validate(req: req) }
             .flatMap { _ in

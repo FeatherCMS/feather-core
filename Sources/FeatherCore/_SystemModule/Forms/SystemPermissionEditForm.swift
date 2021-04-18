@@ -7,48 +7,67 @@
 
 final class SystemPermissionEditForm: ModelForm<SystemPermissionModel> {
 
-//    var namespace = TextField(key: "namespace", required: true)
-//    var context = TextField(key: "context", required: true)
-//    var action = TextField(key: "action", required: true)
-//    var name = TextField(key: "name", required: true)
-//    var notes = TextareaField(key: "notes")
-//    var notification: String?
-//
-//    var fields: [FormFieldRepresentable] {
-//        [namespace, context, action, name, notes]
-//    }
-//
-//    func uniqueKeyValidator(optional: Bool = false) -> ContentValidator<String> {
-//        return ContentValidator<String>(key: "namespace", message: "Permission must be unique", asyncValidation: { [unowned self] value, req in
-//            var query = SystemPermissionModel.query(on: req.db)
-//                .filter(\.$namespace == namespace.input.value!)
-//                .filter(\.$context == context.input.value!)
-//                .filter(\.$action == action.input.value!)
-//
-//            if let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) {
-//                query = query.filter(\.$id != uuid)
-//            }
-//            return query.count().map { $0 == 0  }
-//        })
-//    }
-//
-//    init() {
-//        namespace.validation.validators.append(uniqueKeyValidator())
-//    }
-//
-//    func read(from input: Model)  {
-//        namespace.output.value = input.namespace
-//        context.output.value = input.context
-//        action.output.value = input.action
-//        name.output.value = input.name
-//        notes.output.value = input.notes
-//    }
-//
-//    func write(to output: Model) {
-//        output.namespace = namespace.input.value!
-//        output.context = context.input.value!
-//        output.action = action.input.value!
-//        output.name = name.input.value!
-//        output.notes = notes.input.value?.emptyToNil
-//    }
+    override func initialize() {
+        super.initialize()
+        
+        self.fields = [
+            TextField(key: "namespace")
+                .config { $0.output.required = true }
+                .validators { [
+                    FormFieldValidator($1, "Namespace is required") { !$0.input.isEmpty },
+                ] }
+                .read { [unowned self] in $1.output.value = model?.namespace }
+                .write { [unowned self] in model?.namespace = $1.input },
+            
+            TextField(key: "context")
+                .config { $0.output.required = true }
+                .validators { [
+                    FormFieldValidator($1, "Context is required") { !$0.input.isEmpty },
+                ] }
+                .read { [unowned self] in $1.output.value = model?.context }
+                .write { [unowned self] in model?.context = $1.input },
+            
+            TextField(key: "action")
+                .config { $0.output.required = true }
+                .validators { [
+                    FormFieldValidator($1, "Action is required") { !$0.input.isEmpty },
+                ] }
+                .read { [unowned self] in $1.output.value = model?.action }
+                .write { [unowned self] in model?.action = $1.input },
+            
+            TextField(key: "name")
+                .config { $0.output.required = true }
+                .validators { [
+                    FormFieldValidator($1, "Name is required") { !$0.input.isEmpty },
+                ] }
+                .read { [unowned self] in $1.output.value = model?.name }
+                .write { [unowned self] in model?.name = $1.input },
+
+            TextareaField(key: "notes")
+                .read { [unowned self] in $1.output.value = model?.notes }
+                .write { [unowned self] in model?.notes = $1.input },
+        ]
+    }
+
+    override func validate(req: Request) -> EventLoopFuture<Bool> {
+        super.validate(req: req).flatMap { [unowned self] isValid in
+            guard isValid else {
+                return req.eventLoop.future(false)
+            }
+            struct Permission: Decodable {
+                let namespace: String
+                let context: String
+                let action: String
+            }
+            let p = try! req.content.decode(Permission.self)
+            return SystemPermissionModel.uniqueBy(p.namespace, p.context, p.action, req).map { [unowned self] isUnique in
+                guard isUnique else {
+                    notification = .init(type: .error, title: "This permission already exists")
+                    return false
+                }
+                return true
+            }
+        }
+    }
 }
+

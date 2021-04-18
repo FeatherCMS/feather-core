@@ -27,7 +27,7 @@ struct SystemAdminController {
     
     func settingsView(req: Request) throws -> EventLoopFuture<View> {
         let form = SystemSettingsForm(fields: [])
-        return form.initialize(req: req).flatMap {
+        return form.load(req: req).flatMap {
             render(req: req, form: form)
         }
     }
@@ -40,7 +40,7 @@ struct SystemAdminController {
         try req.validateFormToken(for: "site-settings-form")
 
         let form = SystemSettingsForm(fields: [])
-        return form.initialize(req: req)
+        return form.load(req: req)
             .flatMapThrowing { try form.process(req: req) }
             .flatMap { form.validate(req: req) }
             .flatMap { [self] isValid -> EventLoopFuture<View> in

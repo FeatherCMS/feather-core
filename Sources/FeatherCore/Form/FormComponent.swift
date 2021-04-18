@@ -6,15 +6,11 @@
 //
 
 public protocol FormComponent: Encodable {
-    
-    //var key: String { get }
-
-    func initialize(req: Request) -> EventLoopFuture<Void>
-    func process(req: Request) throws // async?
-    func validate(req: Request) -> EventLoopFuture<Bool>
 
     func load(req: Request) -> EventLoopFuture<Void>
+    func process(req: Request) throws
+    func validate(req: Request) -> EventLoopFuture<Bool>
+    func write(req: Request) -> EventLoopFuture<Void>
     func save(req: Request) -> EventLoopFuture<Void>
-    
-    func render(req: Request) throws // async?
+    func read(req: Request) -> EventLoopFuture<Void>
 }

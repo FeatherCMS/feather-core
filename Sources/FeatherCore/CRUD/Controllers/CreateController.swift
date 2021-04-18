@@ -86,7 +86,7 @@ public extension CreateController {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
             let form = CreateForm()
-            return form.initialize(req: req).flatMap {
+            return form.load(req: req).flatMap {
                 renderCreateForm(req: req, form: form)
             }
         }
@@ -102,22 +102,20 @@ public extension CreateController {
      check access
      validate incoming from with token
      create form
-     initialize form
-     process input form
+     load form
+     process form
      validate form
      if invalid:
         -> before invalid render we can still alter the form!
         -> render
      else:
-     create / find the model
-     write the form content to the model
-     before create we can still alter the model
-     create
-     call didSave model
-     after create we can alter the model
-     read the form with using new model
-     call save form
-     createResponse (render the form)
+     find model
+     write form
+     beforeCreate controller
+     create model
+     afterCreate controller
+     save form
+     createResponse (redirect)
      */
     func create(req: Request) throws -> EventLoopFuture<Response> {
         accessCreate(req: req).throwingFlatMap { hasAccess in
@@ -127,7 +125,7 @@ public extension CreateController {
 //            try req.validateFormToken(for: "create-form")
 
             let form = CreateForm()
-            return form.initialize(req: req)
+            return form.load(req: req)
                 .flatMapThrowing { try form.process(req: req) }
                 .flatMap { form.validate(req: req) }
                 .flatMap { isValid in
@@ -139,13 +137,11 @@ public extension CreateController {
                     let model = Model()
                     form.model = model as? CreateForm.Model
 
-                    return form.save(req: req)
+                    return form.write(req: req)
                         .flatMap { beforeCreate(req: req, model: model, form: form) }
                         .flatMap { model in model.create(on: req.db).map { model } }
-//                        .flatMap { model in form.didSave(req: req, model: model as! CreateForm.Model ).map { model } }
                         .flatMap { afterCreate(req: req, form: form, model: $0) }
-//                        .map { model in form.read(from: model as! CreateForm.Model); return model; }
-//                        .flatMap { model in form.save(req: req).map { model } }
+                        .flatMap { model in form.save(req: req).map { model } }
                         .flatMap { createResponse(req: req, form: form, model: $0) }
             }
         }
@@ -154,11 +150,7 @@ public extension CreateController {
     func afterCreate(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Model> {
         req.eventLoop.future(model)
     }
-//
-//    func createResponse(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Response> {
-//        renderCreateForm(req: req, form: form).encodeResponse(for: req)
-//    }
-    
+
     /// after we create a new viper model we can redirect the user to the edit screen using the unique id and replace the last path component
     func createResponse(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Response> {
         let path = req.url.path.replacingLastPath(model.identifier)

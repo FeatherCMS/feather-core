@@ -57,7 +57,6 @@ public protocol UpdateController: IdentifiableController {
     func setupUpdateApiRoute(on builder: RoutesBuilder)
 }
 
-
 public extension UpdateController {
     
     var updateView: String { "System/Admin/Form" }
@@ -71,8 +70,8 @@ public extension UpdateController {
     }
     
     func renderUpdateForm(req: Request, form: UpdateForm) -> EventLoopFuture<View> {
-        return beforeUpdateFormRender(req: req, form: form).flatMap {
-            return req.view.render(updateView, ["form": form])
+        beforeUpdateFormRender(req: req, form: form).flatMap {
+            req.view.render(updateView, ["form": form])
         }
     }
 
@@ -89,9 +88,10 @@ public extension UpdateController {
             let form = UpdateForm()
             return findBy(id, on: req.db).flatMap { model in
                 form.model = model as? UpdateForm.Model
-                return form.initialize(req: req).flatMap { form.load(req: req) }.flatMap {
-                    renderUpdateForm(req: req, form: form)
-                }
+
+                return form.load(req: req)
+                    .flatMap { form.read(req: req) }
+                    .flatMap { renderUpdateForm(req: req, form: form) }
             }
         }
     }
@@ -131,7 +131,7 @@ public extension UpdateController {
 
             let id = try identifier(req)
             let form = UpdateForm()
-            return form.initialize(req: req)
+            return form.load(req: req)
                 .flatMapThrowing { try form.process(req: req) }
                 .flatMap { form.validate(req: req) }
                 .throwingFlatMap { isValid in
@@ -142,19 +142,12 @@ public extension UpdateController {
                     return findBy(id, on: req.db)
                         .flatMap { model in
                             form.model = model as? UpdateForm.Model
-                            return form.load(req: req).map { model }
+                            return form.write(req: req).map { model }
                         }
-//                        .flatMap { model in form.willSave(req: req, model: model as! UpdateForm.Model).map { model } }
                         .flatMap { beforeUpdate(req: req, model: $0, form: form) }
-                        .flatMap { model in form.save(req: req).map { model } }
                         .flatMap { model in model.update(on: req.db).map { model } }
-//                        .flatMap { model in form.didSave(req: req, model: model as! UpdateForm.Model).map { model } }
+                        .flatMap { model in form.save(req: req).map { model } }
                         .flatMap { afterUpdate(req: req, form: form, model: $0) }
-                        .flatMap { model in
-                            form.model = model as? UpdateForm.Model
-                            return form.load(req: req).map { model }
-                        }
-//                        .map { form.read(from: $0 as! UpdateForm.Model); return $0; }
                         .flatMap { updateResponse(req: req, form: form, model: $0) }
                 }
         }
@@ -188,7 +181,8 @@ public extension UpdateController {
     }
     
     func updateResponse(req: Request, form: UpdateForm, model: Model) -> EventLoopFuture<Response> {
-        renderUpdateForm(req: req, form: form).encodeResponse(for: req)
+//        let path = req.url.path.replacingLastPath(model.identifier)
+        return req.eventLoop.future(req.redirect(to: req.url.path))
     }
 
     func setupUpdateRoutes(on builder: RoutesBuilder, as pathComponent: PathComponent) {
@@ -198,5 +192,23 @@ public extension UpdateController {
     
     func setupUpdateApiRoute(on builder: RoutesBuilder) {
         builder.put(idPathComponent, use: updateApi)
+    }
+}
+
+public extension UpdateController where Model: MetadataRepresentable {
+
+    func renderUpdateForm(req: Request, form: UpdateForm) -> EventLoopFuture<View> {
+        return beforeUpdateFormRender(req: req, form: form).flatMap {
+
+            var future: EventLoopFuture<Metadata?> = req.eventLoop.future(nil)
+            if let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) {
+                future = Model.findMetadata(reference: uuid, on: req.db)
+            }
+            return future.flatMap { metadata in
+                var templateData = ["form": form].encodeToTemplateData().dictionary!
+                templateData["metadata"] = metadata?.encodeToTemplateData()
+                return req.tau.render(template: updateView, context: .init(templateData))
+            }
+        }
     }
 }

@@ -7,59 +7,52 @@
 
 final class SystemUserEditForm: ModelForm<SystemUserModel> {
 
-//    var email = TextField(key: "email", required: true)
-//    var password = TextField(key: "password")
-//    var root = ToggleField(key: "root")
-//    var roles = CheckboxField(key: "roles")
-//    var notification: String?
-//
-//    var fields: [FormFieldRepresentable] {
-//        [email, password, root, roles]
-//    }
-//
-//    func uniqueKeyValidator(optional: Bool = false) -> ContentValidator<String> {
-//        return ContentValidator<String>(key: "email", message: "Email must be unique", asyncValidation: { value, req in
-//            var query = SystemUserModel.query(on: req.db).filter(\.$email == value)
-//            if let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) {
-//                query = query.filter(\.$id != uuid)
-//            }
-//            return query.count().map { $0 == 0  }
-//        })
-//    }
-//
-//    init() {
-//        email.validation.validators.append(uniqueKeyValidator())
-//    }
-//
-//    func initialize(req: Request) -> EventLoopFuture<Void> {
-//        root.output.value = false
-//        return SystemRoleModel.query(on: req.db).all().mapEach(\.formFieldOption).map { [unowned self] in roles.output.options = $0 }
-//    }
-//
-//
-//    func read(from input: Model) {
-//        email.output.value = input.email
-//        root.output.value = input.root
-//        roles.output.values = input.roles.compactMap { $0.identifier }
-//    }
-//
-//    func write(to output: Model) {
-//        output.email = email.input.value!
-//        output.root = root.input.value ?? false
-//        if let password = password.input.value, !password.isEmpty {
-//            output.password = try! Bcrypt.hash(password)
-//        }
-//    }
-//
-//    func didSave(req: Request, model: Model) -> EventLoopFuture<Void> {
-//        var future = req.eventLoop.future()
-//        if let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) {
-//            future = FeatherUserRoleModel.query(on: req.db).filter(\.$user.$id == uuid).delete()
-//        }
-//        return future.flatMap { [unowned self] in
-//            #warning("fixme")
-//            return (roles.input.value ?? []).map { FeatherUserRoleModel(userId: model.id!, roleId: UUID(uuidString: $0)!) }.create(on: req.db)
-//        }
-//    }
-
+    override func initialize() {
+        super.initialize()
+        
+        self.fields = [
+            TextField(key: "email")
+                .config { $0.output.required = true }
+                .validators { [
+                    FormFieldValidator($1, "Email is required") { !$0.input.isEmpty },
+                    FormFieldValidator($1, "Email must be unique", nil) { field, req in
+                        Model.isUniqueBy(\.$email == field.input, req: req)
+                    }
+                ] }
+                .read { [unowned self] in $1.output.value = model?.email }
+                .write { [unowned self] in model?.email = $1.input },
+            
+            TextField(key: "password")
+                .write { [unowned self] req, field -> Void in
+                    if !field.input.isEmpty {
+                        model?.password = try! Bcrypt.hash(field.input)
+                    }
+                },
+            
+            ToggleField(key: "root")
+                .read { [unowned self] in $1.output.value = model?.root ?? false }
+                .write { [unowned self] in model?.root = $1.input },
+            
+            CheckboxField(key: "roles")
+                .load { req, field in
+                    SystemRoleModel.query(on: req.db).all()
+                        .mapEach(\.formFieldOption)
+                        .map { field.output.options = $0 }
+                }
+                .read { [unowned self] req, field in
+                    field.output.values = model?.roles.compactMap { $0.identifier } ?? []
+                }
+                .save { [unowned self] req, field in
+                    let values = field.input.compactMap { UUID(uuidString: $0) }
+                    #warning("generic attach / detach")
+                    
+                    return model!.$roles.detach(model!.$roles.value ?? [], on: req.db).flatMap {
+                        SystemRoleModel.query(on: req.db).filter(\.$id ~~ values).all().flatMap { items in
+                            model!.$roles.attach(items, on: req.db)
+                        }
+                    }
+                }
+            
+        ]
+    }
 }

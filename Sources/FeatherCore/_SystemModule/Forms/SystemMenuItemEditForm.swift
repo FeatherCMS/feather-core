@@ -7,45 +7,52 @@
 
 final class SystemMenuItemEditForm: ModelForm<SystemMenuItemModel> {
 
-//    var icon = TextField(key: "icon")
-//    var label = TextField(key: "label", required: true)
-//    var url = TextField(key: "url", required: true)
-//    var priority = TextField(key: "priority", required: true)
-//    var isBlank = ToggleField(key: "isBlank")
-//    var permission = TextField(key: "permission")
-//    var menuId = TextField(key: "menuId")
-//    var notification: String?
-//    
-//    var fields: [FormFieldRepresentable] {
-//        [icon, label, url, priority, isBlank, permission, menuId]
-//    }
-//
-//    init() {}
-//
-//    func initialize(req: Request) -> EventLoopFuture<Void> {
-//        isBlank.output.value = false
-//        priority.output.value = "100"
-//        return req.eventLoop.future()
-//    }
-//
-//    func read(from input: Model)  {
-//        icon.output.value = input.icon
-//        label.output.value = input.label
-//        url.output.value = input.url
-//        priority.output.value = String(input.priority)
-//        isBlank.output.value = input.isBlank
-//        permission.output.value = input.permission
-//        menuId.output.value = input.$menu.id.uuidString
-//    }
-//
-//    func write(to output: Model) {
-//        #warning("validation / input types")
-//        output.icon = icon.input.value?.emptyToNil
-//        output.label = label.input.value!
-//        output.url = url.input.value!
-//        output.priority = Int(priority.input.value!)!
-//        output.isBlank = isBlank.input.value!
-//        output.permission = permission.input.value?.emptyToNil
-//        output.$menu.id = UUID(uuidString: menuId.input.value!)!
-//    }
+    override func initialize() {
+        super.initialize()
+
+        self.fields = [
+            TextareaField(key: "icon")
+                .load { [unowned self] in model?.icon = $1.input }
+                .save { [unowned self] in $1.output.value = model?.icon },
+            
+            TextField(key: "label")
+                .config { $0.output.required = true }
+                .validators { [
+                    FormFieldValidator($1, "Label is required") { !$0.input.isEmpty },
+                ] }
+                .read { [unowned self] in $1.output.value = model?.label }
+                .write { [unowned self] in model?.label = $1.input },
+                
+            TextField(key: "url")
+                .config { $0.output.required = true }
+                .validators { [
+                    FormFieldValidator($1, "URL is required") { !$0.input.isEmpty },
+                ] }
+                .read { [unowned self] in $1.output.value = model?.url }
+                .write { [unowned self] in model?.url = $1.input },
+
+            TextField(key: "priority")
+                .config { $0.output.value = String(100) }
+                .read { [unowned self] in model?.priority = Int($1.input) ?? 100 }
+                .write { [unowned self] in $1.output.value = String(model?.priority ?? 100) },
+                
+            ToggleField(key: "isBlank")
+                .read { [unowned self] in $1.output.value = model?.isBlank ?? false }
+                .write { [unowned self] in model?.isBlank = $1.input },
+            
+            TextareaField(key: "permission")
+                .read { [unowned self] in $1.output.value = model?.permission }
+                .write { [unowned self] in model?.permission = $1.input },
+            
+            HiddenField(key: "menuId")
+                .read { [unowned self] req, field -> Void in
+                    if let uuid = UUID(uuidString: field.input) {
+                        model?.$menu.id = uuid
+                    }
+                }
+                .write { [unowned self] req, field in
+                    field.output.value = model?.$menu.id.uuidString
+                },
+        ]
+    }
 }

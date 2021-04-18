@@ -17,7 +17,8 @@ final class SystemVariableEditForm: ModelForm<SystemVariableModel> {
                 .validators { [
                     FormFieldValidator($1, "Name is required") { !$0.input.isEmpty },
                 ] }
-                .persist(\.name) { [unowned self] in model },
+                .read { [unowned self] in $1.output.value = model?.name }
+                .write { [unowned self] in model?.name = $1.input },
 
             TextField(key: "key")
                 .config { $0.output.required = true }
@@ -27,10 +28,16 @@ final class SystemVariableEditForm: ModelForm<SystemVariableModel> {
                         Model.isUniqueBy(\.$key == field.input, req: req)
                     }
                 ] }
-                .persist(\.key) { [unowned self] in model },
+                .write { [unowned self] in model?.key = $1.input }
+                .read { [unowned self] in $1.output.value = model?.key },
             
-            TextareaField(key: "value").persist(\.value) { [unowned self] in model },
-            TextareaField(key: "notes").persist(\.notes) { [unowned self] in model },
+            TextareaField(key: "value")
+                .read { [unowned self] in $1.output.value = model?.value }
+                .write { [unowned self] in model?.value = $1.input },
+            
+            TextareaField(key: "notes")
+                .read { [unowned self] in $1.output.value = model?.notes }
+                .write { [unowned self] in model?.notes = $1.input },
         ]
     }
 }

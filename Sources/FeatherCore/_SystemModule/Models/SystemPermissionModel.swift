@@ -74,6 +74,22 @@ extension SystemPermissionModel {
     var key: String { [namespace, context, action].joined(separator: ".") }
 }
 
+extension SystemPermissionModel {
+    
+    static func uniqueBy(_ namespace: String, _ context: String, _ action: String, paramKey: String = "id", _ req: Request) -> EventLoopFuture<Bool> {
+        var query = SystemPermissionModel.query(on: req.db)
+            .filter(\.$namespace == namespace)
+            .filter(\.$context == context)
+            .filter(\.$action == action)
+        
+        if let id = req.parameters.get(paramKey), let uuid = UUID(uuidString: id) {
+            query = query.filter(\.$id != uuid)
+        }
+        return query.count().map { $0 == 0  }
+    }
+}
+
+
 // MARK: - view
 
 extension SystemPermissionModel: FormFieldOptionRepresentable {
