@@ -8,9 +8,10 @@
 
 open class FormField<Input: Decodable, Output: Encodable>: FormComponent {
 
+    public typealias FormFieldValidatorsHandler = ((Request, FormField<Input, Output>) -> [AsyncValidator])
     public typealias FormFieldHandler = (Request, FormField<Input, Output>) throws -> Void
     public typealias FormFieldAsyncHandler = (Request, FormField<Input, Output>) -> EventLoopFuture<Void>
-    public typealias FormFieldAsyncBoolHandler = (Request, FormField<Input, Output>) -> EventLoopFuture<Bool>
+//    public typealias FormFieldAsyncBoolHandler = (Request, FormField<Input, Output>) -> EventLoopFuture<Bool>
     
     
     public var key: String
@@ -19,7 +20,8 @@ open class FormField<Input: Decodable, Output: Encodable>: FormComponent {
     
     private var initHandler: FormFieldAsyncHandler?
     private var processHandler: FormFieldHandler?
-    private var validationHandler: FormFieldAsyncBoolHandler?
+    private var validatorsHandler: FormFieldValidatorsHandler?
+//    private var validationHandler: FormFieldAsyncBoolHandler?
     private var loadHandler: FormFieldAsyncHandler?
     private var saveHandler: FormFieldAsyncHandler?
     private var renderHandler: FormFieldHandler?
@@ -52,10 +54,15 @@ open class FormField<Input: Decodable, Output: Encodable>: FormComponent {
         return self
     }
     
-    open func onValidation(_ block: @escaping FormFieldAsyncBoolHandler) -> Self {
-        validationHandler = block
+    open func validators(_ block: @escaping FormFieldValidatorsHandler) -> Self {
+        validatorsHandler = block
         return self
     }
+
+//    open func onValidation(_ block: @escaping FormFieldAsyncBoolHandler) -> Self {
+//        validationHandler = block
+//        return self
+//    }
     
     open func onLoad(_ block: @escaping FormFieldAsyncHandler) -> Self {
         loadHandler = block
@@ -83,7 +90,10 @@ open class FormField<Input: Decodable, Output: Encodable>: FormComponent {
     }
 
     public func validate(req: Request) -> EventLoopFuture<Bool> {
-        validationHandler?(req, self) ?? req.eventLoop.future(true)
+        guard let validators = validatorsHandler else {
+            return req.eventLoop.future(true)
+        }
+        return InputValidator(validators(req, self)).validate(req)
     }
     
     public func load(req: Request) -> EventLoopFuture<Void> {
@@ -97,9 +107,6 @@ open class FormField<Input: Decodable, Output: Encodable>: FormComponent {
     public func render(req: Request) throws {
         try renderHandler?(req, self)
     }
+    
+    
 }
-
-
-
-
-

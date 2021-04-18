@@ -146,11 +146,15 @@ public extension UpdateController {
                         }
 //                        .flatMap { model in form.willSave(req: req, model: model as! UpdateForm.Model).map { model } }
                         .flatMap { beforeUpdate(req: req, model: $0, form: form) }
+                        .flatMap { model in form.save(req: req).map { model } }
                         .flatMap { model in model.update(on: req.db).map { model } }
 //                        .flatMap { model in form.didSave(req: req, model: model as! UpdateForm.Model).map { model } }
                         .flatMap { afterUpdate(req: req, form: form, model: $0) }
+                        .flatMap { model in
+                            form.model = model as? UpdateForm.Model
+                            return form.load(req: req).map { model }
+                        }
 //                        .map { form.read(from: $0 as! UpdateForm.Model); return $0; }
-                        .flatMap { model in form.save(req: req).map { model } }
                         .flatMap { updateResponse(req: req, form: form, model: $0) }
                 }
         }
