@@ -20,7 +20,9 @@
     <div id="notification" class="#(form.notification.type ?? "info")">
         #if(form.notification.icon ?? false): #svg(form.notification.icon) #endif
         #if(form.notification.title ?? false): <h3>#(form.notification.title)</h3>#endif
+        #if(form.notification.message ?? false):
         <p>#(form.notification.message)</p>
+        #endif
     </div>
     #endif
 

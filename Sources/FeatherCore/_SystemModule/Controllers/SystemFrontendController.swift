@@ -42,11 +42,8 @@ struct SystemFrontendController {
         req.view.render("System/Robots").encodeResponse(status: .ok, headers: ["Content-Type": "text/plain; charset=utf-8"], for: req)
     }
     
-    private func render(req: Request, model: SystemUserModel? = nil, form: SystemLoginForm = .init(fields: [])) -> EventLoopFuture<Response> {
-        if let model = model {
-//            form.email.output.value = model.email
-        }
 
+    private func render(req: Request, form: SystemLoginForm = .init()) -> EventLoopFuture<Response> {
         return req.view.render("System/Login", ["form": form]).encodeResponse(for: req)
     }
 
@@ -77,7 +74,7 @@ struct SystemFrontendController {
             .flatMapThrowing { try form.process(req: req) }
             .flatMap { form.validate(req: req) }
             .flatMap { _ in
-//                form.notification = "Invalid username or password"
+                form.notification = .init(type: .error, title: "Invalid username or password")
                 return render(req: req, form: form)
             }
     }

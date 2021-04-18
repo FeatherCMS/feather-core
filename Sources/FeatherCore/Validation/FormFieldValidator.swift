@@ -42,4 +42,3 @@ public struct FormFieldValidator<Input: Decodable, Output: FormFieldView>: Async
         }
     }
 }
-

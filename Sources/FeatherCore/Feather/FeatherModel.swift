@@ -84,6 +84,16 @@ public extension FeatherModel {
                                        path: "/admin/" + Module.path),
                          permissions: permissions, urls: .init(list: "/admin/" + path))
     }
+
+    /// check if a model is unique by a given filter (excludes the current object id if peresnt in a given request parameter)
+    static func isUniqueBy(_ filter:  ModelValueFilter<Self>, paramKey: String = "id", req: Request) -> EventLoopFuture<Bool> {
+        var query = Self.query(on: req.db).filter(filter)
+        if let id = req.parameters.get(paramKey), let uuid = UUID(uuidString: id) {
+            query = query.filter(\Self._$id != uuid)
+        }
+        return query.count().map { $0 == 0  }
+    }
+
 }
 
 

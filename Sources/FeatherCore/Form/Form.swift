@@ -55,6 +55,12 @@ open class Form: FormComponent {
         self.title = title
         self.notification = notification
         self.fields = fields
+        
+        self.initialize()
+    }
+    
+    open func initialize() {
+        
     }
 
     public func encode(to encoder: Encoder) throws {

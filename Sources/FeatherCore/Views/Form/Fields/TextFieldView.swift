@@ -9,7 +9,7 @@ public struct TextFieldView: FormFieldView {
     
     public enum Format: String, Codable {
         case normal
-        case secure
+        case password
         case email
         case number
     }

@@ -58,3 +58,4 @@ final class SystemVariableModel: FeatherModel {
         ]
     }
 }
+

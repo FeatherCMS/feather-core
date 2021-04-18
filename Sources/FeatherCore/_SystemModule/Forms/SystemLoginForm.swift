@@ -7,8 +7,27 @@
 
 final class SystemLoginForm: Form {
 
-//    var email = TextField(key: "email", required: true)
-//    var password = TextField(key: "password", required: true)
-//    var notification: String?
-//
+    override func initialize() {
+        super.initialize()
+        
+        self.fields = [
+            TextField(key: "email")
+                .config {
+                    $0.output.required = true
+                    $0.output.format = .email
+                }
+                .validators { [
+                    FormFieldValidator($1, "Email is required") { !$0.input.isEmpty },
+                ] },
+
+            TextField(key: "password")
+                .config {
+                    $0.output.required = true
+                    $0.output.format = .password
+                }
+                .validators { [
+                    FormFieldValidator($1, "Password is required") { !$0.input.isEmpty },
+                ] },
+        ]
+    }
 }

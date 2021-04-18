@@ -39,13 +39,9 @@ open class ModelForm<T: FeatherModel>: Form, FeatherForm {
 
         self.title = Model.name
 
-        self.initialize()
+        super.initialize()
     }
-    
-    open func initialize() {
         
-    }
-    
     open override func initialize(req: Request) -> EventLoopFuture<Void> {
         modelInfo = Model.info(req)
         return super.initialize(req: req)

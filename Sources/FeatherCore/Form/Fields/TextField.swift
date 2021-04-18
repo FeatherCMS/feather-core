@@ -15,7 +15,6 @@ class TextField: FormField<String, TextFieldView> {
     override func process(req: Request) throws {
         input = try req.content.get(String.self, at: key)
         output.value = input
- 
         try super.process(req: req)
     }
     
