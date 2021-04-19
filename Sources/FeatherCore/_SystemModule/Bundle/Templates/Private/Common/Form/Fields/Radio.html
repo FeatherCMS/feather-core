@@ -1,8 +1,8 @@
 <section>
     #inline("System/Common/Form/Fields/Label")
 
-    #for(item in field.data.options):
-    <input type="radio" name="#(field.key)" value="#(item.key)" id="#(field.key)-#(item.key)" #if(field.data.value == item.key):checked#endif>
+    #for(item in field.options):
+    <input type="radio" name="#(field.key)" value="#(item.key)" id="#(field.key)-#(item.key)" #if(field.value == item.key):checked#endif>
     <label for="#(field.key)-#(item.key)">#(item.label)</label><br>
     #endfor
 

@@ -81,32 +81,27 @@ open class Form: FormComponent {
     // MARK: - fields api
 
     func loadFields(req: Request) -> EventLoopFuture<Void> {
-        let futures = fields.map { $0.load(req: req) }
-        return req.eventLoop.flatten(futures)
+        req.eventLoop.flatten(fields.map { $0.load(req: req) })
     }
 
-    func processFields(req: Request) throws {
-        try fields.forEach { try $0.process(req: req) }
+    func processFields(req: Request) -> EventLoopFuture<Void> {
+        req.eventLoop.flatten(fields.map { $0.process(req: req) })
     }
     
     func validateFields(req: Request) -> EventLoopFuture<Bool> {
-        let futures = fields.map { $0.validate(req: req) }
-        return req.eventLoop.mergeTrueFutures(futures)
+        req.eventLoop.mergeTrueFutures(fields.map { $0.validate(req: req) })
     }
 
     func saveFields(req: Request) -> EventLoopFuture<Void> {
-        let futures = fields.map { $0.save(req: req) }
-        return req.eventLoop.flatten(futures)
+        req.eventLoop.flatten(fields.map { $0.save(req: req) })
     }
     
     func readFields(req: Request) -> EventLoopFuture<Void> {
-        let futures = fields.map { $0.read(req: req) }
-        return req.eventLoop.flatten(futures)
+        req.eventLoop.flatten(fields.map { $0.read(req: req) })
     }
 
     func writeFields(req: Request) -> EventLoopFuture<Void> {
-        let futures = fields.map { $0.write(req: req) }
-        return req.eventLoop.flatten(futures)
+        req.eventLoop.flatten(fields.map { $0.write(req: req) })
     }
     
     
@@ -118,8 +113,8 @@ open class Form: FormComponent {
         return loadFields(req: req)
     }
     
-    open func process(req: Request) throws {
-        try processFields(req: req)
+    open func process(req: Request) -> EventLoopFuture<Void> {
+        processFields(req: req)
     }
     
     open func validate(req: Request) -> EventLoopFuture<Bool> {

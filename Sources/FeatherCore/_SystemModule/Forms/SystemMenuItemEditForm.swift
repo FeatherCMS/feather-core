@@ -12,9 +12,9 @@ final class SystemMenuItemEditForm: ModelForm<SystemMenuItemModel> {
 
         self.fields = [
             TextareaField(key: "icon")
-                .load { [unowned self] in model?.icon = $1.input }
-                .save { [unowned self] in $1.output.value = model?.icon },
-            
+                .read { [unowned self] in $1.output.value = model?.icon }
+                .write { [unowned self] in model?.icon = $1.input },
+
             TextField(key: "label")
                 .config { $0.output.required = true }
                 .validators { [

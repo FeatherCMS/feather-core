@@ -11,9 +11,9 @@ class ToggleField: FormField<Bool, ToggleFieldView> {
         self.init(key: key, input: false, output: ToggleFieldView(key: key))
     }
     
-    override func process(req: Request) throws {
-        try super.process(req: req)
-        output.value = input
+    override func process(req: Request) -> EventLoopFuture<Void> {
+        super.process(req: req).map { [unowned self] in
+            output.value = input
+        }
     }
-
 }

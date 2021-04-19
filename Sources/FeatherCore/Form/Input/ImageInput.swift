@@ -42,4 +42,8 @@ public final class ImageInput: Codable, FormFieldInput {
         }
         remove = (try? req.content.get(Bool.self, at: key+"Remove")) ?? false
     }
+
+    public var isEmpty: Bool {
+        (temporaryImage == nil && remove) || (temporaryImage == nil && currentKey == nil)
+    }
 }

@@ -41,7 +41,7 @@ struct SystemAdminController {
 
         let form = SystemSettingsForm(fields: [])
         return form.load(req: req)
-            .flatMapThrowing { try form.process(req: req) }
+            .flatMap { form.process(req: req) }
             .flatMap { form.validate(req: req) }
             .flatMap { [self] isValid -> EventLoopFuture<View> in
                 guard isValid else {

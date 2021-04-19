@@ -71,7 +71,7 @@ struct SystemFrontendController {
         }
         let form = SystemLoginForm(fields: [])
         return form.load(req: req)
-            .flatMapThrowing { try form.process(req: req) }
+            .flatMap { form.process(req: req) }
             .flatMap { form.validate(req: req) }
             .flatMap { _ in
                 form.notification = .init(type: .error, title: "Invalid username or password")

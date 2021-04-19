@@ -8,96 +8,94 @@
 /// represents a file data value
 class ImageField: FormField<ImageInput, ImageFieldView> {
 
-
+    convenience init(key: String) {
+        self.init(key: key,
+                  input: ImageInput(key: key, file: nil, currentKey: nil, temporaryImage: nil, remove: false),
+                  output: .init(key: key, originalKey: nil, delete: false))
+    }
     
-//            validation.validators.append(ContentValidator<String>.required(key: key))
-            //    func required(message: String? = nil) -> Self {
-            //        validators.append({ [unowned self] field -> Bool in
-            //            if
-            //                (field.value.temporaryFile == nil && field.value.delete) ||
-            //                (field.value.temporaryFile == nil && field.value.originalKey == nil)
-            //            {
-            //                let message = message ?? "\(name ?? key.capitalized) is required"
-            //                field.error = message
-            //                return false
-            //            }
-            //            return true
-            //        })
-            //        return self
-            //    }
+    override func process(req: Request) -> EventLoopFuture<Void> {
+        input.process(req: req)
 
+        return super.process(req: req).map { [unowned self] in
+            output.originalKey = input.currentKey
+            output.temporaryKey = input.temporaryImage?.key
+            output.temporaryName = input.temporaryImage?.name
+            output.delete = input.remove
+        }
+    }
 
     // MARK: - helpers
     
-//    private func removeTemporaryFile(req: Request) -> EventLoopFuture<Void> {
-//        if let file = input.value?.temporaryImage {
-//            return req.fs.delete(key: file.key).map { [unowned self] in
-//                input.value?.temporaryImage = nil
-//            }
-//        }
-//        return req.eventLoop.future()
-//    }
-//
-//    private func updateCurrentKey(_ key: String?, req: Request) -> EventLoopFuture<String?> {
-//        var future = req.eventLoop.future()
-//        if let key = input.value?.currentKey {
-//            future = future.flatMap { req.fs.delete(key: key) }
-//        }
-//        return future.map { [unowned self] in
-//            input.value?.currentKey = key
-//            return key
-//        }
-//    }
-//
-//    // MARK: - api
-//    
-//    func uploadTemporaryFile(req: Request) -> EventLoopFuture<Void> {
-//        /// we only manipulate temporary files here...
-//        var future = req.eventLoop.future()
-//        if input.value?.remove ?? false {
-//            future = removeTemporaryFile(req: req)
-//        }
-//        else if let file = input.value?.file, let data = file.dataValue, !data.isEmpty {
-//            let key = "tmp/\(UUID().uuidString).tmp"
-//            /// remove previous temp file and upload new one
-//            future = removeTemporaryFile(req: req).flatMap {
-//                req.fs.upload(key: key, data: data).map { [unowned self] url in
-//                    input.value?.temporaryImage = .init(key: key, name: file.filename)
-//                }
-//            }
-//        }
-//        return future
-//    }
-//
-//    func save(to path: String, req: Request) -> EventLoopFuture<String?> {
-//        var future: EventLoopFuture<String?> = req.eventLoop.future(nil)
-//        /// if there is a delete flag we simply remove the original file
-//        if input.value?.remove ?? false {
-//            future = updateCurrentKey(nil, req: req)
-//        }
-//        else if let file = input.value?.temporaryImage {
-//            let destination = path + file.name
-//
-//            /// if the target file already exists we give it a timestamp as a prefix
-//            future = req.fs.exists(key: destination)
-//                .map { exists -> String in
-//                    if exists {
-//                        let formatter = DateFormatter()
-//                        formatter.dateFormat="y-MM-dd-HH-mm-ss-"
-//                        let prefix = formatter.string(from: .init())
-//                        return path + prefix + file.name
-//                    }
-//                    return destination
-//                }
-//                .flatMap { dest in
-//                    req.fs.move(key: file.key, to: dest).flatMap { [unowned self] _ in
-//                        input.value?.temporaryImage = nil
-//                        return updateCurrentKey(dest, req: req)
-//                    }
-//                }
-//        }
-//        return future
-//    }
+    private func removeTemporaryFile(req: Request) -> EventLoopFuture<Void> {
+        if let file = input.temporaryImage {
+            return req.fs.delete(key: file.key).map { [unowned self] in
+                input.temporaryImage = nil
+            }
+        }
+        return req.eventLoop.future()
+    }
+
+    private func updateCurrentKey(_ key: String?, req: Request) -> EventLoopFuture<String?> {
+        var future = req.eventLoop.future()
+        if let key = input.currentKey {
+            future = future.flatMap { req.fs.delete(key: key) }
+        }
+        return future.map { [unowned self] in
+            input.currentKey = key
+            return key
+        }
+    }
+
+    // MARK: - api
+    
+    func uploadTemporaryFile(req: Request) -> EventLoopFuture<Void> {
+        /// we only manipulate temporary files here...
+        var future = req.eventLoop.future()
+        if input.remove {
+            future = removeTemporaryFile(req: req)
+        }
+        else if let file = input.file, let data = file.dataValue, !data.isEmpty {
+            let key = "tmp/\(UUID().uuidString).tmp"
+            /// remove previous temp file and upload new one
+            future = removeTemporaryFile(req: req).flatMap {
+                req.fs.upload(key: key, data: data).map { [unowned self] url in
+                    input.temporaryImage = .init(key: key, name: file.filename)
+                }
+            }
+        }
+        return future
+    }
+
+    public func saveImage(to path: String, req: Request) -> EventLoopFuture<String?> {
+        var future: EventLoopFuture<String?> = req.eventLoop.future(nil)
+        /// if there is a delete flag we simply remove the original file
+        if input.remove {
+            future = updateCurrentKey(nil, req: req)
+        }
+        else if let file = input.temporaryImage {
+            let destination = path + file.name
+
+            /// if the target file already exists we give it a timestamp as a prefix
+            future = req.fs.exists(key: destination)
+                .map { exists -> String in
+                    if exists {
+                        let formatter = DateFormatter()
+                        formatter.dateFormat="y-MM-dd-HH-mm-ss-"
+                        let prefix = formatter.string(from: .init())
+                        return path + prefix + file.name
+                    }
+                    return destination
+                }
+                .flatMap { dest in
+                    req.fs.move(key: file.key, to: dest).flatMap { [unowned self] _ in
+                        input.temporaryImage = nil
+                        return updateCurrentKey(dest, req: req)
+                    }
+                }
+        }
+        return future
+    }
 }
 
 

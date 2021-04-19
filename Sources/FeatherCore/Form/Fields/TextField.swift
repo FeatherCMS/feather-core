@@ -9,11 +9,12 @@
 class TextField: FormField<String, TextFieldView> {
 
     convenience init(key: String) {
-        self.init(key: key, input: "", output: TextFieldView(key: key))
+        self.init(key: key, input: "", output: .init(key: key))
     }
     
-    override func process(req: Request) throws {
-        try super.process(req: req)
-        output.value = input
+    override func process(req: Request) -> EventLoopFuture<Void> {
+        super.process(req: req).map { [unowned self] in
+            output.value = input
+        }
     }
 }

@@ -11,8 +11,9 @@ class MultiGroupOptionField: FormField<[String], MultiGroupOptionFieldView> {
         self.init(key: key, input: [], output: .init(key: key))
     }
     
-    override func process(req: Request) throws {
-        try super.process(req: req)
-        output.values = input
+    override func process(req: Request) -> EventLoopFuture<Void> {
+        super.process(req: req).map { [unowned self] in
+            output.values = input
+        }
     }
 }

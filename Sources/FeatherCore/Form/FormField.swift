@@ -8,18 +8,16 @@
 open class FormField<Input: Decodable, Output: Encodable>: FormComponent {
 
     public typealias FormFieldBlock = (Request, FormField<Input, Output>) -> Void
-    public typealias FormFieldProcessBlock = (Request, FormField<Input, Output>) throws -> Void
     public typealias FormFieldFutureBlock = (Request, FormField<Input, Output>) -> EventLoopFuture<Void>
     public typealias FormFieldValidatorsBlock = ((Request, FormField<Input, Output>) -> [AsyncValidator])
-    
-    
+
     public var key: String
     public var input: Input
     public var output: Output
 
     
     private var loadBlock: FormFieldFutureBlock?
-    private var processBlock: FormFieldProcessBlock?
+    private var processBlock: FormFieldFutureBlock?
     private var validatorsBlock: FormFieldValidatorsBlock?
     private var readBlock: FormFieldFutureBlock?
     private var writeBlock: FormFieldFutureBlock?
@@ -59,7 +57,7 @@ open class FormField<Input: Decodable, Output: Encodable>: FormComponent {
     }
 
     
-    open func process(_ block: @escaping FormFieldProcessBlock) -> Self {
+    open func process(_ block: @escaping FormFieldFutureBlock) -> Self {
         processBlock = block
         return self
     }
@@ -114,9 +112,11 @@ open class FormField<Input: Decodable, Output: Encodable>: FormComponent {
         loadBlock?(req, self) ?? req.eventLoop.future()
     }
 
-    public func process(req: Request) throws {
-        input = try req.content.get(Input.self, at: key)
-        try processBlock?(req, self)
+    public func process(req: Request) -> EventLoopFuture<Void> {
+        if let value = try? req.content.get(Input.self, at: key) {
+            input = value
+        }
+        return processBlock?(req, self) ?? req.eventLoop.future()
     }
 
     public func validate(req: Request) -> EventLoopFuture<Bool> {

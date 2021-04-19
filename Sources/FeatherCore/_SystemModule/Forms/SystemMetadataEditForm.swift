@@ -7,91 +7,102 @@
 
 final class SystemMetadataEditForm: ModelForm<SystemMetadataModel> {
     
+    var formatter: DateFormatter {
+        Application.Config.dateFormatter()
+    }
 
-//    var module = TextField(key: "module").required().length(max: 250)
-//    var model = TextField(key: "model").required().length(max: 250)
-//    var reference = TextField(key: "reference")
-//    var slug = TextField(key: "slug")
-//    var title = TextField(key: "title")
-//    var excerpt = TextField(key: "excerpt")
-//    var canonicalUrl = TextField(key: "canonicalUrl")
-//    var statusId = SelectionField(key: "statusId")
-//    var feedItem = ToggleField(key: "feedItem")
-//    var filters = MultiSelectionField(key: "filters")
-//    var date = TextField(key: "date")
-//    var css = TextareaField(key: "css")
-//    var js = TextareaField(key: "js")
-////    var image = FileFormField(key: "image")
-//    var notification: String?
-//
-//    var dateFormat: String?
-//    
-//    var fields: [FormFieldRepresentable] {
-//        [slug, title, excerpt, canonicalUrl, statusId, feedItem, filters, date, /*image,*/ css, js]
-//    }
-//
-//    init() {}
-//
-//    func initialize(req: Request) -> EventLoopFuture<Void> {
-//        dateFormat = Application.Config.dateFormatter().dateFormat
-//        statusId.output.options = Metadata.Status.allCases.map(\.formFieldOption)
-//        statusId.output.value = MetadataStatus.draft.rawValue
-//        date.output.value = Application.Config.dateFormatter().string(from: Date())
-//
-//        let contentFilters: [[ContentFilter]] = req.invokeAll("content-filters")
-//        filters.output.options = contentFilters.flatMap { $0 }.map(\.formFieldOption)
-//        filters.output.options.append(.init(key: "[disable-all-filters]", label: "Disable all filters"))
-//        return req.eventLoop.future()
-//    }
-//
-////    func processAfterFields(req: Request) -> EventLoopFuture<Void> {
-////        image.uploadTemporaryFile(req: req)
-////    }
-//
-//    func read(from input: Model)  {
-////        module.value = input.module
-////        model.value = input.model
-////        reference.value = input.reference
-//        slug.output.value = input.slug
-//        statusId.output.value = input.status.rawValue
-//        feedItem.output.value = input.feedItem
-//        date.output.value = Application.Config.dateFormatter().string(from: input.date)
-//        title.output.value = input.title
-//        excerpt.output.value = input.excerpt
-//        canonicalUrl.output.value = input.canonicalUrl
-////        image.value.originalKey = input.imageKey
-//        css.output.value = input.css
-//        js.output.value = input.js
-//    }
-//
-//    func write(to output: Model) {
-////        output.module = module.value!
-////        output.model = model.value!
-////        output.reference = reference.value!
-//        output.slug = slug.input.value!
-//        output.status = Metadata.Status(rawValue: statusId.input.value!)!
-//        output.feedItem = feedItem.input.value ?? false
-////        output.filters = filters.input.value
-//        output.date = Application.Config.dateFormatter().date(from: date.input.value!)!
-//        output.title = title.input.value?.emptyToNil
-//        output.excerpt = excerpt.input.value?.emptyToNil
-//        output.canonicalUrl = canonicalUrl.input.value?.emptyToNil
-//        output.css = css.input.value?.emptyToNil
-//        output.js = js.input.value?.emptyToNil
-//    }
+    override func initialize() {
+        super.initialize()
 
-//    func willSave(req: Request, model: Model) -> EventLoopFuture<Void> {
-//        /// only delete original file if key contains frontend model key
-//        let delete = image.value.delete
-//        image.value.delete = false
-//        if delete, let original = image.value.originalKey, original.contains(Model.path) {
-//            image.value.delete = true
-//        }
-//        return image.save(to: Model.path, req: req).map { [unowned self] key in
-//            if delete || key != nil {
-//                model.imageKey = key
-//            }
-//            image.value.delete = false
-//        }
-//    }
+        self.action = Action(multipart: true)
+
+        self.fields = [
+            
+            TextField(key: "slug")
+                .config { $0.output.required = true }
+                .validators { [
+                    FormFieldValidator($1, "Slug is required") { !$0.input.isEmpty },
+                ] }
+                .read { [unowned self] in $1.output.value = model?.slug }
+                .write { [unowned self] in model?.slug = $1.input },
+
+            
+            ImageField(key: "image")
+                .read { [unowned self] in $1.output.originalKey = model?.imageKey }
+                .process { ($1 as? ImageField)?.uploadTemporaryFile(req: $0) ?? $0.eventLoop.future() }
+                .write { [unowned self] req, field in
+                    (field as? ImageField)?.saveImage(to: Model.path, req: req).map { key in
+                        if field.input.remove || key != nil {
+                            model?.imageKey = key
+                        }
+                    } ?? req.eventLoop.future()
+                },
+
+            
+            TextField(key: "title")
+                .read { [unowned self] in $1.output.value = model?.title }
+                .write { [unowned self] in model?.title = $1.input },
+                
+            TextareaField(key: "excerpt")
+                .read { [unowned self] in $1.output.value = model?.excerpt }
+                .write { [unowned self] in model?.excerpt = $1.input },
+            
+            TextField(key: "canonicalUrl")
+                .config {
+                    $0.output.label = "Canonical URL"
+                }
+                .read { [unowned self] in $1.output.value = model?.canonicalUrl }
+                .write { [unowned self] in model?.canonicalUrl = $1.input },
+            
+            SelectionField(key: "statusId", value: MetadataStatus.draft.rawValue)
+                .config {
+                    $0.output.required = true
+                    $0.output.label = "Status"
+                    $0.output.options = Metadata.Status.allCases.map(\.formFieldOption)
+                }
+                .validators { [
+                    FormFieldValidator($1, "Invalid status") { field in
+                        Metadata.Status(rawValue: field.input) != nil
+                    }
+                ] }
+                .read { [unowned self] in $1.output.value = model?.status.rawValue }
+                .write { [unowned self] in model?.status = Metadata.Status(rawValue: $1.input)! },
+
+            ToggleField(key: "feedItem")
+                .config {
+                    $0.output.required = true
+                    $0.output.label = "Is feed item?"
+                }
+                .read { [unowned self] in $1.output.value = model?.feedItem ?? false }
+                .write { [unowned self] in model?.feedItem = $1.input },
+            
+            MultiSelectionField(key: "filters")
+                .load { req, field -> Void in
+                    let contentFilters: [[ContentFilter]] = req.invokeAll("content-filters")
+                    field.output.options = contentFilters.flatMap { $0 }.map(\.formFieldOption)
+                },
+
+            TextField(key: "date")
+                .validators { [unowned self] in [
+                    FormFieldValidator($1, "Invalid date") { field in
+                        formatter.date(from: field.input) != nil
+                    }
+                ] }
+                .read { [unowned self] in $1.output.value = formatter.string(from: model?.date ?? Date()) }
+                .write { [unowned self] in model?.date = formatter.date(from: $1.input) ?? Date() },
+            
+            TextareaField(key: "css")
+                .read { [unowned self] in $1.output.value = model?.css }
+                .write { [unowned self] in model?.css = $1.input },
+            
+            TextareaField(key: "js")
+                .read { [unowned self] in $1.output.value = model?.js }
+                .write { [unowned self] in model?.js = $1.input },
+  
+        ]
+    }
+
+
+
+
 }

@@ -132,7 +132,7 @@ public extension UpdateController {
             let id = try identifier(req)
             let form = UpdateForm()
             return form.load(req: req)
-                .flatMapThrowing { try form.process(req: req) }
+                .flatMap { form.process(req: req) }
                 .flatMap { form.validate(req: req) }
                 .throwingFlatMap { isValid in
                     guard isValid else {
