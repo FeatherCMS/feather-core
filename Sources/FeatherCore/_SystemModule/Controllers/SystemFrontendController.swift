@@ -57,7 +57,7 @@ struct SystemFrontendController {
     // MARK: - api
     
     func loginView(req: Request) throws -> EventLoopFuture<Response> {
-        guard req.auth.has(SystemUserModel.self) else {
+        guard req.auth.has(User.self) else {
             return render(req: req)
         }
         let response = req.redirect(to: getCustomRedirect(req: req), type: .normal)
@@ -65,7 +65,7 @@ struct SystemFrontendController {
     }
 
     func login(req: Request) throws -> EventLoopFuture<Response> {
-        if let user = req.auth.get(SystemUserModel.self) {
+        if let user = req.auth.get(User.self) {
             req.session.authenticate(user)
             return req.eventLoop.future(req.redirect(to: getCustomRedirect(req: req)))
         }
@@ -80,8 +80,8 @@ struct SystemFrontendController {
     }
 
     func logout(req: Request) throws -> Response {
-        req.auth.logout(SystemUserModel.self)
-        req.session.unauthenticate(SystemUserModel.self)
+        req.auth.logout(User.self)
+        req.session.unauthenticate(User.self)
         return req.redirect(to: getCustomRedirect(req: req))
     }
 }

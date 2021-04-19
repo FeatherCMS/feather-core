@@ -24,11 +24,11 @@ struct SystemUserController: FeatherController {
     // MARK: - login
 
     func login(req: Request) throws -> EventLoopFuture<TokenObject> {
-        guard let user = req.auth.get(SystemUserModel.self) else {
+        guard let user = req.auth.get(User.self) else {
             throw Abort(.unauthorized)
         }
         let tokenValue = [UInt8].random(count: 16).base64
-        let token = SystemTokenModel(value: tokenValue, userId: user.id!)
+        let token = SystemTokenModel(value: tokenValue, userId: user.id)
         return token.create(on: req.db).map { token.getContent }
     }
     
@@ -47,7 +47,7 @@ struct SystemUserController: FeatherController {
     }
 
     func beforeDelete(req: Request, model: Model) -> EventLoopFuture<Model> {
-        SystemUserModel.query(on: req.db).count().flatMap { count in
+        Model.query(on: req.db).count().flatMap { count in
             if count == 1 {
                 return req.eventLoop.future(error: Abort(.badRequest, reason: "You can't delete every user"))
             }

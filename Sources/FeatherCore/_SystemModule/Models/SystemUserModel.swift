@@ -29,8 +29,6 @@ final class SystemUserModel: FeatherModel {
     @Field(key: FieldKeys.root) var root: Bool
 
     @Siblings(through: FeatherUserRoleModel.self, from: \.$user, to: \.$role) var roles: [SystemRoleModel]
-    
-    var permissions: [String] = []
 
     init() { }
     
@@ -64,12 +62,6 @@ final class SystemUserModel: FeatherModel {
     }
 }
 
-extension SystemUserModel: SessionAuthenticatable {
-    typealias SessionID = UUID
-
-    var sessionID: SessionID { id! }
-}
-
 extension SystemUserModel: FormFieldOptionRepresentable {
 
     var formFieldOption: FormFieldOption {
@@ -77,39 +69,33 @@ extension SystemUserModel: FormFieldOptionRepresentable {
     }
 }
 
+extension SystemUserModel: Authenticatable {}
+
 extension SystemUserModel {
 
     /// find user by identifier with roles
     static func findWithRolesBy(id: UUID, on db: Database) -> EventLoopFuture<SystemUserModel?> {
-        SystemUserModel.query(on: db).filter(\.$id == id).with(\.$roles).first()
+        query(on: db).filter(\.$id == id).with(\.$roles).first()
     }
     
     /// find user by identifier with permissions
     static func findWithPermissionsBy(id: UUID, on db: Database) -> EventLoopFuture<SystemUserModel?> {
-        SystemUserModel.query(on: db)
+        query(on: db)
             .filter(\.$id == id)
             .with(\.$roles) { role in role.with(\.$permissions) }
             .first()
-            .map { user in
-                if user != nil {
-                    user!.permissions = user!.roles.reduce([]) { $0 + $1.permissions.map(\.key) }
-                }
-                return user
-            }
     }
 
     /// find user email with permissions
     static func findWithPermissionsBy(email: String, on db: Database) -> EventLoopFuture<SystemUserModel?> {
-        SystemUserModel.query(on: db)
+        query(on: db)
             .filter(\.$email == email.lowercased())
             .with(\.$roles) { role in role.with(\.$permissions) }
             .first()
-            .map { user in
-                if user != nil {
-                    user!.permissions = user!.roles.reduce([]) { $0 + $1.permissions.map(\.key) }
-                }
-                return user
-            }
+    }
+    
+    var authUserValue: User {
+        User(id: id!, email: email, isRoot: root, permissions: roles.reduce([]) { $0 + $1.permissions.map(\.permissionValue) })
     }
 }
 

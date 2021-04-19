@@ -144,7 +144,7 @@ final class SystemModule: FeatherModule {
 
     func adminAuthMiddlewaresHook(args: HookArguments) -> [Middleware] {
         [
-            SystemUserModel.redirectMiddleware(path: "/login/?redirect=/admin/"),
+            User.redirectMiddleware(path: "/login/?redirect=/admin/"),
             AccessGuardMiddleware(.init(namespace: "admin", context: "module", action: .custom("access")))
         ]
     }
@@ -152,7 +152,7 @@ final class SystemModule: FeatherModule {
     func apiAuthMiddlewaresHook(args: HookArguments) -> [Middleware] {
         [
             SystemTokenModel.authenticator(),
-            SystemUserModel.guardMiddleware()
+            User.guardMiddleware()
         ]
     }
     
@@ -205,13 +205,13 @@ final class SystemModule: FeatherModule {
     func permissionHook(args: HookArguments) -> Bool {
         let permission = args["permission"] as! Permission
         
-        guard let user = args.req.auth.get(SystemUserModel.self) else {
+        guard let user = args.req.auth.get(User.self) else {
             return false
         }
-        if user.root {
+        if user.isRoot {
             return true
         }
-        return user.permissions.contains(permission.identifier)
+        return user.permissions.contains(permission)
     }
     
     /// by default return the permission as an access...

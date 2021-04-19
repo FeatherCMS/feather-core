@@ -5,9 +5,9 @@
 //  Created by Tibor Bodecs on 2021. 03. 26..
 //
 
-public struct Permission: Codable {
+public struct Permission: Codable, Equatable {
 
-    public enum Action: Codable {
+    public enum Action: Codable, Equatable {
 
         private enum CodingKeys: String, CodingKey {
             case list, get, create, update, patch, delete, custom
@@ -95,3 +95,5 @@ public struct Permission: Codable {
     
     public var name: String { "\(namespace) \(context) \(action.identifier)" }
 }
+
+

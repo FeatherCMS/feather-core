@@ -16,7 +16,7 @@ struct SystemUserCredentialsAuthenticator: CredentialsAuthenticator {
         SystemUserModel.findWithPermissionsBy(email: credentials.email, on: req.db).map {
             do {
                 if let user = $0, try Bcrypt.verify(credentials.password, created: user.password) {
-                    req.auth.login(user)
+                    req.auth.login(user.authUserValue)
                 }
             }
             catch {

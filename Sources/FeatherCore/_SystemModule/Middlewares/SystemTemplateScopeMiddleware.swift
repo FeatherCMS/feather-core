@@ -67,8 +67,8 @@ struct SystemTemplateScopeMiddleware: Middleware {
         }
         .flatMapThrowing { _ in
             let user: [String: TemplateDataGenerator] = [
-                "isAuthenticated": .lazy(TemplateData.bool(req.auth.has(SystemUserModel.self))),
-                "email": .lazy(TemplateData.string(req.auth.get(SystemUserModel.self)?.email)),
+                "isAuthenticated": .lazy(TemplateData.bool(req.auth.has(User.self))),
+                "email": .lazy(TemplateData.string(req.auth.get(User.self)?.email)),
             ]
 
             try req.tau.context.register(generators: req.application.templateScopeGenerator, toScope: "app")

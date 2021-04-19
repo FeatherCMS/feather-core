@@ -29,7 +29,7 @@ final class SystemTokenModel: FeatherModel {
     
     init(id: UUID? = nil,
          value: String,
-         userId: SystemUserModel.IDValue)
+         userId: UUID)
     {
         self.id = id
         self.value = value

@@ -72,6 +72,10 @@ final class SystemPermissionModel: FeatherModel {
 
 extension SystemPermissionModel {
     var key: String { [namespace, context, action].joined(separator: ".") }
+    
+    var permissionValue: Permission {
+        Permission(namespace: namespace, context: context, action: .init(identifier: action))
+    }
 }
 
 extension SystemPermissionModel {
