@@ -23,7 +23,8 @@ final class SystemModule: FeatherModule {
         app.middleware.use(SystemTemplateScopeMiddleware())
         app.middleware.use(SystemSafePathMiddleware())
         app.middleware.use(SystemInstallGuardMiddleware())
-        app.middleware.use(SystemUserSessionAuthenticator())
+        app.middleware.use(SystemAbortErrorMiddleware())
+
         /// install
         app.hooks.register("install-models", use: installModelsHook)
         app.hooks.register("install-permissions", use: installPermissionsHook)
@@ -31,9 +32,6 @@ final class SystemModule: FeatherModule {
         /// acl
         app.hooks.register("permission", use: permissionHook)
         app.hooks.register("access", use: accessHook)
-        /// auth
-        app.hooks.register("admin-auth-middlewares", use: adminAuthMiddlewaresHook)
-        app.hooks.register("api-auth-middlewares", use: apiAuthMiddlewaresHook)
         //app.hooks.register("system-variables-list-access", use: systemVariablesAccessHook)
         /// admin menus
         app.hooks.register("admin-menus", use: adminMenusHook)
@@ -42,8 +40,8 @@ final class SystemModule: FeatherModule {
         try router.boot(routes: app.routes)
         app.hooks.register("routes", use: router.routesHook)
         app.hooks.register("admin-routes", use: router.adminRoutesHook)
-        app.hooks.register("public-api-routes", use: router.publicApiRoutesHook)
         app.hooks.register("api-routes", use: router.apiRoutesHook)
+        app.hooks.register("api-admin-routes", use: router.apiAdminRoutesHook)
         /// pages
         app.hooks.register("response", use: responseHook)
         app.hooks.register("home-page", use: homePageHook)
@@ -139,23 +137,8 @@ final class SystemModule: FeatherModule {
             .map { Application.Config.installed = true }
             .flatMap { req.view.render("System/Install/Finish") }
             .flatMapError { req.view.render("System/Install/Error", ["error": $0.localizedDescription]) }
-            
     }
 
-    func adminAuthMiddlewaresHook(args: HookArguments) -> [Middleware] {
-        [
-            User.redirectMiddleware(path: "/login/?redirect=/admin/"),
-            AccessGuardMiddleware(.init(namespace: "admin", context: "module", action: .custom("access")))
-        ]
-    }
-    
-    func apiAuthMiddlewaresHook(args: HookArguments) -> [Middleware] {
-        [
-            SystemTokenModel.authenticator(),
-            User.guardMiddleware()
-        ]
-    }
-    
     func adminMenusHook(args: HookArguments) -> [SystemMenu] {
         [
             .init(key: "system",

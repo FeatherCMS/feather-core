@@ -60,7 +60,7 @@ public protocol CreateController: ModelController {
 
 public extension CreateController {
 
-    var createView: String { "System/Admin/Form" }
+    var createView: String { "System/Admin/Edit" }
 
     func beforeInvalidCreateFormRender(req: Request, form: CreateForm) -> EventLoopFuture<CreateForm> {
         req.eventLoop.future(form)

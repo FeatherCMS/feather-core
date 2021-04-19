@@ -69,7 +69,12 @@ extension SystemUserModel: FormFieldOptionRepresentable {
     }
 }
 
-extension SystemUserModel: Authenticatable {}
+extension SystemUserModel: Authenticatable {
+    
+    var aclObject: User {
+        User(id: id!, email: email, isRoot: root, permissions: roles.reduce([]) { $0 + $1.permissions.map(\.aclObject) })
+    }
+}
 
 extension SystemUserModel {
 
@@ -92,10 +97,6 @@ extension SystemUserModel {
             .filter(\.$email == email.lowercased())
             .with(\.$roles) { role in role.with(\.$permissions) }
             .first()
-    }
-    
-    var authUserValue: User {
-        User(id: id!, email: email, isRoot: root, permissions: roles.reduce([]) { $0 + $1.permissions.map(\.permissionValue) })
     }
 }
 

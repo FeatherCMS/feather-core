@@ -1,66 +1,17 @@
 #define(title):
 Site settings
 #enddefine
+
 #define(body):
-<div class="lead container">
-    <div class="segment">
-        <a href="/" target="_blank">View site</a>
+    <div class="lead container">
+        <div class="segment">
+            <a href="/" target="_blank">View site</a>
+        </div>
+
+        <h1>Site settings</h1>
     </div>
 
-    <h1>Site settings</h1>
-</div>
-
-<form
-    #if(form.id ?? false): id="#(form.id)"#endif
-    #if(form.class ?? false): class="#(form.class)"#endif
-    method="#(form.action.method ?? "post")"
-    #if(form.action.url ?? false): action="#(form.action.url)"#endif
-    #if(form.action.multipart ?? false): enctype="multipart/form-data"#endif
-    class="container"
-    >
-
-    #if(form.notification ?? false):
-    <div id="notification" class="#(form.notification.type ?? "info")">
-        #if(form.notification.icon ?? false): #svg(form.notification.icon) #endif
-        #if(form.notification.title ?? false): <h3>#(form.notification.title)</h3>#endif
-        #if(form.notification.message ?? false):
-        <p>#(form.notification.message)</p>
-        #endif
-    </div>
-    #endif
-
-    #if(form.error ?? false):
-    <section>
-        <p class="error">#(form.error)</p>
-    </section>
-    #endif
-        #var(field = nil)
-
-        #(field = ["key": "formId", "value": form.id])
-        #inline("System/Common/Form/Fields/Hidden")
-
-        #(field = ["key": "formToken", "value": form.token])
-        #inline("System/Common/Form/Fields/Hidden")
-
-        #for(field in form.fields):
-            #if(field.type == "hidden"):                #inline("System/Common/Form/Fields/Hidden")
-            #elseif(field.type == "text"):              #inline("System/Common/Form/Fields/Text")
-            #elseif(field.type == "textarea"):          #inline("System/Common/Form/Fields/Textarea")
-            #elseif(field.type == "toggle"):            #inline("System/Common/Form/Fields/Toggle")
-            #elseif(field.type == "checkbox"):          #inline("System/Common/Form/Fields/Checkbox")
-            #elseif(field.type == "radio"):             #inline("System/Common/Form/Fields/Radio")
-            #elseif(field.type == "selection"):         #inline("System/Common/Form/Fields/Selection")
-            #elseif(field.type == "multiselection"):    #inline("System/Common/Form/Fields/Multiselection")
-            #elseif(field.type == "multigroupoption"):  #inline("System/Common/Form/Fields/Multigroupoption")
-            #elseif(field.type == "image"):             #inline("System/Common/Form/Fields/Image")
-            #endif
-        #endfor
-        
-    <section>
-        <input type="submit" value="Save">
-    </section>
-    
-</form>
+    #inline("System/Common/Form")
 #enddefine
 
 #inline("System/Admin/Index")

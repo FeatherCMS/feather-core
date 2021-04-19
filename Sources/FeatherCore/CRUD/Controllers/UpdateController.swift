@@ -59,7 +59,7 @@ public protocol UpdateController: IdentifiableController {
 
 public extension UpdateController {
     
-    var updateView: String { "System/Admin/Form" }
+    var updateView: String { "System/Admin/Edit" }
 
     func beforeInvalidUpdateFormRender(req: Request, form: UpdateForm) -> EventLoopFuture<UpdateForm> {
         req.eventLoop.future(form)

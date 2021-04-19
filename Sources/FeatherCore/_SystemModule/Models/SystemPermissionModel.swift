@@ -71,10 +71,18 @@ final class SystemPermissionModel: FeatherModel {
 }
 
 extension SystemPermissionModel {
+
     var key: String { [namespace, context, action].joined(separator: ".") }
     
-    var permissionValue: Permission {
+    var aclObject: Permission {
         Permission(namespace: namespace, context: context, action: .init(identifier: action))
+    }
+}
+
+extension SystemPermissionModel: FormFieldOptionRepresentable {
+
+    var formFieldOption: FormFieldOption {
+        .init(key: identifier, label: name)
     }
 }
 
@@ -92,15 +100,3 @@ extension SystemPermissionModel {
         return query.count().map { $0 == 0  }
     }
 }
-
-
-// MARK: - view
-
-extension SystemPermissionModel: FormFieldOptionRepresentable {
-
-    var formFieldOption: FormFieldOption {
-        .init(key: identifier, label: name)
-    }
-}
-
-

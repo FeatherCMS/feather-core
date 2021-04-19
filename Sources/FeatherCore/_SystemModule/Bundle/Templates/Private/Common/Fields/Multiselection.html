@@ -1,9 +1,9 @@
 <section>
-    #inline("System/Common/Form/Fields/Label")
+    #inline("System/Common/Fields/Label")
     <select name="#(field.key)[]" multiple>
         #for(item in field.options):
         <option #if(field.values.contains(item.key)): selected="selected" #endif value="#(item.key)">#(item.label)</option>
         #endfor
     </select>
-    #inline("System/Common/Form/Fields/Error")
+    #inline("System/Common/Fields/Error")
 </section>

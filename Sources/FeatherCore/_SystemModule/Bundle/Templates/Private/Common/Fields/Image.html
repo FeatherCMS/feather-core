@@ -7,7 +7,7 @@
         <div id="placeholder" class="p:l">#svg(field.placeholder ?? "image", class: "s64 block m:h:auto")</div>
     #endif
 
-    #inline("System/Common/Form/Fields/Label")
+    #inline("System/Common/Fields/Label")
     <input id="#(field.key)" name="#(field.key)" type="file"#if(field.accept ?? false): accept="#(field.accept)"#endif #if(field.required ?? false): aria-required="true"#endif>
 
     #if(!field.required ?? false):
@@ -23,5 +23,5 @@
     <input id="#(field.key)TemporaryName" name="#(field.key)TemporaryName" type="hidden" value="#(field.temporaryName)">
     #endif
 
-    #inline("System/Common/Form/Fields/Error")
+    #inline("System/Common/Fields/Error")
 </section>
