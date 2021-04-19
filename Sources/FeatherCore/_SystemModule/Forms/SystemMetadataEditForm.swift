@@ -27,8 +27,12 @@ final class SystemMetadataEditForm: ModelForm<SystemMetadataModel> {
                 .write { [unowned self] in model?.slug = $1.input },
 
             ImageField(key: "image", path: Model.path)
-                .read { [unowned self] in ($1 as? ImageField)?.imageKey = model?.imageKey }
-                .write { [unowned self] in model?.imageKey = ($1 as? ImageField)?.imageKey },
+                .config { $0.output.required = true }
+                .validators { [
+                    FormFieldValidator($1, "Image is required") { !($0 as! ImageField).isEmptyImage },
+                ] }
+                .read { [unowned self] in ($1 as! ImageField).imageKey = model?.imageKey }
+                .write { [unowned self] in model?.imageKey = ($1 as! ImageField).imageKey },
 
             
             TextField(key: "title")

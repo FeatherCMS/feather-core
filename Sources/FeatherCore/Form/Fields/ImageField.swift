@@ -39,6 +39,13 @@ class ImageField: FormField<ImageInput, ImageFieldView> {
         }
     }
 
+    public var isEmptyImage: Bool {
+        if shouldRemoveImage {
+            return true
+        }
+        return temporaryImage == nil && imageKey == nil
+    }
+    
     init(key: String, path: String) {
         self.path = path
          
@@ -72,7 +79,9 @@ class ImageField: FormField<ImageInput, ImageFieldView> {
                 }
         }
         return future.flatMap { [unowned self] key in
-            imageKey = key
+            if shouldRemoveImage || key != nil {
+                imageKey = key
+            }
             return writeBlock?(req, self) ?? req.eventLoop.future()
         }
     }
