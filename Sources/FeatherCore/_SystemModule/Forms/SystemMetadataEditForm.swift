@@ -26,16 +26,9 @@ final class SystemMetadataEditForm: ModelForm<SystemMetadataModel> {
                 .read { [unowned self] in $1.output.value = model?.slug }
                 .write { [unowned self] in model?.slug = $1.input },
 
-            
-            ImageField(key: "image")
-                .read { [unowned self] in $1.output.originalKey = model?.imageKey }
-                .write { [unowned self] req, field in
-                    (field as? ImageField)?.saveImage(to: Model.path, req: req).map { key in
-                        if field.input.remove || key != nil {
-                            model?.imageKey = key
-                        }
-                    } ?? req.eventLoop.future()
-                },
+            ImageField(key: "image", path: Model.path)
+                .read { [unowned self] in ($1 as? ImageField)?.imageKey = model?.imageKey }
+                .write { [unowned self] in model?.imageKey = ($1 as? ImageField)?.imageKey },
 
             
             TextField(key: "title")

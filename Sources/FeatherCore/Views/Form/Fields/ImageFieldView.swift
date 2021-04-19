@@ -17,10 +17,10 @@ public struct ImageFieldView: FormFieldView {
     public var more: String?
 
     public var accept: String?
-    public var originalKey: String?
+    public var currentKey: String?
     public var temporaryKey: String?
     public var temporaryName: String?
-    public var delete: Bool
+    public var remove: Bool
 
     public init(key: String,
                 required: Bool = false,
@@ -28,20 +28,20 @@ public struct ImageFieldView: FormFieldView {
                 label: String? = nil,
                 more: String? = nil,
                 accept: String? = nil,
-                originalKey: String? = nil,
+                currentKey: String? = nil,
                 temporaryKey: String? = nil,
                 temporaryName: String? = nil,
-                delete: Bool = false) {
+                remove: Bool = false) {
         self.key = key
         self.required = required
         self.error = error
         self.label = label
         self.more = more
         self.accept = accept
-        self.originalKey = originalKey
+        self.currentKey = currentKey
         self.temporaryKey = temporaryKey
         self.temporaryName = temporaryName
-        self.delete = delete
+        self.remove = remove
     }
 }
 

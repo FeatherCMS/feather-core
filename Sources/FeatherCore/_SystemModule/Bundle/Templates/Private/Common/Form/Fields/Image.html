@@ -1,8 +1,8 @@
 <section class="#(field.class ?? "large")-uploader uploader">
 
-    #if(field.originalKey ?? false):
-        <input id="#(field.key)OriginalKey" name="#(field.key)OriginalKey" type="hidden" value="#(field.originalKey)">
-        <img id="preview" src="#(field.originalKey.resolve())">
+    #if(field.currentKey ?? false):
+        <input id="#(field.key)CurrentKey" name="#(field.key)CurrentKey" type="hidden" value="#(field.currentKey)">
+        <img id="preview" src="#(field.currentKey.resolve())">
     #else:
         <div id="placeholder" class="p:l">#svg(field.placeholder ?? "image", class: "s64 block m:h:auto")</div>
     #endif
@@ -11,8 +11,8 @@
     <input id="#(field.key)" name="#(field.key)" type="file"#if(field.accept ?? false): accept="#(field.accept)"#endif #if(field.required ?? false): aria-required="true"#endif>
 
     #if(!field.required ?? false):
-    <input id="#(field.key)Delete" name="#(field.key)Delete" type="checkbox" value="true" #if(field.delete == true):checked#endif>
-    <label for="#(field.key)Delete">Remove</label>
+    <input id="#(field.key)Remove" name="#(field.key)Remove" type="checkbox" value="true" #if(field.remove == true):checked#endif>
+    <label for="#(field.key)Remove">Remove</label>
     #endif
 
     #if(field.temporaryKey ?? false):

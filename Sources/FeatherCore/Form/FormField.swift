@@ -16,12 +16,12 @@ open class FormField<Input: Decodable, Output: Encodable>: FormComponent {
     public var output: Output
 
     
-    private var loadBlock: FormFieldFutureBlock?
-    private var processBlock: FormFieldFutureBlock?
-    private var validatorsBlock: FormFieldValidatorsBlock?
-    private var readBlock: FormFieldFutureBlock?
-    private var writeBlock: FormFieldFutureBlock?
-    private var saveBlock: FormFieldFutureBlock?
+    internal var loadBlock: FormFieldFutureBlock?
+    internal var processBlock: FormFieldFutureBlock?
+    internal var validatorsBlock: FormFieldValidatorsBlock?
+    internal var readBlock: FormFieldFutureBlock?
+    internal var writeBlock: FormFieldFutureBlock?
+    internal var saveBlock: FormFieldFutureBlock?
 
     
     public init(key: String, input: Input, output: Output) {
