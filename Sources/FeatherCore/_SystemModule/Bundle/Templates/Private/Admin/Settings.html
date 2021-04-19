@@ -9,86 +9,59 @@ Site settings
 
     <h1>Site settings</h1>
 </div>
-<div class="container">
-    
-    <form id="site-settings-form" method="post" action="#($req.url.path)" enctype="multipart/form-data">
-        #var(field = nil)
 
-        #(field = ["key": "formId", "value": formId])
-        #inline("System/Common/Form/Fields/Hidden")
+<form
+    #if(form.id ?? false): id="#(form.id)"#endif
+    #if(form.class ?? false): class="#(form.class)"#endif
+    method="#(form.action.method ?? "post")"
+    #if(form.action.url ?? false): action="#(form.action.url)"#endif
+    #if(form.action.multipart ?? false): enctype="multipart/form-data"#endif
+    class="container"
+    >
 
-        <fieldset>
-            <legend>General</legend>
-            
-            #(field = ["key": "formToken", "value": formToken])
-            #inline("System/Common/Form/Fields/Hidden")
-
-            #(field = ["key": "image", "label": "Logo", "class": "small", "data": fields.image, "accept": "image/png"])
-            #inline("System/Common/Form/Fields/File")
-
-            #(field = ["key": "title", "required": true, "data": fields.title])
-            #inline("System/Common/Form/Fields/Text")
-
-            #(field = ["key": "excerpt", "size": "s", "data": fields.excerpt])
-            #inline("System/Common/Form/Fields/Textarea")
-            
-            #(field = ["key": "noindex", "label": "Site index", "placeholder": "Disable site indexing by search engines", "data": fields.noindex])
-            #inline("System/Common/Form/Fields/Toggle")
-
-        </fieldset>
-
-        #if(!fields.filters.options.isEmpty()):
-        <fieldset>
-            <legend><a id="content">Content</a></legend>
-        
-            #(field = ["key": "filters", "data": fields.filters])
-            #inline("System/Common/Form/Fields/Checkbox")
-        
-        </fieldset>
+    #if(form.notification ?? false):
+    <div id="notification" class="#(form.notification.type ?? "info")">
+        #if(form.notification.icon ?? false): #svg(form.notification.icon) #endif
+        #if(form.notification.title ?? false): <h3>#(form.notification.title)</h3>#endif
+        #if(form.notification.message ?? false):
+        <p>#(form.notification.message)</p>
         #endif
+    </div>
+    #endif
 
-        <fieldset>
-            <legend>Localization</legend>
-            
-            #(field = ["key": "locale", "label": "Locale", "required": true, "data": fields.locale])
-            #inline("System/Common/Form/Fields/Selection")
-            
-            #(field = ["key": "timezone", "required": true, "data": fields.timezone])
-            #inline("System/Common/Form/Fields/Selection")
-        
-        </fieldset>
-
-        <fieldset>
-            <legend>Code injection</legend>
-            
-            #(field = ["key": "css", "label": "CSS", "size": "xl", "data": fields.css])
-            #inline("System/Common/Form/Fields/Textarea")
-            
-            #(field = ["key": "js", "label": "JavaScript", "size": "xl", "data": fields.js])
-            #inline("System/Common/Form/Fields/Textarea")
-        
-        </fieldset>
-
-        <fieldset>
-            <legend>Footer</legend>
-
-            #(field = ["key": "footerTop", "label": "Top area", "size": "s", "data": fields.footerTop])
-            #inline("System/Common/Form/Fields/Textarea")
-            
-            #(field = ["key": "footerBottom", "label": "Bottom area", "size": "s", "data": fields.footerBottom])
-            #inline("System/Common/Form/Fields/Textarea")
-
-        </fieldset>
-
-        #(field = ["label": "Save"])
-        #inline("System/Common/Form/Fields/Button")
-    </form>
-
-    #if(notification != nil):
-    <section id="notification">
-        <span>#(notification)</span>
+    #if(form.error ?? false):
+    <section>
+        <p class="error">#(form.error)</p>
     </section>
     #endif
-</div>
+        #var(field = nil)
+
+        #(field = ["key": "formId", "value": form.id])
+        #inline("System/Common/Form/Fields/Hidden")
+
+        #(field = ["key": "formToken", "value": form.token])
+        #inline("System/Common/Form/Fields/Hidden")
+
+        #for(field in form.fields):
+            #if(field.type == "hidden"):                #inline("System/Common/Form/Fields/Hidden")
+            #elseif(field.type == "text"):              #inline("System/Common/Form/Fields/Text")
+            #elseif(field.type == "textarea"):          #inline("System/Common/Form/Fields/Textarea")
+            #elseif(field.type == "toggle"):            #inline("System/Common/Form/Fields/Toggle")
+            #elseif(field.type == "checkbox"):          #inline("System/Common/Form/Fields/Checkbox")
+            #elseif(field.type == "radio"):             #inline("System/Common/Form/Fields/Radio")
+            #elseif(field.type == "selection"):         #inline("System/Common/Form/Fields/Selection")
+            #elseif(field.type == "multiselection"):    #inline("System/Common/Form/Fields/Multiselection")
+            #elseif(field.type == "multigroupoption"):  #inline("System/Common/Form/Fields/Multigroupoption")
+            #elseif(field.type == "image"):             #inline("System/Common/Form/Fields/Image")
+            #endif
+        #endfor
+        
+    <section>
+        <input type="submit" value="Save">
+    </section>
+    
+</form>
 #enddefine
+
 #inline("System/Admin/Index")
+

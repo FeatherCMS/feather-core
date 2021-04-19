@@ -11,8 +11,6 @@ final class SystemVariableEditForm: ModelForm<SystemVariableModel> {
     override func initialize() {
         super.initialize()
 
-        self.action.multipart = true
-
         self.fields = [
             
             TextField(key: "name")

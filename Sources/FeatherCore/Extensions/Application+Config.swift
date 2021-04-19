@@ -81,24 +81,39 @@ extension Application.Config {
     
 
     static var timezone: TimeZone {
-        if let tzValue = get("timezone"), let tz = TimeZone(identifier: tzValue) {
-            return tz
+        get {
+            if let tzValue = get("timezone"), let tz = TimeZone(identifier: tzValue) {
+                return tz
+            }
+            return .autoupdatingCurrent
         }
-        return .autoupdatingCurrent
+        set {
+            set("timezone", value: newValue.identifier)
+        }
     }
 
     static var locale: Locale {
-        if let localeValue = get("locale") {
-            return Locale(identifier: localeValue)
+        get {
+            if let localeValue = get("locale") {
+                return Locale(identifier: localeValue)
+            }
+            return .autoupdatingCurrent
         }
-        return .autoupdatingCurrent
+        set {
+            set("locale", value: newValue.identifier)
+        }
     }
 
     static var filters: [String] {
-        if let filterValue = get("filters") {
-            return filterValue.split(separator: ",").map(String.init)
+        get {
+            if let filterValue = get("filters") {
+                return filterValue.split(separator: ",").map(String.init)
+            }
+            return []
         }
-        return []
+        set {
+            set("filters", value: newValue.joined(separator: ","))
+        }
     }
 
     static func dateFormatter(dateStyle: DateFormatter.Style = .short, timeStyle: DateFormatter.Style = .short) -> DateFormatter {

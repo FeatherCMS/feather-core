@@ -14,7 +14,7 @@ final class SystemMetadataEditForm: ModelForm<SystemMetadataModel> {
     override func initialize() {
         super.initialize()
 
-        self.action = Action(multipart: true)
+        self.action.multipart = true
 
         self.fields = [
             
@@ -94,7 +94,6 @@ final class SystemMetadataEditForm: ModelForm<SystemMetadataModel> {
             TextareaField(key: "js")
                 .read { [unowned self] in $1.output.value = model?.js }
                 .write { [unowned self] in model?.js = $1.input },
-  
         ]
     }
 

@@ -33,7 +33,7 @@ final class SystemMenuEditForm: ModelForm<SystemMenuModel> {
             TextareaField(key: "notes")
                 .read { [unowned self] in $1.output.value = model?.notes }
                 .write { [unowned self] in model?.notes = $1.input },
-                
+
         ]
     }
 }

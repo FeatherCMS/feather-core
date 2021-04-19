@@ -27,9 +27,9 @@ struct SystemAdminController {
     
     func settingsView(req: Request) throws -> EventLoopFuture<View> {
         let form = SystemSettingsForm(fields: [])
-        return form.load(req: req).flatMap {
-            render(req: req, form: form)
-        }
+        return form.load(req: req)
+            .flatMap { form.read(req: req) }
+            .flatMap { render(req: req, form: form) }
     }
 
     func render(req: Request, form: SystemSettingsForm) -> EventLoopFuture<View> {
@@ -37,20 +37,20 @@ struct SystemAdminController {
     }
     
     func updateSettings(req: Request) throws -> EventLoopFuture<Response> {
-        try req.validateFormToken(for: "site-settings-form")
+//        try req.validateFormToken(for: "site-settings-form")
 
         let form = SystemSettingsForm(fields: [])
         return form.load(req: req)
             .flatMap { form.process(req: req) }
             .flatMap { form.validate(req: req) }
-            .flatMap { [self] isValid -> EventLoopFuture<View> in
+            .throwingFlatMap { isValid in
                 guard isValid else {
                     return render(req: req, form: form)
+                        .encodeResponse(for: req)
                 }
-                return form.save(req: req).flatMap {
-                    render(req: req, form: form)
-                }
+                return form.write(req: req)
+                    .flatMap { form.save(req: req) }
+                    .map { req.redirect(to: "/admin/settings/") }
             }
-            .encodeResponse(for: req)
     }
 }
