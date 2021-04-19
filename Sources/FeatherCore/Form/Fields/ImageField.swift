@@ -8,16 +8,16 @@
 /// represents a file data value
 class ImageField: FormField<ImageInput, ImageFieldView> {
 
+//    let path: String!
+//    var imageKey: String?
+
     convenience init(key: String) {
-        self.init(key: key,
-                  input: ImageInput(key: key, file: nil, currentKey: nil, temporaryImage: nil, remove: false),
-                  output: .init(key: key, originalKey: nil, delete: false))
+        self.init(key: key, input: .init(key: key), output: .init(key: key))
     }
     
     override func process(req: Request) -> EventLoopFuture<Void> {
         input.process(req: req)
-
-        return super.process(req: req).map { [unowned self] in
+        return uploadTemporaryFile(req: req).map { [unowned self] in
             output.originalKey = input.currentKey
             output.temporaryKey = input.temporaryImage?.key
             output.temporaryName = input.temporaryImage?.name
@@ -46,10 +46,8 @@ class ImageField: FormField<ImageInput, ImageFieldView> {
             return key
         }
     }
-
-    // MARK: - api
     
-    func uploadTemporaryFile(req: Request) -> EventLoopFuture<Void> {
+    private func uploadTemporaryFile(req: Request) -> EventLoopFuture<Void> {
         /// we only manipulate temporary files here...
         var future = req.eventLoop.future()
         if input.remove {
@@ -66,6 +64,9 @@ class ImageField: FormField<ImageInput, ImageFieldView> {
         }
         return future
     }
+
+    // MARK: - api
+    
 
     public func saveImage(to path: String, req: Request) -> EventLoopFuture<String?> {
         var future: EventLoopFuture<String?> = req.eventLoop.future(nil)

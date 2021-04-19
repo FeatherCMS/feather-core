@@ -15,7 +15,7 @@ open class Form: FormComponent {
         }
         public let method: Method
         public let url: String?
-        public let multipart: Bool
+        public var multipart: Bool
         
         public init(method: Method = .post,
                     url: String? = nil,

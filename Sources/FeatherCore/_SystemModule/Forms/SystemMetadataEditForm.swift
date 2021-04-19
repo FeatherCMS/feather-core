@@ -29,7 +29,6 @@ final class SystemMetadataEditForm: ModelForm<SystemMetadataModel> {
             
             ImageField(key: "image")
                 .read { [unowned self] in $1.output.originalKey = model?.imageKey }
-                .process { ($1 as? ImageField)?.uploadTemporaryFile(req: $0) ?? $0.eventLoop.future() }
                 .write { [unowned self] req, field in
                     (field as? ImageField)?.saveImage(to: Model.path, req: req).map { key in
                         if field.input.remove || key != nil {

@@ -11,7 +11,21 @@ final class SystemVariableEditForm: ModelForm<SystemVariableModel> {
     override func initialize() {
         super.initialize()
 
+        self.action.multipart = true
+
         self.fields = [
+
+            ImageField(key: "image")
+//                .read { [unowned self] in $1.output.originalKey = nil }
+                .write { [unowned self] req, field in
+                    (field as? ImageField)?.saveImage(to: Model.path, req: req).map { key in
+                        if field.input.remove || key != nil {
+                            
+                        }
+                    } ?? req.eventLoop.future()
+                },
+
+            
             TextField(key: "name")
                 .config { $0.output.required = true }
                 .validators { [

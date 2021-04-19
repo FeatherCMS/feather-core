@@ -35,10 +35,10 @@ public final class ImageInput: Codable, FormFieldInput {
         file = try? req.content.get(File.self, at: key)
         currentKey = try? req.content.get(String.self, at: key+"CurrentKey")
         if
-            let key = try? req.content.get(String.self, at: key+"TemporaryKey"),
-            let name = try? req.content.get(String.self, at: key+"TemporaryName")
+            let tmpkey = try? req.content.get(String.self, at: key+"TemporaryKey"),
+            let tmpname = try? req.content.get(String.self, at: key+"TemporaryName")
         {
-            temporaryImage = .init(key: key, name: name)
+            temporaryImage = .init(key: tmpkey, name: tmpname)
         }
         remove = (try? req.content.get(Bool.self, at: key+"Remove")) ?? false
     }

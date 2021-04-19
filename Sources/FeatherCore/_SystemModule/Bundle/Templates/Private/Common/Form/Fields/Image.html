@@ -1,6 +1,7 @@
 <section class="#(field.class ?? "large")-uploader uploader">
 
     #if(field.originalKey ?? false):
+        <input id="#(field.key)OriginalKey" name="#(field.key)OriginalKey" type="hidden" value="#(field.originalKey)">
         <img id="preview" src="#(field.originalKey.resolve())">
     #else:
         <div id="placeholder" class="p:l">#svg(field.placeholder ?? "image", class: "s64 block m:h:auto")</div>
@@ -14,13 +15,12 @@
     <label for="#(field.key)Delete">Remove</label>
     #endif
 
-    #if(field.originalKey ?? false):
-    <input id="#(field.key)OriginalKey" name="#(field.key)OriginalKey" type="hidden" value="#(field.originalKey)">
+    #if(field.temporaryKey ?? false):
+    <input id="#(field.key)TemporaryKey" name="#(field.key)TemporaryKey" type="hidden" value="#(field.temporaryKey)">
     #endif
-
-    #if(field.temporaryFile ?? false):
-    <input id="#(field.key)TemporaryKey" name="#(field.key)TemporaryKey" type="hidden" value="#(field.temporaryFile.key)">
-    <input id="#(field.key)TemporaryName" name="#(field.key)TemporaryName" type="hidden" value="#(field.temporaryFile.name)">
+    
+    #if(field.temporaryName ?? false):
+    <input id="#(field.key)TemporaryName" name="#(field.key)TemporaryName" type="hidden" value="#(field.temporaryName)">
     #endif
 
     #inline("System/Common/Form/Fields/Error")
