@@ -132,18 +132,3 @@ public extension UpdateController {
         builder.put(idPathComponent, use: updateApi)
     }
 }
-
-public extension UpdateController where Model: MetadataRepresentable {
-
-    func renderUpdate(req: Request, context: UpdateForm) -> EventLoopFuture<View> {
-        var future: EventLoopFuture<Metadata?> = req.eventLoop.future(nil)
-        if let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) {
-            future = Model.findMetadata(reference: uuid, on: req.db)
-        }
-        return future.flatMap { metadata in
-            var templateData = context.encodeToTemplateData().dictionary!
-            templateData["metadata"] = metadata?.encodeToTemplateData()
-            return req.tau.render(template: updateView, context: .init(templateData))
-        }
-    }
-}

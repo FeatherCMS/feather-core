@@ -20,25 +20,17 @@ struct SystemMenuController: FeatherController {
     typealias PatchApi = SystemMenuApi
     typealias DeleteApi = SystemMenuApi
 
-    
-//        "title": "Menus",
-//        "key": "frontend.menus",
-//        "fields": [
-//            ["key": "name", "default": true]
-//        ],
-//        "actions": []
-//
-//
+
 //    #if(UserHasPermission("system.menuItems.list")):
 //        #(table.actions.append(["url": "/items/", "label": "Items", "icon": "link", "width": "4rem"]))
 //    #endif
-    
+
     func listTable(_ models: [Model]) -> Table {
         Table(columns: ["name", "key"], rows: models.map { model in
             TableRow(id: model.identifier, cells: [TableCell(model.name), TableCell(model.key)])
         })
     }
-    
+
     func beforeDelete(req: Request, model: SystemMenuModel) -> EventLoopFuture<SystemMenuModel> {
         SystemMenuItemModel.query(on: req.db).filter(\.$menu.$id == model.id!).delete().map { model }
     }
