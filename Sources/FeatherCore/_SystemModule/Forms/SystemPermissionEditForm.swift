@@ -67,7 +67,7 @@ struct SystemPermissionEditForm: EditFormController {
             let p = try! req.content.decode(Permission.self)
             return Model.uniqueBy(p.namespace, p.context, p.action, req).map { isUnique in
                 guard isUnique else {
-                    context.form.notification = .init(type: .error, title: "This permission already exists")
+                    context.form.error = "This permission already exists"
                     return false
                 }
                 return true

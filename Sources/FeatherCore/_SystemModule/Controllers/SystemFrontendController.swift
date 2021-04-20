@@ -69,12 +69,12 @@ struct SystemFrontendController {
             req.session.authenticate(user)
             return req.eventLoop.future(req.redirect(to: getCustomRedirect(req: req)))
         }
-        var formController = SystemLoginForm()
+        let formController = SystemLoginForm()
         return formController.load(req: req)
             .flatMap { formController.process(req: req) }
             .flatMap { formController.validate(req: req) }
             .flatMap { _ in
-//                formController.form.notification = .init(type: .error, title: "Invalid username or password")
+                formController.context.form.error = "Invalid username or password"
                 return render(req: req, form: formController.context.form)
             }
     }

@@ -31,6 +31,7 @@ open class Form: FormComponent {
         case token
         case title
         case notification
+        case error
         case fields
     }
 
@@ -39,6 +40,7 @@ open class Form: FormComponent {
     open var token: String
     open var title: String
     open var notification: Notification?
+    open var error: String?
     open var fields: [FormComponent]
 
     public init(action: Action = .init(),
@@ -46,6 +48,7 @@ open class Form: FormComponent {
                 token: String = UUID().uuidString,
                 title: String = "form",
                 notification: Notification? = nil,
+                error: String? = nil,
                 fields: [FormComponent] = []) {
         
         self.action = action
@@ -53,6 +56,7 @@ open class Form: FormComponent {
         self.token = token
         self.title = title
         self.notification = notification
+        self.error = error
         self.fields = fields
     }
 
@@ -64,6 +68,7 @@ open class Form: FormComponent {
         try container.encodeIfPresent(token, forKey: .token)
         try container.encodeIfPresent(title, forKey: .title)
         try container.encodeIfPresent(notification, forKey: .notification)
+        try container.encodeIfPresent(error, forKey: .error)
 
         var fieldsArrayContainer = container.superEncoder(forKey: .fields).unkeyedContainer()
         for field in fields {
