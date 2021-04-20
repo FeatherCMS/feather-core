@@ -15,8 +15,27 @@ struct SystemMetadataEditForm: EditFormController {
 
     init() {
         context = .init()
+        context.form.title = "metadata"
         context.form.action.multipart = true
         context.form.fields = createFormFields()
+    }
+    
+    func load(req: Request) -> EventLoopFuture<Void> {
+        guard let model = context.model else {
+            return context.load(req: req)
+        }
+        
+        context.nav.append(.init(label: "Preview", url: model.slug.safePath(), isBlank: true))
+        
+        if req.checkPermission(for: .init(namespace: model.module, context: model.model, action: .update)) {
+            let url = ["admin", model.module, model.model, model.reference.uuidString, Model.updatePathComponent.description].joined(separator: "/").safePath()
+            context.nav.append(.init(label: "Reference", url: url))
+        }
+        else if req.checkPermission(for: .init(namespace: model.module, context: model.model, action: .update)) {
+            let url = ["admin", model.module, model.model, model.reference.uuidString].joined(separator: "/").safePath()
+            context.nav.append(.init(label: "Reference", url: url))
+        }
+        return context.load(req: req)
     }
     
     private func createFormFields() -> [FormComponent] {

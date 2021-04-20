@@ -14,14 +14,14 @@
 
     #var(navItems = [])
     #if((detail.edit ?? true) && UserHasPermission(detail.key + ".update")):
-        #(navItems.append(["link": $req.url.path + "update/", "label": "Edit"]))
+        #(navItems.append(["url": $req.url.path + "update/", "label": "Edit"]))
     #endif
     #let(segmentItems = navItems + detail.nav ?? [])
     
     #if(!segmentItems.isEmpty()):
     <div class="segment grid-#(segmentItems.count())">
         #for(navItem in navItems + detail.nav ?? []):
-            <a href="#(navItem.link)"#if(navItem.isBlank ?? false): target="_blank"#endif>#(navItem.label)</a>
+            <a href="#(navItem.url)"#if(navItem.isBlank ?? false): target="_blank"#endif>#(navItem.label)</a>
         #endfor
     </div>
     #endif

@@ -1,11 +1,11 @@
 #var(actions = [])
 
 #if(list.update):
-    #(actions.append(["link": "/update/", "label": "Edit", "icon": "edit", "width": "4rem"]))
+    #(actions.append(["url": "/update/", "label": "Edit", "icon": "edit", "width": "4rem"]))
 #endif
 
 #if(list.delete):
-    #(actions.append(["link": "/delete/", "label": "Delete", "icon": "delete", "width": "4rem"]))
+    #(actions.append(["url": "/delete/", "label": "Delete", "icon": "delete", "width": "4rem"]))
 #endif
 
 #define(css):
@@ -36,10 +36,10 @@ td.field {
     <p>
         #var(nav = [])
         #if(list.create):
-            #(nav.append(["link": $req.url.path + "create/", "label": "Create new"]))
+            #(nav.append(["url": $req.url.path + "create/", "label": "Create new"]))
         #endif
         #for(item in nav):
-            #if(!isFirst): &middot; #endif<a href="#(item.link)"#if(item.isBlank ?? false): target="_blank"#endif>#(item.label)</a>
+            #if(!isFirst): &middot; #endif<a href="#(item.url)"#if(item.isBlank ?? false): target="_blank"#endif>#(item.label)</a>
         #endfor
     </p>
 </div>
@@ -101,7 +101,7 @@ td.field {
             #endfor
             #for(action in actions):
             <td class="action">
-                <a href="#($req.url.path)#(row.id)#(action.link)">#svg(action.icon)</a>
+                <a href="#($req.url.path)#(row.id)#(action.url)">#svg(action.icon)</a>
             </td>
             #endfor
         </tr>

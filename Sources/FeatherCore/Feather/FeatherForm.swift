@@ -11,6 +11,7 @@ open class EditFormContext<T: FeatherModel>: FormComponent {
         case nav
         case model
         case form
+        case metadata
     }
     
     private var modelInfo: ModelInfo?
@@ -18,6 +19,7 @@ open class EditFormContext<T: FeatherModel>: FormComponent {
     var form: Form
     var model: T?
     var nav: [Link]
+    var metadata: Metadata?
 
     public init(form: Form = .init(), model: T? = nil, nav: [Link] = []) {
         self.form = form
@@ -27,9 +29,10 @@ open class EditFormContext<T: FeatherModel>: FormComponent {
 
     open func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(modelInfo, forKey: .model)
         try container.encode(nav, forKey: .nav)
         try container.encode(form, forKey: .form)
+        try container.encodeIfPresent(modelInfo, forKey: .model)
+        try container.encodeIfPresent(metadata, forKey: .metadata)
     }
 
     // MARK: - form component

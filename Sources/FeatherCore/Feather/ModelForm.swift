@@ -44,3 +44,26 @@ public extension EditFormController {
         context.read(req: req)
     }
 }
+
+// NOTE: this requires joined metadata identifier...
+public extension EditFormController where Model: MetadataRepresentable {
+
+    func load(req: Request) -> EventLoopFuture<Void> {
+        guard let model = context.model else {
+            return context.load(req: req)
+        }
+        return Model.findMetadata(reference: model.id!, on: req.db).flatMap { metadata -> EventLoopFuture<Void> in
+            guard let metadata = metadata else {
+                return context.load(req: req)
+            }
+            context.metadata = metadata
+            if req.checkPermission(for: SystemMetadataModel.permission(for: .update)) {
+                context.nav.append(.init(label: "Metadata", url: "/admin/system/metadatas/" + metadata.id!.uuidString + "/update/"))
+            }
+            else if req.checkPermission(for: SystemMetadataModel.permission(for: .get)) {
+                context.nav.append(.init(label: "Metadata", url: "/admin/system/metadatas/" + metadata.id!.uuidString))
+            }
+            return context.load(req: req)
+        }
+    }
+}

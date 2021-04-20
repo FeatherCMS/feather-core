@@ -13,21 +13,20 @@
     <a href="#($req.url.path)" class="current">#if(id != nil):Edit#else:Create#endif</a>
 #enddefine
 
-
 #define(body):
-#(self)
 <div class="lead container">
 
     #var(navItems = [])
     #if((id != nil) && (model.permissions.get ?? false)):
-        #(navItems.append(["link": $req.url.path.trimLast(), "label": "View"]))
+        #(navItems.append(["url": $req.url.path.trimLast(), "label": "View"]))
     #endif
-    #let(segmentItems = navItems + form.nav ?? [])
+
+    #let(segmentItems = navItems + nav ?? [])
     
     #if(!segmentItems.isEmpty()):
     <div class="segment grid-#(segmentItems.count())">
         #for(navItem in segmentItems):
-            <a href="#(navItem.link)"#if(navItem.isBlank ?? false): target="_blank"#endif>#(navItem.label)</a>
+            <a href="#(navItem.url)"#if(navItem.isBlank ?? false): target="_blank"#endif>#(navItem.label)</a>
         #endfor
     </div>
     #endif

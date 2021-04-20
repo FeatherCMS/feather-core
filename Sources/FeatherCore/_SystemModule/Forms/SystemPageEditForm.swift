@@ -11,6 +11,7 @@ struct SystemPageEditForm: EditFormController {
     
     init() {
         context = .init()
+        context.form.title = "page"
         context.form.fields = createFormFields()
     }
 

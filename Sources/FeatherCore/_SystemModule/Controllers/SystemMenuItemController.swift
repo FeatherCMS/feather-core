@@ -35,7 +35,7 @@ struct SystemMenuItemController: FeatherController {
 //        ["key": "label", "default": true]
 //    ],
 //    "nav": [
-//        ["label": "Menu", "link": "/admin/frontend/menus/" + menuId]
+//        ["label": "Menu", "url": "/admin/frontend/menus/" + menuId]
 //    ]
     func listTable(_ models: [Model]) -> Table {
         Table(columns: ["label", "url"], rows: models.map { model in

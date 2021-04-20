@@ -12,6 +12,7 @@ struct SystemVariableEditForm: EditFormController {
     
     init() {
         context = .init()
+        context.form.title = "variable"
         context.form.fields = createFormFields()
     }
 

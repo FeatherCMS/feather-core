@@ -34,14 +34,14 @@ tr {
 <header class="lead">
     #var(navItems = [])
     #if(UserHasPermission("file.browser.create")):
-    #(navItems.append(["link": $req.url.path.trimLast() + "directory/?key=" + Request(query: "key"), "label": "Create directory"]))
-        #(navItems.append(["link": $req.url.path.trimLast() + "upload/?key=" + Request(query: "key"), "label": "Upload files"]))
+    #(navItems.append(["url": $req.url.path.trimLast() + "directory/?key=" + Request(query: "key"), "label": "Create directory"]))
+        #(navItems.append(["url": $req.url.path.trimLast() + "upload/?key=" + Request(query: "key"), "label": "Upload files"]))
     #endif
     #let(segmentItems = navItems + table.nav ?? [])
     #if(!segmentItems.isEmpty()):
     <div class="segment grid-#(segmentItems.count())">
         #for(navItem in segmentItems):
-        <a href="#(navItem.link)"#if(navItem.targetBlank ?? false): target="_blank"#endif>#(navItem.label)</a>
+        <a href="#(navItem.url)"#if(navItem.targetBlank ?? false): target="_blank"#endif>#(navItem.label)</a>
         #endfor
     </div>
     #endif

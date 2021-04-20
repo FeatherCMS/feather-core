@@ -30,7 +30,7 @@ struct SystemMenuController: FeatherController {
 //
 //
 //    #if(UserHasPermission("system.menuItems.list")):
-//        #(table.actions.append(["link": "/items/", "label": "Items", "icon": "link", "width": "4rem"]))
+//        #(table.actions.append(["url": "/items/", "label": "Items", "icon": "link", "width": "4rem"]))
 //    #endif
     
     func listTable(_ models: [Model]) -> Table {
