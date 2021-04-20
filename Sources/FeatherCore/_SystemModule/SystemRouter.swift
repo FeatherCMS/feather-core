@@ -54,7 +54,8 @@ struct SystemRouter: RouteCollection {
         var adminMiddlewares = adminMiddlewaresResult.flatMap { $0 }
         adminMiddlewares.append(SystemUserSessionAuthenticator())
         adminMiddlewares.append(User.redirectMiddleware(path: "/login/?redirect=/admin/"))
-        adminMiddlewares.append(AccessGuardMiddleware(.init(namespace: "admin", context: "module", action: .custom("access"))))
+        adminMiddlewares.append(AccessGuardMiddleware(.init(namespace: "system", context: "module", action: .custom("admin"))))
+        adminMiddlewares.append(SystemAbortErrorMiddleware())
         /// groupd admin routes, first we use auth middlewares then the error middleware
         let adminRoutes = routes.grouped("admin").grouped(adminMiddlewares)
         /// setup home view (dashboard)
@@ -87,7 +88,7 @@ struct SystemRouter: RouteCollection {
 //        modulePath
 //            .grouped(UserAccessMiddleware(name: "file.browser.list"))
 //            .get("browser", use: fileAdmin.browserView)
-//        
+//
 //        let directoryPath = modulePath.grouped("directory")
 //            .grouped(UserAccessMiddleware(name: "file.browser.create"))
 //        directoryPath.get(use: fileAdmin.directoryView)

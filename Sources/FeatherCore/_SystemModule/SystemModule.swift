@@ -23,7 +23,7 @@ final class SystemModule: FeatherModule {
         app.middleware.use(SystemTemplateScopeMiddleware())
         app.middleware.use(SystemSafePathMiddleware())
         app.middleware.use(SystemInstallGuardMiddleware())
-        app.middleware.use(SystemAbortErrorMiddleware())
+        
 
         /// install
         app.hooks.register("install-models", use: installModelsHook)

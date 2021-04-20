@@ -40,7 +40,7 @@ struct SystemUserEditForm: EditFormController {
             
             CheckboxField(key: "roles")
                 .load { req, field in
-                    Model.query(on: req.db).all()
+                    SystemRoleModel.query(on: req.db).all()
                         .mapEach(\.formFieldOption)
                         .map { field.output.options = $0 }
                 }

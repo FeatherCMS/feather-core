@@ -92,7 +92,7 @@
 
             <nav>
                 #if($user.isAuthenticated):
-                    #if(UserHasPermission("admin.module.access")):
+                    #if(UserHasPermission("system.module.admin")):
                     <a href="/admin/">Admin</a> &middot;
                     #endif
                 <a href="/logout/">Logout</a>

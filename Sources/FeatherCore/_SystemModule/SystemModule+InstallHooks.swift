@@ -84,7 +84,7 @@ extension SystemModule {
     
     func installPermissionsHook(args: HookArguments) -> [SystemPermission] {
         var permissions: [SystemPermission] = [
-            SystemModule.systemPermission(for: .custom("view"))
+            SystemModule.systemPermission(for: .custom("admin"))
         ]
         permissions += SystemUserModel.systemPermissions()
         permissions += SystemRoleModel.systemPermissions()
