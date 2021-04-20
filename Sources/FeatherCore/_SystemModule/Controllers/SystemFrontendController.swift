@@ -43,7 +43,7 @@ struct SystemFrontendController {
     }
     
 
-    private func render(req: Request, form: SystemLoginForm = .init()) -> EventLoopFuture<Response> {
+    private func render(req: Request, form: Form) -> EventLoopFuture<Response> {
         return req.view.render("System/Login", ["form": form]).encodeResponse(for: req)
     }
 
@@ -58,7 +58,7 @@ struct SystemFrontendController {
     
     func loginView(req: Request) throws -> EventLoopFuture<Response> {
         guard req.auth.has(User.self) else {
-            return render(req: req)
+            return render(req: req, form: SystemLoginForm().context.form)
         }
         let response = req.redirect(to: getCustomRedirect(req: req), type: .normal)
         return req.eventLoop.future(response)
@@ -69,13 +69,13 @@ struct SystemFrontendController {
             req.session.authenticate(user)
             return req.eventLoop.future(req.redirect(to: getCustomRedirect(req: req)))
         }
-        let form = SystemLoginForm(fields: [])
-        return form.load(req: req)
-            .flatMap { form.process(req: req) }
-            .flatMap { form.validate(req: req) }
+        var formController = SystemLoginForm()
+        return formController.load(req: req)
+            .flatMap { formController.process(req: req) }
+            .flatMap { formController.validate(req: req) }
             .flatMap { _ in
-                form.notification = .init(type: .error, title: "Invalid username or password")
-                return render(req: req, form: form)
+//                formController.form.notification = .init(type: .error, title: "Invalid username or password")
+                return render(req: req, form: formController.context.form)
             }
     }
 

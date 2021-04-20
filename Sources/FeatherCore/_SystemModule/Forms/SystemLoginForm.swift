@@ -5,12 +5,17 @@
 //  Created by Tibor Bodecs on 2020. 02. 20..
 //
 
-final class SystemLoginForm: Form {
-
-    override func initialize() {
-        super.initialize()
-        
-        self.fields = [
+struct SystemLoginForm: EditFormController {
+    
+    var context: EditFormContext<SystemUserModel>
+    
+    init() {
+        context = .init()
+        context.form.fields = createFormFields()
+    }
+    
+    private func createFormFields() -> [FormComponent] {
+        [
             TextField(key: "email")
                 .config {
                     $0.output.required = true
@@ -19,7 +24,7 @@ final class SystemLoginForm: Form {
                 .validators { [
                     FormFieldValidator($1, "Email is required") { !$0.input.isEmpty },
                 ] },
-
+            
             TextField(key: "password")
                 .config {
                     $0.output.required = true

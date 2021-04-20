@@ -5,7 +5,6 @@
 //  Created by Tibor Bodecs on 2020. 04. 22..
 //
 
-
 open class Form: FormComponent {
 
     public struct Action: Encodable {
@@ -41,13 +40,13 @@ open class Form: FormComponent {
     open var title: String
     open var notification: Notification?
     open var fields: [FormComponent]
-    
-    init(action: Action = .init(),
-         id: String = UUID().uuidString,
-         token: String = UUID().uuidString,
-         title: String = "form",
-         notification: Notification? = nil,
-         fields: [FormComponent] = []) {
+
+    public init(action: Action = .init(),
+                id: String = UUID().uuidString,
+                token: String = UUID().uuidString,
+                title: String = "form",
+                notification: Notification? = nil,
+                fields: [FormComponent] = []) {
         
         self.action = action
         self.id = id
@@ -55,15 +54,9 @@ open class Form: FormComponent {
         self.title = title
         self.notification = notification
         self.fields = fields
-        
-        self.initialize()
-    }
-    
-    open func initialize() {
-        
     }
 
-    public func encode(to encoder: Encoder) throws {
+    open func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         try container.encode(action, forKey: .action)
@@ -77,60 +70,30 @@ open class Form: FormComponent {
             try field.encode(to: fieldsArrayContainer.superEncoder())
         }
     }
-
-    // MARK: - fields api
-
-    func loadFields(req: Request) -> EventLoopFuture<Void> {
+    
+    // MARK: - form component
+    
+    open func load(req: Request) -> EventLoopFuture<Void> {
         req.eventLoop.flatten(fields.map { $0.load(req: req) })
     }
 
-    func processFields(req: Request) -> EventLoopFuture<Void> {
+    open func process(req: Request) -> EventLoopFuture<Void> {
         req.eventLoop.flatten(fields.map { $0.process(req: req) })
     }
     
-    func validateFields(req: Request) -> EventLoopFuture<Bool> {
+    open func validate(req: Request) -> EventLoopFuture<Bool> {
         req.eventLoop.mergeTrueFutures(fields.map { $0.validate(req: req) })
     }
 
-    func saveFields(req: Request) -> EventLoopFuture<Void> {
+    open func save(req: Request) -> EventLoopFuture<Void> {
         req.eventLoop.flatten(fields.map { $0.save(req: req) })
     }
     
-    func readFields(req: Request) -> EventLoopFuture<Void> {
+    open func read(req: Request) -> EventLoopFuture<Void> {
         req.eventLoop.flatten(fields.map { $0.read(req: req) })
     }
 
-    func writeFields(req: Request) -> EventLoopFuture<Void> {
+    open func write(req: Request) -> EventLoopFuture<Void> {
         req.eventLoop.flatten(fields.map { $0.write(req: req) })
     }
-    
-    
-    // MARK: - open api
-
-    
-    open func load(req: Request) -> EventLoopFuture<Void> {
-        token = req.generateNonce(for: "form", id: id)
-        return loadFields(req: req)
-    }
-    
-    open func process(req: Request) -> EventLoopFuture<Void> {
-        processFields(req: req)
-    }
-    
-    open func validate(req: Request) -> EventLoopFuture<Bool> {
-        validateFields(req: req)
-    }
-
-    open func save(req: Request) -> EventLoopFuture<Void> {
-        saveFields(req: req)
-    }
-
-    open func read(req: Request) -> EventLoopFuture<Void> {
-        readFields(req: req)
-    }
-    
-    open func write(req: Request) -> EventLoopFuture<Void> {
-        writeFields(req: req)
-    }
 }
-

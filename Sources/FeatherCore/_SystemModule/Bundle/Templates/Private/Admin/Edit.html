@@ -5,10 +5,10 @@
 #enddefine
 
 #define(breadcrumb):
-    <a href="#(form.model.module.path)">#(form.model.module.title.capitalized())</a>
+    <a href="#(model.module.path)">#(model.module.title.capitalized())</a>
 
-    #if(form.model.permissions.list ?? false):
-    <a href="#(form.model.urls.list)">#(form.model.title.capitalized())</a>
+    #if(model.permissions.list ?? false):
+    <a href="#(model.urls.list)">#(model.title.capitalized())</a>
     #endif
     <a href="#($req.url.path)" class="current">#if(id != nil):Edit#else:Create#endif</a>
 #enddefine
@@ -19,7 +19,7 @@
 <div class="lead container">
 
     #var(navItems = [])
-    #if((id != nil) && (form.model.permissions.get ?? false)):
+    #if((id != nil) && (model.permissions.get ?? false)):
         #(navItems.append(["link": $req.url.path.trimLast(), "label": "View"]))
     #endif
     #let(segmentItems = navItems + form.nav ?? [])
@@ -38,7 +38,7 @@
 #inline("System/Common/Form")
 
 <div class="container">
-    #if((id != nil) && (form.model.permissions.delete ?? false)):
+    #if((id != nil) && (model.permissions.delete ?? false)):
     <a href="#($req.url.path.trimLast())delete/?cancel=#($req.url.path)" class="destructive">Delete</a>
     #endif
 </div>

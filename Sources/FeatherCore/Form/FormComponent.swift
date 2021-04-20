@@ -14,3 +14,4 @@ public protocol FormComponent: Encodable {
     func save(req: Request) -> EventLoopFuture<Void>
     func read(req: Request) -> EventLoopFuture<Void>
 }
+

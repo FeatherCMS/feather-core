@@ -40,30 +40,31 @@ struct SystemAdminController {
     }
     
     func settingsView(req: Request) throws -> EventLoopFuture<View> {
-        let form = SystemSettingsForm(fields: [])
-        return form.load(req: req)
-            .flatMap { form.read(req: req) }
-            .flatMap { render(req: req, form: form) }
+        
+        let formController = SystemSettingsForm()
+        return formController.load(req: req)
+            .flatMap { formController.read(req: req) }
+            .flatMap { render(req: req, form: formController.context.form) }
     }
 
-    func render(req: Request, form: SystemSettingsForm) -> EventLoopFuture<View> {
+    func render(req: Request, form: Form) -> EventLoopFuture<View> {
         req.view.render("System/Admin/Settings", ["form": form])
     }
     
     func updateSettings(req: Request) throws -> EventLoopFuture<Response> {
 //        try req.validateFormToken(for: "site-settings-form")
 
-        let form = SystemSettingsForm(fields: [])
-        return form.load(req: req)
-            .flatMap { form.process(req: req) }
-            .flatMap { form.validate(req: req) }
+        let formController = SystemSettingsForm()
+        return formController.load(req: req)
+            .flatMap { formController.process(req: req) }
+            .flatMap { formController.validate(req: req) }
             .throwingFlatMap { isValid in
                 guard isValid else {
-                    return render(req: req, form: form)
+                    return render(req: req, form: formController.context.form)
                         .encodeResponse(for: req)
                 }
-                return form.write(req: req)
-                    .flatMap { form.save(req: req) }
+                return formController.write(req: req)
+                    .flatMap { formController.save(req: req) }
                     .map { req.redirect(to: "/admin/settings/") }
             }
     }

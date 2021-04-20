@@ -5,52 +5,57 @@
 //  Created by Tibor Bodecs on 2020. 03. 23..
 //
 
-final class SystemPermissionEditForm: ModelForm<SystemPermissionModel> {
+struct SystemPermissionEditForm: EditFormController {
+    
+    var context: EditFormContext<SystemPermissionModel>
+    
+    init() {
+        context = .init()
+        context.form.fields = createFormFields()
+    }
 
-    override func initialize() {
-        super.initialize()
-        
-        self.fields = [
+    private func createFormFields() -> [FormComponent] {
+        [
             TextField(key: "namespace")
                 .config { $0.output.required = true }
                 .validators { [
                     FormFieldValidator($1, "Namespace is required") { !$0.input.isEmpty },
                 ] }
-                .read { [unowned self] in $1.output.value = model?.namespace }
-                .write { [unowned self] in model?.namespace = $1.input },
+                .read { $1.output.value = context.model?.namespace }
+                .write { context.model?.namespace = $1.input },
             
             TextField(key: "context")
                 .config { $0.output.required = true }
                 .validators { [
                     FormFieldValidator($1, "Context is required") { !$0.input.isEmpty },
                 ] }
-                .read { [unowned self] in $1.output.value = model?.context }
-                .write { [unowned self] in model?.context = $1.input },
+                .read { $1.output.value = context.model?.context }
+                .write { context.model?.context = $1.input },
             
             TextField(key: "action")
                 .config { $0.output.required = true }
                 .validators { [
                     FormFieldValidator($1, "Action is required") { !$0.input.isEmpty },
                 ] }
-                .read { [unowned self] in $1.output.value = model?.action }
-                .write { [unowned self] in model?.action = $1.input },
+                .read { $1.output.value = context.model?.action }
+                .write { context.model?.action = $1.input },
             
             TextField(key: "name")
                 .config { $0.output.required = true }
                 .validators { [
                     FormFieldValidator($1, "Name is required") { !$0.input.isEmpty },
                 ] }
-                .read { [unowned self] in $1.output.value = model?.name }
-                .write { [unowned self] in model?.name = $1.input },
+                .read { $1.output.value = context.model?.name }
+                .write { context.model?.name = $1.input },
 
             TextareaField(key: "notes")
-                .read { [unowned self] in $1.output.value = model?.notes }
-                .write { [unowned self] in model?.notes = $1.input },
+                .read { $1.output.value = context.model?.notes }
+                .write { context.model?.notes = $1.input },
         ]
     }
 
-    override func validate(req: Request) -> EventLoopFuture<Bool> {
-        super.validate(req: req).flatMap { [unowned self] isValid in
+    func validate(req: Request) -> EventLoopFuture<Bool> {
+        context.validate(req: req).flatMap { isValid in
             guard isValid else {
                 return req.eventLoop.future(false)
             }
@@ -60,9 +65,9 @@ final class SystemPermissionEditForm: ModelForm<SystemPermissionModel> {
                 let action: String
             }
             let p = try! req.content.decode(Permission.self)
-            return SystemPermissionModel.uniqueBy(p.namespace, p.context, p.action, req).map { [unowned self] isUnique in
+            return Model.uniqueBy(p.namespace, p.context, p.action, req).map { isUnique in
                 guard isUnique else {
-                    notification = .init(type: .error, title: "This permission already exists")
+                    context.form.notification = .init(type: .error, title: "This permission already exists")
                     return false
                 }
                 return true

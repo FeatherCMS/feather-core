@@ -5,12 +5,17 @@
 //  Created by Tibor Bodecs on 2020. 03. 23..
 //
 
-final class SystemUserEditForm: ModelForm<SystemUserModel> {
+struct SystemUserEditForm: EditFormController {
+    
+    var context: EditFormContext<SystemUserModel>
+    
+    init() {
+        context = .init()
+        context.form.fields = createFormFields()
+    }
 
-    override func initialize() {
-        super.initialize()
-        
-        self.fields = [
+    private func createFormFields() -> [FormComponent] {
+        [
             TextField(key: "email")
                 .config { $0.output.required = true }
                 .validators { [
@@ -19,36 +24,36 @@ final class SystemUserEditForm: ModelForm<SystemUserModel> {
                         Model.isUniqueBy(\.$email == field.input, req: req)
                     }
                 ] }
-                .read { [unowned self] in $1.output.value = model?.email }
-                .write { [unowned self] in model?.email = $1.input },
+                .read { $1.output.value = context.model?.email }
+                .write { context.model?.email = $1.input },
             
             TextField(key: "password")
-                .write { [unowned self] req, field -> Void in
+                .write { req, field -> Void in
                     if !field.input.isEmpty {
-                        model?.password = try! Bcrypt.hash(field.input)
+                        context.model?.password = try! Bcrypt.hash(field.input)
                     }
                 },
             
             ToggleField(key: "root")
-                .read { [unowned self] in $1.output.value = model?.root ?? false }
-                .write { [unowned self] in model?.root = $1.input },
+                .read { $1.output.value = context.model?.root ?? false }
+                .write { context.model?.root = $1.input },
             
             CheckboxField(key: "roles")
                 .load { req, field in
-                    SystemRoleModel.query(on: req.db).all()
+                    Model.query(on: req.db).all()
                         .mapEach(\.formFieldOption)
                         .map { field.output.options = $0 }
                 }
-                .read { [unowned self] req, field in
-                    field.output.values = model?.roles.compactMap { $0.identifier } ?? []
+                .read { req, field in
+                    field.output.values = context.model?.roles.compactMap { $0.identifier } ?? []
                 }
-                .save { [unowned self] req, field in
+                .save { req, field in
                     let values = field.input.compactMap { UUID(uuidString: $0) }
                     #warning("generic attach / detach")
                     
-                    return model!.$roles.detach(model!.$roles.value ?? [], on: req.db).flatMap {
+                    return context.model!.$roles.detach(context.model!.$roles.value ?? [], on: req.db).flatMap {
                         SystemRoleModel.query(on: req.db).filter(\.$id ~~ values).all().flatMap { items in
-                            model!.$roles.attach(items, on: req.db)
+                            context.model!.$roles.attach(items, on: req.db)
                         }
                     }
                 }

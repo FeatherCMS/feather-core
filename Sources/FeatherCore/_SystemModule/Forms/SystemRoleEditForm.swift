@@ -6,12 +6,17 @@
 //
 
 
-final class SystemRoleEditForm: ModelForm<SystemRoleModel> {
+struct SystemRoleEditForm: EditFormController {
+    
+    var context: EditFormContext<SystemRoleModel>
+    
+    init() {
+        context = .init()
+        context.form.fields = createFormFields()
+    }
 
-    override func initialize() {
-        super.initialize()
-        
-        self.fields = [
+    private func createFormFields() -> [FormComponent] {
+        [
             TextField(key: "key")
                 .config { $0.output.required = true }
                 .validators { [
@@ -20,38 +25,38 @@ final class SystemRoleEditForm: ModelForm<SystemRoleModel> {
                         Model.isUniqueBy(\.$key == field.input, req: req)
                     }
                 ] }
-                .read { [unowned self] in $1.output.value = model?.key }
-                .write { [unowned self] in model?.key = $1.input },
+                .read { $1.output.value = context.model?.key }
+                .write { context.model?.key = $1.input },
             
             TextField(key: "name")
                 .config { $0.output.required = true }
                 .validators { [
                     FormFieldValidator($1, "Name is required") { !$0.input.isEmpty },
                 ] }
-                .read { [unowned self] in $1.output.value = model?.name }
-                .write { [unowned self] in model?.name = $1.input },
+                .read { $1.output.value = context.model?.name }
+                .write { context.model?.name = $1.input },
 
             TextareaField(key: "notes")
-                .read { [unowned self] in $1.output.value = model?.notes }
-                .write { [unowned self] in model?.notes = $1.input },
+                .read { $1.output.value = context.model?.notes }
+                .write { context.model?.notes = $1.input },
             
             MultiGroupOptionField(key: "permissions")
-                .load { [unowned self] req, field in
+                .load {  req, field in
                     SystemPermissionModel.query(on: req.db)
                         .all()
                         .map { field.output.options = getMultiGroupOptions($0) }
                 }
-                .read { [unowned self] req, field in
-                    field.output.values = model?.permissions.compactMap { $0.identifier } ?? []
+                .read { req, field in
+                    field.output.values = context.model?.permissions.compactMap { $0.identifier } ?? []
                 }
-                .save { [unowned self] req, field in
+                .save { req, field in
                     let values = field.input.compactMap { UUID(uuidString: $0) }
                     #warning("generic diff for attach / detach")
-//                    print(model?.permissions.map(\.id!.uuidString))
+//                    print(context.model?.permissions.map(\.id!.uuidString))
 //                    print(req.body.data!.getString(at: 0, length: req.body.data!.readableBytes))
-                    return model!.$permissions.detach(model!.permissions, on: req.db).flatMap {
+                    return context.model!.$permissions.detach(context.model!.permissions, on: req.db).flatMap {
                         SystemPermissionModel.query(on: req.db).filter(\.$id ~~ values).all().flatMap { items in
-                            model!.$permissions.attach(items, on: req.db)
+                            context.model!.$permissions.attach(items, on: req.db)
                         }
                     }
                 }

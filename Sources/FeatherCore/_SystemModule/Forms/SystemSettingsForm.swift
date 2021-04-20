@@ -5,7 +5,14 @@
 //  Created by Tibor Bodecs on 2020. 11. 19..
 //
 
-final class SystemSettingsForm: Form {
+struct SystemSettingsForm: EditFormController {
+    
+    var context: EditFormContext<SystemUserModel>
+
+    init() {
+        context = .init()
+        context.form.fields = createFormFields()
+    }
 
     private func load(key: String, req: Request) -> EventLoopFuture<String?> {
         SystemVariableModel.query(on: req.db).filter(\.$key == "site" + key.capitalized).first().map { $0?.value }
@@ -15,34 +22,31 @@ final class SystemSettingsForm: Form {
         SystemVariableModel.query(on: req.db).filter(\.$key == "site" + key.capitalized).set(\.$value, to: value).update()
     }
     
-    override func initialize() {
-        super.initialize()
-        
-        self.fields = [
-
+    private func createFormFields() -> [FormComponent] {
+        [
             ImageField(key: "image", path: "feather")
-                .read { [unowned self] req, field in load(key: field.key, req: req).map { (field as! ImageField).imageKey = $0 } }
-                .write { [unowned self] req, field in save(key: field.key, value: (field as! ImageField).imageKey, req: req) },
+                .read { req, field in load(key: field.key, req: req).map { (field as! ImageField).imageKey = $0 } }
+                .write { req, field in save(key: field.key, value: (field as! ImageField).imageKey, req: req) },
 
             TextField(key: "title")
                 .config { $0.output.required = true }
                 .validators { [
                     FormFieldValidator($1, "Title is required") { !$0.input.isEmpty },
                 ] }
-                .read { [unowned self] req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
-                .write { [unowned self] req, field in save(key: field.key, value: field.output.value, req: req) },
+                .read { req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
+                .write { req, field in save(key: field.key, value: field.output.value, req: req) },
             
             TextareaField(key: "excerpt")
                 .config { $0.output.required = true }
                 .validators { [
                     FormFieldValidator($1, "Excerpt is required") { !$0.input.isEmpty },
                 ] }
-                .read { [unowned self] req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
-                .write { [unowned self] req, field in save(key: field.key, value: field.output.value, req: req) },
+                .read { req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
+                .write { req, field in save(key: field.key, value: field.output.value, req: req) },
 
             ToggleField(key: "noindex")
-                .read { [unowned self] req, field in load(key: field.key, req: req).map { field.output.value = Bool($0 ?? "false") ?? false } }
-                .write { [unowned self] req, field in save(key: field.key, value: String(field.output.value), req: req) },
+                .read { req, field in load(key: field.key, req: req).map { field.output.value = Bool($0 ?? "false") ?? false } }
+                .write { req, field in save(key: field.key, value: String(field.output.value), req: req) },
             
             SelectionField(key: "locale", value: Application.Config.locale.identifier, options: FormFieldOption.locales)
                 .config {
@@ -68,20 +72,20 @@ final class SystemSettingsForm: Form {
                 .write { Application.Config.filters = $1.input },
             
             TextareaField(key: "css")
-                .read { [unowned self] req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
-                .write { [unowned self] req, field in save(key: field.key, value: field.output.value, req: req) },
+                .read { req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
+                .write { req, field in save(key: field.key, value: field.output.value, req: req) },
             
             TextareaField(key: "js")
-                .read { [unowned self] req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
-                .write { [unowned self] req, field in save(key: field.key, value: field.output.value, req: req) },
+                .read { req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
+                .write { req, field in save(key: field.key, value: field.output.value, req: req) },
             
             TextareaField(key: "footerTop")
-                .read { [unowned self] req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
-                .write { [unowned self] req, field in save(key: field.key, value: field.output.value, req: req) },
+                .read { req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
+                .write { req, field in save(key: field.key, value: field.output.value, req: req) },
             
             TextareaField(key: "footerBottom")
-                .read { [unowned self] req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
-                .write { [unowned self] req, field in save(key: field.key, value: field.output.value, req: req) },
+                .read { req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
+                .write { req, field in save(key: field.key, value: field.output.value, req: req) },
         ]
     }
 }

@@ -14,7 +14,6 @@ open class FormField<Input: Decodable, Output: Encodable>: FormComponent {
     public var key: String
     public var input: Input
     public var output: Output
-
     
     internal var loadBlock: FormFieldFutureBlock?
     internal var processBlock: FormFieldFutureBlock?
@@ -136,7 +135,5 @@ open class FormField<Input: Decodable, Output: Encodable>: FormComponent {
     
     open func read(req: Request) -> EventLoopFuture<Void> {
         readBlock?(req, self) ?? req.eventLoop.future()
-    }
-
-    
+    }   
 }

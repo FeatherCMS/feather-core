@@ -6,7 +6,7 @@
 //
 
 struct SystemPermissionController: FeatherController {
-    
+
     typealias Module = SystemModule
     typealias Model = SystemPermissionModel
     typealias CreateForm = SystemPermissionEditForm

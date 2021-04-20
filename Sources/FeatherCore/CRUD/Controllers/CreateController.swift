@@ -18,43 +18,20 @@ public protocol CreateApiRepresentable: ModelApi {
 public protocol CreateController: ModelController {
 
     associatedtype CreateApi: CreateApiRepresentable & GetApiRepresentable
-    associatedtype CreateForm: FeatherForm
+    associatedtype CreateForm: EditFormController
 
-    /// the name of the edit view template
     var createView: String { get }
 
-    /// used after form validation when we have an invalid form
-    func beforeInvalidCreateFormRender(req: Request, form: CreateForm) -> EventLoopFuture<CreateForm>
-    
-    /// this is called before the form rendering happens (used both in createView and updateView)
-    func beforeCreateFormRender(req: Request, form: CreateForm) -> EventLoopFuture<Void>
-    
-    /// renders the form using the given template
-    func renderCreateForm(req: Request, form: CreateForm) -> EventLoopFuture<View>
-
-    /// check if there is access to create the object, if the future the server will respond with a forbidden status
+    func renderCreate(req: Request, context: CreateForm) -> EventLoopFuture<View>
     func accessCreate(req: Request) -> EventLoopFuture<Bool>
+    func beforeCreate(req: Request, model: Model) -> EventLoopFuture<Model>
+    func afterCreate(req: Request, model: Model) -> EventLoopFuture<Void>
 
-    /// this is the main view for the create controller
     func createView(req: Request) throws -> EventLoopFuture<View>
-    
-    /// this will be called before the model is saved to the database during the create event
-    func beforeCreate(req: Request, model: Model, form: CreateForm) -> EventLoopFuture<Model>
-
-    /// create handler for the form submission
     func create(req: Request) throws -> EventLoopFuture<Response>
-    
-    /// runs after the model has been created
-    func afterCreate(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Model>
-
-    /// returns a response after the create flow
-    func createResponse(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Response>
-    
     func createApi(_ req: Request) throws -> EventLoopFuture<CreateApi.GetObject>
 
-    /// setup the get and post create routes using the given builder
     func setupCreateRoutes(on: RoutesBuilder, as: PathComponent)
-    
     func setupCreateApiRoute(on builder: RoutesBuilder)
 }
 
@@ -62,100 +39,63 @@ public extension CreateController {
 
     var createView: String { "System/Admin/Edit" }
 
-    func beforeInvalidCreateFormRender(req: Request, form: CreateForm) -> EventLoopFuture<CreateForm> {
-        req.eventLoop.future(form)
-    }
-
-    func beforeCreateFormRender(req: Request, form: CreateForm) -> EventLoopFuture<Void> {
-        req.eventLoop.future()
-    }
-
-    func renderCreateForm(req: Request, form: CreateForm) -> EventLoopFuture<View> {
-        beforeCreateFormRender(req: req, form: form).flatMap {
-            req.view.render(createView, ["form": form])
-        }
+    func renderCreate(req: Request, context: CreateForm) -> EventLoopFuture<View> {
+        req.view.render(createView, context)
     }
 
     func accessCreate(req: Request) -> EventLoopFuture<Bool> {
         req.checkAccess(for: Model.permission(for: .create))
     }
+    
+    func beforeCreate(req: Request, model: Model) -> EventLoopFuture<Model> {
+        req.eventLoop.future(model)
+    }
+    
+    func afterCreate(req: Request, model: Model) -> EventLoopFuture<Void> {
+        req.eventLoop.future()
+    }
 
-    func createView(req: Request) throws -> EventLoopFuture<View>  {
+    // MARK: - route handlers
+
+    func createView(req: Request) throws -> EventLoopFuture<View> {
         accessCreate(req: req).flatMap { hasAccess in
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
-            let form = CreateForm()
-            return form.load(req: req).flatMap {
-                renderCreateForm(req: req, form: form)
+            let createFormController = CreateForm()
+            return createFormController.load(req: req).flatMap {
+                renderCreate(req: req, context: createFormController)
             }
         }
     }
 
-    func beforeCreate(req: Request, model: Model, form: CreateForm) -> EventLoopFuture<Model> {
-        req.eventLoop.future(model)
-    }
-    
-    /*
-     FLOW:
-     ----
-     check access
-     validate incoming from with token
-     create form
-     load form
-     process form
-     validate form
-     if invalid:
-        -> before invalid render we can still alter the form!
-        -> render
-     else:
-     find model
-     write form
-     beforeCreate controller
-     create model
-     afterCreate controller
-     save form
-     createResponse (redirect)
-     */
     func create(req: Request) throws -> EventLoopFuture<Response> {
         accessCreate(req: req).throwingFlatMap { hasAccess in
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
-//            try req.validateFormToken(for: "create-form")
 
-            let form = CreateForm()
-            return form.load(req: req)
-                .flatMap { form.process(req: req) }
-                .flatMap { form.validate(req: req) }
+            let createFormController = CreateForm()
+            return createFormController.load(req: req)
+                .flatMap { createFormController.process(req: req) }
+                .flatMap { createFormController.validate(req: req) }
                 .flatMap { isValid in
                     guard isValid else {
-                        return beforeInvalidCreateFormRender(req: req, form: form).flatMap {
-                            renderCreateForm(req: req, form: $0).encodeResponse(for: req)
-                        }
+                        return renderCreate(req: req, context: createFormController).encodeResponse(for: req)
                     }
                     let model = Model()
-                    form.model = model as? CreateForm.Model
-
-                    return form.write(req: req)
-                        .flatMap { beforeCreate(req: req, model: model, form: form) }
+                    createFormController.context.model = model as? CreateForm.Model
+                    return createFormController.write(req: req)
+                        .flatMap { beforeCreate(req: req, model: model) }
                         .flatMap { model in model.create(on: req.db).map { model } }
-                        .flatMap { afterCreate(req: req, form: form, model: $0) }
-                        .flatMap { model in form.save(req: req).map { model } }
-                        .flatMap { createResponse(req: req, form: form, model: $0) }
+                        .flatMap { afterCreate(req: req, model: $0) }
+                        .flatMap { model in createFormController.save(req: req).map { model } }
+                        .map {
+                            req.redirect(to: req.url.path.replacingLastPath(model.identifier) + "/" + Model.updatePathComponent.description + "/")
+                        }
             }
         }
-    }
-    
-    func afterCreate(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Model> {
-        req.eventLoop.future(model)
-    }
-
-    /// after we create a new viper model we can redirect the user to the edit screen using the unique id and replace the last path component
-    func createResponse(req: Request, form: CreateForm, model: Model) -> EventLoopFuture<Response> {
-        let path = req.url.path.replacingLastPath(model.identifier)
-        return req.eventLoop.future(req.redirect(to: path + "/" + Model.updatePathComponent.description + "/"))
-    }
+    }    
 
     func createApi(_ req: Request) throws -> EventLoopFuture<CreateApi.GetObject> {
         accessCreate(req: req).throwingFlatMap { hasAccess in

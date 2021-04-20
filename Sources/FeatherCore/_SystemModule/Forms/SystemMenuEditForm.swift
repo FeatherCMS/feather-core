@@ -5,12 +5,17 @@
 //  Created by Tibor Bodecs on 2020. 11. 15..
 //
 
-final class SystemMenuEditForm: ModelForm<SystemMenuModel> {
+struct SystemMenuEditForm: EditFormController {
     
-    override func initialize() {
-        super.initialize()
+    var context: EditFormContext<SystemMenuModel>
+    
+    init() {
+        context = .init()
+        context.form.fields = createFormFields()
+    }
 
-        self.fields = [
+    private func createFormFields() -> [FormComponent] {
+        [
             TextField(key: "key")
                 .config { $0.output.required = true }
                 .validators { [
@@ -19,20 +24,20 @@ final class SystemMenuEditForm: ModelForm<SystemMenuModel> {
                         Model.isUniqueBy(\.$key == field.input, req: req)
                     }
                 ] }
-                .read { [unowned self] in $1.output.value = model?.key }
-                .write { [unowned self] in model?.key = $1.input },
+                .read { $1.output.value = context.model?.key }
+                .write { context.model?.key = $1.input },
 
             TextField(key: "name")
                 .config { $0.output.required = true }
                 .validators { [
                     FormFieldValidator($1, "Name is required") { !$0.input.isEmpty },
                 ] }
-                .read { [unowned self] in $1.output.value = model?.name }
-                .write { [unowned self] in model?.name = $1.input },
+                .read { $1.output.value = context.model?.name }
+                .write { context.model?.name = $1.input },
 
             TextareaField(key: "notes")
-                .read { [unowned self] in $1.output.value = model?.notes }
-                .write { [unowned self] in model?.notes = $1.input },
+                .read { $1.output.value = context.model?.notes }
+                .write { context.model?.notes = $1.input },
 
         ]
     }

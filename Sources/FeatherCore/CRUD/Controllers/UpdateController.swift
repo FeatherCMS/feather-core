@@ -17,43 +17,20 @@ public protocol UpdateApiRepresentable: ModelApi {
 public protocol UpdateController: IdentifiableController {
     
     associatedtype UpdateApi: UpdateApiRepresentable & GetApiRepresentable
-    associatedtype UpdateForm: FeatherForm
+    associatedtype UpdateForm: EditFormController
 
-    /// the name of the update view template
     var updateView: String { get }
 
-    /// this is called after form validation when the form is invalid
-    func beforeInvalidUpdateFormRender(req: Request, form: UpdateForm) -> EventLoopFuture<UpdateForm>
-    
-    /// this is called before the form rendering happens (used both in createView and updateView)
-    func beforeUpdateFormRender(req: Request, form: UpdateForm) -> EventLoopFuture<Void>
-
-    /// renders the form using the given template
-    func renderUpdateForm(req: Request, form: UpdateForm) -> EventLoopFuture<View>
-    
-    /// check if there is access to update the object, if the future the server will respond with a forbidden status
     func accessUpdate(req: Request) -> EventLoopFuture<Bool>
-    
-    /// renders the update form filled with the entity
-    func updateView(req: Request) throws -> EventLoopFuture<View>
-    
-    /// this will be called before the model is updated
-    func beforeUpdate(req: Request, model: Model, form: UpdateForm) -> EventLoopFuture<Model>
-    
-    /// update handler for the form submission
-    func update(req: Request) throws -> EventLoopFuture<Response>
-    
-    /// runs after the model was updated
-    func afterUpdate(req: Request, form: UpdateForm, model: Model) -> EventLoopFuture<Model>
+    func renderUpdate(req: Request, context: UpdateForm) -> EventLoopFuture<View>
+    func beforeUpdate(req: Request, model: Model) -> EventLoopFuture<Model>
+    func afterUpdate(req: Request, model: Model) -> EventLoopFuture<Void>
 
-    /// returns a response after the update flow
-    func updateResponse(req: Request, form: UpdateForm, model: Model) -> EventLoopFuture<Response>
-    
+    func updateView(req: Request) throws -> EventLoopFuture<View>
+    func update(req: Request) throws -> EventLoopFuture<Response>
     func updateApi(_ req: Request) throws -> EventLoopFuture<UpdateApi.GetObject>
-    
-    /// setup update routes using the route builder
+
     func setupUpdateRoutes(on builder: RoutesBuilder, as: PathComponent)
-    
     func setupUpdateApiRoute(on builder: RoutesBuilder)
 }
 
@@ -61,94 +38,64 @@ public extension UpdateController {
     
     var updateView: String { "System/Admin/Edit" }
 
-    func beforeInvalidUpdateFormRender(req: Request, form: UpdateForm) -> EventLoopFuture<UpdateForm> {
-        req.eventLoop.future(form)
-    }
-
-    func beforeUpdateFormRender(req: Request, form: UpdateForm) -> EventLoopFuture<Void> {
-        req.eventLoop.future()
-    }
-    
-    func renderUpdateForm(req: Request, form: UpdateForm) -> EventLoopFuture<View> {
-        beforeUpdateFormRender(req: req, form: form).flatMap {
-            req.view.render(updateView, ["form": form])
-        }
-    }
+    // MARK: - lifecycle & access
 
     func accessUpdate(req: Request) -> EventLoopFuture<Bool> {
         req.checkAccess(for: Model.permission(for: .update))
     }
+    
+    func renderUpdate(req: Request, context: UpdateForm) -> EventLoopFuture<View> {
+        req.view.render(updateView, context)
+    }
+    
+    func beforeUpdate(req: Request, model: Model) -> EventLoopFuture<Model> {
+        req.eventLoop.future(model)
+    }
+    
+    func afterUpdate(req: Request, model: Model) -> EventLoopFuture<Void> {
+        req.eventLoop.future()
+    }
+    
+    // MARK: - route handlers
     
     func updateView(req: Request) throws -> EventLoopFuture<View>  {
         accessUpdate(req: req).throwingFlatMap { hasAccess in
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
-            let id = try identifier(req)
-            let form = UpdateForm()
-            return findBy(id, on: req.db).flatMap { model in
-                form.model = model as? UpdateForm.Model
-
-                return form.load(req: req)
-                    .flatMap { form.read(req: req) }
-                    .flatMap { renderUpdateForm(req: req, form: form) }
+            return findBy(try identifier(req), on: req.db).flatMap { model in
+                let updateFormController = UpdateForm()
+                updateFormController.context.model = model as? UpdateForm.Model
+                return updateFormController.load(req: req)
+                    .flatMap { updateFormController.read(req: req) }
+                    .flatMap { renderUpdate(req: req, context: updateFormController) }
             }
         }
     }
-    
-    func beforeUpdate(req: Request, model: Model, form: UpdateForm) -> EventLoopFuture<Model> {
-        req.eventLoop.future(model)
-    }
-    
-    /*
-     FLOW:
-     ----
-     check access
-     validate incoming from with token
-     create form
-     initialize form
-     process input form
-     validate form
-     if invalid:
-        -> before invalid render we can still alter the form!
-        -> render
-     else:
-     create / find the model
-     write the form content to the model
-     before update we can still alter the model
-     update
-     save form
-     after create we can alter the model
-     read the form with using new model
-     createResponse (render the form)
-     */
+
     func update(req: Request) throws -> EventLoopFuture<Response> {
         accessUpdate(req: req).throwingFlatMap { hasAccess in
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
-//            try req.validateFormToken(for: "update-form")
-
-            let id = try identifier(req)
-            let form = UpdateForm()
-            return form.load(req: req)
-                .flatMap { form.process(req: req) }
-                .flatMap { form.validate(req: req) }
+            let updateFormController = UpdateForm()
+            return updateFormController.load(req: req)
+                .flatMap { updateFormController.process(req: req) }
+                .flatMap { updateFormController.validate(req: req) }
                 .throwingFlatMap { isValid in
                     guard isValid else {
-                        return beforeInvalidUpdateFormRender(req: req, form: form)
-                            .flatMap { renderUpdateForm(req: req, form: $0).encodeResponse(for: req) }
+                        return renderUpdate(req: req, context: updateFormController).encodeResponse(for: req)
                     }
-                    return findBy(id, on: req.db)
+                    return findBy(try identifier(req), on: req.db)
                         .flatMap { model in
-                            form.model = model as? UpdateForm.Model
-                            return form.write(req: req).map { model }
+                            updateFormController.context.model = model as? UpdateForm.Model
+                            return updateFormController.write(req: req).map { model }
                         }
-                        .flatMap { beforeUpdate(req: req, model: $0, form: form) }
+                        .flatMap { beforeUpdate(req: req, model: $0) }
                         .flatMap { model in model.update(on: req.db).map { model } }
-                        .flatMap { model in form.save(req: req).map { model } }
-                        .flatMap { afterUpdate(req: req, form: form, model: $0) }
-                        .flatMap { updateResponse(req: req, form: form, model: $0) }
+                        .flatMap { model in updateFormController.save(req: req).map { model } }
+                        .flatMap { afterUpdate(req: req, model: $0) }
+                        .map { req.redirect(to: req.url.path) }
                 }
         }
     }
@@ -176,15 +123,6 @@ public extension UpdateController {
         }
     }
 
-    func afterUpdate(req: Request, form: UpdateForm, model: Model) -> EventLoopFuture<Model> {
-        req.eventLoop.future(model)
-    }
-    
-    func updateResponse(req: Request, form: UpdateForm, model: Model) -> EventLoopFuture<Response> {
-//        let path = req.url.path.replacingLastPath(model.identifier)
-        return req.eventLoop.future(req.redirect(to: req.url.path))
-    }
-
     func setupUpdateRoutes(on builder: RoutesBuilder, as pathComponent: PathComponent) {
         builder.get(idPathComponent, pathComponent, use: updateView)
         builder.on(.POST, idPathComponent, pathComponent, use: update)
@@ -197,18 +135,15 @@ public extension UpdateController {
 
 public extension UpdateController where Model: MetadataRepresentable {
 
-    func renderUpdateForm(req: Request, form: UpdateForm) -> EventLoopFuture<View> {
-        return beforeUpdateFormRender(req: req, form: form).flatMap {
-
-            var future: EventLoopFuture<Metadata?> = req.eventLoop.future(nil)
-            if let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) {
-                future = Model.findMetadata(reference: uuid, on: req.db)
-            }
-            return future.flatMap { metadata in
-                var templateData = ["form": form].encodeToTemplateData().dictionary!
-                templateData["metadata"] = metadata?.encodeToTemplateData()
-                return req.tau.render(template: updateView, context: .init(templateData))
-            }
+    func renderUpdate(req: Request, context: UpdateForm) -> EventLoopFuture<View> {
+        var future: EventLoopFuture<Metadata?> = req.eventLoop.future(nil)
+        if let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) {
+            future = Model.findMetadata(reference: uuid, on: req.db)
+        }
+        return future.flatMap { metadata in
+            var templateData = context.encodeToTemplateData().dictionary!
+            templateData["metadata"] = metadata?.encodeToTemplateData()
+            return req.tau.render(template: updateView, context: .init(templateData))
         }
     }
 }

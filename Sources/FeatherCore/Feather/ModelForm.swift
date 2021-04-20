@@ -6,62 +6,41 @@
 //
 
 
-open class ModelForm<T: FeatherModel>: Form, FeatherForm {
-        
-    public typealias Model = T
+public protocol EditFormController: FormComponent {
+    associatedtype Model: FeatherModel
 
-    enum CodingKeys: CodingKey {
-        case nav
-        case model
-        
-        case action
-        case id
-        case token
-        case title
-        case notification
-        case fields
-    }
+    var context: EditFormContext<Model> { get set }
 
-    open var nav: [Link]
-    open var model: T?
-    
-    private var modelInfo: ModelInfo?
+    init()
+}
 
-    public convenience required init() {
-        self.init(model: nil)
-    }
+public extension EditFormController {
 
-    init(model: T? = nil, nav: [Link] = []) {
-        self.model = model
-        self.nav = nav
-
-        super.init()
-
-        self.title = Model.name
-
-        super.initialize()
-    }
-        
-    open override func load(req: Request) -> EventLoopFuture<Void> {
-        modelInfo = Model.info(req)
-        return super.load(req: req)
+    func encode(to encoder: Encoder) throws {
+        try context.encode(to: encoder)
     }
     
-    public override func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(modelInfo, forKey: .model)
-        try container.encode(nav, forKey: .nav)
-        
-        /// NOTE: can't call super.encode(to:) due to a Tau super encoder bug... need to fix that later on
-        try container.encode(action, forKey: .action)
-        try container.encodeIfPresent(id, forKey: .id)
-        try container.encodeIfPresent(token, forKey: .token)
-        try container.encodeIfPresent(title, forKey: .title)
-        try container.encodeIfPresent(notification, forKey: .notification)
-
-        var fieldsArrayContainer = container.superEncoder(forKey: .fields).unkeyedContainer()
-        for field in fields {
-            try field.encode(to: fieldsArrayContainer.superEncoder())
-        }
+    func load(req: Request) -> EventLoopFuture<Void> {
+        context.load(req: req)
+    }
+    
+    func process(req: Request) -> EventLoopFuture<Void> {
+        context.process(req: req)
+    }
+    
+    func validate(req: Request) -> EventLoopFuture<Bool> {
+        context.validate(req: req)
+    }
+    
+    func write(req: Request) -> EventLoopFuture<Void> {
+        context.write(req: req)
+    }
+    
+    func save(req: Request) -> EventLoopFuture<Void> {
+        context.save(req: req)
+    }
+    
+    func read(req: Request) -> EventLoopFuture<Void> {
+        context.read(req: req)
     }
 }
