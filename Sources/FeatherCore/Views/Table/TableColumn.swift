@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 03. 30..
 //
 
-public final class TableColumn: Encodable {
+public struct TableColumn: Encodable {
 
     public let id: String
     public let label: String?
@@ -18,7 +18,7 @@ public final class TableColumn: Encodable {
 
 extension TableColumn: ExpressibleByStringLiteral {
 
-    public convenience init(stringLiteral value: String) {
+    public init(stringLiteral value: String) {
         self.init(id: value, label: nil)
     }
 }

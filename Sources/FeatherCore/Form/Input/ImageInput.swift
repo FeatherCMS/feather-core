@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 04. 17..
 //
 
-public final class ImageInput: Codable {
+public struct ImageInput: Codable {
     
     public var key: String
     
@@ -24,8 +24,7 @@ public final class ImageInput: Codable {
         self.remove = remove
     }
 
-
-    public func process(req: Request) {
+    public mutating func process(req: Request) {
         file = try? req.content.get(File.self, at: key)
         currentKey = try? req.content.get(String.self, at: key+"CurrentKey")
         temporaryKey = try? req.content.get(String.self, at: key+"TemporaryKey")

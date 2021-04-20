@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 03. 30..
 //
 
-public final class TableCell: Encodable {
+public struct TableCell: Encodable {
     
     public enum `Type`: String, Encodable {
         case text

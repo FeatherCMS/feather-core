@@ -10,6 +10,6 @@ open class FeatherModuleBuilder {
     public required init() {}
     
     open func build() -> FeatherModule {
-        fatalError("The abstract ViperBuilder can't build any modules.")
+        fatalError("The abstract Feather module builder can't create any modules. ¯\\_(ツ)_/¯")
     }
 }

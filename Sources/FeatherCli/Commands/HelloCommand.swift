@@ -5,9 +5,9 @@
 //  Created by Tibor Bodecs on 2020. 08. 29..
 //
 
+import Vapor
 
-
-final class HelloCommand: Command {
+struct HelloCommand: Command {
     
     static let name = "hello"
         

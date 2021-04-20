@@ -5,9 +5,9 @@
 //  Created by Tibor Bodecs on 2020. 12. 21..
 //
 
+import Vapor
 
-
-final class ApiObjectCommand: Command {
+struct ApiObjectCommand: Command {
     
     static let name = "object"
         
@@ -17,7 +17,7 @@ final class ApiObjectCommand: Command {
         var name: String
         
         @Argument(name: "fields", help: "List of fields (id:UUID,name:String)")
-        var name: String
+        var fields: String
     }
 
     let help = "This command will generate CRUD objects for a given API model."

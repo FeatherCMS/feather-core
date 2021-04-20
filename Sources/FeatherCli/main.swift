@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 08. 29..
 //
 
-
+import Vapor
 
 let console: Console = Terminal()
 var input = CommandInput(arguments: CommandLine.arguments)

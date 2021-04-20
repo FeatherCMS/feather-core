@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 03. 30..
 //
 
-public final class Table: Encodable {
+public struct Table: Encodable {
 
     public let id: String?
     public let columns: [TableColumn]

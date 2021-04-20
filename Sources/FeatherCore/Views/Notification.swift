@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 04. 01..
 //
 
-public final class Notification: Codable {
+public struct Notification: Codable {
 
     public enum `Type`: String, Codable {
         case info

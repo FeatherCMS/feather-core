@@ -12,7 +12,7 @@
 /// # Reference:
 /// - More details about [Vapor 4](https://docs.vapor.codes/4.0/environment).
 /// - More details about [Feather CMS](https://github.com/FeatherCMS/feather).
-public final class Feather {
+public struct Feather {
 
     public static var modulesLocation: String = "Sources/App/Modules/"
 
@@ -26,7 +26,7 @@ public final class Feather {
     }
 
     /// set viper modules
-    public func use(_ modules: [FeatherModule]) {
+    public mutating func use(_ modules: [FeatherModule]) {
         self.modules = (self.modules + modules).sorted { $0.priority > $1.priority }
     }
 
