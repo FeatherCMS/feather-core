@@ -1,0 +1,45 @@
+#let(key = Request(query: "key") ?? fields.key.value)
+
+#define(title):
+Upload files
+#enddefine
+
+#define(breadcrumb):
+    <a href="#($req.url.path.trimLast())browser/?key=#(key)">File browser</a>
+#enddefine
+
+#define(body):
+
+<div class="container">
+
+    <header class="lead">
+        <p class="note">Destination &middot; <a href="#($req.url.path.trimLast())browser/?key=#(key)">/#(key)</a></p>
+        <h1>Upload files</h1>
+    </header>
+    
+    <form id="file-upload-form" method="post" action="#($req.url.path)" enctype="multipart/form-data">
+        #var(field = nil)
+        
+        #(field = ["id": "formId", "value": formId])
+        #inline("Common/Fields/Hidden")
+        
+        #(field = ["id": "formToken", "value": formToken])
+        #inline("Common/Fields/Hidden")
+
+        #(field = ["id": "key", "value": key])
+        #inline("Common/Fields/Hidden")
+
+        <section>
+            <label for="files">Files<span class="color-gray"> (max size: #(maxUploadSize))</span><span class="color-red">*</span></label>
+            <input id="files" name="files[]" type="file" multiple>
+            #if(fields.files.error != nil):
+            <span class="color-red">#(fields.files.error)</span>
+            #endif
+        </section>
+        
+        #(field = ["label": "Upload files", "class": "shadow"])
+        #inline("Common/Fields/Button")
+    </form>
+</div>
+#enddefine
+#inline("Admin/Index")

@@ -95,6 +95,27 @@ extension SystemModule {
         permissions += SystemMenuItemModel.systemPermissions()
         permissions += SystemPageModel.systemPermissions()
 
+//        FileModule.permissions +
+//        [
+//            [
+//                "module": Self.name.lowercased(),
+//                "context": "browser",
+//                "action": "list",
+//                "name": "List items",
+//            ],
+//            [
+//                "module": Self.name.lowercased(),
+//                "context": "browser",
+//                "action": "create",
+//                "name": "Upload items",
+//            ],
+//            [
+//                "module": Self.name.lowercased(),
+//                "context": "browser",
+//                "action": "delete",
+//                "name": "Remove items",
+//            ]
+//        ]
         return permissions
     }
     

@@ -139,6 +139,7 @@ final class SystemModule: FeatherModule {
             .flatMapError { req.view.render("System/Install/Error", ["error": $0.localizedDescription]) }
     }
 
+    #warning("add back permissions")
     func adminMenusHook(args: HookArguments) -> [SystemMenu] {
         [
             .init(key: "system",
@@ -152,6 +153,12 @@ final class SystemModule: FeatherModule {
                     .init(label: "Settings",
                           url: "/admin/settings/",
                           permission: nil),
+                    .init(label: "Variables",
+                          url: "/admin/system/variables/",
+                          permission: nil),
+                    .init(label: "Metadatas",
+                          url: "/admin/system/metadatas/",
+                          permission: nil),
                   ]),
             .init(key: "web", name: "Web", icon: "web",
                   permission: nil,
@@ -162,13 +169,21 @@ final class SystemModule: FeatherModule {
                     .init(label: "Menus",
                           url: "/admin/system/menus/",
                           permission: nil),
-                    .init(label: "Variables",
-                          url: "/admin/system/variables/",
-                          permission: nil),
-                    .init(label: "Metadatas",
-                          url: "/admin/system/metadatas/",
-                          permission: nil),
                   ]),
+            
+//            [
+//                "name": "File",
+//                "icon": "folder",
+//                "permission": "file.module.access",
+//                "items": TemplateData.array([
+//                    [
+//                        "url": "/admin/file/browser/",
+//                        "label": "Browser",
+//                        "permission": "file.browser.list",
+//                    ],
+//                ])
+//            ]
+            
             .init(key: "user", name: "User", icon: "user",
                   permission: nil,
                   items: [

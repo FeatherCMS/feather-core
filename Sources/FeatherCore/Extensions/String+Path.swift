@@ -6,7 +6,15 @@
 //
 
 public extension String {
-
+    
+    /// the file has an extension if the name contains a dot (also we can think of if it')
+    var fileExt: String? {
+        guard contains(".") else {
+            return nil
+        }
+        return split(separator: ".").last.map(String.init)
+    }
+    
     /// removes unsafe characters from a string, so it can be used as a slug
     func slugify() -> String {
         let allowed = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyz0123456789-_.")
