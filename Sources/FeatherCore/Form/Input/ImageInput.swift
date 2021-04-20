@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 04. 17..
 //
 
-public final class ImageInput: Codable, FormFieldInput {
+public final class ImageInput: Codable {
     
     public var key: String
     
