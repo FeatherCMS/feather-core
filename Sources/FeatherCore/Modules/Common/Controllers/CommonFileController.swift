@@ -76,8 +76,8 @@ struct CommonFileController {
         }
     }
 
-    private func renderDirectoryView(req: Request, form: FileDirectoryForm) -> EventLoopFuture<View> {
-        return req.view.render("System/Admin/File/Directory", ["form": FileDirectoryForm()])
+    private func renderDirectoryView(req: Request, form: CommonFileDirectoryForm) -> EventLoopFuture<View> {
+        return req.view.render("System/Admin/File/Directory", ["form": CommonFileDirectoryForm()])
     }
     
     func directoryView(req: Request) -> EventLoopFuture<View> {
@@ -103,7 +103,7 @@ struct CommonFileController {
     
     // MARK: - upload
     
-    private func renderUploadView(req: Request, form: FileUploadForm) -> EventLoopFuture<View> {
+    private func renderUploadView(req: Request, form: CommonFileUploadForm) -> EventLoopFuture<View> {
         /// provide max upload size for the template
         let formatter = ByteCountFormatter()
         formatter.countStyle = .binary
@@ -111,7 +111,7 @@ struct CommonFileController {
         let maxUploadSize = formatter.string(fromByteCount: Int64(byteCount.value))
 
         struct Context: Encodable {
-            let form: FileUploadForm
+            let form: CommonFileUploadForm
             let maxUploadSize: String
         }
 

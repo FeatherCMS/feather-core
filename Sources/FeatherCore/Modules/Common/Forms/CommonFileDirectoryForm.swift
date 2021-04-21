@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 06. 03..
 //
 
-final class FileDirectoryForm: Form {
+final class CommonFileDirectoryForm: Form {
 
     var name: String?
 

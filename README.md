@@ -5,6 +5,7 @@ Core dependencies for Feather CMS.
 
 ## TODO
 
+- [ ] separate system scope middleware for tau
 - [ ] frontend, system, user modules
 - [ ] fix hardcoded menu links (frontend menu item controller, admin menu)
 - [ ] export / import feature

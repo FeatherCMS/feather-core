@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 06. 03..
 //
 
-final class FileUploadForm: Form {
+final class CommonFileUploadForm: Form {
 
     var name: String?
 
