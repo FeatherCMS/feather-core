@@ -61,7 +61,7 @@ public extension FeatherModel {
 
 
     static func permission(for action: Permission.Action) -> Permission {
-        .init(namespace: Module.idKey, context: name.plural, action: action)
+        .init(namespace: Module.idKey, context: idKey, action: action)
     }
 
     static func permissions() -> [Permission] {
@@ -71,7 +71,7 @@ public extension FeatherModel {
     static func systemPermissions() -> [SystemPermission] {
         permissions().map { SystemPermission($0) }
     }
-    
+        
     static func info(_ req: Request) -> ModelInfo {
         let list = req.checkPermission(for: permission(for: .list))
         let get = req.checkPermission(for: permission(for: .get))
@@ -81,20 +81,21 @@ public extension FeatherModel {
         let delete = req.checkPermission(for: permission(for: .delete))
     
         let permissions = ModelInfo.AvailablePermissions(list: list, get: get, create: create, update: update, patch: patch, delete: delete)
-        return ModelInfo(idKey: Self.idKey,
-                         name: .init(singular: Self.name.singular, plural: Self.name.plural),
-                         assetPath: Self.assetPath,
+        return ModelInfo(idKey: idKey,
+                         idParamKey: idParamKey,
+                         name: .init(singular: name.singular, plural: name.plural),
+                         assetPath: assetPath,
                          module: .init(idKey: Module.idKey, name: Module.name, assetPath: Module.assetPath),
                          permissions: permissions,
-                         isSearchable: Self.isSearchable,
-                         allowedOrders: Self.allowedOrders().map(\.description),
-                         defaultOrder: Self.allowedOrders().first?.description,
-                         defaultSort: Self.defaultSort().rawValue)
+                         isSearchable: isSearchable,
+                         allowedOrders: allowedOrders().map(\.description),
+                         defaultOrder: allowedOrders().first?.description,
+                         defaultSort: defaultSort().rawValue)
     }
 
     /// check if a model is unique by a given filter (excludes the current object id if peresnt in a given request parameter)
     static func isUniqueBy(_ filter:  ModelValueFilter<Self>, req: Request) -> EventLoopFuture<Bool> {
-        var query = Self.query(on: req.db).filter(filter)
+        var query = query(on: req.db).filter(filter)
         if let modelId = getIdParameter(req: req) {
             query = query.filter(\Self._$id != modelId)
         }

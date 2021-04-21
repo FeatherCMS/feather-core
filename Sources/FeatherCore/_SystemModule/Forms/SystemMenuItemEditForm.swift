@@ -38,8 +38,8 @@ struct SystemMenuItemEditForm: FeatherForm {
 
             TextField(key: "priority")
                 .config { $0.output.value = String(100) }
-                .read { context.model?.priority = Int($1.input) ?? 100 }
-                .write { $1.output.value = String(context.model?.priority ?? 100) },
+                .read { $1.output.value = String(context.model?.priority ?? 100) }
+                .write { context.model?.priority = Int($1.input) ?? 100 },
                 
             ToggleField(key: "isBlank")
                 .read { $1.output.value = context.model?.isBlank ?? false }

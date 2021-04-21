@@ -1,4 +1,4 @@
-#let(id = Request(parameter: "id"))
+#let(id = Request(parameter: model.idParamKey))
 
 #define(title):
 #if(id != nil):Edit#else:Create#endif #(model.name.singular.lowercased())

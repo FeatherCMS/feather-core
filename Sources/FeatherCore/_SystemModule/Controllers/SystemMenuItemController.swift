@@ -40,7 +40,7 @@ struct SystemMenuItemController: FeatherController {
     }
 
     func listContext(req: Request, table: Table, pages: Pagination) -> ListContext {
-        let menuId = SystemMenuItemModel.getIdParameter(req: req)!
+        let menuId = SystemMenuModel.getIdParameter(req: req)!
 
         return ListContext(info: Model.info(req), table: table, pages: pages, nav: [
             .init(label: "Menu details", url: "/admin/system/menus/" + menuId.uuidString + "/")
@@ -53,7 +53,7 @@ struct SystemMenuItemController: FeatherController {
     }
     
     func beforeCreate(req: Request, model: SystemMenuItemModel) -> EventLoopFuture<SystemMenuItemModel> {
-        guard let menuId = SystemMenuItemModel.getIdParameter(req: req) else {
+        guard let menuId = SystemMenuModel.getIdParameter(req: req) else {
             return req.eventLoop.future(error: Abort(.badRequest))
         }
         model.$menu.id = menuId
@@ -61,7 +61,7 @@ struct SystemMenuItemController: FeatherController {
     }
 
     func beforeListQuery(req: Request, queryBuilder: QueryBuilder<SystemMenuItemModel>) -> QueryBuilder<SystemMenuItemModel> {
-        guard let menuId = SystemMenuItemModel.getIdParameter(req: req) else {
+        guard let menuId = SystemMenuModel.getIdParameter(req: req) else {
             return queryBuilder
         }
         return queryBuilder.filter(\.$menu.$id == menuId)

@@ -28,6 +28,7 @@ public struct ModelInfo: Encodable {
     }
 
     let idKey: String
+    let idParamKey: String
     let name: ModelName
     let assetPath: String
     let module: ModuleInfo
