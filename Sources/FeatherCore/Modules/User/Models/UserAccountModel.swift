@@ -8,8 +8,8 @@
 final class UserAccountModel: FeatherModel {
     typealias Module = UserModule
     
-    static let modelKey: String = "users"
-    static let name: FeatherModelName = "User"
+    static let modelKey: String = "accounts"
+    static let name: FeatherModelName = "Account"
 
     struct FieldKeys {
         

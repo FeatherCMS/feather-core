@@ -21,7 +21,7 @@ struct CommonRouter: RouteCollection {
     func adminRoutesHook(args: HookArguments) {
         let adminRoutes = args["routes"] as! RoutesBuilder
 
-        adminRoutes.get("web", use: SystemAdminMenuController(key: "web").moduleView)
+        adminRoutes.get("common", use: SystemAdminMenuController(key: "common").moduleView)
         
         let modulePath = adminRoutes.grouped(SystemModule.moduleKeyPathComponent)
         modulePath

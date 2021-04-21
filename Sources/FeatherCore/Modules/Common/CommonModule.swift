@@ -45,15 +45,15 @@ final class CommonModule: FeatherModule {
         [
             .init(key: "common",
                   link: .init(label: "Common",
-                              url: "/admin/system/",
+                              url: "/admin/common/",
                               icon: "system",
                               permission: nil),
                   items: [
                     .init(label: "Variables",
-                          url: "/admin/system/variables/",
+                          url: "/admin/common/variables/",
                           permission: nil),
                     .init(label: "Files",
-                          url: "/admin/system/files/",
+                          url: "/admin/common/files/",
                           permission: nil),
 //                    .init(label: "Labels",
 //                          url: "#",

@@ -41,6 +41,8 @@ struct FrontendRouter: RouteCollection {
     func adminRoutesHook(args: HookArguments) {
         let adminRoutes = args["routes"] as! RoutesBuilder
 
+        adminRoutes.get("frontend", use: SystemAdminMenuController(key: "frontend").moduleView)
+        
         adminRoutes.register(pageController)
         adminRoutes.register(metadataController)
         adminRoutes.register(menuController)

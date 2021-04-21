@@ -81,21 +81,20 @@ final class FrontendModule: FeatherModule {
     #warning("add back permissions")
     func adminMenusHook(args: HookArguments) -> [FrontendMenu] {
         [
-
-            .init(key: "web",
+            .init(key: "frontend",
                   link: .init(label: "Frontend",
-                              url: "/admin/web/",
+                              url: "/admin/frontend/",
                               icon: "web",
                               permission: nil),
                   items: [
                     .init(label: "Pages",
-                          url: "/admin/system/pages/",
+                          url: "/admin/frontend/pages/",
                           permission: nil),
                     .init(label: "Menus",
-                          url: "/admin/system/menus/",
+                          url: "/admin/frontend/menus/",
                           permission: nil),
                     .init(label: "Metadatas",
-                          url: "/admin/system/metadatas/",
+                          url: "/admin/frontend/metadatas/",
                           permission: nil),
                   ]),
         ]

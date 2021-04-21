@@ -57,13 +57,13 @@ final class UserModule: FeatherModule {
                               permission: nil),
                   items: [
                     .init(label: "Accounts",
-                          url: "/admin/system/users/",
+                          url: "/admin/user/accounts/",
                           permission: nil),
                     .init(label: "Permissions",
-                          url: "/admin/system/permissions/",
+                          url: "/admin/user/permissions/",
                           permission: nil),
                     .init(label: "Roles",
-                          url: "/admin/system/roles/",
+                          url: "/admin/user/roles/",
                           permission: nil),
                   ]),
         ]
