@@ -9,6 +9,15 @@ extension Application {
     
     struct Config {
 
+        enum Keys: String {
+            case installed
+            case template
+            case timezone
+            case locale
+            case filters
+            case defaultListLimit
+        }
+        
         fileprivate struct KeyValueStorage: Codable {
             
             static var url: URL { Application.Paths.resources.appendingPathComponent("config").appendingPathExtension("json") }
@@ -40,13 +49,13 @@ extension Application {
             }
         }
 
-        fileprivate static func get(_ key: String) -> String? {
-            return KeyValueStorage.current[key]
+        fileprivate static func get(_ key: Keys) -> String? {
+            return KeyValueStorage.current[key.rawValue]
         }
 
-        fileprivate static func set(_ key: String, value: String) {
+        fileprivate static func set(_ key: Keys, value: String) {
             var dict = KeyValueStorage.current
-            dict[key] = value
+            dict[key.rawValue] = value
             KeyValueStorage.save(dict)
         }
 
@@ -59,60 +68,79 @@ extension Application {
 }
 
 extension Application.Config {
+    
+    
 
     static var installed: Bool {
         get {
-            if let rawValue = get("installed"), let value = Bool(rawValue) {
+            if let rawValue = get(.installed), let value = Bool(rawValue) {
                 return value
             }
             return false
         }
         set {
-            set("installed", value: String(newValue))
+            set(.installed, value: String(newValue))
         }
     }
     
     static var template: String {
-        if let value = get("template") {
-            return value
+        get {
+            if let value = get(.template) {
+                return value
+            }
+            return "Default"
         }
-        return "Default"
+        set {
+            set(.template, value: newValue)
+        }
     }
     
 
     static var timezone: TimeZone {
         get {
-            if let tzValue = get("timezone"), let tz = TimeZone(identifier: tzValue) {
+            if let tzValue = get(.timezone), let tz = TimeZone(identifier: tzValue) {
                 return tz
             }
             return .autoupdatingCurrent
         }
         set {
-            set("timezone", value: newValue.identifier)
+            set(.timezone, value: newValue.identifier)
         }
     }
 
     static var locale: Locale {
         get {
-            if let localeValue = get("locale") {
+            if let localeValue = get(.locale) {
                 return Locale(identifier: localeValue)
             }
             return .autoupdatingCurrent
         }
         set {
-            set("locale", value: newValue.identifier)
+            set(.locale, value: newValue.identifier)
+        }
+    }
+    
+    static var defaultListLimit: Int {
+        get {
+            if let rawValue = get(.defaultListLimit), let value = Int(rawValue) {
+                return value
+            }
+            return 10
+        }
+        set {
+            set(.defaultListLimit, value: String(newValue))
         }
     }
 
     static var filters: [String] {
         get {
-            if let filterValue = get("filters") {
+            if let filterValue = get(.filters) {
                 return filterValue.split(separator: ",").map(String.init)
             }
             return []
         }
         set {
-            set("filters", value: newValue.joined(separator: ","))
+            set(.filters, value: newValue.joined(separator: ","))
         }
     }
 

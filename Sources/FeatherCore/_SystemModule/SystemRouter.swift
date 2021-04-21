@@ -60,7 +60,15 @@ struct SystemRouter: RouteCollection {
         let adminRoutes = routes.grouped("admin").grouped(adminMiddlewares)
         /// setup home view (dashboard)
         adminRoutes.get(use: adminController.homeView)
-        adminRoutes.get("dashboard", use: adminController.dashboardView)
+        /// setup module related admin routes
+        adminRoutes.get("system", use: FeatherAdminMenuController(key: "system").moduleView)
+        adminRoutes.get("web", use: FeatherAdminMenuController(key: "web").moduleView)
+        adminRoutes.get("user", use: FeatherAdminMenuController(key: "user").moduleView)
+        /// setup dasbhoard & settings routes
+        adminRoutes.grouped(SystemModule.idKeyPathComponent).get("dashboard", use: adminController.dashboardView)
+        adminRoutes.grouped(SystemModule.idKeyPathComponent).get("settings", use: adminController.settingsView)
+        adminRoutes.grouped(SystemModule.idKeyPathComponent).post("settings", use: adminController.updateSettings)
+        
         /// hook up other admin views that are protected by the authentication middleware
         let _: [Void] = app.invokeAll("admin-routes", args: ["routes": adminRoutes])
 
@@ -81,13 +89,6 @@ struct SystemRouter: RouteCollection {
     func adminRoutesHook(args: HookArguments) {
         let adminRoutes = args["routes"] as! RoutesBuilder
 
-        adminRoutes.get("system", use: FeatherAdminMenuController(key: "system").moduleView)
-        adminRoutes.get("web", use: FeatherAdminMenuController(key: "web").moduleView)
-        adminRoutes.get("user", use: FeatherAdminMenuController(key: "user").moduleView)
-        
-        adminRoutes.get("settings", use: adminController.settingsView)
-        adminRoutes.post("settings", use: adminController.updateSettings)
-        
 //        let modulePath = routes.grouped(FileModule.pathComponent)
 //        modulePath
 //            .grouped(UserAccessMiddleware(name: "file.browser.list"))

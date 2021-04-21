@@ -69,6 +69,22 @@ final class SystemSettingsForm: Form {
                 }
                 .write { Application.Config.filters = $1.input },
             
+            TextField(key: "template").config { $0.output.value = Application.Config.template }
+                .write { Application.Config.template = $1.input },
+            
+            SelectionField(key: "defaultListLimit",
+                           value: String(Application.Config.defaultListLimit),
+                           options: FormFieldOption.numbers([5, 10, 15, 20, 25, 30, 50, 100]))
+                .config {
+                    $0.output.label = "Default list limit"
+                }
+                .write { req, field -> Void in
+                    if let newValue = Int(field.input) {
+                        Application.Config.defaultListLimit = newValue
+                    }
+                },
+            
+            
             TextareaField(key: "css")
                 .read { [unowned self] req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
                 .write { [unowned self] req, field in save(key: field.key, value: field.output.value, req: req) },

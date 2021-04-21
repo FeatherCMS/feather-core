@@ -91,7 +91,7 @@ public extension ListController {
     var listSearchKey: String { "search" }
     var listLimitKey: String { "limit" }
     var listPageKey: String { "page" }
-    var listDefaultLimit: Int { 10 }
+    var listDefaultLimit: Int { Application.Config.defaultListLimit }
     var listDefaultPage: Int { 1 }
     
     var listView: String { "System/Admin/List" }

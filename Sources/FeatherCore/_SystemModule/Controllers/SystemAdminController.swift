@@ -64,7 +64,7 @@ struct SystemAdminController {
                 }
                 return form.write(req: req)
                     .flatMap { form.save(req: req) }
-                    .map { req.redirect(to: "/admin/settings/") }
+                    .map { req.redirect(to: req.url.path.safePath()) }
             }
     }
     

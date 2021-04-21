@@ -16,6 +16,8 @@ Core dependencies for Feather CMS.
 - [x] menu item detail page & nav links
 - [x] delete context default implementation
 - [x] generic attach / detach diff api
+- [ ] App config cache, template settings
+- [ ] content form field type (rich editor)
 - [ ] file module
 - [ ] basic widgets
 - [ ] test content filters

@@ -1,21 +1,24 @@
 #define(css):
 .lead span svg {
-    width: var(--font-size-3xl);
-    height: var(--font-size-3xl);
+    width: var(--font-size-4xl);
+    height: var(--font-size-4xl);
     color: var(--color-1);
+}
+.lead h1 {
+    margin-top: var(--space-2xs);
 }
 .lead nav a {
     display: block;
+    margin-bottom: var(--space-xs);
 }
 #enddefine
-
 
 #define(title):
 #(menu.link.label)
 #enddefine
 
 #define(breadcrumb):
-    <a href="#($req.url.path)" class="current">#title()</a>
+    <a href="#($req.url.path)" class="selected">#title()</a>
 #enddefine
 
 
@@ -26,7 +29,7 @@
     <span>#svg(menu.link.icon)</span>
     <h1>#title()</h1>
     <p>#(menu.notes ?? "")</p>
-    
+
 #if(UserHasPermission(menu.link.permission) ?? true):
     <nav>
         

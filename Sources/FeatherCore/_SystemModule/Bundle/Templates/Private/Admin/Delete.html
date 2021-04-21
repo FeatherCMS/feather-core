@@ -25,7 +25,7 @@ Confirm deletion
     <a href="#($req.url.path)" class="selected">Delete</a>
 #else:
     #for(b in bc):
-        <a href="#(b.url)"#if(isLast): class="current"#endif>#(b.label)</a>
+        <a href="#(b.url)"#if(isLast): class="selected"#endif>#(b.label)</a>
     #endfor
 #endif
 #enddefine

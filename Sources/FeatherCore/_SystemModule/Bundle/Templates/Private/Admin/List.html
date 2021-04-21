@@ -38,10 +38,10 @@ td.field {
 #define(breadcrumb):
 #if(bc.isEmpty()):
     <a href="#($req.url.path.trimLast())">#(model.module.name)</a>
-    <a href="#($req.url.path)" class="current">#title()</a>
+    <a href="#($req.url.path)" class="selected">#title()</a>
 #else:
     #for(b in bc):
-        <a href="#(b.url)"#if(isLast): class="current"#endif>#(b.label)</a>
+        <a href="#(b.url)"#if(isLast): class="selected"#endif>#(b.label)</a>
     #endfor
 #endif
 #enddefine

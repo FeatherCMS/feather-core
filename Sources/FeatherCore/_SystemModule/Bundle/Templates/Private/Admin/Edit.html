@@ -14,10 +14,10 @@
     <a>#(model.name.plural)</a>
     #endif
 
-    <a href="#($req.url.path)" class="current">#if(id != nil):Edit#else:Create#endif</a>
+    <a href="#($req.url.path)" class="selected">#if(id != nil):Edit#else:Create#endif</a>
 #else:
     #for(b in bc):
-        <a href="#(b.url)"#if(isLast): class="current"#endif>#(b.label)</a>
+        <a href="#(b.url)"#if(isLast): class="selected"#endif>#(b.label)</a>
     #endfor
 #endif
 #enddefine
