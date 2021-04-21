@@ -7,7 +7,7 @@
 
 struct FrontendMetadataController: FeatherController {
     
-    typealias Module = SystemModule
+    typealias Module = FrontendModule
     typealias Model = FrontendMetadataModel
     
     typealias CreateForm = FrontendMetadataEditForm

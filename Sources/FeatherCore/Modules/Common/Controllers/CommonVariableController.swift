@@ -7,7 +7,7 @@
 //
 struct CommonVariableController: FeatherController {
     
-    typealias Module = SystemModule
+    typealias Module = CommonModule
     typealias Model = CommonVariableModel
     
     typealias CreateForm = SystemVariableEditForm

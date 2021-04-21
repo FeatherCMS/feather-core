@@ -7,7 +7,7 @@
 
 struct FrontendPageController: FeatherController {
     
-    typealias Module = SystemModule
+    typealias Module = FrontendModule
     typealias Model = FrontendPageModel
     
     typealias CreateForm = FrontendPageEditForm

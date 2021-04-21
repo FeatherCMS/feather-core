@@ -7,7 +7,7 @@
 
 struct FrontendMenuController: FeatherController {
 
-    typealias Module = SystemModule
+    typealias Module = FrontendModule
     typealias Model = FrontendMenuModel
 
     typealias CreateForm = FrontendMenuEditForm
