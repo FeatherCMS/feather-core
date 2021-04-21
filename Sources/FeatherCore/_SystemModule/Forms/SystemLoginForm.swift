@@ -5,15 +5,15 @@
 //  Created by Tibor Bodecs on 2020. 02. 20..
 //
 
-struct SystemLoginForm: EditFormController {
-    
-    var context: EditFormContext<SystemUserModel>
-    
+final class SystemLoginForm: Form {
+
     init() {
-        context = .init()
-        context.form.fields = createFormFields()
+        super.init()
+
+        title = "login"
+        fields = createFormFields()
     }
-    
+
     private func createFormFields() -> [FormComponent] {
         [
             TextField(key: "email")

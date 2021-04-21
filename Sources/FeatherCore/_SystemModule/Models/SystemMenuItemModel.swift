@@ -8,8 +8,8 @@
 final class SystemMenuItemModel: FeatherModel {
     typealias Module = SystemModule
 
-    static let name = "menuItems"
-    static let schema = "\(Module.name)_menu_\(name)"
+    static let name: FeatherModelName = "menuItem"
+    static let schema = "\(Module.name)_menu_items"
     static var pathComponent: PathComponent { "items" }
     
     struct FieldKeys {

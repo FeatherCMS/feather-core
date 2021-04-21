@@ -15,8 +15,7 @@ struct SystemMetadataEditForm: EditFormController {
 
     init() {
         context = .init()
-        context.form.title = "metadata"
-        context.form.action.multipart = true
+        context.form.title = Model.name.singular
         context.form.fields = createFormFields()
     }
     

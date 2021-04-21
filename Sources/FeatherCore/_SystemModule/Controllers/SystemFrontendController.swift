@@ -58,7 +58,7 @@ struct SystemFrontendController {
     
     func loginView(req: Request) throws -> EventLoopFuture<Response> {
         guard req.auth.has(User.self) else {
-            return render(req: req, form: SystemLoginForm().context.form)
+            return render(req: req, form: SystemLoginForm())
         }
         let response = req.redirect(to: getCustomRedirect(req: req), type: .normal)
         return req.eventLoop.future(response)
@@ -69,13 +69,15 @@ struct SystemFrontendController {
             req.session.authenticate(user)
             return req.eventLoop.future(req.redirect(to: getCustomRedirect(req: req)))
         }
-        let formController = SystemLoginForm()
-        return formController.load(req: req)
-            .flatMap { formController.process(req: req) }
-            .flatMap { formController.validate(req: req) }
-            .flatMap { _ in
-                formController.context.form.error = "Invalid username or password"
-                return render(req: req, form: formController.context.form)
+        let form = SystemLoginForm()
+        return form.load(req: req)
+            .flatMap { form.process(req: req) }
+            .flatMap { form.validate(req: req) }
+            .flatMap { isValid in
+                if isValid {
+                    form.error = "Invalid username or password"
+                }
+                return render(req: req, form: form)
             }
     }
 

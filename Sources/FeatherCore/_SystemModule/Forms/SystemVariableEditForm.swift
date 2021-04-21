@@ -12,7 +12,7 @@ struct SystemVariableEditForm: EditFormController {
     
     init() {
         context = .init()
-        context.form.title = "variable"
+        context.form.title = Model.name.singular
         context.form.fields = createFormFields()
     }
 

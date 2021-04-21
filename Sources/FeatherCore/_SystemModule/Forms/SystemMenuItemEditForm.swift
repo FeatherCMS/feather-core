@@ -11,6 +11,7 @@ struct SystemMenuItemEditForm: EditFormController {
     
     init() {
         context = .init()
+        context.form.title = Model.name.singular
         context.form.fields = createFormFields()
     }
 

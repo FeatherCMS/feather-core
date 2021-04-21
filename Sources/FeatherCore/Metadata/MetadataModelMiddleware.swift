@@ -16,7 +16,7 @@ public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware
             var metadata = model.metadata
             metadata.id = UUID()
             metadata.module = T.Module.name
-            metadata.model = T.name
+            metadata.model = T.name.plural
             metadata.reference = model.id
             let model = SystemMetadataModel()
             model.use(metadata)
@@ -42,7 +42,7 @@ public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware
         next.delete(model, force: force, on: db).flatMap {
             var metadata = model.metadata
             metadata.module = T.Module.name
-            metadata.model = T.name
+            metadata.model = T.name.plural
             metadata.reference = model.id
             
             return SystemMetadataModel.query(on: db)

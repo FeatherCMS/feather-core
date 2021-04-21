@@ -100,7 +100,7 @@ public extension ListController {
     
     var listView: String { "System/Admin/List" }
 
-    var listTitle: String { Model.name.lowercased().capitalized }
+    var listTitle: String { Model.name.plural.lowercased().capitalized }
     
     var listIsSearchable: Bool { true }
     
@@ -114,7 +114,7 @@ public extension ListController {
 
     func listContext(req: Request) -> ListControllerContext {
         .init(module: Model.Module.name,
-              model: Model.name,
+              model: Model.name.plural,
               title: listTitle,
               searchable: listIsSearchable,
               create: req.checkPermission(for: Model.permission(for: .create)),

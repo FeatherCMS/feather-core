@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 04. 22..
 //
 
+
 /// viper model
 public protocol FeatherModel: Model where Self.IDValue == UUID {
 
@@ -12,7 +13,7 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
     associatedtype Module: FeatherModule
 
     /// pluar name of the model
-    static var name: String { get }
+    static var name: FeatherModelName { get }
     
     /// path of the model relative to the module (e.g. Module/Model/) can be used as a location or key
     static var path: String { get }
@@ -38,13 +39,13 @@ public extension FeatherModel {
     var identifier: String { id!.uuidString }
 
     /// schema is always prefixed with the module name
-    static var schema: String { Module.name + "_" + Self.name }
+    static var schema: String { Module.name + "_" + Self.name.plural }
     
     /// path of the model relative to the module (e.g. Module/Model/)
-    static var path: String { Module.path + Self.name + "/" }
+    static var path: String { Module.path + Self.name.plural + "/" }
     
     /// path component based on the model name
-    static var pathComponent: PathComponent { .init(stringLiteral: name) }
+    static var pathComponent: PathComponent { .init(stringLiteral: name.plural) }
     
     static var createPathComponent: PathComponent { "create" }
     static var updatePathComponent: PathComponent { "update" }
@@ -57,7 +58,7 @@ public extension FeatherModel {
     
 
     static func permission(for action: Permission.Action) -> Permission {
-        .init(namespace: Module.name, context: name, action: action)
+        .init(namespace: Module.name, context: name.plural, action: action)
     }
 
     static func permissions() -> [Permission] {
@@ -77,8 +78,8 @@ public extension FeatherModel {
         let delete = req.checkPermission(for: permission(for: .delete))
     
         let permissions = ModelInfo.AvailablePermissions(list: list, get: get, create: create, update: update, patch: patch, delete: delete)
-        return ModelInfo(key: Self.name,
-                         title: Self.name,
+        return ModelInfo(key: Self.name.plural,
+                         title: Self.name.singular,
                          module: .init(key: Module.name,
                                        title: Module.name,
                                        path: "/admin/" + Module.path),

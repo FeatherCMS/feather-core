@@ -26,7 +26,7 @@ public extension QueryBuilder where Model: FeatherModel & MetadataRepresentable 
     func joinMetadata() -> QueryBuilder<Model> {
         join(SystemMetadataModel.self, on: \SystemMetadataModel.$reference == \Model._$id)
                     .filter(SystemMetadataModel.self, \.$module == Model.Module.name)
-                    .filter(SystemMetadataModel.self, \.$model == Model.name)
+            .filter(SystemMetadataModel.self, \.$model == Model.name.plural)
     }
     
     /// find an object with an associated the metadata object for a given path

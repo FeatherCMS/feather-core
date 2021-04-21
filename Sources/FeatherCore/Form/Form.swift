@@ -41,7 +41,12 @@ open class Form: FormComponent {
     open var title: String
     open var notification: Notification?
     open var error: String?
-    open var fields: [FormComponent]
+    open var fields: [FormComponent] {
+        didSet {
+            /// NOTE: maybe a requiresMultipart: Bool FormComponent protocol property would be a better idea... ?
+            self.action.multipart = fields.reduce(false, { $0 || ($1 is ImageField /*|| $1 is FileField*/) })
+        }
+    }
 
     public init(action: Action = .init(),
                 id: String = UUID().uuidString,

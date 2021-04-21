@@ -8,7 +8,7 @@
 final class SystemUserModel: FeatherModel {
     typealias Module = SystemModule
     
-    static let name = "users"
+    static let name: FeatherModelName = "user"
 
     struct FieldKeys {
         

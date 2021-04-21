@@ -8,7 +8,7 @@
 final class SystemPageModel: FeatherModel {
     typealias Module = SystemModule
 
-    static let name = "pages"
+    static let name: FeatherModelName = "page"
 
     struct FieldKeys {
         static var title: FieldKey { "title" }

@@ -5,7 +5,6 @@
 //  Created by Tibor Bodecs on 2020. 11. 19..
 //
 
-
 public protocol EditFormController: FormComponent {
     associatedtype Model: FeatherModel
 
