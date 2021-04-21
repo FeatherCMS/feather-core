@@ -89,9 +89,9 @@ public struct Permission: Codable, Equatable {
 
     public var components: [String] { [namespace, context, action.identifier] }
 
-    public var identifier: String { components.joined(separator: ".").lowercased() }
+    public var identifier: String { components.joined(separator: ".") }
 
-    public var accessIdentifier: String { (components + ["access"]).joined(separator: "-").lowercased() }
+    public var accessIdentifier: String { (components + ["access"]).joined(separator: "-") }
     
     public var name: String { "\(namespace) \(context) \(action.identifier)" }
 }

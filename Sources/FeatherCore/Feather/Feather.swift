@@ -95,12 +95,13 @@ public struct Feather {
 
         for module in app.feather.modules {
             guard let url = module.bundleUrl else { continue }
-            let source = ModuleBundleTemplateSource(module: module.name,
+            let idKey = type(of: module).self.idKey
+            let source = ModuleBundleTemplateSource(module: idKey,
                                                     rootDirectory: url.path.withTrailingSlash,
                                                     templatesDirectory: Application.Directories.templates,
                                                     fileio: app.fileio)
 
-            try templateSources.register(source: "\(module.name)-module", using: source)
+            try templateSources.register(source: "\(idKey)-module", using: source)
         }
         
         TemplateEngine.sources = templateSources
@@ -204,7 +205,7 @@ public struct Feather {
                 continue
             }
             let source = bundleUrl.appendingPathComponent(Application.Directories.templates).appendingPathComponent("Public")
-            let destination = templatesUrl.appendingPathComponent(module.name.lowercased().capitalized)
+            let destination = templatesUrl.appendingPathComponent(type(of: module).self.idKey)
             try FileManager.default.copy(at: source, to: destination)
         }
     }
@@ -233,7 +234,7 @@ public struct Feather {
     /// Big thanks to [Lopdo](https://github.com/Lopdo) for the plugin loader sample code. 🙏
     ///
     private static func loadDynamicModuleBuilder(named name: String, _ app: Application) -> FeatherModuleBuilder {
-        let moduleName = name.lowercased().capitalized
+        let moduleName = name
         let path = app.directory.resourcesDirectory + "Modules/libDynamic\(moduleName)Module.dylib"
 
         guard let dylibReference = dlopen(path, RTLD_NOW|RTLD_LOCAL) else {

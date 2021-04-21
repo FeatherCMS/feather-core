@@ -14,6 +14,9 @@ Admin
 .card .content nav a {
     display: block;
 }
+.card h2 a {
+    color: var(--text-color-1);
+}
 #enddefine
 
 #define(body):
@@ -25,11 +28,11 @@ Admin
 
 <section class="grid-321">
     #for(menu in menus):
-        #if(UserHasPermission(menu.permission) ?? true):
+        #if(UserHasPermission(menu.link.permission) ?? true):
         <div class="card">
             <div class="content">
-            <span>#svg(menu.icon)</span>
-            <h2>#(menu.name)</h2>
+            <span>#svg(menu.link.icon)</span>
+            <h2><a href="#(menu.link.url)">#(menu.link.label)</a></h2>
             <nav>
             #for(item in menu.items):
                 #if(UserHasPermission(item.permission) ?? true):

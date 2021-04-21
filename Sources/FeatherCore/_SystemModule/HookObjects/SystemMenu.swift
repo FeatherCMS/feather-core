@@ -10,26 +10,22 @@ import Foundation
 public struct SystemMenu: Codable {
 
     public let key: String
-    public let name: String
-    public let icon: String?
     public let notes: String?
-    public let permission: String?
+
+    public let link: SystemMenuItem?
     public let items: [SystemMenuItem]
-    
+
     public init(key: String,
-                name: String,
-                icon: String? = nil,
                 notes: String? = nil,
-                permission: String? = nil,
-                items: [SystemMenuItem])
-    {
+                link: SystemMenuItem? = nil,
+                items: [SystemMenuItem] = []) {
         self.key = key
-        self.name = name
-        self.icon = icon
         self.notes = notes
-        self.permission = permission
+        self.link = link
         self.items = items
     }
+   
+    
 }
 
 

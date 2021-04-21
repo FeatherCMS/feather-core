@@ -12,19 +12,20 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
     /// associated viper module
     associatedtype Module: FeatherModule
 
-    /// pluar name of the model
-    static var name: FeatherModelName { get }
-    
-    /// path of the model relative to the module (e.g. Module/Model/) can be used as a location or key
-    static var path: String { get }
-    
+    /// path identifier key
+    static var idKey: String { get }
     /// path component
-    static var pathComponent: PathComponent { get }
-    
+    static var idKeyPathComponent: PathComponent { get }
     static var createPathComponent: PathComponent { get }
     static var updatePathComponent: PathComponent { get }
     static var deletePathComponent: PathComponent { get }
     
+    /// pluar name of the model
+    static var name: FeatherModelName { get }
+    /// path of the model relative to the module (e.g. Module/Model/) can be used as a location or key
+    static var assetPath: String { get }
+    
+
     static var isSearchable: Bool { get }
     static func allowedOrders() -> [FieldKey]
     static func defaultSort() -> FieldSort
@@ -38,29 +39,22 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
 public extension FeatherModel {
     
     var identifier: String { id!.uuidString }
-
-    /// schema is always prefixed with the module name
-    static var schema: String { Module.name + "_" + Self.name.plural }
-    
-    /// path of the model relative to the module (e.g. Module/Model/)
-    static var path: String { Module.path + Self.name.plural + "/" }
-    
-    /// path component based on the model name
-    static var pathComponent: PathComponent { .init(stringLiteral: name.plural) }
-    
+    static var idKeyPathComponent: PathComponent { .init(stringLiteral: idKey) }
     static var createPathComponent: PathComponent { "create" }
     static var updatePathComponent: PathComponent { "update" }
     static var deletePathComponent: PathComponent { "delete" }
     
+    static var schema: String { Module.idKey + "_" + idKey }
+    static var assetPath: String { Module.assetPath + idKey + "/" }
+
     static var isSearchable: Bool { true }
     static func allowedOrders() -> [FieldKey] { [] }
     static func defaultSort() -> FieldSort { .asc }
     static func search(_ term: String) -> [ModelValueFilter<Self>] { [] }
 
-    
 
     static func permission(for action: Permission.Action) -> Permission {
-        .init(namespace: Module.name, context: name.plural, action: action)
+        .init(namespace: Module.idKey, context: name.plural, action: action)
     }
 
     static func permissions() -> [Permission] {
@@ -80,9 +74,10 @@ public extension FeatherModel {
         let delete = req.checkPermission(for: permission(for: .delete))
     
         let permissions = ModelInfo.AvailablePermissions(list: list, get: get, create: create, update: update, patch: patch, delete: delete)
-        return ModelInfo(path: Self.path,
+        return ModelInfo(idKey: Self.idKey,
                          name: .init(singular: Self.name.singular, plural: Self.name.plural),
-                         module: .init(name: Module.name, path: Module.path),
+                         assetPath: Self.assetPath,
+                         module: .init(idKey: Module.idKey, name: Module.name, assetPath: Module.assetPath),
                          permissions: permissions,
                          isSearchable: Self.isSearchable,
                          allowedOrders: Self.allowedOrders().map(\.description),

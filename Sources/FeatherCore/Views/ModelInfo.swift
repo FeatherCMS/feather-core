@@ -22,12 +22,14 @@ public struct ModelInfo: Encodable {
     }
     
     public struct ModuleInfo: Encodable {
+        let idKey: String
         let name: String
-        let path: String
+        let assetPath: String
     }
 
-    let path: String
+    let idKey: String
     let name: ModelName
+    let assetPath: String
     let module: ModuleInfo
     let permissions: AvailablePermissions
     let isSearchable: Bool

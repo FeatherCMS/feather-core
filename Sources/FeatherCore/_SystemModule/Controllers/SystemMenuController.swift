@@ -20,15 +20,19 @@ struct SystemMenuController: FeatherController {
     typealias PatchApi = SystemMenuApi
     typealias DeleteApi = SystemMenuApi
 
-
-//    #if(UserHasPermission("system.menuItems.list")):
-//        #(table.actions.append(["url": "/items/", "label": "Items", "icon": "link", "width": "4rem"]))
-//    #endif
-
     func listTable(_ models: [Model]) -> Table {
-        Table(columns: ["name", "key"], rows: models.map { model in
-            TableRow(id: model.identifier, cells: [TableCell(model.name), TableCell(model.key)])
-        })
+        Table(columns: ["name", "key"],
+              rows: models.map { model in
+                TableRow(id: model.identifier, cells: [TableCell(model.name), TableCell(model.key)])
+              },
+              action: TableRowAction(label: "Items",
+                                     icon: "system",
+                                     url: "/items/",
+                                     permission: SystemMenuItemModel.permission(for: .list).identifier))
+    }
+    
+    func listContext(req: Request, table: Table, pages: Pagination) -> ListContext {
+        .init(info: Model.info(req), table: table, pages: pages)
     }
 
     func beforeDelete(req: Request, model: SystemMenuModel) -> EventLoopFuture<SystemMenuModel> {

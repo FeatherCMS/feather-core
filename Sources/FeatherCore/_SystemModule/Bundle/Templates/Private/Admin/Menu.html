@@ -1,0 +1,45 @@
+#define(css):
+.lead span svg {
+    width: var(--font-size-3xl);
+    height: var(--font-size-3xl);
+    color: var(--color-1);
+}
+.lead nav a {
+    display: block;
+}
+#enddefine
+
+
+#define(title):
+#(menu.link.label)
+#enddefine
+
+#define(breadcrumb):
+    <a href="#($req.url.path)" class="current">#title()</a>
+#enddefine
+
+
+#define(body):
+
+<div class="lead center">
+
+    <span>#svg(menu.link.icon)</span>
+    <h1>#title()</h1>
+    <p>#(menu.notes ?? "")</p>
+    
+#if(UserHasPermission(menu.link.permission) ?? true):
+    <nav>
+        
+        #for(item in menu.items):
+            #if(UserHasPermission(item.permission) ?? true):
+            <a href="#(item.url)">#(item.label)</a>
+            #endif
+        #endfor
+    </nav>
+#endif
+
+
+</div>
+
+#enddefine
+#inline("System/Admin/Index")

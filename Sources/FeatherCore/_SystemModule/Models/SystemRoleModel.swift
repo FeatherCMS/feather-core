@@ -8,7 +8,8 @@
 final class SystemRoleModel: FeatherModel {
     typealias Module = SystemModule
     
-    static let name: FeatherModelName = "role"
+    static let idKey: String = "roles"
+    static let name: FeatherModelName = "Role"
 
     struct FieldKeys {
         static var key: FieldKey { "key" }

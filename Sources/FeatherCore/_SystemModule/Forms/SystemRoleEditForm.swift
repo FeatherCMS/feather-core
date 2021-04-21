@@ -67,7 +67,7 @@ struct SystemRoleEditForm: FeatherForm {
         var data: [FormFieldMultiGroupOption] = []
         for permission in permissions {
             let ffo = FormFieldOption(key: permission.identifier, label: permission.action.capitalized)
-            let module = permission.namespace.lowercased().capitalized
+            let module = permission.namespace.capitalized
 
             /// if there is no module with the permission, we create it...
             var moduleIndex: Array<FormFieldMultiGroupOption>.Index!
@@ -79,7 +79,7 @@ struct SystemRoleEditForm: FeatherForm {
                 moduleIndex = data.endIndex.advanced(by: -1)
             }
 
-            let ctx = permission.context.replacingOccurrences(of: ".", with: " ").lowercased().capitalized
+            let ctx = permission.context.replacingOccurrences(of: ".", with: " ").capitalized
             /// find an existing ctx group or create a new one...
             var groupIndex: Array<FormFieldOptionGroup>.Index!
             if let g = data[moduleIndex].groups.firstIndex(where: { $0.name == ctx }) {

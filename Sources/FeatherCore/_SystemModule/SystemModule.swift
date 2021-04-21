@@ -8,9 +8,9 @@
 
 final class SystemModule: FeatherModule {
 
-    static var name: String = "system"
+    static var idKey: String = "system"
 
-    static var bundleUrl: URL? {
+    var bundleUrl: URL? {
         Bundle.module.resourceURL?.appendingPathComponent("Bundle")
     }
 
@@ -106,7 +106,7 @@ final class SystemModule: FeatherModule {
             guard let moduleBundle = module.bundleUrl else {
                 continue
             }
-            let name = module.name.lowercased()
+            let name = type(of: module).self.idKey
             let sourcePath = moduleBundle.appendingPathComponent("Install").path
             let sourceUrl = URL(fileURLWithPath: sourcePath)
             let keys: [URLResourceKey] = [.isDirectoryKey]
@@ -143,9 +143,10 @@ final class SystemModule: FeatherModule {
     func adminMenusHook(args: HookArguments) -> [SystemMenu] {
         [
             .init(key: "system",
-                  name: "System",
-                  icon: "system",
-                  permission: nil,
+                  link: .init(label: "System",
+                              url: "/admin/system/",
+                              icon: "system",
+                              permission: nil),
                   items: [
                     .init(label: "Dashboard",
                           url: "/admin/dashboard/",
@@ -160,8 +161,12 @@ final class SystemModule: FeatherModule {
                           url: "/admin/system/metadatas/",
                           permission: nil),
                   ]),
-            .init(key: "web", name: "Web", icon: "web",
-                  permission: nil,
+
+            .init(key: "web",
+                  link: .init(label: "Web",
+                              url: "/admin/web/",
+                              icon: "web",
+                              permission: nil),
                   items: [
                     .init(label: "Pages",
                           url: "/admin/system/pages/",
@@ -184,8 +189,11 @@ final class SystemModule: FeatherModule {
 //                ])
 //            ]
             
-            .init(key: "user", name: "User", icon: "user",
-                  permission: nil,
+            .init(key: "user",
+                  link: .init(label: "User",
+                              url: "/admin/user/",
+                              icon: "user",
+                              permission: nil),
                   items: [
                     .init(label: "Users",
                           url: "/admin/system/users/",

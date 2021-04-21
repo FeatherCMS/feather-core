@@ -20,31 +20,42 @@ struct SystemMenuItemController: FeatherController {
     typealias PatchApi = SystemVariableApi
     typealias DeleteApi = SystemVariableApi
 
-    func setupRoutes(on: RoutesBuilder, createPath: PathComponent = "create", updatePath: PathComponent = "update", deletePath: PathComponent = "delete") {
-        let base = on.grouped(SystemMenuModel.pathComponent).grouped(":menuId").grouped(Model.pathComponent)
+    func setupRoutes(on builder: RoutesBuilder) {
+        let base = builder.grouped(SystemModule.idKeyPathComponent)
+                          .grouped(SystemMenuModel.idKeyPathComponent)
+                          .grouped(":id")
+                          .grouped(Model.idKeyPathComponent)
+        
         setupListRoute(on: base)
         setupGetRoute(on: base)
-        setupCreateRoutes(on: base, as: createPath)
-        setupUpdateRoutes(on: base, as: updatePath)
-        setupDeleteRoutes(on: base, as: deletePath)
+        setupCreateRoutes(on: base, as: Model.createPathComponent)
+        setupUpdateRoutes(on: base, as: Model.updatePathComponent)
+        setupDeleteRoutes(on: base, as: Model.deletePathComponent)
     }
+    
+    var idParamKey: String { "itemId" }
 
-//    "title": "Menu items",
-//    "key": "system.menuItems",
-//    "fields": [
-//        ["key": "label", "default": true]
-//    ],
-//    "nav": [
-//        ["label": "Menu", "url": "/admin/frontend/menus/" + menuId]
-//    ]
     func listTable(_ models: [Model]) -> Table {
         Table(columns: ["label", "url"], rows: models.map { model in
             TableRow(id: model.identifier, cells: [TableCell(model.label), TableCell(model.url)])
         })
     }
 
+    func listContext(req: Request, table: Table, pages: Pagination) -> ListContext {
+        let id = req.parameters.get("id")!
+        
+        return ListContext(info: Model.info(req), table: table, pages: pages, nav: [
+            .init(label: "Menu details", url: "/admin/system/menus/" + req.parameters.get("id")! + "/")
+        ], breadcrumb: [
+            .init(label: "System", url: "/admin/system/"),
+            .init(label: "Menus", url: "/admin/system/menus/"),
+            .init(label: "Menu", url: "/admin/system/menus/" + id + "/"),
+            .init(label: "Items", url: req.url.path.safePath()),
+        ])
+    }
+
     func beforeListQuery(req: Request, queryBuilder: QueryBuilder<SystemMenuItemModel>) -> QueryBuilder<SystemMenuItemModel> {
-        guard let id = req.parameters.get("menuId"), let uuid = UUID(uuidString: id) else {
+        guard let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) else {
             return queryBuilder
         }
         return queryBuilder.filter(\.$menu.$id == uuid)

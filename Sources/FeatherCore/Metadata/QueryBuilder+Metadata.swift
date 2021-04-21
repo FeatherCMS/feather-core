@@ -25,7 +25,7 @@ public extension QueryBuilder where Model: FeatherModel & MetadataRepresentable 
     /// joins the metadata object on the ViperModel query, if a path is present it'll use it as a filter to return only one instance that matches the slug
     func joinMetadata() -> QueryBuilder<Model> {
         join(SystemMetadataModel.self, on: \SystemMetadataModel.$reference == \Model._$id)
-                    .filter(SystemMetadataModel.self, \.$module == Model.Module.name)
+                    .filter(SystemMetadataModel.self, \.$module == Model.Module.idKey)
             .filter(SystemMetadataModel.self, \.$model == Model.name.plural)
     }
     

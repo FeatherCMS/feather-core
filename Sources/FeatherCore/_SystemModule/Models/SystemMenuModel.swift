@@ -8,7 +8,8 @@
 final class SystemMenuModel: FeatherModel {
     typealias Module = SystemModule
 
-    static let name: FeatherModelName = "menu"
+    static let idKey: String = "menus"
+    static let name: FeatherModelName = "Menu"
     
     struct FieldKeys {
         static var key: FieldKey { "key" }

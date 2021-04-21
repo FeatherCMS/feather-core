@@ -5,15 +5,21 @@
 #enddefine
 
 #define(breadcrumb):
-    <a href="/admin/#(model.module.path)">#(model.module.name.capitalized())</a>
+#if(bc.isEmpty()):
+    <a href="/admin/#(model.module.idKey)/">#(model.module.name)</a>
 
     #if(model.permissions.list ?? false):
-    <a href="/admin/#(model.path)">#(model.name.plural.capitalized())</a>
+    <a href="/admin/#(model.module.idKey)/#(model.idKey)/">#(model.name.plural)</a>
     #else:
-    <a>#(model.name.plural.capitalized())</a>
+    <a>#(model.name.plural)</a>
     #endif
 
     <a href="#($req.url.path)" class="current">#if(id != nil):Edit#else:Create#endif</a>
+#else:
+    #for(b in bc):
+        <a href="#(b.url)"#if(isLast): class="current"#endif>#(b.label)</a>
+    #endfor
+#endif
 #enddefine
 
 #define(body):

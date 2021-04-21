@@ -45,19 +45,35 @@ struct SystemMenuItemEditForm: FeatherForm {
                 .read { $1.output.value = context.model?.isBlank ?? false }
                 .write { context.model?.isBlank = $1.input },
             
-            TextareaField(key: "permission")
+            TextField(key: "permission")
                 .read { $1.output.value = context.model?.permission }
                 .write { context.model?.permission = $1.input },
             
+            TextareaField(key: "notes")
+                .read { $1.output.value = context.model?.notes }
+                .write { context.model?.notes = $1.input },
+            
             HiddenField(key: "menuId")
-                .read { req, field -> Void in
+                .read { $1.output.value = context.model?.$menu.id.uuidString }
+                .write { req, field in
                     if let uuid = UUID(uuidString: field.input) {
                         context.model?.$menu.id = uuid
                     }
-                }
-                .write { req, field in
-                    field.output.value = context.model?.$menu.id.uuidString
                 },
         ]
+    }
+    
+    func load(req: Request) -> EventLoopFuture<Void> {
+        let id = req.parameters.get("id")!
+        let itemId = req.parameters.get("itemId")
+        
+        context.breadcrumb = [
+            .init(label: "System", url: "/admin/system/"),
+            .init(label: "Menus", url: "/admin/system/menus/"),
+            .init(label: "Menu", url: "/admin/system/menus/" + id + "/"),
+            .init(label: "Items", url: "/admin/system/menus/" + id + "/items/"),
+            .init(label: itemId != nil ? "Edit" : "Create", url: req.url.path.safePath()),
+        ]
+        return context.load(req: req)
     }
 }

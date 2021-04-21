@@ -47,7 +47,7 @@ struct SystemMetadataEditForm: FeatherForm {
                 .read { $1.output.value = context.model?.slug }
                 .write { context.model?.slug = $1.input },
             
-            ImageField(key: "image", path: Model.path)
+            ImageField(key: "image", path: Model.assetPath)
                 .read { ($1 as! ImageField).imageKey = context.model?.imageKey }
                 .write { context.model?.imageKey = ($1 as! ImageField).imageKey },
             

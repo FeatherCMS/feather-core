@@ -17,11 +17,15 @@ public struct ListContext: Encodable {
     public let model: ModelInfo
     public let table: Table
     public let pages: Pagination
+    public let nav: [Link]
+    public let bc: [Link]
     
-    public init(info: ModelInfo, table: Table, pages: Pagination) {
+    public init(info: ModelInfo, table: Table, pages: Pagination, nav: [Link] = [], breadcrumb: [Link] = []) {
         self.model = info
         self.table = table
         self.pages = pages
+        self.nav = nav
+        self.bc = breadcrumb
     }
 }
 
@@ -92,7 +96,7 @@ public extension ListController {
     
     var listView: String { "System/Admin/List" }
 
-    var listTitle: String { Model.name.plural.lowercased().capitalized }
+    var listTitle: String { Model.name.plural }
     
     var listIsSearchable: Bool { true }
     

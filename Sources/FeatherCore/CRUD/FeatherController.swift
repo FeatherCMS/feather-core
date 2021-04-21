@@ -12,7 +12,11 @@ public protocol FeatherController:
     UpdateController,
     PatchController,
     DeleteController
-{}
+{
+    
+    func setupRoutes(on builder: RoutesBuilder)
+    func setupApiRoutes(on builder: RoutesBuilder)
+}
 
 public protocol FeatherApiRepresentable:
     ListApiRepresentable,
@@ -21,10 +25,12 @@ public protocol FeatherApiRepresentable:
     UpdateApiRepresentable,
     PatchApiRepresentable,
     DeleteApiRepresentable
-{}
+{
+    
+}
 
 
-fileprivate extension FeatherController {
+public extension FeatherController {
 
     /*
      Routes & associated controller methods:
@@ -39,7 +45,7 @@ fileprivate extension FeatherController {
         + POST                           delete
      */
     func setupRoutes(on builder: RoutesBuilder) {
-        let base = builder.grouped(Model.Module.pathComponent).grouped(Model.pathComponent)
+        let base = builder.grouped(Model.Module.idKeyPathComponent).grouped(Model.idKeyPathComponent)
         setupListRoute(on: base)
         setupGetRoute(on: base)
         setupCreateRoutes(on: base, as: Model.createPathComponent)
@@ -58,7 +64,7 @@ fileprivate extension FeatherController {
      DELETE /[module]/[model]/:id       deleteApi
      */
     func setupApiRoutes(on builder: RoutesBuilder) {
-        let base = builder.grouped(Model.Module.pathComponent).grouped(Model.pathComponent)
+        let base = builder.grouped(Model.Module.idKeyPathComponent).grouped(Model.idKeyPathComponent)
         setupListApiRoute(on: base)
         setupGetApiRoute(on: base)
         setupCreateApiRoute(on: base)

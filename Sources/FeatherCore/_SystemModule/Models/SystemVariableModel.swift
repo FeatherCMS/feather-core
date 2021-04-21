@@ -8,7 +8,8 @@
 final class SystemVariableModel: FeatherModel {
     typealias Module = SystemModule
 
-    static let name: FeatherModelName = "variable"
+    static let idKey: String = "variables"
+    static let name: FeatherModelName = "Variable"
 
     struct FieldKeys {
         static var key: FieldKey { "key" }

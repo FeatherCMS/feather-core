@@ -1,23 +1,29 @@
-#var(actions = [])
+#var(tableActions = [])
+
+#if(table.action ?? false):
+    #if(UserHasPermission(table.action.permission) ?? true):
+        #(tableActions.append(["url": table.action.url, "label": table.action.label, "icon": table.action.icon, "width": "4rem"]))
+    #endif
+#endif
 
 #if(model.permissions.update):
-    #(actions.append(["url": "/update/", "label": "Edit", "icon": "edit", "width": "4rem"]))
+    #(tableActions.append(["url": "/update/", "label": "Edit", "icon": "edit", "width": "4rem"]))
 #endif
 
 #if(model.permissions.delete):
-    #(actions.append(["url": "/delete/", "label": "Delete", "icon": "delete", "width": "4rem"]))
+    #(tableActions.append(["url": "/delete/", "label": "Delete", "icon": "delete", "width": "4rem"]))
 #endif
 
 #define(css):
 tr {
-    grid-template-columns: repeat(#max(1, actions.count()), 1fr);
+    grid-template-columns: repeat(#max(1, tableActions.count()), 1fr);
 }
 td.field {
-    grid-column: span #(actions.count());
+    grid-column: span #(tableActions.count());
 }
 @media (min-width: 600px) {
     tr {
-        grid-template-columns:#for(f in table.columns ?? []): #(f.width ?? "1fr")#endfor #for(a in actions): #(a.width ?? "1fr")#endfor;
+        grid-template-columns:#for(f in table.columns ?? []): #(f.width ?? "1fr")#endfor #for(a in tableActions): #(a.width ?? "1fr")#endfor;
     }
     td.field {
         grid-column: span 1;
@@ -26,19 +32,25 @@ td.field {
 #enddefine
 
 #define(title):
-#(model.name.plural.capitalized())
+#(model.name.plural)
 #enddefine
 
 #define(breadcrumb):
-    <a href="#($req.url.path.trimLast())">#(model.module.name.capitalized())</a>
+#if(bc.isEmpty()):
+    <a href="#($req.url.path.trimLast())">#(model.module.name)</a>
     <a href="#($req.url.path)" class="current">#title()</a>
+#else:
+    #for(b in bc):
+        <a href="#(b.url)"#if(isLast): class="current"#endif>#(b.label)</a>
+    #endfor
+#endif
 #enddefine
 
 #define(body):
 <div class="lead">
     <h1>#title()</h1>
     <p>
-        #var(nav = [])
+        #var(nav = nav ?? [])
         #if(model.permissions.create):
             #(nav.append(["url": $req.url.path + "create/", "label": "Create new"]))
         #endif
@@ -82,7 +94,7 @@ td.field {
                 #endif
             </td>
             #endfor
-            #for(action in actions):
+            #for(action in tableActions):
             <td class="action">#(action.label)</td>
             #endfor
         </tr>
@@ -103,7 +115,7 @@ td.field {
                 #endif
             </td>
             #endfor
-            #for(action in actions):
+            #for(action in tableActions):
             <td class="action">
                 <a href="#($req.url.path)#(row.id)#(action.url)">#svg(action.icon)</a>
             </td>

@@ -8,8 +8,9 @@
 final class SystemTokenModel: FeatherModel {
     typealias Module = SystemModule
     
-    static let name: FeatherModelName = "token"
-    static let schema = "\(Module.name)_user_\(name.plural)"
+    static let idKey: String = "tokens"
+    static let name: FeatherModelName = "Token"
+    static let schema = "\(Module.idKey)_user_\(idKey)"
     
     struct FieldKeys {
         static var value: FieldKey { "value" }

@@ -29,7 +29,7 @@ public extension FeatherModel where Self: MetadataRepresentable {
 
     static func findMetadata(reference: UUID, on db: Database) -> EventLoopFuture<Metadata?> {
         SystemMetadataModel.query(on: db)
-            .filter(\.$module == Module.name)
+            .filter(\.$module == Module.idKey)
             .filter(\.$model == name.plural)
             .filter(\.$reference == reference)
             .first()
@@ -70,7 +70,7 @@ public extension FeatherModel where Self: MetadataRepresentable {
         var metadata = block()
         metadata.reference = id!
         metadata.model = Self.name.plural
-        metadata.module = Module.name
+        metadata.module = Module.idKey
         
         return SystemMetadataModel.query(on: db)
                     .filter(\.$module == metadata.module!)

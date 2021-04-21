@@ -8,7 +8,8 @@
 final class SystemPermissionModel: FeatherModel {
     typealias Module = SystemModule
     
-    static let name: FeatherModelName = "permission"
+    static let idKey: String = "permissions"
+    static let name: FeatherModelName = "Permission"
 
     struct FieldKeys {
         static var namespace: FieldKey { "namespace" }

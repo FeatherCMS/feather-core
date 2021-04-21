@@ -53,6 +53,7 @@ struct SystemMigration_v1: Migration {
                 .field(SystemMenuItemModel.FieldKeys.isBlank, .bool, .required)
                 .field(SystemMenuItemModel.FieldKeys.menuId, .uuid, .required)
                 .field(SystemMenuItemModel.FieldKeys.permission, .string)
+                .field(SystemMenuItemModel.FieldKeys.notes, .string)
                 .foreignKey(SystemMenuItemModel.FieldKeys.menuId, references: SystemMenuModel.schema, .id)
                 .create(),
             db.schema(SystemVariableModel.schema)

@@ -9,7 +9,8 @@
 final class SystemMetadataModel: FeatherModel {
     typealias Module = SystemModule
 
-    static let name: FeatherModelName = "metadata"
+    static let idKey: String = "metadatas"
+    static let name: FeatherModelName = "Metadata"
 
     struct FieldKeys {
         /// reference

@@ -15,7 +15,7 @@ public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware
         next.create(model, on: db).flatMap {
             var metadata = model.metadata
             metadata.id = UUID()
-            metadata.module = T.Module.name
+            metadata.module = T.Module.idKey
             metadata.model = T.name.plural
             metadata.reference = model.id
             let model = SystemMetadataModel()
@@ -41,7 +41,7 @@ public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware
     public func delete(model: T, force: Bool, on db: Database, next: AnyModelResponder) -> EventLoopFuture<Void> {
         next.delete(model, force: force, on: db).flatMap {
             var metadata = model.metadata
-            metadata.module = T.Module.name
+            metadata.module = T.Module.idKey
             metadata.model = T.name.plural
             metadata.reference = model.id
             

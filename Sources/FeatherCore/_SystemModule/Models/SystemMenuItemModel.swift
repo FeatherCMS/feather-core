@@ -8,10 +8,10 @@
 final class SystemMenuItemModel: FeatherModel {
     typealias Module = SystemModule
 
-    static let name: FeatherModelName = "menuItem"
-    static let schema = "\(Module.name)_menu_items"
-    static var pathComponent: PathComponent { "items" }
-    
+    static let idKey = "items"
+    static let name: FeatherModelName = "Menu item"
+    static let schema = "\(Module.idKey)_menu_\(idKey)"
+
     struct FieldKeys {
         static var icon: FieldKey { "icon" }
         static var label: FieldKey { "label" }
@@ -19,6 +19,7 @@ final class SystemMenuItemModel: FeatherModel {
         static var priority: FieldKey { "priority" }
         static var isBlank: FieldKey { "is_blank" }
         static var permission: FieldKey { "permission" }
+        static var notes: FieldKey { "notes" }
         static var menuId: FieldKey { "menu_id" }
     }
 
@@ -31,6 +32,7 @@ final class SystemMenuItemModel: FeatherModel {
     @Field(key: FieldKeys.priority) var priority: Int
     @Field(key: FieldKeys.isBlank) var isBlank: Bool
     @Field(key: FieldKeys.permission) var permission: String?
+    @Field(key: FieldKeys.notes) var notes: String?
     @Parent(key: FieldKeys.menuId) var menu: SystemMenuModel
 
     init() { }
@@ -42,6 +44,7 @@ final class SystemMenuItemModel: FeatherModel {
          priority: Int = 100,
          isBlank: Bool = false,
          permission: String? = nil,
+         notes: String? = nil,
          menuId: UUID)
     {
         self.id = id
@@ -51,6 +54,7 @@ final class SystemMenuItemModel: FeatherModel {
         self.priority = priority
         self.isBlank = isBlank
         self.permission = permission
+        self.notes = notes
         self.$menu.id = menuId
     }
     

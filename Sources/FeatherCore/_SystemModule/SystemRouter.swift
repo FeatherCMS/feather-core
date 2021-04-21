@@ -81,6 +81,10 @@ struct SystemRouter: RouteCollection {
     func adminRoutesHook(args: HookArguments) {
         let adminRoutes = args["routes"] as! RoutesBuilder
 
+        adminRoutes.get("system", use: FeatherAdminMenuController(key: "system").moduleView)
+        adminRoutes.get("web", use: FeatherAdminMenuController(key: "web").moduleView)
+        adminRoutes.get("user", use: FeatherAdminMenuController(key: "user").moduleView)
+        
         adminRoutes.get("settings", use: adminController.settingsView)
         adminRoutes.post("settings", use: adminController.updateSettings)
         

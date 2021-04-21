@@ -7,11 +7,12 @@
 
 open class FeatherFormContext<T: FeatherModel>: FormComponent {
     
-    fileprivate enum CodingKeys: CodingKey {
+    fileprivate enum CodingKeys: String, CodingKey {
         case nav
         case model
         case form
         case metadata
+        case breadcrumb = "bc"
     }
     
     private var modelInfo: ModelInfo?
@@ -20,11 +21,13 @@ open class FeatherFormContext<T: FeatherModel>: FormComponent {
     var model: T?
     var nav: [Link]
     var metadata: Metadata?
+    var breadcrumb: [Link]
 
-    public init(form: Form = .init(), model: T? = nil, nav: [Link] = []) {
+    public init(form: Form = .init(), model: T? = nil, nav: [Link] = [], breadcrumb: [Link] = []) {
         self.form = form
         self.model = model
         self.nav = nav
+        self.breadcrumb = breadcrumb
     }
 
     open func encode(to encoder: Encoder) throws {
@@ -33,6 +36,7 @@ open class FeatherFormContext<T: FeatherModel>: FormComponent {
         try container.encode(form, forKey: .form)
         try container.encodeIfPresent(modelInfo, forKey: .model)
         try container.encodeIfPresent(metadata, forKey: .metadata)
+        try container.encode(breadcrumb, forKey: .breadcrumb)
     }
 
     // MARK: - form component
