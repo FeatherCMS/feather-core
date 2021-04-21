@@ -116,7 +116,7 @@ struct SystemAdminController {
                 /// filter tmp folder and hidden files & directories
                 .filter { !($0.name == "tmp" && $0.ext == nil) && !$0.name.hasPrefix(".") }
                 
-                return req.tau.render(template: "File/Admin/Browser", context: [
+                return req.tau.render(template: "System/Admin/File/Browser", context: [
                     "current": current?.templateData ?? .trueNil,
                     "parent": parent?.templateData ?? .trueNil,
                     "children": .array(sortedChildren),
@@ -125,25 +125,18 @@ struct SystemAdminController {
             .encodeResponse(for: req)
         }
     }
-//    
-//    private func renderDirectoryView(req: Request, form: FileDirectoryForm) -> EventLoopFuture<View> {
-//        let formId = UUID().uuidString
-//        let nonce = req.generateNonce(for: "file-directory-form", id: formId)
-//        
-//        var templateData = form.templateData.dictionary!
-//        templateData["formId"] = .string(formId)
-//        templateData["formToken"] = .string(nonce)
-//        
-//        return req.tau.render(template: "File/Admin/Directory", context: .init(templateData))
-//    }
-//    
-//    func directoryView(req: Request) -> EventLoopFuture<View> {
-//        renderDirectoryView(req: req, form: .init())
-//    }
-//    
+
+    private func renderDirectoryView(req: Request, form: FileDirectoryForm) -> EventLoopFuture<View> {
+        return req.view.render("System/Admin/File/Directory", ["form": FileDirectoryForm()])
+    }
+    
+    func directoryView(req: Request) -> EventLoopFuture<View> {
+        renderDirectoryView(req: req, form: .init())
+    }
+    
 //    func directory(req: Request) throws -> EventLoopFuture<Response> {
 //        try req.validateFormToken(for: "file-directory-form")
-//        
+//
 //        let form = FileDirectoryForm()
 //        return form.initialize(req: req)
 //            .flatMap { form.process(req: req) }
@@ -157,34 +150,31 @@ struct SystemAdminController {
 //                }
 //            }
 //    }
-//    
-//    // MARK: - upload
-//    
-//    private func renderUploadView(req: Request, form: FileUploadForm) -> EventLoopFuture<View> {
-//        let formId = UUID().uuidString
-//        let nonce = req.generateNonce(for: "file-upload-form", id: formId)
-//        
-//        var templateData = form.templateData.dictionary!
-//        templateData["formId"] = .string(formId)
-//        templateData["formToken"] = .string(nonce)
-//        
-//        /// provide max upload size for the template
-//        let formatter = ByteCountFormatter()
-//        formatter.countStyle = .binary
-//        let byteCount = req.application.routes.defaultMaxBodySize
-//        let maxUploadSize = formatter.string(fromByteCount: Int64(byteCount.value))
-//        templateData["maxUploadSize"] = .string(maxUploadSize)
-//
-//        return req.tau.render(template: "File/Admin/Upload", context: .init(templateData))
-//    }
-//    
-//    func uploadView(req: Request) -> EventLoopFuture<View> {
-//        renderUploadView(req: req, form: .init())
-//    }
-//    
+    
+    // MARK: - upload
+    
+    private func renderUploadView(req: Request, form: FileUploadForm) -> EventLoopFuture<View> {
+        /// provide max upload size for the template
+        let formatter = ByteCountFormatter()
+        formatter.countStyle = .binary
+        let byteCount = req.application.routes.defaultMaxBodySize
+        let maxUploadSize = formatter.string(fromByteCount: Int64(byteCount.value))
+
+        struct Context: Encodable {
+            let form: FileUploadForm
+            let maxUploadSize: String
+        }
+
+        return req.view.render("System/Admin/File/Upload", Context(form: form, maxUploadSize: maxUploadSize))
+    }
+    
+    func uploadView(req: Request) -> EventLoopFuture<View> {
+        renderUploadView(req: req, form: .init())
+    }
+    
 //    func upload(req: Request) throws -> EventLoopFuture<Response> {
 //        try req.validateFormToken(for: "file-upload-form")
-//        
+//
 //        let form = FileUploadForm()
 //        return form.initialize(req: req)
 //            .flatMap { form.process(req: req) }
@@ -193,7 +183,7 @@ struct SystemAdminController {
 //                guard isValid else {
 //                    return renderUploadView(req: req, form: form).encodeResponse(for: req)
 //                }
-//                
+//
 //                let futures = form.files.values.map { file -> EventLoopFuture<String> in
 //                    /// NOTE: better key validation on long term...
 //                    let fileKey = String((form.key.value! + "/" + file.filename).safePath().dropFirst())
@@ -204,13 +194,13 @@ struct SystemAdminController {
 //                }
 //            }
 //    }
-//    
-//    // MARK: - delete
-//    
+    
+    // MARK: - delete
+    
 //    func deleteView(req: Request) throws -> EventLoopFuture<Response>  {
 //        let formId = UUID().uuidString
 //        let nonce = req.generateNonce(for: "file-delete-form", id: formId)
-//        
+//
 //        var key: String? = nil
 //        /// if there is a key, check if it exists
 //        var future: EventLoopFuture<Bool> = req.eventLoop.future(true)
@@ -218,7 +208,7 @@ struct SystemAdminController {
 //            future = req.fs.exists(key: keyValue)
 //            key = keyValue
 //        }
-//        
+//
 //        /// check if directory exists, then make some assumption about the list items...
 //        return future.flatMap { exists -> EventLoopFuture<Response> in
 //            guard exists else {
@@ -231,10 +221,10 @@ struct SystemAdminController {
 //            ]).encodeResponse(for: req)
 //        }
 //    }
-//    
+//
 //    func delete(req: Request) throws -> EventLoopFuture<Response> {
 //        try req.validateFormToken(for: "file-delete-form")
-//        
+//
 //        struct Context: Decodable {
 //            let key: String
 //            let redirect: String
@@ -244,5 +234,4 @@ struct SystemAdminController {
 //            req.redirect(to: context.redirect).encodeResponse(for: req)
 //        }
 //    }
-//    
 }

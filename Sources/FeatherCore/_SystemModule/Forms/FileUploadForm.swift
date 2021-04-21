@@ -5,26 +5,19 @@
 //  Created by Tibor Bodecs on 2020. 06. 03..
 //
 
-//import FeatherCore
-//
-//extension File: TemplateDataRepresentable {
-//
-//    public var templateData: TemplateData {
-//        .dictionary([
-//            "name": filename
-//        ])
-//    }
-//}
-//
-//final class FileUploadForm: Form {
-//
-//    var key = FormField<String>(key: "key")
-//    var files = ArraySelectionFormField<File>(key: "files") //required
-//    var notification: String?
-//
-//    var fields: [FormFieldRepresentable] {
-//        [key, files]
-//    }
-//    
-//    init() {}
-//}
+final class FileUploadForm: Form {
+
+    var name: String?
+
+    init() {
+        super.init()
+        fields = createFormFields()
+    }
+
+    private func createFormFields() -> [FormComponent] {
+        [
+            TextField(key: "files").read { [unowned self] req, field in self.name = field.input }
+        ]
+    }
+}
+

@@ -89,25 +89,25 @@ struct SystemRouter: RouteCollection {
     func adminRoutesHook(args: HookArguments) {
         let adminRoutes = args["routes"] as! RoutesBuilder
 
-//        let modulePath = routes.grouped(FileModule.pathComponent)
-//        modulePath
-//            .grouped(UserAccessMiddleware(name: "file.browser.list"))
-//            .get("browser", use: fileAdmin.browserView)
-//
-//        let directoryPath = modulePath.grouped("directory")
-//            .grouped(UserAccessMiddleware(name: "file.browser.create"))
-//        directoryPath.get(use: fileAdmin.directoryView)
-//        directoryPath.post(use: fileAdmin.directory)
-//
-//        let uploadPath = modulePath.grouped("upload")
-//            .grouped(UserAccessMiddleware(name: "file.browser.create"))
-//        uploadPath.get(use: fileAdmin.uploadView)
-//        uploadPath.post(use: fileAdmin.upload)
-//
-//        let deletePath = modulePath.grouped("delete")
-//            .grouped(UserAccessMiddleware(name: "file.browser.delete"))
-//        deletePath.get(use: fileAdmin.deleteView)
-//        deletePath.post(use: fileAdmin.delete)
+        let modulePath = adminRoutes.grouped(SystemModule.idKeyPathComponent)
+        modulePath
+            .grouped(AccessGuardMiddleware(.init(namespace: "system", context: "files", action: .list)))
+            .get("files", use: adminController.browserView)
+
+        let directoryPath = modulePath.grouped("files").grouped("directory")
+            .grouped(AccessGuardMiddleware(.init(namespace: "system", context: "files", action: .create)))
+        directoryPath.get(use: adminController.directoryView)
+//        directoryPath.post(use: adminController.directory)
+
+        let uploadPath = modulePath.grouped("files").grouped("upload")
+            .grouped(AccessGuardMiddleware(.init(namespace: "system", context: "files", action: .create)))
+        uploadPath.get(use: adminController.uploadView)
+//        uploadPath.post(use: adminController.upload)
+
+        let deletePath = modulePath.grouped("files").grouped("delete")
+            .grouped(AccessGuardMiddleware(.init(namespace: "system", context: "files", action: .delete)))
+//        deletePath.get(use: adminController.deleteView)
+//        deletePath.post(use: adminController.delete)
         
         adminRoutes.register(userController)
         adminRoutes.register(roleController)

@@ -1,11 +1,11 @@
-#let(key = Request(query: "key") ?? fields.key.value)
+#let(key = Request(query: "key"))
 
 #define(title):
 Create directory
 #enddefine
 
 #define(breadcrumb):
-    <a href="#($req.url.path.trimLast())browser/?key=#(key)">File browser</a>
+    <a href="#($req.url.path.trimLast())browser/#if(key ?? false):?key=#(key)#endif">File browser</a>
 #enddefine
 
 #define(body):
@@ -13,30 +13,13 @@ Create directory
 <div class="container">
 
     <header class="lead">
-        <p class="note">Destination &middot; <a href="#($req.url.path.trimLast())browser/?key=#(key)">/#(key)</a></p>
+        <p class="note">Destination &middot; <a href="#($req.url.path.trimLast())browser/#if(key ?? false):?key=#(key)#endif">/#(key ?? "")</a></p>
         <h1>Create directory</h1>
     </header>
     
-    <form id="file-directory-form" method="post" action="#($req.url.path)">
-        #var(field = nil)
-        
-        #(field = ["id": "formId", "value": formId])
-        #inline("Common/Fields/Hidden")
-        
-        #(field = ["id": "formToken", "value": formToken])
-        #inline("Common/Fields/Hidden")
-
-        #(field = ["id": "key", "value": key])
-        #inline("Common/Fields/Hidden")
-
-        #(field = ["id": "name", "required": true, "data": fields.name])
-        #inline("Common/Fields/Text")
-        
-        #(field = ["label": "Create directory", "class": "shadow"])
-        #inline("Common/Fields/Button")
-    </form>
+    #inline("System/Common/Form")
 
 </div>
 #enddefine
 
-#inline("Admin/Index")
+#inline("System/Admin/Index")

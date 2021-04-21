@@ -5,22 +5,23 @@
 //  Created by Tibor Bodecs on 2020. 06. 03..
 //
 
-//import FeatherCore
-//
-//final class FileDirectoryForm: Form {
-//
-//    var key = FormField<String>(key: "key")
-//    var name = FormField<String>(key: "name").alphanumerics().length(max: 250)
-//    var notification: String?
-//    
-//    var fields: [FormFieldRepresentable] {
-//        [key, name]
-//    }
-//
-//    init() {}
-//
+final class FileDirectoryForm: Form {
+
+    var name: String?
+
+    init() {
+        super.init()
+        fields = createFormFields()
+    }
+
+    private func createFormFields() -> [FormComponent] {
+        [
+            TextField(key: "name").read { [unowned self] req, field in self.name = field.input }
+        ]
+    }
+    
 //    func save(req: Request) -> EventLoopFuture<Void> {
 //        let directoryKey = String((key.value! + "/" + name.value!).safePath().dropFirst().dropLast())
 //        return req.fs.createDirectory(key: directoryKey)
 //    }
-//}
+}
