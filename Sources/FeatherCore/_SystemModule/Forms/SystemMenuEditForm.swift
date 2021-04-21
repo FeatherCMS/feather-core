@@ -5,13 +5,12 @@
 //  Created by Tibor Bodecs on 2020. 11. 15..
 //
 
-struct SystemMenuEditForm: EditFormController {
+struct SystemMenuEditForm: FeatherForm {
     
-    var context: EditFormContext<SystemMenuModel>
+    var context: FeatherFormContext<SystemMenuModel>
     
     init() {
         context = .init()
-        context.form.title = Model.name.singular
         context.form.fields = createFormFields()
     }
 

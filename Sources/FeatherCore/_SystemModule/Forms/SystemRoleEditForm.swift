@@ -6,13 +6,12 @@
 //
 
 
-struct SystemRoleEditForm: EditFormController {
+struct SystemRoleEditForm: FeatherForm {
     
-    var context: EditFormContext<SystemRoleModel>
+    var context: FeatherFormContext<SystemRoleModel>
     
     init() {
         context = .init()
-        context.form.title = Model.name.singular
         context.form.fields = createFormFields()
     }
 

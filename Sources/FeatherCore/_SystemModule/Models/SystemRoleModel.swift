@@ -41,7 +41,7 @@ final class SystemRoleModel: FeatherModel {
     }
 }
 
-extension SystemRoleModel: FormFieldOptionRepresentable {
+extension SystemRoleModel {
 
     var formFieldOption: FormFieldOption {
         .init(key: identifier, label: name)

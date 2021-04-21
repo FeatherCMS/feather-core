@@ -9,8 +9,6 @@ final class SystemSettingsForm: Form {
 
     init() {
         super.init()
-
-        title = "settings"
         fields = createFormFields()
     }
 

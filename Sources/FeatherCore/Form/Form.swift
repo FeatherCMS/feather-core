@@ -47,7 +47,6 @@ open class Form: FormComponent {
     open var action: Action
     open var id: String
     open var token: String
-    open var title: String
     open var notification: Notification?
     open var error: String?
     open var fields: [FormComponent] {
@@ -60,7 +59,6 @@ open class Form: FormComponent {
     public init(action: Action = .init(),
                 id: String = UUID().uuidString,
                 token: String = UUID().uuidString,
-                title: String = "form",
                 notification: Notification? = nil,
                 error: String? = nil,
                 fields: [FormComponent] = []) {
@@ -68,7 +66,6 @@ open class Form: FormComponent {
         self.action = action
         self.id = id
         self.token = token
-        self.title = title
         self.notification = notification
         self.error = error
         self.fields = fields
@@ -80,7 +77,6 @@ open class Form: FormComponent {
         try container.encode(action, forKey: .action)
         try container.encodeIfPresent(id, forKey: .id)
         try container.encodeIfPresent(token, forKey: .token)
-        try container.encodeIfPresent(title, forKey: .title)
         try container.encodeIfPresent(notification, forKey: .notification)
         try container.encodeIfPresent(error, forKey: .error)
 

@@ -18,7 +18,7 @@ public protocol CreateApiRepresentable: ModelApi {
 public protocol CreateController: ModelController {
 
     associatedtype CreateApi: CreateApiRepresentable & GetApiRepresentable
-    associatedtype CreateForm: EditFormController
+    associatedtype CreateForm: FeatherForm
 
     var createView: String { get }
 

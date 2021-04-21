@@ -17,7 +17,7 @@ public protocol UpdateApiRepresentable: ModelApi {
 public protocol UpdateController: IdentifiableController {
     
     associatedtype UpdateApi: UpdateApiRepresentable & GetApiRepresentable
-    associatedtype UpdateForm: EditFormController
+    associatedtype UpdateForm: FeatherForm
 
     var updateView: String { get }
 

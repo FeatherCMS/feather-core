@@ -6,13 +6,12 @@
 //
 //
 
-struct SystemVariableEditForm: EditFormController {
+struct SystemVariableEditForm: FeatherForm {
 
-    var context: EditFormContext<SystemVariableModel>
+    var context: FeatherFormContext<SystemVariableModel>
     
     init() {
         context = .init()
-        context.form.title = Model.name.singular
         context.form.fields = createFormFields()
     }
 

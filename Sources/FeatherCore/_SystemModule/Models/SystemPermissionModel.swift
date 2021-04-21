@@ -79,7 +79,7 @@ extension SystemPermissionModel {
     }
 }
 
-extension SystemPermissionModel: FormFieldOptionRepresentable {
+extension SystemPermissionModel {
 
     var formFieldOption: FormFieldOption {
         .init(key: identifier, label: name)

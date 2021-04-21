@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 2020. 12. 04..
 //
 
-
-
 public protocol ListApiRepresentable: ModelApi {
     associatedtype ListObject: Content
     
@@ -14,27 +12,17 @@ public protocol ListApiRepresentable: ModelApi {
 }
 
 
-public struct ListControllerContext: Codable {
+public struct ListContext: Encodable {
 
-    public let module: String
-    public let model: String
-    public let title: String
-
-    public let searchable: Bool
-    public let create: Bool
-    public let view: Bool
-    public let update: Bool
-    public let delete: Bool
+    public let model: ModelInfo
+    public let table: Table
+    public let pages: Pagination
     
-    public let allowedOrders: [String]
-    public let defaultOrder: String?
-    public let defaultSort: String
-}
-
-struct ListTemplateView: Encodable {
-    let table: Table
-    let pages: Pagination
-    let list: ListControllerContext
+    public init(info: ModelInfo, table: Table, pages: Pagination) {
+        self.model = info
+        self.table = table
+        self.pages = pages
+    }
 }
 
 public protocol ListController: ModelController {
@@ -59,6 +47,9 @@ public protocol ListController: ModelController {
     /// url query parameter list page key
     var listPageKey: String { get }
     
+    /// default page number to show
+    var listDefaultPage: Int { get }
+    
     /// default list limit
     var listDefaultLimit: Int { get }
     
@@ -70,11 +61,11 @@ public protocol ListController: ModelController {
     func accessList(req: Request) -> EventLoopFuture<Bool>
     
     /// builds the query in order to list objects in the admin interface
-    func listQueryBuilder(req: Request, queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model>
+    func beforeListQuery(queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model>
     
     func listTable(_ models: [Model]) -> Table
     
-    func listContext(req: Request) -> ListControllerContext
+    func listContext(req: Request, table: Table, pages: Pagination) -> ListContext
     
     /// renders the list view
     func listView(req: Request) throws -> EventLoopFuture<View>
@@ -97,6 +88,7 @@ public extension ListController {
     var listLimitKey: String { "limit" }
     var listPageKey: String { "page" }
     var listDefaultLimit: Int { 10 }
+    var listDefaultPage: Int { 1 }
     
     var listView: String { "System/Admin/List" }
 
@@ -104,26 +96,27 @@ public extension ListController {
     
     var listIsSearchable: Bool { true }
     
+    var listLoader: ListLoader<Model> {
+        ListLoader<Model>(sortKey: listSortKey,
+                          orderKey: listOrderKey,
+                          searchKey: listSearchKey,
+                          limitKey: listLimitKey,
+                          limit: listDefaultLimit,
+                          pageKey: listPageKey,
+                          page: listDefaultPage,
+                          beforeQuery: beforeListQuery)
+    }
+    
     func accessList(req: Request) -> EventLoopFuture<Bool> {
         req.checkAccess(for: Model.permission(for: .list))
     }
     
-    func listQueryBuilder(req: Request, queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
+    func beforeListQuery(queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
         queryBuilder
     }
 
-    func listContext(req: Request) -> ListControllerContext {
-        .init(module: Model.Module.name,
-              model: Model.name.plural,
-              title: listTitle,
-              searchable: listIsSearchable,
-              create: req.checkPermission(for: Model.permission(for: .create)),
-              view: req.checkPermission(for: Model.permission(for: .get)),
-              update: req.checkPermission(for: Model.permission(for: .update)),
-              delete: req.checkPermission(for: Model.permission(for: .delete)),
-              allowedOrders: Model.allowedOrders().map(\.description),
-              defaultOrder: Model.allowedOrders().first?.description,
-              defaultSort: Model.defaultSort().rawValue)
+    func listContext(req: Request, table: Table, pages: Pagination) -> ListContext {
+        .init(info: Model.info(req), table: table, pages: pages)
     }
 
     func listView(req: Request) throws -> EventLoopFuture<View> {
@@ -131,8 +124,8 @@ public extension ListController {
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
-            return ListLoader<Model>().paginate(req)
-                .flatMap { req.view.render(listView, ListTemplateView(table: listTable($0.items), pages: $0.info, list: listContext(req: req))) }
+            return listLoader.paginate(req)
+                .flatMap { req.view.render(listView, listContext(req: req, table: listTable($0.items), pages: $0.info)) }
         }
     }
 
@@ -141,8 +134,7 @@ public extension ListController {
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
-            #warning("llprops, key, order, sort, etc.")
-            return ListLoader<Model>().paginate(req).map { pc -> PaginationContainer<ListApi.ListObject> in
+            return listLoader.paginate(req).map { pc -> PaginationContainer<ListApi.ListObject> in
                 let api = ListApi()
                 let items = pc.map { api.mapList(model: $0 as! ListApi.Model) }
                 return items

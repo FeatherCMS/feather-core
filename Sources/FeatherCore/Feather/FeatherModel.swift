@@ -25,6 +25,7 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
     static var updatePathComponent: PathComponent { get }
     static var deletePathComponent: PathComponent { get }
     
+    static var isSearchable: Bool { get }
     static func allowedOrders() -> [FieldKey]
     static func defaultSort() -> FieldSort
     static func search(_ term: String) -> [ModelValueFilter<Self>]
@@ -51,6 +52,7 @@ public extension FeatherModel {
     static var updatePathComponent: PathComponent { "update" }
     static var deletePathComponent: PathComponent { "delete" }
     
+    static var isSearchable: Bool { true }
     static func allowedOrders() -> [FieldKey] { [] }
     static func defaultSort() -> FieldSort { .asc }
     static func search(_ term: String) -> [ModelValueFilter<Self>] { [] }
@@ -78,12 +80,14 @@ public extension FeatherModel {
         let delete = req.checkPermission(for: permission(for: .delete))
     
         let permissions = ModelInfo.AvailablePermissions(list: list, get: get, create: create, update: update, patch: patch, delete: delete)
-        return ModelInfo(key: Self.name.plural,
-                         title: Self.name.singular,
-                         module: .init(key: Module.name,
-                                       title: Module.name,
-                                       path: "/admin/" + Module.path),
-                         permissions: permissions, urls: .init(list: "/admin/" + path))
+        return ModelInfo(path: Self.path,
+                         name: .init(singular: Self.name.singular, plural: Self.name.plural),
+                         module: .init(name: Module.name, path: Module.path),
+                         permissions: permissions,
+                         isSearchable: Self.isSearchable,
+                         allowedOrders: Self.allowedOrders().map(\.description),
+                         defaultOrder: Self.allowedOrders().first?.description,
+                         defaultSort: Self.defaultSort().rawValue)
     }
 
     /// check if a model is unique by a given filter (excludes the current object id if peresnt in a given request parameter)

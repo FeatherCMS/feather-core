@@ -5,9 +5,9 @@
 // Created by Tibor Bodecs on 2020. 06. 09..
 //
 
-struct SystemMetadataEditForm: EditFormController {
+struct SystemMetadataEditForm: FeatherForm {
     
-    var context: EditFormContext<SystemMetadataModel>
+    var context: FeatherFormContext<SystemMetadataModel>
     
     var formatter: DateFormatter {
         Application.Config.dateFormatter()
@@ -15,7 +15,6 @@ struct SystemMetadataEditForm: EditFormController {
 
     init() {
         context = .init()
-        context.form.title = Model.name.singular
         context.form.fields = createFormFields()
     }
     

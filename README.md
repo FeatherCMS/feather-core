@@ -7,10 +7,11 @@ Core dependencies for Feather CMS.
 
 - [x] singular / plural model names (automatic form names)
 - [x] fix login & settings forms (they are not edit ctx forms)
-- [ ] auto-validate form tokens
-- [ ] table nav links & context cleanup & list loader params
+- [x] auto-validate form tokens
+- [x] list loader params
+- [x] table context cleanup
 - [ ] module detail pages
-- [ ] menu items admin
+- [ ] menu items admin (table nav links)
 - [ ] file module
 - [ ] basic widgets
 - [ ] test content filters

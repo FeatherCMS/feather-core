@@ -10,7 +10,6 @@ final class SystemLoginForm: Form {
     init() {
         super.init()
 
-        title = "login"
         fields = createFormFields()
     }
 

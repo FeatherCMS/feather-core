@@ -6,7 +6,7 @@
 //
 
 /// a content filter can  synchronously transform an input string
-public protocol ContentFilter: FormFieldOptionRepresentable {
+public protocol ContentFilter {
     
     /// unique identifier key
     var key: String { get }

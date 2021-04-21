@@ -62,7 +62,7 @@ final class SystemUserModel: FeatherModel {
     }
 }
 
-extension SystemUserModel: FormFieldOptionRepresentable {
+extension SystemUserModel {
 
     var formFieldOption: FormFieldOption {
         .init(key: identifier, label: email)

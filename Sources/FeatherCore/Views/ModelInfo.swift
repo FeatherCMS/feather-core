@@ -7,6 +7,11 @@
 
 public struct ModelInfo: Encodable {
 
+    public struct ModelName: Encodable {
+        let singular: String
+        let plural: String
+    }
+
     public struct AvailablePermissions: Encodable {
         let list: Bool
         let get: Bool
@@ -15,20 +20,18 @@ public struct ModelInfo: Encodable {
         let patch: Bool
         let delete: Bool
     }
-
-    public struct Urls: Encodable {
-        let list: String
-    }
     
     public struct ModuleInfo: Encodable {
-        let key: String
-        let title: String
+        let name: String
         let path: String
     }
 
-    let key: String
-    let title: String
+    let path: String
+    let name: ModelName
     let module: ModuleInfo
     let permissions: AvailablePermissions
-    let urls: Urls
+    let isSearchable: Bool
+    let allowedOrders: [String]
+    let defaultOrder: String?
+    let defaultSort: String
 }

@@ -1,15 +1,18 @@
 #let(id = Request(parameter: "id"))
 
 #define(title):
-#if(id != nil):Edit#else:Create#endif #(form.title.lowercased())
+#if(id != nil):Edit#else:Create#endif #(model.name.singular)
 #enddefine
 
 #define(breadcrumb):
-    <a href="#(model.module.path)">#(model.module.title.capitalized())</a>
+    <a href="/admin/#(model.module.path)">#(model.module.name.capitalized())</a>
 
     #if(model.permissions.list ?? false):
-    <a href="#(model.urls.list)">#(model.title.capitalized())</a>
+    <a href="/admin/#(model.path)">#(model.name.plural.capitalized())</a>
+    #else:
+    <a>#(model.name.plural.capitalized())</a>
     #endif
+
     <a href="#($req.url.path)" class="current">#if(id != nil):Edit#else:Create#endif</a>
 #enddefine
 
@@ -22,7 +25,7 @@
     #endif
 
     #let(segmentItems = navItems + nav ?? [])
-    
+
     #if(!segmentItems.isEmpty()):
     <div class="segment grid-#(segmentItems.count())">
         #for(navItem in segmentItems):
@@ -31,16 +34,16 @@
     </div>
     #endif
     
-    <h1>#if(id != nil):Edit#else:Create#endif #(form.title.lowercased())</h1>
+    <h1>#title()</h1>
 </div>
 
 #inline("System/Common/Form")
 
+#if((id != nil) && (model.permissions.delete ?? false)):
 <div class="container">
-    #if((id != nil) && (model.permissions.delete ?? false)):
     <a href="#($req.url.path.trimLast())delete/?cancel=#($req.url.path)" class="destructive">Delete</a>
-    #endif
 </div>
+#endif
 #enddefine
 
 #inline("System/Admin/Index")

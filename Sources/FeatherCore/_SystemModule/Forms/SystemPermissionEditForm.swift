@@ -5,13 +5,12 @@
 //  Created by Tibor Bodecs on 2020. 03. 23..
 //
 
-struct SystemPermissionEditForm: EditFormController {
+struct SystemPermissionEditForm: FeatherForm {
     
-    var context: EditFormContext<SystemPermissionModel>
+    var context: FeatherFormContext<SystemPermissionModel>
     
     init() {
         context = .init()
-        context.form.title = Model.name.singular
         context.form.fields = createFormFields()
     }
 

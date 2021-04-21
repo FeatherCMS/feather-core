@@ -131,7 +131,7 @@ final class SystemMetadataModel: FeatherModel {
 
 // MARK: - view
 
-extension Metadata.Status: FormFieldOptionRepresentable {
+extension Metadata.Status {
 
     public var formFieldOption: FormFieldOption {
         .init(key: rawValue, label: localized)

@@ -1,64 +1,71 @@
 //
-//  File.swift
-//  
+//  EditForm.swift
+//  ViewKit
 //
-//  Created by Tibor Bodecs on 2021. 04. 18..
+//  Created by Tibor Bodecs on 2020. 11. 19..
 //
 
-open class EditFormContext<T: FeatherModel>: FormComponent {
-    
-    fileprivate enum CodingKeys: CodingKey {
-        case nav
-        case model
-        case form
-        case metadata
-    }
-    
-    private var modelInfo: ModelInfo?
+public protocol FeatherForm: FormComponent {
+    associatedtype Model: FeatherModel
 
-    var form: Form
-    var model: T?
-    var nav: [Link]
-    var metadata: Metadata?
+    var context: FeatherFormContext<Model> { get set }
 
-    public init(form: Form = .init(), model: T? = nil, nav: [Link] = []) {
-        self.form = form
-        self.model = model
-        self.nav = nav
-    }
+    init()
+}
 
-    open func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(nav, forKey: .nav)
-        try container.encode(form, forKey: .form)
-        try container.encodeIfPresent(modelInfo, forKey: .model)
-        try container.encodeIfPresent(metadata, forKey: .metadata)
-    }
+public extension FeatherForm {
 
-    // MARK: - form component
-        
-    open func load(req: Request) -> EventLoopFuture<Void> {
-        modelInfo = T.info(req)
-        return form.load(req: req)
+    func encode(to encoder: Encoder) throws {
+        try context.encode(to: encoder)
     }
     
-    open func process(req: Request) -> EventLoopFuture<Void> {
-        form.process(req: req)
+    func load(req: Request) -> EventLoopFuture<Void> {
+        return context.load(req: req)
     }
     
-    open func validate(req: Request) -> EventLoopFuture<Bool> {
-        form.validate(req: req)
+    func process(req: Request) -> EventLoopFuture<Void> {
+        context.process(req: req)
     }
     
-    open func write(req: Request) -> EventLoopFuture<Void> {
-        form.write(req: req)
+    func validate(req: Request) -> EventLoopFuture<Bool> {
+        context.validate(req: req)
     }
     
-    open func save(req: Request) -> EventLoopFuture<Void> {
-        form.save(req: req)
+    func write(req: Request) -> EventLoopFuture<Void> {
+        context.write(req: req)
     }
     
-    open func read(req: Request) -> EventLoopFuture<Void> {
-        form.read(req: req)
+    func save(req: Request) -> EventLoopFuture<Void> {
+        context.save(req: req)
+    }
+    
+    func read(req: Request) -> EventLoopFuture<Void> {
+        context.read(req: req)
+    }
+}
+
+// NOTE: this requires joined metadata identifier...
+public extension FeatherForm where Model: MetadataRepresentable {
+
+    func load(req: Request) -> EventLoopFuture<Void> {
+        guard let model = context.model else {
+            return context.load(req: req)
+        }
+        return Model.findMetadata(reference: model.id!, on: req.db).flatMap { metadata -> EventLoopFuture<Void> in
+            guard let metadata = metadata else {
+                return context.load(req: req)
+            }
+            context.metadata = metadata
+            let baseUrl = "/admin/" + SystemMetadataModel.path + metadata.id!.uuidString + "/"
+            if req.checkPermission(for: SystemMetadataModel.permission(for: .update)) {
+                context.nav.append(.init(label: SystemMetadataModel.name.singular.capitalized,
+                                         url: baseUrl + SystemMetadataModel.updatePathComponent.description + "/"))
+            }
+            else if req.checkPermission(for: SystemMetadataModel.permission(for: .get)) {
+                context.nav.append(.init(label: SystemMetadataModel.name.singular.capitalized,
+                                         url: baseUrl))
+            }
+            return context.load(req: req)
+        }
     }
 }
