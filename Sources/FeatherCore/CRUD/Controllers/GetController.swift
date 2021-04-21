@@ -12,18 +12,37 @@ public protocol GetApiRepresentable: ModelApi {
     func mapGet(model: Model) -> GetObject
 }
 
-public struct GetViewContext: Codable {
+public struct DetailContext: Encodable {
 
-    public struct Field: Codable {
+    public struct Field: Encodable {
+
+        public enum `Type`: String, Encodable {
+            case text
+            case image
+        }
+
+        public let type: Type
         public let label: String
         public let value: String
+        
+        public init(type: DetailContext.Field.`Type` = .text, label: String, value: String) {
+            self.type = type
+            self.label = label
+            self.value = value
+        }
     }
 
-    public let title: String
-    public let key: String
-    public let list: Link
-    public let nav: [Link]
+    public let model: ModelInfo
     public let fields: [Field]
+    public let nav: [Link]
+    public let bc: [Link]
+
+    public init(model: ModelInfo, fields: [DetailContext.Field], nav: [Link] = [], bc: [Link] = []) {
+        self.model = model
+        self.fields = fields
+        self.nav = nav
+        self.bc = bc
+    }
 }
 
 
@@ -43,7 +62,9 @@ public protocol GetController: IdentifiableController {
     /// renders the get view
     func get(req: Request) throws -> EventLoopFuture<Response>
 
-    func getContext(req: Request, model: Model) -> GetViewContext
+    func detailFields(req: Request, model: Model) -> [DetailContext.Field]
+    
+    func getContext(req: Request, model: Model) -> DetailContext
     
     /// returns a response after the get request
     func getResponse(req: Request, model: Model) -> EventLoopFuture<Response>
@@ -51,7 +72,7 @@ public protocol GetController: IdentifiableController {
     func getApi(_ req: Request) throws -> EventLoopFuture<GetApi.GetObject>
 
     /// setup get related route
-    func setupGetRoute(on: RoutesBuilder)
+    func setupGetRoute(on builder: RoutesBuilder)
 
     func setupGetApiRoute(on builder: RoutesBuilder)
 }
@@ -92,9 +113,12 @@ public extension GetController {
         }
     }
     
+    func getContext(req: Request, model: Model) -> DetailContext {
+        .init(model: Model.info(req), fields: detailFields(req: req, model: model))
+    }
+
     func getResponse(req: Request, model: Model) -> EventLoopFuture<Response> {
-        req.view.render(getView, ["detail": getContext(req: req, model: model)])
-            .encodeResponse(for: req)
+        req.view.render(getView, getContext(req: req, model: model)).encodeResponse(for: req)
     }
     
     func setupGetRoute(on builder: RoutesBuilder) {

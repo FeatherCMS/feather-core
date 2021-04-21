@@ -11,6 +11,10 @@ final class SystemMenuItemModel: FeatherModel {
     static let idKey = "items"
     static let name: FeatherModelName = "Menu item"
     static let schema = "\(Module.idKey)_menu_\(idKey)"
+    
+    static func permission(for action: Permission.Action) -> Permission {
+        .init(namespace: Module.idKey, context: "menu_" + idKey, action: action)
+    }
 
     struct FieldKeys {
         static var icon: FieldKey { "icon" }

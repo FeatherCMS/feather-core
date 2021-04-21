@@ -25,20 +25,16 @@ struct SystemPermissionController: FeatherController {
         })
     }
     
-    func getContext(req: Request, model: Model) -> GetViewContext {
-        .init(title: "Permissions",
-              key: "system.permissions",
-              list: .init(label: "Permissions", url: "/admin/system/permissions/"),
-              nav: [],
-              fields: [
-                .init(label: "Id", value: model.identifier),
-                .init(label: "Key", value: model.key),
-                .init(label: "Name", value: model.name),
-                .init(label: "Namespace", value: model.namespace),
-                .init(label: "Context", value: model.context),
-                .init(label: "Action", value: model.action),
-                .init(label: "Notes", value: model.notes ?? ""),
-              ])
+    func detailFields(req: Request, model: Model) -> [DetailContext.Field] {
+        [
+            .init(label: "Id", value: model.identifier),
+            .init(label: "Key", value: model.key),
+            .init(label: "Name", value: model.name),
+            .init(label: "Namespace", value: model.namespace),
+            .init(label: "Context", value: model.context),
+            .init(label: "Action", value: model.action),
+            .init(label: "Notes", value: model.notes ?? ""),
+        ]
     }
     
     func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {

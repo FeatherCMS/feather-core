@@ -39,19 +39,20 @@ struct SystemMenuController: FeatherController {
         SystemMenuItemModel.query(on: req.db).filter(\.$menu.$id == model.id!).delete().map { model }
     }
 
-    func getContext(req: Request, model: Model) -> GetViewContext {
-        .init(title: "Menu",
-              key: "system.menus",
-              list: .init(label: "Menus", url: "/admin/system/menus/"),
-              nav: [
-                .init(label: "Menu items", url: "/admin/system/menus/" + model.identifier + "/items/")
-              ],
-              fields: [
-                .init(label: "Id", value: model.identifier),
-                .init(label: "Key", value: model.key),
-                .init(label: "Name", value: model.name),
-                .init(label: "Notes", value: model.notes ?? ""),
-              ])
+    
+    func detailFields(req: Request, model: SystemMenuModel) -> [DetailContext.Field] {
+        [
+            .init(label: "Id", value: model.identifier),
+            .init(label: "Key", value: model.key),
+            .init(label: "Name", value: model.name),
+            .init(label: "Notes", value: model.notes ?? ""),
+        ]
+    }
+   
+    func getContext(req: Request, model: Model) -> DetailContext {
+        .init(model: Model.info(req), fields: detailFields(req: req, model: model), nav: [
+            .init(label: "Menu items", url: "/admin/system/menus/" + model.identifier + "/items/")
+        ])
     }
 
     func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {

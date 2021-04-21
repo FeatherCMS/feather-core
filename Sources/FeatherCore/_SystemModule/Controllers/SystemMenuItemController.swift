@@ -38,6 +38,8 @@ struct SystemMenuItemController: FeatherController {
             TableRow(id: model.identifier, cells: [TableCell(model.label), TableCell(model.url)])
         })
     }
+    
+    
 
     func listContext(req: Request, table: Table, pages: Pagination) -> ListContext {
         let menuId = SystemMenuModel.getIdParameter(req: req)!
@@ -68,19 +70,23 @@ struct SystemMenuItemController: FeatherController {
     }
     
     
-    func getContext(req: Request, model: Model) -> GetViewContext {
-        .init(title: "Menu item",
-              key: "system.menuItems",
-              list: .init(label: "Menu items", url: "/admin/frontend/menus/" + model.$menu.id.uuidString + "/items/"),
-              nav: [],
-              fields: [
-                .init(label: "Id", value: model.identifier),
-                .init(label: "Icon", value: model.icon ?? ""),
-                .init(label: "Label", value: model.label),
-                .init(label: "Url", value: model.url),
-                .init(label: "Target", value: "Open in " + (model.isBlank ? "new" : "same") + " window / tab"),
-                .init(label: "Permission", value: model.permission ?? ""),
-              ])
+    
+    func detailFields(req: Request, model: SystemMenuItemModel) -> [DetailContext.Field] {
+        [
+            .init(label: "Id", value: model.identifier),
+            .init(label: "Icon", value: model.icon ?? ""),
+            .init(label: "Label", value: model.label),
+            .init(label: "Url", value: model.url),
+            .init(label: "Target", value: "Open in " + (model.isBlank ? "new" : "same") + " window / tab"),
+            .init(label: "Permission", value: model.permission ?? ""),
+        ]
+    }
+    
+    #warning("fixme")
+    func getContext(req: Request, model: Model) -> DetailContext {
+        .init(model: Model.info(req), fields: detailFields(req: req, model: model), nav: [], bc: [
+            //list: .init(label: "Menu items", url: "/admin/frontend/menus/" + model.$menu.id.uuidString + "/items/"),
+        ])
     }
     
     func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {

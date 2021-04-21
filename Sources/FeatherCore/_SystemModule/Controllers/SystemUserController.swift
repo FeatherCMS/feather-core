@@ -62,17 +62,13 @@ struct SystemUserController: FeatherController {
         })
     }
 
-    func getContext(req: Request, model: Model) -> GetViewContext {
-        .init(title: "User",
-              key: "system.users",
-              list: .init(label: "Users", url: "/admin/system/users/"),
-              nav: [],
-              fields: [
-                .init(label: "Id", value: model.identifier),
-                .init(label: "Email", value: model.email),
-                .init(label: "Has root access?", value: model.root ? "Yes" : "No"),
-                .init(label: "Roles", value: model.roles.map(\.name).joined(separator: "<br>")),
-              ])
+    func detailFields(req: Request, model: Model) -> [DetailContext.Field] {
+        [
+            .init(label: "Id", value: model.identifier),
+            .init(label: "Email", value: model.email),
+            .init(label: "Has root access?", value: model.root ? "Yes" : "No"),
+            .init(label: "Roles", value: model.roles.map(\.name).joined(separator: "<br>")),
+        ]
     }
     
     func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {

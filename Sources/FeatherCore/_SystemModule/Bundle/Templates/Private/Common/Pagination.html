@@ -1,8 +1,8 @@
-#(let pages = list.info ?? page.info ?? nil)
 
 #if(pages.total > 1 && pages.current < pages.total + 1):
     <hr>
 
+    <div id="pagination" class="center">
     #if(pages.current > 1):
         <a href="#Request(setQuery: ["page": 1])">#svg("chevrons-left")</a>
     #else:
@@ -28,5 +28,5 @@
     #else:
         #svg("chevrons-right")
     #endif
-
+    </div>
 #endif

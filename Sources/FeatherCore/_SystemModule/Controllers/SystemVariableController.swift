@@ -26,19 +26,15 @@ struct SystemVariableController: FeatherController {
             TableRow(id: model.identifier, cells: [TableCell(model.name)])
         })
     }
-
-    func getContext(req: Request, model: Model) -> GetViewContext {
-        .init(title: "Variable",
-              key: "system.variables",
-              list: .init(label: "Variables", url: "/admin/system/variables/"),
-              nav: [],
-              fields: [
-                .init(label: "Id", value: model.identifier),
-                .init(label: "Key", value: model.key),
-                .init(label: "Name", value: model.name),
-                .init(label: "Value", value: model.value ?? ""),
-                .init(label: "Notes", value: model.notes ?? ""),
-              ])
+    
+    func detailFields(req: Request, model: Model) -> [DetailContext.Field] {
+        [
+            .init(label: "Id", value: model.identifier),
+            .init(label: "Key", value: model.key),
+            .init(label: "Name", value: model.name),
+            .init(label: "Value", value: model.value ?? ""),
+            .init(label: "Notes", value: model.notes ?? ""),
+        ]
     }
     
     func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {

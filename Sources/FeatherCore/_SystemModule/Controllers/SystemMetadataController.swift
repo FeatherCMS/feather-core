@@ -42,30 +42,30 @@ struct SystemMetadataController: FeatherController {
         }
         return future
     }
+    
+    func detailFields(req: Request, model: SystemMetadataModel) -> [DetailContext.Field] {
+        [
+            .init(label: "Id", value: model.identifier),
+            .init(type: .image, label: "Image", value: model.imageKey ?? ""),
+            .init(label: "Title", value: model.title ?? ""),
+            .init(label: "Excerpt", value: model.excerpt ?? ""),
+            //.init(label: "Date", value: model.excerpt ?? ""),
+            //#Date(timeStamp: model.date, fixedFormat: $app.dateFormats.full, timeZone: $app.timezone)
+            .init(label: "Slug", value: model.slug),
+            .init(label: "Status", value: model.status.localized),
+            .init(label: "Is feed item?", value: model.feedItem ? "Yes" : "No"),
+            .init(label: "Canonical url", value: model.canonicalUrl ?? ""),
+            .init(label: "Filters", value: model.filters.joined(separator: "<br>")),
+            .init(label: "CSS", value: model.css ?? ""),
+            .init(label: "JS", value: model.js ?? ""),
+        ]
+    }
 
-    func getContext(req: Request, model: Model) -> GetViewContext {
-        .init(title: "Metadata",
-              key: "system.metadatas",
-              list: .init(label: "Metadatas", url: "/admin/system/metadatas"),
-              nav: [
-                .init(label: "Preview", url: model.slug.safePath(), isBlank: true),
-                .init(label: "Reference", url: "/admin/" + model.module + "/" + model.model + "/" + model.reference.uuidString + "/"),
-              ],
-              fields: [
-                .init(label: "Id", value: model.identifier),
-                .init(label: "Image", value: model.imageKey ?? ""),
-                .init(label: "Title", value: model.title ?? ""),
-                .init(label: "Excerpt", value: model.excerpt ?? ""),
-                //.init(label: "Date", value: model.excerpt ?? ""),
-                //#Date(timeStamp: model.date, fixedFormat: $app.dateFormats.full, timeZone: $app.timezone)
-                .init(label: "Slug", value: model.slug),
-                .init(label: "Status", value: model.status.localized),
-                .init(label: "Is feed item?", value: model.feedItem ? "Yes" : "No"),
-                .init(label: "Canonical url", value: model.canonicalUrl ?? ""),
-                .init(label: "Filters", value: model.filters.joined(separator: "<br>")),
-                .init(label: "CSS", value: model.css ?? ""),
-                .init(label: "JS", value: model.js ?? ""),
-              ])
+    func getContext(req: Request, model: Model) -> DetailContext {
+        .init(model: Model.info(req), fields: detailFields(req: req, model: model), nav: [
+            .init(label: "Preview", url: model.slug.safePath(), isBlank: true),
+            .init(label: "Reference", url: "/admin/" + model.module + "/" + model.model + "/" + model.reference.uuidString + "/"),
+        ])
     }
     
     func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {

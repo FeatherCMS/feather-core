@@ -38,19 +38,15 @@ struct SystemRoleController: FeatherController {
             TableRow(id: model.identifier, cells: [TableCell(model.name)])
         })
     }
-    
-    func getContext(req: Request, model: Model) -> GetViewContext {
-        .init(title: "Role",
-              key: "system.roles",
-              list: .init(label: "Roles", url: "/admin/system/roles/"),
-              nav: [],
-              fields: [
-                .init(label: "Id", value: model.identifier),
-                .init(label: "Key", value: model.key),
-                .init(label: "Name", value: model.name),
-                .init(label: "Notes", value: model.notes ?? ""),
-                .init(label: "Permissions", value: model.permissions.map(\.name).joined(separator: "<br>")),
-              ])
+
+    func detailFields(req: Request, model: SystemRoleModel) -> [DetailContext.Field] {
+        [
+            .init(label: "Id", value: model.identifier),
+            .init(label: "Key", value: model.key),
+            .init(label: "Name", value: model.name),
+            .init(label: "Notes", value: model.notes ?? ""),
+            .init(label: "Permissions", value: model.permissions.map(\.name).joined(separator: "<br>")),
+        ]
     }
     
     func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {

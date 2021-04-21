@@ -26,17 +26,13 @@ struct SystemPageController: FeatherController {
             TableRow(id: model.identifier, cells: [TableCell(model.title)])
         })
     }
-        
-    func getContext(req: Request, model: Model) -> GetViewContext {
-        .init(title: "Page",
-              key: "system.page",
-              list: .init(label: "Pages", url: "/admin/system/pages"),
-              nav: [],
-              fields: [
-                .init(label: "Id", value: model.identifier),
-                .init(label: "Title", value: model.title),
-                .init(label: "Content", value: model.content),
-              ])
+    
+    func detailFields(req: Request, model: Model) -> [DetailContext.Field] {
+        [
+            .init(label: "Id", value: model.identifier),
+            .init(label: "Title", value: model.title),
+            .init(label: "Content", value: model.content),
+        ]
     }
     
     func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {
