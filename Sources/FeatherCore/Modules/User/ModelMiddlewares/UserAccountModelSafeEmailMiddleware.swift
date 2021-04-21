@@ -6,7 +6,7 @@
 //
 
 /// we use this middleware to ensure that email addresses are always saved as lowercased strings
-struct SystemUserModelSafeEmailMiddleware: ModelMiddleware {
+struct UserAccountModelSafeEmailMiddleware: ModelMiddleware {
 
     /// transform email to lowercase before create an entry
     func create(model: UserAccountModel, on db: Database, next: AnyModelResponder) -> EventLoopFuture<Void> {

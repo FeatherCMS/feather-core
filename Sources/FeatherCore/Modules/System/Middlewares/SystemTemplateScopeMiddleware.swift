@@ -52,7 +52,7 @@ struct SystemTemplateScopeMiddleware: Middleware {
                 return ["menus": items]
             },
             /// add variables to the scope
-            SystemVariableModel.query(on: req.db).all().map { variables in
+            CommonVariableModel.query(on: req.db).all().map { variables in
                 var items: [String: TemplateDataGenerator] = [:]
                 for variable in variables {
                     items[variable.key] = .immediate(variable.value)

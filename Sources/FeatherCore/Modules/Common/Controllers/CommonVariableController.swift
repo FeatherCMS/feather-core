@@ -5,21 +5,20 @@
 //  Created by Tibor Bödecs on 2020. 06. 10..
 //
 //
-struct SystemVariableController: FeatherController {
+struct CommonVariableController: FeatherController {
     
-
     typealias Module = SystemModule
-    typealias Model = SystemVariableModel
+    typealias Model = CommonVariableModel
     
     typealias CreateForm = SystemVariableEditForm
     typealias UpdateForm = SystemVariableEditForm
     
-    typealias GetApi = SystemVariableApi
-    typealias ListApi = SystemVariableApi
-    typealias CreateApi = SystemVariableApi
-    typealias UpdateApi = SystemVariableApi
-    typealias PatchApi = SystemVariableApi
-    typealias DeleteApi = SystemVariableApi
+    typealias GetApi = CommonVariableApi
+    typealias ListApi = CommonVariableApi
+    typealias CreateApi = CommonVariableApi
+    typealias UpdateApi = CommonVariableApi
+    typealias PatchApi = CommonVariableApi
+    typealias DeleteApi = CommonVariableApi
     
     func listTable(_ models: [Model]) -> Table {
         Table(columns: ["name"], rows: models.map { model in
@@ -37,7 +36,7 @@ struct SystemVariableController: FeatherController {
         ]
     }
     
-    func deleteContext(req: Request, model: SystemVariableModel) -> String {
+    func deleteContext(req: Request, model: CommonVariableModel) -> String {
         model.name
     }    
 }

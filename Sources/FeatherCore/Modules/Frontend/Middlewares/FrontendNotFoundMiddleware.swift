@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 04. 07..
 //
 
-struct SystemNotFoundMiddleware: Middleware {
+struct FrontendNotFoundMiddleware: Middleware {
 
     /// if we found a .notFound error in the responder chain, we render our custom not found page with a 404 status code
     func respond(to req: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {

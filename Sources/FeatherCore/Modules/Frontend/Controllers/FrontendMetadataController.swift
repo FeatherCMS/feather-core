@@ -14,12 +14,12 @@ struct FrontendMetadataController: FeatherController {
     typealias UpdateForm = FrontendMetadataEditForm
     
     #warning("fixme")
-    typealias GetApi = SystemVariableApi
-    typealias ListApi = SystemVariableApi
-    typealias CreateApi = SystemVariableApi
-    typealias UpdateApi = SystemVariableApi
-    typealias PatchApi = SystemVariableApi
-    typealias DeleteApi = SystemVariableApi
+    typealias GetApi = CommonVariableApi
+    typealias ListApi = CommonVariableApi
+    typealias CreateApi = CommonVariableApi
+    typealias UpdateApi = CommonVariableApi
+    typealias PatchApi = CommonVariableApi
+    typealias DeleteApi = CommonVariableApi
     
 //        "title": "Metadatas",
 //        "key": "frontend.metadatas",

@@ -11,8 +11,8 @@ extension VariableCreateObject: Content {}
 extension VariableUpdateObject: Content {}
 extension VariablePatchObject: Content {}
 
-struct SystemVariableApi: FeatherApiRepresentable {
-    typealias Model = SystemVariableModel
+struct CommonVariableApi: FeatherApiRepresentable {
+    typealias Model = CommonVariableModel
     
     typealias ListObject = VariableListObject
     typealias GetObject = VariableGetObject

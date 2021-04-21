@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 04. 21..
 //
 
-struct SystemFileController {
+struct CommonFileController {
     struct File: TemplateDataRepresentable {
         let name: String
         let key: String

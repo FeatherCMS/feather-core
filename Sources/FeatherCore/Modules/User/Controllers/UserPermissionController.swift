@@ -12,12 +12,12 @@ struct UserPermissionController: FeatherController {
     typealias CreateForm = UserPermissionEditForm
     typealias UpdateForm = UserPermissionEditForm
     
-    typealias GetApi = SystemVariableApi
-    typealias ListApi = SystemVariableApi
-    typealias CreateApi = SystemVariableApi
-    typealias UpdateApi = SystemVariableApi
-    typealias PatchApi = SystemVariableApi
-    typealias DeleteApi = SystemVariableApi
+    typealias GetApi = CommonVariableApi
+    typealias ListApi = CommonVariableApi
+    typealias CreateApi = CommonVariableApi
+    typealias UpdateApi = CommonVariableApi
+    typealias PatchApi = CommonVariableApi
+    typealias DeleteApi = CommonVariableApi
     
     func listTable(_ models: [Model]) -> Table {
         Table(columns: ["name"], rows: models.map { model in

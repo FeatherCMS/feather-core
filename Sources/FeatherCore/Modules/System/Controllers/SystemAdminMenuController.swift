@@ -6,7 +6,7 @@
 //
 
 /// can be used to display a standalone module menu on the admin
-public struct FeatherAdminMenuController {
+public struct SystemAdminMenuController {
 
     public let key: String
     

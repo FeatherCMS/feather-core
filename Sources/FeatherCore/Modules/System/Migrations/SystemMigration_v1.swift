@@ -56,13 +56,13 @@ struct SystemMigration_v1: Migration {
                 .field(FrontendMenuItemModel.FieldKeys.notes, .string)
                 .foreignKey(FrontendMenuItemModel.FieldKeys.menuId, references: FrontendMenuModel.schema, .id)
                 .create(),
-            db.schema(SystemVariableModel.schema)
+            db.schema(CommonVariableModel.schema)
                 .id()
-                .field(SystemVariableModel.FieldKeys.key, .string, .required)
-                .field(SystemVariableModel.FieldKeys.name, .string, .required)
-                .field(SystemVariableModel.FieldKeys.value, .string)
-                .field(SystemVariableModel.FieldKeys.notes, .string)
-                .unique(on: SystemVariableModel.FieldKeys.key)
+                .field(CommonVariableModel.FieldKeys.key, .string, .required)
+                .field(CommonVariableModel.FieldKeys.name, .string, .required)
+                .field(CommonVariableModel.FieldKeys.value, .string)
+                .field(CommonVariableModel.FieldKeys.notes, .string)
+                .unique(on: CommonVariableModel.FieldKeys.key)
                 .create(),
             db.schema(UserAccountModel.schema)
                 .id()
@@ -115,7 +115,7 @@ struct SystemMigration_v1: Migration {
             db.schema(FrontendMenuModel.schema).delete(),
             db.schema(FrontendPageModel.schema).delete(),
             db.schema(FrontendMetadataModel.schema).delete(),
-            db.schema(SystemVariableModel.schema).delete(),
+            db.schema(CommonVariableModel.schema).delete(),
             db.schema(UserRolePermissionModel.schema).delete(),
             db.schema(UserAccountRoleModel.schema).delete(),
             db.schema(UserPermissionModel.schema).delete(),

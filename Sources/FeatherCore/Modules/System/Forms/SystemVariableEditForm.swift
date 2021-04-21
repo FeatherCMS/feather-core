@@ -8,7 +8,7 @@
 
 struct SystemVariableEditForm: FeatherForm {
 
-    var context: FeatherFormContext<SystemVariableModel>
+    var context: FeatherFormContext<CommonVariableModel>
     
     init() {
         context = .init()

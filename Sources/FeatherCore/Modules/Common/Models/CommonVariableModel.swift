@@ -5,7 +5,7 @@
 //  Created by Tibor Bödecs on 2020. 06. 10..
 //
 
-final class SystemVariableModel: FeatherModel {
+final class CommonVariableModel: FeatherModel {
     typealias Module = SystemModule
 
     static let modelKey: String = "variables"
@@ -50,7 +50,7 @@ final class SystemVariableModel: FeatherModel {
         ]
     }
     
-    static func search(_ term: String) -> [ModelValueFilter<SystemVariableModel>] {
+    static func search(_ term: String) -> [ModelValueFilter<CommonVariableModel>] {
         [
             \.$name ~~ term,
             \.$key ~~ term,

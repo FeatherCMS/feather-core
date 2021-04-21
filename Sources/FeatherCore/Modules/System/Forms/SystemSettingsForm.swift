@@ -13,11 +13,11 @@ final class SystemSettingsForm: Form {
     }
 
     private func load(key: String, req: Request) -> EventLoopFuture<String?> {
-        SystemVariableModel.query(on: req.db).filter(\.$key == "site" + key.capitalized).first().map { $0?.value }
+        CommonVariableModel.query(on: req.db).filter(\.$key == "site" + key.capitalized).first().map { $0?.value }
     }
 
     private func save(key: String, value: String?, req: Request) -> EventLoopFuture<Void> {
-        SystemVariableModel.query(on: req.db).filter(\.$key == "site" + key.capitalized).set(\.$value, to: value).update()
+        CommonVariableModel.query(on: req.db).filter(\.$key == "site" + key.capitalized).set(\.$value, to: value).update()
     }
     
     private func createFormFields() -> [FormComponent] {

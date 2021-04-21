@@ -5,9 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 04. 03..
 //
 
-import Foundation
-
-public struct SystemVariable: Codable {
+public struct CommonVariable: Codable {
 
     public let key: String
     public let value: String?
