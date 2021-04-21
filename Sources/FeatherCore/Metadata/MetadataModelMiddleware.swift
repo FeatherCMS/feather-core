@@ -15,10 +15,11 @@ public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware
         next.create(model, on: db).flatMap {
             var metadata = model.metadata
             metadata.id = UUID()
-            metadata.module = T.Module.idKey
-            metadata.model = T.name.plural
+            metadata.module = T.Module.moduleKey
+            metadata.model = T.modelKey
             metadata.reference = model.id
-            let model = SystemMetadataModel()
+            metadata.filters = Application.Config.filters
+            let model = FrontendMetadataModel()
             model.use(metadata)
             return model.create(on: db)
         }
@@ -26,26 +27,18 @@ public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware
     
     /// on update action we call the willUpdate method using the delegate
     public func update(model: T, on db: Database, next: AnyModelResponder) -> EventLoopFuture<Void> {
-        // NOTE: we don't want to update metadata info on model update
-        next.update(model, on: db)//.flatMap {
-//            var metadata = model.metadata
-//            metadata.module = T.Module.name
-//            metadata.model = T.name
-//            metadata.reference = model.id
-//            metadata.slug = nil
-//            return Feather.metadataDelegate?.update(metadata, on: db) ?? db.eventLoop.future()
-//        }
+        next.update(model, on: db)
     }
     
     /// on delete action, we remove the associated metadata
     public func delete(model: T, force: Bool, on db: Database, next: AnyModelResponder) -> EventLoopFuture<Void> {
         next.delete(model, force: force, on: db).flatMap {
             var metadata = model.metadata
-            metadata.module = T.Module.idKey
-            metadata.model = T.name.plural
+            metadata.module = T.Module.moduleKey
+            metadata.model = T.modelKey
             metadata.reference = model.id
             
-            return SystemMetadataModel.query(on: db)
+            return FrontendMetadataModel.query(on: db)
                 .filter(\.$module == metadata.module!)
                 .filter(\.$model == metadata.model!)
                 .filter(\.$reference == metadata.reference!)

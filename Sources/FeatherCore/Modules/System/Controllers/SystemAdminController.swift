@@ -8,7 +8,7 @@
 struct SystemAdminController {
 
     func homeView(req: Request) throws -> EventLoopFuture<View> {
-        let menus: [[SystemMenu]] = req.invokeAll("admin-menus")
+        let menus: [[FrontendMenu]] = req.invokeAll("admin-menus")
         return req.view.render("System/Admin/Home", [
             "menus": menus.flatMap { $0 }
         ])

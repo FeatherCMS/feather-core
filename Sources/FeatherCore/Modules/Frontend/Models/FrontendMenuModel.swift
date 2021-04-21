@@ -1,20 +1,19 @@
 //
-//  SystemVariableModel.swift
-//  SystemModule
+//  MenuModel.swift
+//  FrontendModule
 //
-//  Created by Tibor Bödecs on 2020. 06. 10..
+//  Created by Tibor Bodecs on 2020. 11. 15..
 //
 
-final class SystemVariableModel: FeatherModel {
+final class FrontendMenuModel: FeatherModel {
     typealias Module = SystemModule
 
-    static let modelKey: String = "variables"
-    static let name: FeatherModelName = "Variable"
-
+    static let modelKey: String = "menus"
+    static let name: FeatherModelName = "Menu"
+    
     struct FieldKeys {
         static var key: FieldKey { "key" }
         static var name: FieldKey { "name" }
-        static var value: FieldKey { "value" }
         static var notes: FieldKey { "notes" }
     }
 
@@ -23,40 +22,35 @@ final class SystemVariableModel: FeatherModel {
     @ID() var id: UUID?
     @Field(key: FieldKeys.key) var key: String
     @Field(key: FieldKeys.name) var name: String
-    @Field(key: FieldKeys.value) var value: String?
     @Field(key: FieldKeys.notes) var notes: String?
-
-    init() {}
-
-    init(id: UUID? = nil,
+    @Children(for: \.$menu) var items: [FrontendMenuItemModel]
+    
+    init() { }
+    
+    init(id: IDValue? = nil,
          key: String,
          name: String,
-         value: String? = nil,
          notes: String? = nil)
     {
         self.id = id
         self.key = key
         self.name = name
-        self.value = value
         self.notes = notes
     }
-    
-    // MARK: - query
 
+    // MARK: - query
+    
     static func allowedOrders() -> [FieldKey] {
         [
-            FieldKeys.name,
             FieldKeys.key,
+            FieldKeys.name,
         ]
     }
-    
-    static func search(_ term: String) -> [ModelValueFilter<SystemVariableModel>] {
+
+    static func search(_ term: String) -> [ModelValueFilter<FrontendMenuModel>] {
         [
-            \.$name ~~ term,
             \.$key ~~ term,
-            \.$value ~~ term,
-            \.$notes ~~ term,
+            \.$name ~~ term,
         ]
     }
 }
-

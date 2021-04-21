@@ -44,7 +44,7 @@ struct SystemTemplateScopeMiddleware: Middleware {
     func respond(to req: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
         req.eventLoop.flatten([
             /// add menus to the scope
-            SystemMenuModel.query(on: req.db).with(\.$items).all().map { menus -> [String: [String: TemplateDataGenerator]] in
+            FrontendMenuModel.query(on: req.db).with(\.$items).all().map { menus -> [String: [String: TemplateDataGenerator]] in
                 var items: [String: TemplateDataGenerator] = [:]
                 for menu in menus {
                     items[menu.key] = .lazy(menu.items.sorted { $0.priority > $1.priority }.map { $0.encodeToTemplateData() })

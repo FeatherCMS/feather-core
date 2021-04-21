@@ -15,7 +15,7 @@ public struct FeatherAdminMenuController {
     }
 
     public func moduleView(req: Request) throws -> EventLoopFuture<View> {
-        let menusResult: [[SystemMenu]] = req.invokeAll("admin-menus")
+        let menusResult: [[FrontendMenu]] = req.invokeAll("admin-menus")
         let menu = menusResult.flatMap { $0 }.first { $0.key == key }
         return req.view.render("System/Admin/Menu", ["menu": menu])
     }

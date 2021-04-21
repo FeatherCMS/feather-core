@@ -45,7 +45,7 @@ public extension FeatherController {
         + POST                           delete
      */
     func setupRoutes(on builder: RoutesBuilder) {
-        let base = builder.grouped(Model.Module.idKeyPathComponent).grouped(Model.idKeyPathComponent)
+        let base = builder.grouped(Model.Module.moduleKeyPathComponent).grouped(Model.modelKeyPathComponent)
         setupListRoute(on: base)
         setupGetRoute(on: base)
         setupCreateRoutes(on: base, as: Model.createPathComponent)
@@ -64,7 +64,7 @@ public extension FeatherController {
      DELETE /[module]/[model]/:id       deleteApi
      */
     func setupApiRoutes(on builder: RoutesBuilder) {
-        let base = builder.grouped(Model.Module.idKeyPathComponent).grouped(Model.idKeyPathComponent)
+        let base = builder.grouped(Model.Module.moduleKeyPathComponent).grouped(Model.modelKeyPathComponent)
         setupListApiRoute(on: base)
         setupGetApiRoute(on: base)
         setupCreateApiRoute(on: base)

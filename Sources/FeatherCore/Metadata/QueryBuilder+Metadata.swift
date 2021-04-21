@@ -24,33 +24,33 @@ public extension QueryBuilder where Model: FeatherModel & MetadataRepresentable 
 
     /// joins the metadata object on the ViperModel query, if a path is present it'll use it as a filter to return only one instance that matches the slug
     func joinMetadata() -> QueryBuilder<Model> {
-        join(SystemMetadataModel.self, on: \SystemMetadataModel.$reference == \Model._$id)
-                    .filter(SystemMetadataModel.self, \.$module == Model.Module.idKey)
-            .filter(SystemMetadataModel.self, \.$model == Model.name.plural)
+        join(FrontendMetadataModel.self, on: \FrontendMetadataModel.$reference == \Model._$id)
+                    .filter(FrontendMetadataModel.self, \.$module == Model.Module.moduleKey)
+            .filter(FrontendMetadataModel.self, \.$model == Model.modelKey)
     }
     
     /// find an object with an associated the metadata object for a given path
     func filterMetadata(path: String) -> QueryBuilder<Model> {
-        filter(SystemMetadataModel.self, \.$slug == path.trimmingSlashes())
+        filter(FrontendMetadataModel.self, \.$slug == path.trimmingSlashes())
     }
 
     /// find an object with a given status
     func filterMetadata(status: Metadata.Status) -> QueryBuilder<Model> {
-        filter(SystemMetadataModel.self, \.$status == status)
+        filter(FrontendMetadataModel.self, \.$status == status)
     }
     
     /// find an object with associated draft or published status
     func filterVisible() -> QueryBuilder<Model> {
-        filter(SystemMetadataModel.self, \.$status != .archived)
+        filter(FrontendMetadataModel.self, \.$status != .archived)
     }
 
     /// date earlier than x
     func filterMetadata(before date: Date) -> QueryBuilder<Model> {
-        filter(SystemMetadataModel.self, \.$date <= date)
+        filter(FrontendMetadataModel.self, \.$date <= date)
     }
 
     /// sort metadata by date in a given direction
     func sortMetadataByDate(_ direction: DatabaseQuery.Sort.Direction = .descending) -> QueryBuilder<Model> {
-        sort(SystemMetadataModel.self, \.$date, direction)
+        sort(FrontendMetadataModel.self, \.$date, direction)
     }
 }

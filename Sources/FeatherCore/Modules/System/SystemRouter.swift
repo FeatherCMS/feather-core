@@ -8,22 +8,22 @@
 struct SystemRouter: RouteCollection {
 
     let adminController = SystemAdminController()
-    let frontendController = SystemFrontendController()
+    let frontendController = FrontendWebController()
 
     let fileController = SystemFileController()
-    let userController = SystemUserController()
-    let roleController = SystemRoleController()
-    let permissionController = SystemPermissionController()
+    let userController = UserAccountController()
+    let roleController = UserRoleController()
+    let permissionController = UserPermissionController()
     let variableController = SystemVariableController()
-    var metadataController = SystemMetadataController()
-    let menuController = SystemMenuController()
-    let menuItemController = SystemMenuItemController()
-    let pageController = SystemPageController()
+    var metadataController = FrontendMetadataController()
+    let menuController = FrontendMenuController()
+    let menuItemController = FrontendMenuItemController()
+    let pageController = FrontendPageController()
 
     func boot(routes: RoutesBuilder) throws {
-        routes.grouped(SystemUserSessionAuthenticator()).get("login", use: frontendController.loginView)
-        routes.grouped(SystemUserCredentialsAuthenticator()).post("login", use: frontendController.login)
-        routes.grouped(SystemUserSessionAuthenticator()).get("logout", use: frontendController.logout)
+        routes.grouped(UserAccountSessionAuthenticator()).get("login", use: frontendController.loginView)
+        routes.grouped(UserAccountCredentialsAuthenticator()).post("login", use: frontendController.login)
+        routes.grouped(UserAccountSessionAuthenticator()).get("logout", use: frontendController.logout)
         
         routes.get("sitemap.xml", use: frontendController.sitemap)
         routes.get("rss.xml", use: frontendController.rss)
@@ -43,8 +43,8 @@ struct SystemRouter: RouteCollection {
         let apiMiddlewaresResult: [[Middleware]] = app.invokeAll("api-auth-middlewares")
         var apiMiddlewares = apiMiddlewaresResult.flatMap { $0 }
         #warning("Session auth is only for testing purposes!")
-        apiMiddlewares.append(SystemUserSessionAuthenticator())
-        apiMiddlewares.append(SystemTokenModel.authenticator())
+        apiMiddlewares.append(UserAccountSessionAuthenticator())
+        apiMiddlewares.append(UserTokenModel.authenticator())
         apiMiddlewares.append(User.guardMiddleware())
         /// register protected api endpoints
         let adminApiRoutes = apiRoutes.grouped("admin").grouped(apiMiddlewares)
@@ -53,7 +53,7 @@ struct SystemRouter: RouteCollection {
         
         let adminMiddlewaresResult: [[Middleware]] = app.invokeAll("admin-auth-middlewares")
         var adminMiddlewares = adminMiddlewaresResult.flatMap { $0 }
-        adminMiddlewares.append(SystemUserSessionAuthenticator())
+        adminMiddlewares.append(UserAccountSessionAuthenticator())
         adminMiddlewares.append(User.redirectMiddleware(path: "/login/?redirect=/admin/"))
         adminMiddlewares.append(AccessGuardMiddleware(.init(namespace: "system", context: "module", action: .custom("admin"))))
         adminMiddlewares.append(SystemAbortErrorMiddleware())
@@ -66,9 +66,9 @@ struct SystemRouter: RouteCollection {
         adminRoutes.get("web", use: FeatherAdminMenuController(key: "web").moduleView)
         adminRoutes.get("user", use: FeatherAdminMenuController(key: "user").moduleView)
         /// setup dasbhoard & settings routes
-        adminRoutes.grouped(SystemModule.idKeyPathComponent).get("dashboard", use: adminController.dashboardView)
-        adminRoutes.grouped(SystemModule.idKeyPathComponent).get("settings", use: adminController.settingsView)
-        adminRoutes.grouped(SystemModule.idKeyPathComponent).post("settings", use: adminController.updateSettings)
+        adminRoutes.grouped(SystemModule.moduleKeyPathComponent).get("dashboard", use: adminController.dashboardView)
+        adminRoutes.grouped(SystemModule.moduleKeyPathComponent).get("settings", use: adminController.settingsView)
+        adminRoutes.grouped(SystemModule.moduleKeyPathComponent).post("settings", use: adminController.updateSettings)
         
         /// hook up other admin views that are protected by the authentication middleware
         let _: [Void] = app.invokeAll("admin-routes", args: ["routes": adminRoutes])
@@ -77,7 +77,7 @@ struct SystemRouter: RouteCollection {
         /// if there are other middlewares we add them, finally we append the not found middleware
         let middlewares: [[Middleware]] = app.invokeAll("frontend-middlewares")
         var frontendMiddlewares = middlewares.flatMap { $0 }
-        frontendMiddlewares.append(SystemUserSessionAuthenticator())
+        frontendMiddlewares.append(UserAccountSessionAuthenticator())
         frontendMiddlewares.append(SystemNotFoundMiddleware())
 
         let frontendRoutes = routes.grouped(frontendMiddlewares)
@@ -90,7 +90,7 @@ struct SystemRouter: RouteCollection {
     func adminRoutesHook(args: HookArguments) {
         let adminRoutes = args["routes"] as! RoutesBuilder
 
-        let modulePath = adminRoutes.grouped(SystemModule.idKeyPathComponent)
+        let modulePath = adminRoutes.grouped(SystemModule.moduleKeyPathComponent)
         modulePath
             .grouped(AccessGuardMiddleware(.init(namespace: "system", context: "files", action: .list)))
             .get("files", use: fileController.browserView)
@@ -123,7 +123,7 @@ struct SystemRouter: RouteCollection {
     func apiRoutesHook(args: HookArguments) {
         let publicApiRoutes = args["routes"] as! RoutesBuilder
 
-        publicApiRoutes.grouped(SystemUserCredentialsAuthenticator()).post("login", use: userController.login)
+        publicApiRoutes.grouped(UserAccountCredentialsAuthenticator()).post("login", use: userController.login)
     }
 
     func apiAdminRoutesHook(args: HookArguments) {

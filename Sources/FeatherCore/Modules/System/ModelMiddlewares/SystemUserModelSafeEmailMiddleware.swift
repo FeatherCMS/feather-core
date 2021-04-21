@@ -9,13 +9,13 @@
 struct SystemUserModelSafeEmailMiddleware: ModelMiddleware {
 
     /// transform email to lowercase before create an entry
-    func create(model: SystemUserModel, on db: Database, next: AnyModelResponder) -> EventLoopFuture<Void> {
+    func create(model: UserAccountModel, on db: Database, next: AnyModelResponder) -> EventLoopFuture<Void> {
         model.email = model.email.lowercased()
         return next.create(model, on: db)
     }
 
     /// transform email to lowercase before update an entry
-    func update(model: SystemUserModel, on db: Database, next: AnyModelResponder) -> EventLoopFuture<Void> {
+    func update(model: UserAccountModel, on db: Database, next: AnyModelResponder) -> EventLoopFuture<Void> {
         model.email = model.email.lowercased()
         return next.update(model, on: db)
     }

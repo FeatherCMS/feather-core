@@ -28,9 +28,9 @@ public extension FeatherModel where Self: MetadataRepresentable {
     // MARK: - find metadata info
 
     static func findMetadata(reference: UUID, on db: Database) -> EventLoopFuture<Metadata?> {
-        SystemMetadataModel.query(on: db)
-            .filter(\.$module == Module.idKey)
-            .filter(\.$model == name.plural)
+        FrontendMetadataModel.query(on: db)
+            .filter(\.$module == Module.moduleKey)
+            .filter(\.$model == modelKey)
             .filter(\.$reference == reference)
             .first()
             .map { $0?.metadata }
@@ -40,7 +40,7 @@ public extension FeatherModel where Self: MetadataRepresentable {
     
     /// returns the joined metadata model as a dictionary or an empty dictionary
     var joinedMetadata: Metadata? {
-        try? joined(SystemMetadataModel.self).metadata
+        try? joined(FrontendMetadataModel.self).metadata
     }
 
     /// joins the metadata object on the ViperModel query, if a path is present it'll use it as a filter to return only one instance that matches the slug
@@ -69,10 +69,10 @@ public extension FeatherModel where Self: MetadataRepresentable {
     func updateMetadata(on db: Database, _ block: @escaping () -> Metadata) -> EventLoopFuture<Void> {
         var metadata = block()
         metadata.reference = id!
-        metadata.model = Self.name.plural
-        metadata.module = Module.idKey
+        metadata.model = Self.modelKey
+        metadata.module = Module.moduleKey
         
-        return SystemMetadataModel.query(on: db)
+        return FrontendMetadataModel.query(on: db)
                     .filter(\.$module == metadata.module!)
                     .filter(\.$model == metadata.model!)
                     .filter(\.$reference == metadata.reference!)

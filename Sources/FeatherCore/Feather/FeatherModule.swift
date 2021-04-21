@@ -9,9 +9,9 @@
 public protocol FeatherModule {
 
     /// name of the module
-    static var idKey: String { get }
+    static var moduleKey: String { get }
     /// path component based
-    static var idKeyPathComponent: PathComponent { get }
+    static var moduleKeyPathComponent: PathComponent { get }
     /// relative location of the module
     static var assetPath: String { get }
 
@@ -29,18 +29,18 @@ public protocol FeatherModule {
     static func permission(for action: Permission.Action) -> Permission
     
     ///
-    static func systemPermission(for action: Permission.Action) -> SystemPermission
+    static func systemPermission(for action: Permission.Action) -> UserPermission
 }
 
 ///default module implementation
 public extension FeatherModule {
 
     /// path component based on the module name
-    static var idKeyPathComponent: PathComponent { .init(stringLiteral: idKey) }
+    static var moduleKeyPathComponent: PathComponent { .init(stringLiteral: moduleKey) }
     /// path of the module is based on the name by default
-    static var assetPath: String { idKey + "/" }
+    static var assetPath: String { moduleKey + "/" }
     
-    static var name: String { idKey.capitalized }
+    static var name: String { moduleKey.capitalized }
     
     /// default module priority 
     var priority: Int { 1000 }
@@ -52,12 +52,12 @@ public extension FeatherModule {
 
     ///
     static func permission(for action: Permission.Action) -> Permission {
-        .init(namespace: idKey, context: "module", action: action)
+        .init(namespace: moduleKey, context: "module", action: action)
     }
     
     ///
-    static func systemPermission(for action: Permission.Action) -> SystemPermission {
-        SystemPermission(permission(for: action))
+    static func systemPermission(for action: Permission.Action) -> UserPermission {
+        UserPermission(permission(for: action))
     }
 }
 

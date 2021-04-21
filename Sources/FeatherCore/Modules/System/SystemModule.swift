@@ -8,7 +8,7 @@
 
 final class SystemModule: FeatherModule {
 
-    static var idKey: String = "system"
+    static var moduleKey: String = "system"
 
     var bundleUrl: URL? {
         Bundle.module.resourceURL?.appendingPathComponent("Bundle")
@@ -17,7 +17,7 @@ final class SystemModule: FeatherModule {
     func boot(_ app: Application) throws {
         /// database
         app.databases.middleware.use(SystemUserModelSafeEmailMiddleware())
-        app.databases.middleware.use(MetadataModelMiddleware<SystemPageModel>())
+        app.databases.middleware.use(MetadataModelMiddleware<FrontendPageModel>())
         app.migrations.add(SystemMigration_v1())
         /// middlewares
         app.middleware.use(SystemTemplateScopeMiddleware())
@@ -57,7 +57,7 @@ final class SystemModule: FeatherModule {
             return performInstall(req: req).encodeOptionalResponse(for: req)
         }
         
-        return SystemPageModel
+        return FrontendPageModel
             .queryJoinVisibleMetadata(path: req.url.path, on: req.db)
             .first()
             .flatMap { page -> EventLoopFuture<Response?> in
@@ -106,7 +106,7 @@ final class SystemModule: FeatherModule {
             guard let moduleBundle = module.bundleUrl else {
                 continue
             }
-            let name = type(of: module).self.idKey
+            let name = type(of: module).self.moduleKey
             let sourcePath = moduleBundle.appendingPathComponent("Install").path
             let sourceUrl = URL(fileURLWithPath: sourcePath)
             let keys: [URLResourceKey] = [.isDirectoryKey]
@@ -140,7 +140,7 @@ final class SystemModule: FeatherModule {
     }
 
     #warning("add back permissions")
-    func adminMenusHook(args: HookArguments) -> [SystemMenu] {
+    func adminMenusHook(args: HookArguments) -> [FrontendMenu] {
         [
 
             .init(key: "web",
@@ -202,12 +202,12 @@ final class SystemModule: FeatherModule {
 //                          permission: nil),
                   ]),
             .init(key: "user",
-                  link: .init(label: "Access",
+                  link: .init(label: "User",
                               url: "/admin/user/",
                               icon: "user",
                               permission: nil),
                   items: [
-                    .init(label: "Users",
+                    .init(label: "Accounts",
                           url: "/admin/system/users/",
                           permission: nil),
                     .init(label: "Permissions",

@@ -13,11 +13,11 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
     associatedtype Module: FeatherModule
 
     /// path identifier key
-    static var idKey: String { get }
+    static var modelKey: String { get }
     static var idParamKey: String { get }
 
     /// path component
-    static var idKeyPathComponent: PathComponent { get }
+    static var modelKeyPathComponent: PathComponent { get }
     static var idParamKeyPathComponent: PathComponent { get }
     static var createPathComponent: PathComponent { get }
     static var updatePathComponent: PathComponent { get }
@@ -36,7 +36,7 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
     
     static func permission(for action: Permission.Action) -> Permission
     static func permissions() -> [Permission]
-    static func systemPermissions() -> [SystemPermission]
+    static func systemPermissions() -> [UserPermission]
     
     static func getIdParameter(req: Request) -> UUID?
 }
@@ -44,15 +44,15 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
 public extension FeatherModel {
     
     var identifier: String { id!.uuidString }
-    static var idParamKey: String { idKey + "Id" }
+    static var idParamKey: String { modelKey + "Id" }
     static var idParamKeyPathComponent: PathComponent { .init(stringLiteral: ":" + idParamKey) }
-    static var idKeyPathComponent: PathComponent { .init(stringLiteral: idKey) }
+    static var modelKeyPathComponent: PathComponent { .init(stringLiteral: modelKey) }
     static var createPathComponent: PathComponent { "create" }
     static var updatePathComponent: PathComponent { "update" }
     static var deletePathComponent: PathComponent { "delete" }
     
-    static var schema: String { Module.idKey + "_" + idKey }
-    static var assetPath: String { Module.assetPath + idKey + "/" }
+    static var schema: String { Module.moduleKey + "_" + modelKey }
+    static var assetPath: String { Module.assetPath + modelKey + "/" }
 
     static var isSearchable: Bool { true }
     static func allowedOrders() -> [FieldKey] { [] }
@@ -61,15 +61,15 @@ public extension FeatherModel {
 
 
     static func permission(for action: Permission.Action) -> Permission {
-        .init(namespace: Module.idKey, context: idKey, action: action)
+        .init(namespace: Module.moduleKey, context: modelKey, action: action)
     }
 
     static func permissions() -> [Permission] {
         Permission.Action.crud.map { permission(for: $0) }
     }
     
-    static func systemPermissions() -> [SystemPermission] {
-        permissions().map { SystemPermission($0) }
+    static func systemPermissions() -> [UserPermission] {
+        permissions().map { UserPermission($0) }
     }
         
     static func info(_ req: Request) -> ModelInfo {
@@ -81,11 +81,11 @@ public extension FeatherModel {
         let delete = req.checkPermission(for: permission(for: .delete))
     
         let permissions = ModelInfo.AvailablePermissions(list: list, get: get, create: create, update: update, patch: patch, delete: delete)
-        return ModelInfo(idKey: idKey,
+        return ModelInfo(idKey: modelKey,
                          idParamKey: idParamKey,
                          name: .init(singular: name.singular, plural: name.plural),
                          assetPath: assetPath,
-                         module: .init(idKey: Module.idKey, name: Module.name, assetPath: Module.assetPath),
+                         module: .init(idKey: Module.moduleKey, name: Module.name, assetPath: Module.assetPath),
                          permissions: permissions,
                          isSearchable: isSearchable,
                          allowedOrders: allowedOrders().map(\.description),
