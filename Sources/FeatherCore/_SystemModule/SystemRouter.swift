@@ -10,6 +10,7 @@ struct SystemRouter: RouteCollection {
     let adminController = SystemAdminController()
     let frontendController = SystemFrontendController()
 
+    let fileController = SystemFileController()
     let userController = SystemUserController()
     let roleController = SystemRoleController()
     let permissionController = SystemPermissionController()
@@ -92,22 +93,22 @@ struct SystemRouter: RouteCollection {
         let modulePath = adminRoutes.grouped(SystemModule.idKeyPathComponent)
         modulePath
             .grouped(AccessGuardMiddleware(.init(namespace: "system", context: "files", action: .list)))
-            .get("files", use: adminController.browserView)
+            .get("files", use: fileController.browserView)
 
         let directoryPath = modulePath.grouped("files").grouped("directory")
             .grouped(AccessGuardMiddleware(.init(namespace: "system", context: "files", action: .create)))
-        directoryPath.get(use: adminController.directoryView)
-//        directoryPath.post(use: adminController.directory)
+        directoryPath.get(use: fileController.directoryView)
+//        directoryPath.post(use: fileController.directory)
 
         let uploadPath = modulePath.grouped("files").grouped("upload")
             .grouped(AccessGuardMiddleware(.init(namespace: "system", context: "files", action: .create)))
-        uploadPath.get(use: adminController.uploadView)
-//        uploadPath.post(use: adminController.upload)
+        uploadPath.get(use: fileController.uploadView)
+//        uploadPath.post(use: fileController.upload)
 
         let deletePath = modulePath.grouped("files").grouped("delete")
             .grouped(AccessGuardMiddleware(.init(namespace: "system", context: "files", action: .delete)))
-//        deletePath.get(use: adminController.deleteView)
-//        deletePath.post(use: adminController.delete)
+//        deletePath.get(use: fileController.deleteView)
+//        deletePath.post(use: fileController.delete)
         
         adminRoutes.register(userController)
         adminRoutes.register(roleController)
