@@ -38,8 +38,6 @@ struct SystemMenuItemController: FeatherController {
             TableRow(id: model.identifier, cells: [TableCell(model.label), TableCell(model.url)])
         })
     }
-    
-    
 
     func listContext(req: Request, table: Table, pages: Pagination) -> ListContext {
         let menuId = SystemMenuModel.getIdParameter(req: req)!
@@ -69,8 +67,6 @@ struct SystemMenuItemController: FeatherController {
         return queryBuilder.filter(\.$menu.$id == menuId)
     }
     
-    
-    
     func detailFields(req: Request, model: SystemMenuItemModel) -> [DetailContext.Field] {
         [
             .init(label: "Id", value: model.identifier),
@@ -81,22 +77,30 @@ struct SystemMenuItemController: FeatherController {
             .init(label: "Permission", value: model.permission ?? ""),
         ]
     }
-    
-    #warning("fixme")
+
     func getContext(req: Request, model: Model) -> DetailContext {
-        .init(model: Model.info(req), fields: detailFields(req: req, model: model), nav: [], bc: [
-            //list: .init(label: "Menu items", url: "/admin/frontend/menus/" + model.$menu.id.uuidString + "/items/"),
+        let menuId = SystemMenuModel.getIdParameter(req: req)!
+        return .init(model: Model.info(req), fields: detailFields(req: req, model: model), nav: [], bc: [
+            .init(label: "System", url: "/admin/system/"),
+            .init(label: "Menus", url: "/admin/system/menus/"),
+            .init(label: "Menu", url: "/admin/system/menus/" + menuId.uuidString + "/"),
+            .init(label: "Items", url: "/admin/system/menus/" + menuId.uuidString + "/items/"),
+            .init(label: "View", url: req.url.path.safePath()),
         ])
     }
     
-    func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {
-        .init(id: formId,
-              token: formToken,
-              context: model.label,
-              type: "menu item",
-              list: .init(label: "Menu items", url: "/admin/frontend/menus/" + model.$menu.id.uuidString + "/items/")
-        )
+    func deleteContext(req: Request, model: SystemMenuItemModel) -> String {
+        model.label
     }
-
     
+    func deleteContext(req: Request, id: String, token: String, model: SystemMenuItemModel) -> DeleteContext {
+        let menuId = SystemMenuModel.getIdParameter(req: req)!
+        return .init(model: Model.info(req), id: id, token: token, context: deleteContext(req: req, model: model), bc: [
+            .init(label: "System", url: "/admin/system/"),
+            .init(label: "Menus", url: "/admin/system/menus/"),
+            .init(label: "Menu", url: "/admin/system/menus/" + menuId.uuidString + "/"),
+            .init(label: "Items", url: "/admin/system/menus/" + menuId.uuidString + "/items/"),
+            .init(label: "Delete", url: req.url.path.safePath()),
+        ])
+    }
 }

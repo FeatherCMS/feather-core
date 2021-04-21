@@ -68,12 +68,7 @@ struct SystemMetadataController: FeatherController {
         ])
     }
     
-    func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {
-        .init(id: formId,
-              token: formToken,
-              context: model.title ?? "",
-              type: "metadata",
-              list: .init(label: "Metadatas", url: "/admin/system/metadatas")
-        )
+    func deleteContext(req: Request, model: SystemMetadataModel) -> String {
+        model.title ?? model.identifier
     }
 }

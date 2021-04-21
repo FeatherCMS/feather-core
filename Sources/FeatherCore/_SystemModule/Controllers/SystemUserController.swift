@@ -71,13 +71,8 @@ struct SystemUserController: FeatherController {
         ]
     }
     
-    func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {
-        .init(id: formId,
-              token: formToken,
-              context: model.email,
-              type: "user",
-              list: .init(label: "Users", url: "/admin/system/users")
-        )
+    func deleteContext(req: Request, model: SystemUserModel) -> String {
+        model.email
     }
 
 }

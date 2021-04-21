@@ -54,13 +54,9 @@ struct SystemMenuController: FeatherController {
             .init(label: "Menu items", url: "/admin/system/menus/" + model.identifier + "/items/")
         ])
     }
-
-    func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {
-        .init(id: formId,
-              token: formToken,
-              context: model.name,
-              type: "menu",
-              list: .init(label: "Menus", url: "/admin/system/menus")
-        )
+    
+    func deleteContext(req: Request, model: SystemMenuModel) -> String {
+        model.name
     }
+
 }

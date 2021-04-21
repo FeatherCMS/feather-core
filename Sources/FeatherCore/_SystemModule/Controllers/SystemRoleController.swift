@@ -49,13 +49,8 @@ struct SystemRoleController: FeatherController {
         ]
     }
     
-    func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {
-        .init(id: formId,
-              token: formToken,
-              context: model.name,
-              type: "role",
-              list: .init(label: "Roles", url: "/admin/system/roles")
-        )
+    func deleteContext(req: Request, model: SystemRoleModel) -> String {
+        model.name
     }
 }
 

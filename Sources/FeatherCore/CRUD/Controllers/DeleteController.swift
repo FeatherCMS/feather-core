@@ -6,18 +6,24 @@
 //
 
 
-
 public protocol DeleteApiRepresentable: ModelApi {}
 
-public struct DeleteControllerContext: Codable {
+public struct DeleteContext: Encodable {
 
-    let id: String
-    let token: String
-    let context: String
-    let type: String
-    let list: Link
+    public let model: ModelInfo
+    public let id: String
+    public let token: String
+    public let context: String
+    public let bc: [Link]
+    
+    public init(model: ModelInfo, id: String, token: String, context: String, bc: [Link] = []) {
+        self.model = model
+        self.id = id
+        self.token = token
+        self.context = context
+        self.bc = bc
+    }
 }
-
 
 public protocol DeleteController: IdentifiableController {
  
@@ -46,7 +52,9 @@ public protocol DeleteController: IdentifiableController {
     
     func setupDeleteApiRoute(on builder: RoutesBuilder)
     
-    func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext
+    func deleteContext(req: Request, model: Model) -> String
+    
+    func deleteContext(req: Request, id: String, token: String, model: Model) -> DeleteContext
 }
 
 public extension DeleteController {
@@ -62,13 +70,11 @@ public extension DeleteController {
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
-            let id = try identifier(req)
-            let formId = UUID().uuidString
-            let nonce = req.generateNonce(for: formId)
-
-            return findBy(id, on: req.db).flatMap { model in
-                let ctx = deleteContext(req: req, model: model, formId: formId, formToken: nonce)
-                return req.view.render(deleteView, ["delete": ctx])
+            return findBy(try identifier(req), on: req.db).flatMap { model in
+                let formId = UUID().uuidString
+                let formToken = req.generateNonce(for: formId)
+                let ctx = deleteContext(req: req, id: formId, token: formToken, model: model)
+                return req.view.render(deleteView, ctx)
             }
         }
     }
@@ -124,6 +130,14 @@ public extension DeleteController {
             url = redirect
         }
         return req.eventLoop.future(req.redirect(to: url))
+    }
+
+    func deleteContext(req: Request, model: Model) -> String {
+        model.identifier
+    }
+    
+    func deleteContext(req: Request, id: String, token: String, model: Model) -> DeleteContext {
+        .init(model: Model.info(req), id: id, token: token, context: deleteContext(req: req, model: model))
     }
     
     func setupDeleteRoutes(on builder: RoutesBuilder, as pathComponent: PathComponent) {

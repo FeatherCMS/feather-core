@@ -37,13 +37,8 @@ struct SystemPermissionController: FeatherController {
         ]
     }
     
-    func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {
-        .init(id: formId,
-              token: formToken,
-              context: model.name,
-              type: "permission",
-              list: .init(label: "Permissions", url: "/admin/system/permissoins")
-        )
+    func deleteContext(req: Request, model: SystemPermissionModel) -> String {
+        model.name
     }
 }
 

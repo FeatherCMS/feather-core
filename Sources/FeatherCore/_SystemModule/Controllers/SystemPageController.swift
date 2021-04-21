@@ -35,12 +35,7 @@ struct SystemPageController: FeatherController {
         ]
     }
     
-    func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {
-        .init(id: formId,
-              token: formToken,
-              context: model.title,
-              type: "page",
-              list: .init(label: "Pages", url: "/admin/system/pages")
-        )
+    func deleteContext(req: Request, model: SystemPageModel) -> String {
+        model.title
     }
 }

@@ -12,7 +12,9 @@ Core dependencies for Feather CMS.
 - [x] table context cleanup
 - [x] menu items admin (table nav links)
 - [x] fixed breadcrumbs
-- [ ] module detail pages
+- [x] unified module detail pages
+- [x] menu item detail page & nav links
+- [x] delete context default implementation 
 - [ ] file module
 - [ ] basic widgets
 - [ ] test content filters

@@ -37,13 +37,7 @@ struct SystemVariableController: FeatherController {
         ]
     }
     
-    func deleteContext(req: Request, model: Model, formId: String, formToken: String) -> DeleteControllerContext {
-        .init(id: formId,
-              token: formToken,
-              context: model.name,
-              type: "variable",
-              list: .init(label: "Variables", url: "/admin/system/variables")
-        )
-    }
-    
+    func deleteContext(req: Request, model: SystemVariableModel) -> String {
+        model.name
+    }    
 }
