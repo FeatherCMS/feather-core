@@ -29,9 +29,8 @@ final class CommonModule: FeatherModule {
         /// admin menus
         app.hooks.register("admin-menus", use: adminMenusHook)
         /// routes
-        let router = SystemRouter()
+        let router = CommonRouter()
         try router.boot(routes: app.routes)
-        app.hooks.register("routes", use: router.routesHook)
         app.hooks.register("admin-routes", use: router.adminRoutesHook)
         app.hooks.register("api-routes", use: router.apiRoutesHook)
         app.hooks.register("api-admin-routes", use: router.apiAdminRoutesHook)

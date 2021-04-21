@@ -30,7 +30,7 @@ final class FrontendModule: FeatherModule {
         /// admin menus
         app.hooks.register("admin-menus", use: adminMenusHook)
         /// routes
-        let router = SystemRouter()
+        let router = FrontendRouter()
         try router.boot(routes: app.routes)
         app.hooks.register("routes", use: router.routesHook)
         app.hooks.register("admin-routes", use: router.adminRoutesHook)

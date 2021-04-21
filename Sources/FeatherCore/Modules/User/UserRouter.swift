@@ -22,6 +22,8 @@ struct UserRouter: RouteCollection {
     func adminRoutesHook(args: HookArguments) {
         let adminRoutes = args["routes"] as! RoutesBuilder
 
+        adminRoutes.get("user", use: SystemAdminMenuController(key: "user").moduleView)
+
         adminRoutes.register(userController)
         adminRoutes.register(roleController)
         adminRoutes.register(permissionController)

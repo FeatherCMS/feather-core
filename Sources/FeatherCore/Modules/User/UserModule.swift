@@ -29,12 +29,15 @@ final class UserModule: FeatherModule {
         app.hooks.register("permission", use: permissionHook)
         app.hooks.register("access", use: accessHook)
         
+        app.hooks.register("admin-auth-middlewares", use: adminAuthMiddlewaresHook)
+        app.hooks.register("api-auth-middlewares", use: adminAuthMiddlewaresHook)
+        
+
         /// admin menus
         app.hooks.register("admin-menus", use: adminMenusHook)
         /// routes
-        let router = SystemRouter()
+        let router = UserRouter()
         try router.boot(routes: app.routes)
-        app.hooks.register("routes", use: router.routesHook)
         app.hooks.register("admin-routes", use: router.adminRoutesHook)
         app.hooks.register("api-routes", use: router.apiRoutesHook)
         app.hooks.register("api-admin-routes", use: router.apiAdminRoutesHook)
@@ -81,5 +84,21 @@ final class UserModule: FeatherModule {
     /// by default return the permission as an access...
     func accessHook(args: HookArguments) -> EventLoopFuture<Bool> {
         args.req.eventLoop.future(permissionHook(args: args))
-    }    
+    }
+    
+    func adminAuthMiddlewaresHook(args: HookArguments) -> [Middleware] {
+        [
+            UserAccountSessionAuthenticator(),
+            User.redirectMiddleware(path: "/login/?redirect=/admin/"),
+        ]
+    }
+
+    #warning("Session auth is only for testing purposes!")
+    func apiAuthMiddlewaresHook(args: HookArguments) -> [Middleware] {
+        [
+            UserAccountSessionAuthenticator(),
+            UserTokenModel.authenticator(),
+            User.guardMiddleware(),
+        ]
+    }
 }

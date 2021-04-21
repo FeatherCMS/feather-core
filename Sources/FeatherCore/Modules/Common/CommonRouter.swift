@@ -21,6 +21,8 @@ struct CommonRouter: RouteCollection {
     func adminRoutesHook(args: HookArguments) {
         let adminRoutes = args["routes"] as! RoutesBuilder
 
+        adminRoutes.get("web", use: SystemAdminMenuController(key: "web").moduleView)
+        
         let modulePath = adminRoutes.grouped(SystemModule.moduleKeyPathComponent)
         modulePath
             .grouped(AccessGuardMiddleware(.init(namespace: "system", context: "files", action: .list)))

@@ -21,7 +21,7 @@ public struct Feather {
 
     /// initialize with viper modules
     init(app: Application) {
-        self.modules = [SystemModule()]
+        self.modules = [SystemModule(), CommonModule(), UserModule(), FrontendModule()]
         self.app = app
     }
 
