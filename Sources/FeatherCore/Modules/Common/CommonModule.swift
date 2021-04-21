@@ -15,8 +15,7 @@ final class CommonModule: FeatherModule {
 
     func boot(_ app: Application) throws {
         /// database
-        
-        app.migrations.add(SystemMigration_v1())
+        app.migrations.add(CommonMigration_v1())
         /// middlewares
         app.middleware.use(SystemTemplateScopeMiddleware())
         

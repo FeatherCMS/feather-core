@@ -6,7 +6,7 @@
 //
 
 final class FrontendMenuModel: FeatherModel {
-    typealias Module = SystemModule
+    typealias Module = FrontendModule
 
     static let modelKey: String = "menus"
     static let name: FeatherModelName = "Menu"

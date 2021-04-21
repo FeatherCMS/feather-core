@@ -7,18 +7,18 @@
 
 struct UserRoleController: FeatherController {
         
-    typealias Module = SystemModule
+    typealias Module = UserModule
     typealias Model = UserRoleModel
     
     typealias CreateForm = UserRoleEditForm
     typealias UpdateForm = UserRoleEditForm
     
-    typealias GetApi = CommonVariableApi
-    typealias ListApi = CommonVariableApi
-    typealias CreateApi = CommonVariableApi
-    typealias UpdateApi = CommonVariableApi
-    typealias PatchApi = CommonVariableApi
-    typealias DeleteApi = CommonVariableApi
+    typealias GetApi = UserRoleApi
+    typealias ListApi = UserRoleApi
+    typealias CreateApi = UserRoleApi
+    typealias UpdateApi = UserRoleApi
+    typealias PatchApi = UserRoleApi
+    typealias DeleteApi = UserRoleApi
 
     
     func findBy(_ id: UUID, on db: Database) -> EventLoopFuture<Model> {

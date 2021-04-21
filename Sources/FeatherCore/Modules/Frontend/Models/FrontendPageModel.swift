@@ -6,7 +6,7 @@
 //
 
 final class FrontendPageModel: FeatherModel {
-    typealias Module = SystemModule
+    typealias Module = FrontendModule
 
     static let modelKey: String = "pages"
     static let name: FeatherModelName = "Page"

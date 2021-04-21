@@ -15,9 +15,8 @@ final class FrontendModule: FeatherModule {
 
     func boot(_ app: Application) throws {
         /// database
-        
         app.databases.middleware.use(MetadataModelMiddleware<FrontendPageModel>())
-        app.migrations.add(SystemMigration_v1())
+        app.migrations.add(FrontendMigration_v1())
         /// middlewares
         app.middleware.use(SystemTemplateScopeMiddleware())
         app.middleware.use(FrontendSafePathMiddleware())

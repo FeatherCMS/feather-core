@@ -6,7 +6,7 @@
 //
 
 final class UserTokenModel: FeatherModel {
-    typealias Module = SystemModule
+    typealias Module = UserModule
     
     static let modelKey: String = "tokens"
     static let name: FeatherModelName = "Token"

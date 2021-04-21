@@ -6,7 +6,7 @@
 //
 
 final class UserRoleModel: FeatherModel {
-    typealias Module = SystemModule
+    typealias Module = UserModule
     
     static let modelKey: String = "roles"
     static let name: FeatherModelName = "Role"

@@ -8,18 +8,18 @@
 
 struct UserAccountController: FeatherController {
 
-    typealias Module = SystemModule
+    typealias Module = UserModule
     typealias Model = UserAccountModel
     
     typealias CreateForm = UserAccountEditForm
     typealias UpdateForm = UserAccountEditForm
     
-    typealias GetApi = CommonVariableApi
-    typealias ListApi = CommonVariableApi
-    typealias CreateApi = CommonVariableApi
-    typealias UpdateApi = CommonVariableApi
-    typealias PatchApi = CommonVariableApi
-    typealias DeleteApi = CommonVariableApi
+    typealias GetApi = UserAccountApi
+    typealias ListApi = UserAccountApi
+    typealias CreateApi = UserAccountApi
+    typealias UpdateApi = UserAccountApi
+    typealias PatchApi = UserAccountApi
+    typealias DeleteApi = UserAccountApi
 
     // MARK: - login
 

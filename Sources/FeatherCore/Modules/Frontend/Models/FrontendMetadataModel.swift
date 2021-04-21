@@ -7,7 +7,7 @@
 
 /// this object is a representation for frontend related pages with unique slugs
 final class FrontendMetadataModel: FeatherModel {
-    typealias Module = SystemModule
+    typealias Module = FrontendModule
 
     static let modelKey: String = "metadatas"
     static let name: FeatherModelName = "Metadata"

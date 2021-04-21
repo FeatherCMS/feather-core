@@ -6,7 +6,7 @@
 //
 
 final class CommonVariableModel: FeatherModel {
-    typealias Module = SystemModule
+    typealias Module = CommonModule
 
     static let modelKey: String = "variables"
     static let name: FeatherModelName = "Variable"

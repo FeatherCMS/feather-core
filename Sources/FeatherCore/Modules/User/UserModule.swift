@@ -17,7 +17,7 @@ final class UserModule: FeatherModule {
         /// database
         app.databases.middleware.use(UserAccountModelSafeEmailMiddleware())
         
-        app.migrations.add(SystemMigration_v1())
+        app.migrations.add(UserMigration_v1())
         /// middlewares
         app.middleware.use(SystemTemplateScopeMiddleware())
 
