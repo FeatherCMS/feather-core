@@ -14,7 +14,7 @@ public struct ListLoader<T: FeatherModel>  {
     let limit: Int
     let pageKey: String
     let page: Int
-    let beforeQuery: ((QueryBuilder<T>) -> QueryBuilder<T>)?
+    let beforeQuery: ((Request, QueryBuilder<T>) -> QueryBuilder<T>)?
     
     public init(sortKey: String = "sort",
                 orderKey: String = "order",
@@ -23,7 +23,7 @@ public struct ListLoader<T: FeatherModel>  {
                 limit: Int = 10,
                 pageKey: String = "page",
                 page: Int = 1,
-                beforeQuery: ((QueryBuilder<T>) -> QueryBuilder<T>)? = nil)
+                beforeQuery: ((Request, QueryBuilder<T>) -> QueryBuilder<T>)? = nil)
     {
         self.sortKey = sortKey
         self.orderKey = orderKey
@@ -38,7 +38,7 @@ public struct ListLoader<T: FeatherModel>  {
     public func paginate(_ req: Request) -> EventLoopFuture<PaginationContainer<T>> {
         var qb = T.query(on: req.db)
         if let beforeQuery = beforeQuery {
-            qb = beforeQuery(qb)
+            qb = beforeQuery(req, qb)
         }
         
         /// sort & order

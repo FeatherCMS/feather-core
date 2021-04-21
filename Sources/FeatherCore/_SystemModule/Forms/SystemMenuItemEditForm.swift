@@ -52,26 +52,19 @@ struct SystemMenuItemEditForm: FeatherForm {
             TextareaField(key: "notes")
                 .read { $1.output.value = context.model?.notes }
                 .write { context.model?.notes = $1.input },
-            
-            HiddenField(key: "menuId")
-                .read { $1.output.value = context.model?.$menu.id.uuidString }
-                .write { req, field in
-                    if let uuid = UUID(uuidString: field.input) {
-                        context.model?.$menu.id = uuid
-                    }
-                },
         ]
     }
     
     func load(req: Request) -> EventLoopFuture<Void> {
-        let id = req.parameters.get("id")!
-        let itemId = req.parameters.get("itemId")
-        
+        guard let menuId = SystemMenuModel.getIdParameter(req: req) else {
+            return req.eventLoop.future(error: Abort(.badRequest))
+        }
+        let itemId = SystemMenuItemModel.getIdParameter(req: req)
         context.breadcrumb = [
             .init(label: "System", url: "/admin/system/"),
             .init(label: "Menus", url: "/admin/system/menus/"),
-            .init(label: "Menu", url: "/admin/system/menus/" + id + "/"),
-            .init(label: "Items", url: "/admin/system/menus/" + id + "/items/"),
+            .init(label: "Menu", url: "/admin/system/menus/" + menuId.uuidString + "/"),
+            .init(label: "Items", url: "/admin/system/menus/" + menuId.uuidString + "/items/"),
             .init(label: itemId != nil ? "Edit" : "Create", url: req.url.path.safePath()),
         ]
         return context.load(req: req)

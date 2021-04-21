@@ -65,7 +65,7 @@ public protocol ListController: ModelController {
     func accessList(req: Request) -> EventLoopFuture<Bool>
     
     /// builds the query in order to list objects in the admin interface
-    func beforeListQuery(queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model>
+    func beforeListQuery(req: Request, queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model>
     
     func listTable(_ models: [Model]) -> Table
     
@@ -115,7 +115,7 @@ public extension ListController {
         req.checkAccess(for: Model.permission(for: .list))
     }
     
-    func beforeListQuery(queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
+    func beforeListQuery(req: Request, queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
         queryBuilder
     }
 

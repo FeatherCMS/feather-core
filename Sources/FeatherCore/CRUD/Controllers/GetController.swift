@@ -98,10 +98,10 @@ public extension GetController {
     }
     
     func setupGetRoute(on builder: RoutesBuilder) {
-        builder.get(idPathComponent, use: get)
+        builder.get(Model.idParamKeyPathComponent, use: get)
     }
     
     func setupGetApiRoute(on builder: RoutesBuilder) {
-        builder.get(idPathComponent, use: getApi)
+        builder.get(Model.idParamKeyPathComponent, use: getApi)
     }
 }

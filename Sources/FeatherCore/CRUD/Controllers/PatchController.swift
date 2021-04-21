@@ -74,6 +74,6 @@ public extension PatchController {
     }
 
     func setupPatchApiRoute(on builder: RoutesBuilder) {
-        builder.patch(idPathComponent, use: patchApi)
+        builder.patch(Model.idParamKeyPathComponent, use: patchApi)
     }
 }

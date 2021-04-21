@@ -127,11 +127,11 @@ public extension DeleteController {
     }
     
     func setupDeleteRoutes(on builder: RoutesBuilder, as pathComponent: PathComponent) {
-        builder.get(idPathComponent, pathComponent, use: deleteView)
-        builder.post(idPathComponent, pathComponent, use: delete)
+        builder.get(Model.idParamKeyPathComponent, pathComponent, use: deleteView)
+        builder.post(Model.idParamKeyPathComponent, pathComponent, use: delete)
     }
     
     func setupDeleteApiRoute(on builder: RoutesBuilder) {
-        builder.delete(idPathComponent, use: deleteApi)
+        builder.delete(Model.idParamKeyPathComponent, use: deleteApi)
     }
 }

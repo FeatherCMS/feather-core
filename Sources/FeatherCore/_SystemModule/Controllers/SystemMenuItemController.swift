@@ -23,7 +23,7 @@ struct SystemMenuItemController: FeatherController {
     func setupRoutes(on builder: RoutesBuilder) {
         let base = builder.grouped(SystemModule.idKeyPathComponent)
                           .grouped(SystemMenuModel.idKeyPathComponent)
-                          .grouped(":id")
+                          .grouped(SystemMenuModel.idParamKeyPathComponent)
                           .grouped(Model.idKeyPathComponent)
         
         setupListRoute(on: base)
@@ -33,8 +33,6 @@ struct SystemMenuItemController: FeatherController {
         setupDeleteRoutes(on: base, as: Model.deletePathComponent)
     }
     
-    var idParamKey: String { "itemId" }
-
     func listTable(_ models: [Model]) -> Table {
         Table(columns: ["label", "url"], rows: models.map { model in
             TableRow(id: model.identifier, cells: [TableCell(model.label), TableCell(model.url)])
@@ -42,23 +40,31 @@ struct SystemMenuItemController: FeatherController {
     }
 
     func listContext(req: Request, table: Table, pages: Pagination) -> ListContext {
-        let id = req.parameters.get("id")!
-        
+        let menuId = SystemMenuItemModel.getIdParameter(req: req)!
+
         return ListContext(info: Model.info(req), table: table, pages: pages, nav: [
-            .init(label: "Menu details", url: "/admin/system/menus/" + req.parameters.get("id")! + "/")
+            .init(label: "Menu details", url: "/admin/system/menus/" + menuId.uuidString + "/")
         ], breadcrumb: [
             .init(label: "System", url: "/admin/system/"),
             .init(label: "Menus", url: "/admin/system/menus/"),
-            .init(label: "Menu", url: "/admin/system/menus/" + id + "/"),
+            .init(label: "Menu", url: "/admin/system/menus/" + menuId.uuidString + "/"),
             .init(label: "Items", url: req.url.path.safePath()),
         ])
     }
+    
+    func beforeCreate(req: Request, model: SystemMenuItemModel) -> EventLoopFuture<SystemMenuItemModel> {
+        guard let menuId = SystemMenuItemModel.getIdParameter(req: req) else {
+            return req.eventLoop.future(error: Abort(.badRequest))
+        }
+        model.$menu.id = menuId
+        return req.eventLoop.future(model)
+    }
 
     func beforeListQuery(req: Request, queryBuilder: QueryBuilder<SystemMenuItemModel>) -> QueryBuilder<SystemMenuItemModel> {
-        guard let id = req.parameters.get("id"), let uuid = UUID(uuidString: id) else {
+        guard let menuId = SystemMenuItemModel.getIdParameter(req: req) else {
             return queryBuilder
         }
-        return queryBuilder.filter(\.$menu.$id == uuid)
+        return queryBuilder.filter(\.$menu.$id == menuId)
     }
     
     

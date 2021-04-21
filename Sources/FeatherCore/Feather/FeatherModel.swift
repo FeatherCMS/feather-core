@@ -14,8 +14,11 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
 
     /// path identifier key
     static var idKey: String { get }
+    static var idParamKey: String { get }
+
     /// path component
     static var idKeyPathComponent: PathComponent { get }
+    static var idParamKeyPathComponent: PathComponent { get }
     static var createPathComponent: PathComponent { get }
     static var updatePathComponent: PathComponent { get }
     static var deletePathComponent: PathComponent { get }
@@ -34,11 +37,15 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
     static func permission(for action: Permission.Action) -> Permission
     static func permissions() -> [Permission]
     static func systemPermissions() -> [SystemPermission]
+    
+    static func getIdParameter(req: Request) -> UUID?
 }
 
 public extension FeatherModel {
     
     var identifier: String { id!.uuidString }
+    static var idParamKey: String { idKey + "Id" }
+    static var idParamKeyPathComponent: PathComponent { .init(stringLiteral: ":" + idParamKey) }
     static var idKeyPathComponent: PathComponent { .init(stringLiteral: idKey) }
     static var createPathComponent: PathComponent { "create" }
     static var updatePathComponent: PathComponent { "update" }
@@ -86,12 +93,19 @@ public extension FeatherModel {
     }
 
     /// check if a model is unique by a given filter (excludes the current object id if peresnt in a given request parameter)
-    static func isUniqueBy(_ filter:  ModelValueFilter<Self>, paramKey: String = "id", req: Request) -> EventLoopFuture<Bool> {
+    static func isUniqueBy(_ filter:  ModelValueFilter<Self>, req: Request) -> EventLoopFuture<Bool> {
         var query = Self.query(on: req.db).filter(filter)
-        if let id = req.parameters.get(paramKey), let uuid = UUID(uuidString: id) {
-            query = query.filter(\Self._$id != uuid)
+        if let modelId = getIdParameter(req: req) {
+            query = query.filter(\Self._$id != modelId)
         }
         return query.count().map { $0 == 0  }
+    }
+    
+    static func getIdParameter(req: Request) -> UUID? {
+        guard let id = req.parameters.get(idParamKey), let uuid = UUID(uuidString: id) else {
+            return nil
+        }
+        return uuid
     }
 
 }

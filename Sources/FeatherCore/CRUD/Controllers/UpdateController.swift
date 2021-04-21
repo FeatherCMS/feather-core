@@ -124,11 +124,11 @@ public extension UpdateController {
     }
 
     func setupUpdateRoutes(on builder: RoutesBuilder, as pathComponent: PathComponent) {
-        builder.get(idPathComponent, pathComponent, use: updateView)
-        builder.on(.POST, idPathComponent, pathComponent, use: update)
+        builder.get(Model.idParamKeyPathComponent, pathComponent, use: updateView)
+        builder.on(.POST, Model.idParamKeyPathComponent, pathComponent, use: update)
     }
     
     func setupUpdateApiRoute(on builder: RoutesBuilder) {
-        builder.put(idPathComponent, use: updateApi)
+        builder.put(Model.idParamKeyPathComponent, use: updateApi)
     }
 }
