@@ -56,7 +56,7 @@ public extension FeatherForm where Model: MetadataRepresentable {
                 return context.load(req: req)
             }
             context.metadata = metadata
-            let baseUrl = "/admin/" + FrontendMetadataModel.modelKey + "/" + metadata.id!.uuidString + "/"
+            let baseUrl = "/admin/" + FrontendModule.moduleKey + "/" + FrontendMetadataModel.modelKey + "/" + metadata.id!.uuidString + "/"
             if req.checkPermission(for: FrontendMetadataModel.permission(for: .update)) {
                 context.nav.append(.init(label: FrontendMetadataModel.name.singular,
                                          url: baseUrl + FrontendMetadataModel.updatePathComponent.description + "/"))
