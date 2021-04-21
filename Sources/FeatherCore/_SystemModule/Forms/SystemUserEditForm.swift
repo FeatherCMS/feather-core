@@ -49,13 +49,7 @@ struct SystemUserEditForm: FeatherForm {
                 }
                 .save { req, field in
                     let values = field.input.compactMap { UUID(uuidString: $0) }
-                    #warning("generic attach / detach")
-                    
-                    return context.model!.$roles.detach(context.model!.$roles.value ?? [], on: req.db).flatMap {
-                        SystemRoleModel.query(on: req.db).filter(\.$id ~~ values).all().flatMap { items in
-                            context.model!.$roles.attach(items, on: req.db)
-                        }
-                    }
+                    return context.model!.$roles.reAttach(ids: values, on: req.db)
                 }
             
         ]

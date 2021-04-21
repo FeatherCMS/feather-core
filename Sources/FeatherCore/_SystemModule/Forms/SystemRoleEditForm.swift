@@ -5,7 +5,8 @@
 //  Created by Tibor Bodecs on 2020. 03. 23..
 //
 
-
+    
+    
 struct SystemRoleEditForm: FeatherForm {
     
     var context: FeatherFormContext<SystemRoleModel>
@@ -51,14 +52,7 @@ struct SystemRoleEditForm: FeatherForm {
                 }
                 .save { req, field in
                     let values = field.input.compactMap { UUID(uuidString: $0) }
-                    #warning("generic diff for attach / detach")
-//                    print(context.model?.permissions.map(\.id!.uuidString))
-//                    print(req.body.data!.getString(at: 0, length: req.body.data!.readableBytes))
-                    return context.model!.$permissions.detach(context.model!.permissions, on: req.db).flatMap {
-                        SystemPermissionModel.query(on: req.db).filter(\.$id ~~ values).all().flatMap { items in
-                            context.model!.$permissions.attach(items, on: req.db)
-                        }
-                    }
+                    return context.model!.$permissions.reAttach(ids: values, on: req.db)
                 }
         ]
     }

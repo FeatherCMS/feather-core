@@ -138,10 +138,6 @@ extension SystemModule {
                   value: "Feather is an open-source CMS written in Swift using Vapor 4.",
                   name: "Site excerpt",
                   notes: "Excerpt for the website"),
-
-            .init(key: "siteContentFilters",
-                  name: "Content filters",
-                  notes: "Coma separated list of content filter identifiers"),
             
             .init(key: "siteCss",
                   name: "Site CSS",
@@ -190,7 +186,6 @@ extension SystemModule {
                   name: "Home page link url",
                   notes: "Link URL of the home page"),
             
-            
             // MARK: - not found
 
             .init(key: "notFoundPageIcon",
@@ -219,7 +214,7 @@ extension SystemModule {
                   notes: "Retry link URL for the not found page"),
 
             // MARK: - empty list
-            
+ 
             .init(key: "emptyListIcon",
                   value: "🔍",
                   name: "Empty list icon",

@@ -14,11 +14,11 @@ Core dependencies for Feather CMS.
 - [x] fixed breadcrumbs
 - [x] unified module detail pages
 - [x] menu item detail page & nav links
-- [x] delete context default implementation 
+- [x] delete context default implementation
+- [x] generic attach / detach diff api
 - [ ] file module
 - [ ] basic widgets
 - [ ] test content filters
-- [ ] generic attach / detach diff api
 - [ ] api tests
 - [ ] review feather API access control (Swift)
 
