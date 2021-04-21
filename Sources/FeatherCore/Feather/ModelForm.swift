@@ -20,7 +20,7 @@ public extension EditFormController {
     }
     
     func load(req: Request) -> EventLoopFuture<Void> {
-        context.load(req: req)
+        return context.load(req: req)
     }
     
     func process(req: Request) -> EventLoopFuture<Void> {

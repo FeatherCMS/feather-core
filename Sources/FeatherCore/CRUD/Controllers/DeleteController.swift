@@ -64,7 +64,7 @@ public extension DeleteController {
             }
             let id = try identifier(req)
             let formId = UUID().uuidString
-            let nonce = req.generateNonce(for: "delete-form", id: formId)
+            let nonce = req.generateNonce(for: formId)
 
             return findBy(id, on: req.db).flatMap { model in
                 let ctx = deleteContext(req: req, model: model, formId: formId, formToken: nonce)
@@ -82,7 +82,9 @@ public extension DeleteController {
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
-            try req.validateFormToken(for: "delete-form")
+            
+            let context = try req.content.decode(Form.IdTokenInput.self)
+            try req.useNonce(id: context.formId, token: context.formToken)
 
             let id = try identifier(req)
             return findBy(id, on: req.db)

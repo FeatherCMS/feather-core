@@ -7,6 +7,15 @@
 
 open class Form: FormComponent {
 
+    /// used to validate form token (nonce) values
+    struct IdTokenInput: Decodable {
+
+        /// identifier of the form
+        let formId: String
+        /// associated token for the form
+        let formToken: String
+    }
+    
     public struct Action: Encodable {
         public enum Method: String, Encodable {
             case get
@@ -81,10 +90,16 @@ open class Form: FormComponent {
         }
     }
     
+    public func validateToken(_ req: Request) throws {
+        let context = try req.content.decode(IdTokenInput.self)
+        try req.useNonce(id: context.formId, token: context.formToken)
+    }
+    
     // MARK: - form component
     
     open func load(req: Request) -> EventLoopFuture<Void> {
-        req.eventLoop.flatten(fields.map { $0.load(req: req) })
+        token = req.generateNonce(for: id)
+        return req.eventLoop.flatten(fields.map { $0.load(req: req) })
     }
 
     open func process(req: Request) -> EventLoopFuture<Void> {
@@ -92,7 +107,13 @@ open class Form: FormComponent {
     }
     
     open func validate(req: Request) -> EventLoopFuture<Bool> {
-        req.eventLoop.mergeTrueFutures(fields.map { $0.validate(req: req) })
+        do {
+            try validateToken(req)
+            return req.eventLoop.mergeTrueFutures(fields.map { $0.validate(req: req) })
+        }
+        catch {
+            return req.eventLoop.future(error: error)
+        }
     }
 
     open func save(req: Request) -> EventLoopFuture<Void> {
