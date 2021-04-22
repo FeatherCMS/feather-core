@@ -91,7 +91,7 @@ public struct Permission: Codable, Equatable {
 
     public var identifier: String { components.joined(separator: ".") }
 
-    public var accessIdentifier: String { (components + ["access"]).joined(separator: "-") }
+    public var accessIdentifier: String { (components + [FeatherHook.access.description]).joined(separator: "-") }
     
     public var name: String { "\(namespace) \(context) \(action.identifier)" }
 }

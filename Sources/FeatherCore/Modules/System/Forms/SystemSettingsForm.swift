@@ -63,7 +63,7 @@ final class SystemSettingsForm: Form {
             
             MultiSelectionField(key: "filters")
                 .load { req, field -> Void in
-                    let contentFilters: [[ContentFilter]] = req.invokeAll("content-filters")
+                    let contentFilters: [[ContentFilter]] = req.invokeAll(.contentFilters)
                     field.output.options = contentFilters.flatMap { $0 }.map(\.formFieldOption)
                     field.output.values = Application.Config.filters
                 }

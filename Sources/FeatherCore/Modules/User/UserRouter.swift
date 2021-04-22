@@ -20,7 +20,7 @@ struct UserRouter: RouteCollection {
     } 
     
     func adminRoutesHook(args: HookArguments) {
-        let adminRoutes = args["routes"] as! RoutesBuilder
+        let adminRoutes = args.routes
 
         adminRoutes.get("user", use: SystemAdminMenuController(key: "user").moduleView)
 
@@ -30,13 +30,13 @@ struct UserRouter: RouteCollection {
     }
     
     func apiRoutesHook(args: HookArguments) {
-        let publicApiRoutes = args["routes"] as! RoutesBuilder
+        let publicApiRoutes = args.routes
 
         publicApiRoutes.grouped(UserAccountCredentialsAuthenticator()).post("login", use: userController.login)
     }
 
     func apiAdminRoutesHook(args: HookArguments) {
-        let apiRoutes = args["routes"] as! RoutesBuilder
+        let apiRoutes = args.routes
 
         apiRoutes.registerApi(userController)
         apiRoutes.registerApi(roleController)

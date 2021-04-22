@@ -7,7 +7,7 @@
 
 /// module component
 public protocol FeatherModule {
-
+    
     /// name of the module
     static var moduleKey: String { get }
     /// path component based

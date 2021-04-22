@@ -15,8 +15,8 @@ public struct SystemAdminMenuController {
     }
 
     public func moduleView(req: Request) throws -> EventLoopFuture<View> {
-        let menusResult: [[FrontendMenu]] = req.invokeAll("admin-menus")
-        let menu = menusResult.flatMap { $0 }.first { $0.key == key }
+        let menusResult: [FrontendMenu] = req.invokeAll(.adminMenu)
+        let menu = menusResult.first { $0.key == key }
         return req.view.render("System/Admin/Menu", ["menu": menu])
     }
 }

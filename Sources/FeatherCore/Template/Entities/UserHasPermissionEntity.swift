@@ -17,9 +17,10 @@ struct UserHasPermissionEntity: UnsafeEntity, NonMutatingMethod, BoolReturn {
         let rawPermission = params[0].string!
         let components = rawPermission.components(separatedBy: ".")
         guard components.count == 3 else { return .error("Invalid permission components: `\(rawPermission)`.") }
-        
-        let permission =  Permission(namespace: components[0], context: components[1], action: .init(identifier: components[2]))
-        let hasPermission: Bool? = req.invoke("permission", args: ["permission": permission])
+
+        var args = HookArguments()
+        args.permission = Permission(namespace: components[0], context: components[1], action: .init(identifier: components[2]))
+        let hasPermission: Bool? = req.invoke(.permission, args: args)
         return .bool(hasPermission ?? false)
     }
 }

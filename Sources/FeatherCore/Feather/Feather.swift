@@ -57,7 +57,9 @@ public struct Feather {
         try app.feather.bootModules()
         try app.autoMigrate().wait()
 
-        let _: [Void] = app.invokeAll("routes", args: ["routes": app.routes])
+        var args = HookArguments()
+        args.routes = app.routes
+        let _: [Void] = app.invokeAll(.routes, args: args)
     }
     
     // MARK: - template engine

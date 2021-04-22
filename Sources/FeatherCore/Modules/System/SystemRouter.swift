@@ -14,34 +14,40 @@ struct SystemRouter: RouteCollection {
     }
     
     func routesHook(args: HookArguments) {
-        let app = args["app"] as! Application
-        let routes = args["routes"] as! RoutesBuilder
+        let app = args.app
+        let routes = args.routes
 
         // MARK: - api
         let apiRoutes = routes.grouped("api")
         /// register publicly available api routes
-        let _: [Void] = app.invokeAll("api-routes", args: ["routes": apiRoutes])
+        var apiArgs = HookArguments()
+        apiArgs.routes = apiRoutes
+        let _: [Void] = app.invokeAll(.apiRoutes, args: apiArgs)
 
         // MARK: - api admin
         /// guard the api with auth middlewares, if there was no auth middlewares returned we simply stop the registration
-        let apiMiddlewaresResult: [[Middleware]] = app.invokeAll("api-auth-middlewares")
+        let apiMiddlewaresResult: [[Middleware]] = app.invokeAll(.apiMiddlewares)
         let apiMiddlewares = apiMiddlewaresResult.flatMap { $0 }
         let adminApiRoutes = apiRoutes.grouped("admin").grouped(apiMiddlewares)
-        let _: [Void] = app.invokeAll("api-admin-routes", args: ["routes": adminApiRoutes])
+        var adminApiArgs = HookArguments()
+        adminApiArgs.routes = adminApiRoutes
+        let _: [Void] = app.invokeAll(.apiAdminRoutes, args: adminApiArgs)
         
         // MARK: - admin
-        let adminMiddlewaresResult: [[Middleware]] = app.invokeAll("admin-auth-middlewares")
+        let adminMiddlewaresResult: [[Middleware]] = app.invokeAll(.adminMiddlewares)
         var adminMiddlewares = adminMiddlewaresResult.flatMap { $0 }
         adminMiddlewares.append(AccessGuardMiddleware(SystemModule.permission(for: .custom("admin"))))
         adminMiddlewares.append(SystemAbortErrorMiddleware())
         let adminRoutes = routes.grouped("admin").grouped(adminMiddlewares)
         adminRoutes.get(use: adminController.homeView)
-        let _: [Void] = app.invokeAll("admin-routes", args: ["routes": adminRoutes])
+        var adminArgs = HookArguments()
+        adminArgs.routes = adminRoutes
+        let _: [Void] = app.invokeAll(.adminRoutes, args: adminArgs)
     }
     
     
     func adminRoutesHook(args: HookArguments) {
-        let adminRoutes = args["routes"] as! RoutesBuilder
+        let adminRoutes = args.routes
 
         adminRoutes.get("system", use: SystemAdminMenuController(key: "system").moduleView)
 
@@ -52,11 +58,11 @@ struct SystemRouter: RouteCollection {
     }
     
     func apiRoutesHook(args: HookArguments) {
-//        let publicApiRoutes = args["routes"] as! RoutesBuilder
+//        let publicApiRoutes = args.routes
     }
 
     func apiAdminRoutesHook(args: HookArguments) {
-//        let apiRoutes = args["routes"] as! RoutesBuilder
+//        let apiRoutes = args.routes
 
     }
     

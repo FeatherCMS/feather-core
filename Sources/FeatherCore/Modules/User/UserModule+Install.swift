@@ -12,7 +12,7 @@ extension UserModule {
         let req = args.req
 
         /// gather the main menu items through a hook function then map them
-        let permissionItems: [[UserPermission]] = req.invokeAll("install-permissions")
+        let permissionItems: [[UserPermission]] = req.invokeAll(.installPermissions)
         let permissionModels = permissionItems.flatMap { $0 }.map {
             UserPermissionModel(namespace: $0.namespace, context: $0.context, action: $0.action, name: $0.name, notes: $0.notes)
         }

@@ -18,25 +18,25 @@ final class FrontendModule: FeatherModule {
         app.databases.middleware.use(MetadataModelMiddleware<FrontendPageModel>())
         app.migrations.add(FrontendMigration_v1())
         /// middlewares
-        app.middleware.use(SystemTemplateScopeMiddleware())
+        app.middleware.use(FrontendTemplateScopeMiddleware())
         app.middleware.use(FrontendSafePathMiddleware())
         
 
         /// install
-        app.hooks.register("install-models", use: installModelsHook)
-        app.hooks.register("install-permissions", use: installPermissionsHook)
-        app.hooks.register("install-variables", use: installVariablesHook)
+        app.hooks.register(.installModels, use: installModelsHook)
+        app.hooks.register(.installPermissions, use: installPermissionsHook)
+        app.hooks.register(.installVariables, use: installVariablesHook)
         /// admin menus
-        app.hooks.register("admin-menus", use: adminMenusHook)
+        app.hooks.register(.adminMenu, use: adminMenuHook)
         /// routes
         let router = FrontendRouter()
         try router.boot(routes: app.routes)
-        app.hooks.register("routes", use: router.routesHook)
-        app.hooks.register("admin-routes", use: router.adminRoutesHook)
-        app.hooks.register("api-routes", use: router.apiRoutesHook)
-        app.hooks.register("api-admin-routes", use: router.apiAdminRoutesHook)
+        app.hooks.register(.routes, use: router.routesHook)
+        app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
+        app.hooks.register(.apiRoutes, use: router.apiRoutesHook)
+        app.hooks.register(.apiAdminRoutes, use: router.apiAdminRoutesHook)
         /// pages
-        app.hooks.register("response", use: responseHook)
+        app.hooks.register(.response, use: responseHook)
         app.hooks.register("home-page", use: homePageHook)
     }
   
@@ -55,7 +55,10 @@ final class FrontendModule: FeatherModule {
                 let content = page.content.trimmingCharacters(in: .whitespacesAndNewlines)
                 if content.hasPrefix("["), content.hasSuffix("-page]") {
                     let name = String(content.dropFirst().dropLast())
-                    let args: HookArguments = ["page-metadata": page.joinedMetadata as Any]
+                    var args = HookArguments()
+                    if let metadata = page.joinedMetadata {
+                        args.metadata = metadata
+                    }
                     if let future: EventLoopFuture<Response?> = req.invoke(name, args: args) {
                         return future
                     }
@@ -73,30 +76,26 @@ final class FrontendModule: FeatherModule {
     func homePageHook(args: HookArguments) -> EventLoopFuture<Response?> {
         let req = args.req
         
-        let metadata = args["page-metadata"] as! Metadata
-
-        return req.view.render("System/Home", ["metadata": metadata]).encodeOptionalResponse(for: req)
+        return req.view.render("System/Home", ["metadata": args.metadata]).encodeOptionalResponse(for: req)
     }
 
     #warning("add back permissions")
-    func adminMenusHook(args: HookArguments) -> [FrontendMenu] {
-        [
-            .init(key: "frontend",
-                  link: .init(label: "Frontend",
-                              url: "/admin/frontend/",
-                              icon: "web",
-                              permission: nil),
-                  items: [
-                    .init(label: "Pages",
-                          url: "/admin/frontend/pages/",
+    func adminMenuHook(args: HookArguments) -> FrontendMenu {
+        .init(key: "frontend",
+              link: .init(label: "Frontend",
+                          url: "/admin/frontend/",
+                          icon: "web",
                           permission: nil),
-                    .init(label: "Menus",
-                          url: "/admin/frontend/menus/",
-                          permission: nil),
-                    .init(label: "Metadatas",
-                          url: "/admin/frontend/metadatas/",
-                          permission: nil),
-                  ]),
-        ]
+              items: [
+                .init(label: "Pages",
+                      url: "/admin/frontend/pages/",
+                      permission: nil),
+                .init(label: "Menus",
+                      url: "/admin/frontend/menus/",
+                      permission: nil),
+                .init(label: "Metadatas",
+                      url: "/admin/frontend/metadatas/",
+                      permission: nil),
+              ])
     }
 }

@@ -10,7 +10,7 @@ extension CommonModule {
     func installModelsHook(args: HookArguments) -> EventLoopFuture<Void> {
         let req = args.req
 
-        let variableItems: [[CommonVariable]] = req.invokeAll("install-variables")
+        let variableItems: [[CommonVariable]] = req.invokeAll(.installVariables)
         let variableModels = variableItems.flatMap { $0 }.map {
             CommonVariableModel(key: $0.key, name: $0.name, value: $0.value, notes: $0.notes)
         }

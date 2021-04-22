@@ -14,7 +14,7 @@ extension FrontendModule {
         let mainMenu = FrontendMenuModel(id: mainId, key: "main", name: "Main menu")
         
         /// gather the main menu items through a hook function then map them
-        let menuItems: [[FrontendMenuItem]] = req.invokeAll("install-main-menu-items")
+        let menuItems: [[FrontendMenuItem]] = req.invokeAll(.installMainMenuItems)
         var mainMenuItemModels = menuItems.flatMap { $0 }.compactMap {
             FrontendMenuItemModel(icon: $0.icon, label: $0.label, url: $0.url, priority: $0.priority, isBlank: $0.isBlank, menuId: mainId)
         }
@@ -32,7 +32,7 @@ extension FrontendModule {
         ]
         
         /// we expect a key-value array of static page install elements with title and content keys
-        let pages: [[FrontendPage]] = req.invokeAll("install-pages")
+        let pages: [[FrontendPage]] = req.invokeAll(.installPages)
         var pageModels = pages.flatMap({ $0 }).map {
             FrontendPageModel(title: $0.title, content: $0.content)
         }

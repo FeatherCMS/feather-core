@@ -38,45 +38,16 @@ fileprivate extension Request {
     }
 }
 
-
 struct SystemTemplateScopeMiddleware: Middleware {
 
     func respond(to req: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
-        req.eventLoop.flatten([
-            /// add menus to the scope
-            FrontendMenuModel.query(on: req.db).with(\.$items).all().map { menus -> [String: [String: TemplateDataGenerator]] in
-                var items: [String: TemplateDataGenerator] = [:]
-                for menu in menus {
-                    items[menu.key] = .lazy(menu.items.sorted { $0.priority > $1.priority }.map { $0.encodeToTemplateData() })
-                }
-                return ["menus": items]
-            },
-            /// add variables to the scope
-            CommonVariableModel.query(on: req.db).all().map { variables in
-                var items: [String: TemplateDataGenerator] = [:]
-                for variable in variables {
-                    items[variable.key] = .immediate(variable.value)
-                }
-                return ["variables": items]
-            },
-        ])
-        .flatMapEachThrowing { generators in
-            for (scope, generator) in generators {
-                try req.tau.context.register(generators: generator, toScope: scope)
-            }
-        }
-        .flatMapThrowing { _ in
-            let user: [String: TemplateDataGenerator] = [
-                "isAuthenticated": .lazy(TemplateData.bool(req.auth.has(User.self))),
-                "email": .lazy(TemplateData.string(req.auth.get(User.self)?.email)),
-            ]
-
+        do {
             try req.tau.context.register(generators: req.application.templateScopeGenerator, toScope: "app")
             try req.tau.context.register(generators: req.templateScopeGenerator, toScope: "req")
-            try req.tau.context.register(generators: user, toScope: "user")
+            return next.respond(to: req)
         }
-        .flatMap { _ in next.respond(to: req) }
+        catch {
+            return req.eventLoop.future(error: error)
+        }
     }
 }
-
-

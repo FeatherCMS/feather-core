@@ -19,7 +19,7 @@ struct CommonRouter: RouteCollection {
     
     
     func adminRoutesHook(args: HookArguments) {
-        let adminRoutes = args["routes"] as! RoutesBuilder
+        let adminRoutes = args.routes
 
         adminRoutes.get("common", use: SystemAdminMenuController(key: "common").moduleView)
         
@@ -49,13 +49,13 @@ struct CommonRouter: RouteCollection {
     }
     
     func apiRoutesHook(args: HookArguments) {
-        let publicApiRoutes = args["routes"] as! RoutesBuilder
+        let publicApiRoutes = args.routes
 
         
     }
 
     func apiAdminRoutesHook(args: HookArguments) {
-        let apiRoutes = args["routes"] as! RoutesBuilder
+        let apiRoutes = args.routes
 
         apiRoutes.registerApi(variableController)
     }

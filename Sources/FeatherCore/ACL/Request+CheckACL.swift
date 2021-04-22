@@ -17,8 +17,8 @@ public extension Request {
     ///
     func checkPermission(for permission: Permission, args: HookArguments = [:]) -> Bool {
         var permissionArgs = args
-        permissionArgs["permission"] = permission
-        let hooks: [Bool] = invokeAll("permission", args: permissionArgs)
+        permissionArgs.permission = permission
+        let hooks: [Bool] = invokeAll(.permission, args: permissionArgs)
         return hooks.reduce(true) { $0 && $1  }
     }
 
@@ -32,9 +32,9 @@ public extension Request {
     ///
     func checkAccess(for permission: Permission, args: HookArguments = [:]) -> EventLoopFuture<Bool> {
         var accessArgs = args
-        accessArgs["permission"] = permission
+        accessArgs.permission = permission
         let namedHooks: [EventLoopFuture<Bool>] = invokeAll(permission.accessIdentifier, args: accessArgs)
-        let accessHooks: [EventLoopFuture<Bool>] = invokeAll("access", args: accessArgs)
+        let accessHooks: [EventLoopFuture<Bool>] = invokeAll(.access, args: accessArgs)
         return eventLoop.mergeTrueFutures(namedHooks + accessHooks)
     }
 }

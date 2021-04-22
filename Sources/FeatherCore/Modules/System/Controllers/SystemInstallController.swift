@@ -46,7 +46,7 @@ struct SystemInstallController {
         }
 
         /// we request the install futures for the database models & execute them together with the file upload futures in parallel
-        let modelInstallFutures: [EventLoopFuture<Void>] = req.invokeAll("install-models")
+        let modelInstallFutures: [EventLoopFuture<Void>] = req.invokeAll(.installModels)
         return req.eventLoop.flatten(modelInstallFutures + fileUploadFutures)
             .map { Application.Config.installed = true }
             .flatMap { req.view.render("System/Install/Finish") }

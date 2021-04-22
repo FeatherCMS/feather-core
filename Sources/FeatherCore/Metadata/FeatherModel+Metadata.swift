@@ -15,7 +15,7 @@ public extension FeatherModel where Self: MetadataRepresentable {
             return req.eventLoop.future(content)
         }
         /// invoke available filtes, filter them by enabled keys & transform the result using the futures...
-        let contentFilters: [[ContentFilter]] = req.invokeAll("content-filters")
+        let contentFilters: [[ContentFilter]] = req.invokeAll(.contentFilters)
         let flatFilteredFilters = contentFilters.flatMap { $0 }.filter { enabledFilters.contains($0.key) }.sorted { $0.priority > $1.priority }
         var result: EventLoopFuture<String> = req.eventLoop.future(content)
         for f in flatFilteredFilters {
