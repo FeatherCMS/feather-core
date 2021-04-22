@@ -14,7 +14,7 @@
 #enddefine
 
 #define(title):
-#(menu.link.label)
+#(menu.item.link.label)
 #enddefine
 
 #define(breadcrumb):
@@ -26,16 +26,16 @@
 
 <div class="lead center">
 
-    <span>#svg(menu.link.icon)</span>
+    <span>#svg(menu.item.icon)</span>
     <h1>#title()</h1>
-    <p>#(menu.notes ?? "")</p>
+    <p>#(menu.item.notes ?? "")</p>
 
-#if(UserHasPermission(menu.link.permission) ?? true):
+#if(UserHasPermission(menu.item.permission) ?? true):
     <nav>
         
-        #for(item in menu.items):
+        #for(item in menu.children):
             #if(UserHasPermission(item.permission) ?? true):
-            <a href="#(item.url)">#(item.label)</a>
+            <a href="#(item.link.url)">#(item.link.label)</a>
             #endif
         #endfor
     </nav>
