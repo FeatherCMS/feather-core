@@ -28,15 +28,15 @@ Admin
 
 <section class="grid-321">
     #for(menu in menus):
-        #if(UserHasPermission(menu.link.permission) ?? true):
+        #if(UserHasPermission(menu.item.link.permission) ?? true):
         <div class="card">
             <div class="content">
-            <span>#svg(menu.link.icon)</span>
-            <h2><a href="#(menu.link.url)">#(menu.link.label)</a></h2>
+            <span>#svg(menu.item.icon ?? "")</span>
+            <h2><a href="#(menu.item.link.url)">#(menu.item.link.label)</a></h2>
             <nav>
-            #for(item in menu.items):
+            #for(item in menu.children):
                 #if(UserHasPermission(item.permission) ?? true):
-                <a href="#(item.url)">#(item.label)</a>
+                <a href="#(item.link.url)">#(item.link.label)</a>
                 #endif
             #endfor
             </nav>

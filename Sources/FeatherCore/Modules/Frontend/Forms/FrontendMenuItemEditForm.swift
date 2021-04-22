@@ -61,10 +61,10 @@ struct FrontendMenuItemEditForm: FeatherForm {
         }
         let itemId = FrontendMenuItemModel.getIdParameter(req: req)
         context.breadcrumb = [
-            .init(label: "Frontend", url: "/admin/frontend/"),
-            .init(label: "Menus", url: "/admin/frontend/menus/"),
-            .init(label: "Menu", url: "/admin/frontend/menus/" + menuId.uuidString + "/"),
-            .init(label: "Items", url: "/admin/frontend/menus/" + menuId.uuidString + "/items/"),
+            FrontendModule.adminLink,
+            FrontendMenuModel.adminLink,
+            FrontendMenuModel.adminLink(for: menuId),
+            FrontendMenuItemModel.adminLink(menuId: menuId),
             .init(label: itemId != nil ? "Edit" : "Create", url: req.url.path.safePath()),
         ]
         return context.load(req: req)

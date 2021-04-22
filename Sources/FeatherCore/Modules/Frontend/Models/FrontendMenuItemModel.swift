@@ -79,3 +79,11 @@ final class FrontendMenuItemModel: FeatherModel {
         ]
     }
 }
+
+extension FrontendMenuItemModel {
+    
+    static func adminLink(menuId: UUID) -> Link {
+        let url = (FrontendMenuModel.adminLink.url + "/" + menuId.uuidString + "/" + modelKey).safePath()
+        return .init(label: name.plural, url: url)
+    }
+}

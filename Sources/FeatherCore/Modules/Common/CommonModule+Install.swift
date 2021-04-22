@@ -10,19 +10,19 @@ extension CommonModule {
     func installModelsHook(args: HookArguments) -> EventLoopFuture<Void> {
         let req = args.req
 
-        let variableItems: [[CommonVariable]] = req.invokeAll(.installVariables)
+        let variableItems: [[VariableCreateObject]] = req.invokeAll(.installVariables)
         let variableModels = variableItems.flatMap { $0 }.map {
             CommonVariableModel(key: $0.key, name: $0.name, value: $0.value, notes: $0.notes)
         }
         return variableModels.create(on: req.db)
     }
     
-    func installPermissionsHook(args: HookArguments) -> [UserPermission] {
-        var permissions: [UserPermission] = [
-            CommonModule.systemPermission(for: .custom("admin"))
+    func installPermissionsHook(args: HookArguments) -> [PermissionCreateObject] {
+        var permissions: [PermissionCreateObject] = [
+            CommonModule.hookInstallPermission(for: .custom("admin"))
         ]
         
-        permissions += CommonVariableModel.systemPermissions()
+        permissions += CommonVariableModel.hookInstallPermissions()
 //        FileModule.permissions +
 //        [
 //            [
@@ -47,55 +47,55 @@ extension CommonModule {
         return permissions
     }
     
-    func installVariablesHook(args: HookArguments) -> [CommonVariable] {
+    func installVariablesHook(args: HookArguments) -> [VariableCreateObject] {
         [
             // MARK: - not found
 
             .init(key: "notFoundPageIcon",
-                  value:  "🙉",
                   name: "Page not found icon",
+                  value:  "🙉",
                   notes: "Icon for the not found page"),
             
             .init(key: "notFoundPageTitle",
-                  value: "Page not found",
                   name: "Page not found title",
+                  value: "Page not found",
                   notes: "Title of the not found page"),
             
             .init(key: "notFoundPageExcerpt",
-                  value: "Unfortunately the requested page is not available.",
                   name: "Page not found excerpt",
+                  value: "Unfortunately the requested page is not available.",
                   notes: "Excerpt for the not found page"),
 
             .init(key: "notFoundPageLinkLabel",
-                  value: "Go to the home page →",
                   name: "Page not found link label",
+                  value: "Go to the home page →",
                   notes: "Retry link text for the not found page"),
 
             .init(key: "notFoundPageLinkUrl",
-                  value: "/",
                   name: "Page not found link URL",
+                  value: "/",
                   notes: "Retry link URL for the not found page"),
 
             // MARK: - empty list
  
             .init(key: "emptyListIcon",
-                  value: "🔍",
                   name: "Empty list icon",
+                  value: "🔍",
                   notes: "Icon for the empty list results view."),
             
             .init(key: "emptyListTitle",
-                  value: "Empty list",
                   name: "Empty list title",
+                  value: "Empty list",
                   notes: "Title for the empty list results view."),
             
             .init(key: "emptyListDescription",
-                  value: "Unfortunately there are no results.",
                   name: "Empty list description",
+                  value: "Unfortunately there are no results.",
                   notes: "Description of the empty list box"),
             
             .init(key: "emptyListLinkLabel",
-                  value: "Try again from scratch →",
                   name: "Empty list link label",
+                  value: "Try again from scratch →",
                   notes: "Start over link text for the empty list box"),
         ]
     }

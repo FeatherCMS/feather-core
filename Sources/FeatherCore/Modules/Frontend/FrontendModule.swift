@@ -79,23 +79,13 @@ final class FrontendModule: FeatherModule {
         return req.view.render("System/Home", ["metadata": args.metadata]).encodeOptionalResponse(for: req)
     }
 
-    #warning("add back permissions")
-    func adminMenuHook(args: HookArguments) -> FrontendMenu {
+    func adminMenuHook(args: HookArguments) -> HookObjects.AdminMenu {
         .init(key: "frontend",
-              link: .init(label: "Frontend",
-                          url: "/admin/frontend/",
-                          icon: "web",
-                          permission: nil),
-              items: [
-                .init(label: "Pages",
-                      url: "/admin/frontend/pages/",
-                      permission: nil),
-                .init(label: "Menus",
-                      url: "/admin/frontend/menus/",
-                      permission: nil),
-                .init(label: "Metadatas",
-                      url: "/admin/frontend/metadatas/",
-                      permission: nil),
+              item: .init(icon: "web", link: Self.adminLink, permission: Self.permission(for: .custom("admin")).identifier),
+              children: [
+                .init(link: FrontendPageModel.adminLink, permission: FrontendPageModel.permission(for: .list).identifier),
+                .init(link: FrontendMenuModel.adminLink, permission: FrontendMenuModel.permission(for: .list).identifier),
+                .init(link: FrontendMetadataModel.adminLink, permission: FrontendMetadataModel.permission(for: .list).identifier),
               ])
     }
 }

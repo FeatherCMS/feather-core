@@ -36,31 +36,15 @@ final class CommonModule: FeatherModule {
     }
   
     // MARK: - hooks
-    
-   
-   
 
-    #warning("add back permissions")
-    func adminMenuHook(args: HookArguments) -> FrontendMenu {
+    func adminMenuHook(args: HookArguments) -> HookObjects.AdminMenu {
         .init(key: "common",
-              link: .init(label: "Common",
-                          url: "/admin/common/",
-                          icon: "system",
-                          permission: nil),
-              items: [
-                .init(label: "Variables",
-                      url: "/admin/common/variables/",
-                      permission: nil),
-                .init(label: "Files",
-                      url: "/admin/common/files/",
-                      permission: nil),
-//                .init(label: "Labels",
-//                      url: "#",
-//                      permission: nil),
+              item: .init(icon: "chevrons-right", link: Self.adminLink, permission: Self.permission(for: .custom("admin")).identifier),
+              children: [
+                .init(link: CommonVariableModel.adminLink, permission: CommonVariableModel.permission(for: .list).identifier),
+                .init(link: .init(label: "Files", url: "/admin/common/files/"), permission: nil),
               ])
     }
-
-
 
 //    func systemVariablesAccessHook(args: HookArguments) -> EventLoopFuture<Bool> {
 //        let req = args.req

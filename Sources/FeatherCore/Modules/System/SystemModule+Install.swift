@@ -7,14 +7,14 @@
 
 extension SystemModule {
 
-    func installPermissionsHook(args: HookArguments) -> [UserPermission] {
-        var permissions: [UserPermission] = [
-            SystemModule.systemPermission(for: .custom("admin"))
+    func installPermissionsHook(args: HookArguments) -> [PermissionCreateObject] {
+        var permissions: [PermissionCreateObject] = [
+            SystemModule.hookInstallPermission(for: .custom("admin"))
         ]
         return permissions
     }
     
-    func installVariablesHook(args: HookArguments) -> [CommonVariable] {
+    func installVariablesHook(args: HookArguments) -> [VariableCreateObject] {
         [
             .init(key: "siteNoindex",
                   name: "Site noindex",
@@ -25,13 +25,13 @@ extension SystemModule {
                   notes: "Logo of the website"),
             
             .init(key: "siteTitle",
-                  value: "Feather",
                   name: "Site title",
+                  value: "Feather",
                   notes: "Title of the website"),
             
             .init(key: "siteExcerpt",
-                  value: "Feather is an open-source CMS written in Swift using Vapor 4.",
                   name: "Site excerpt",
+                  value: "Feather is an open-source CMS written in Swift using Vapor 4.",
                   notes: "Excerpt for the website"),
             
             .init(key: "siteCss",
@@ -43,11 +43,12 @@ extension SystemModule {
                   notes: "Global JavaScript injection for the site"),
             
             .init(key: "siteFooterTop",
+                  name:  "Site footer top section",
                   value: """
                         <img class="size" src="/images/icons/icon.png" alt="Logo of Feather" title="Feather">
                         <p>This site is powered by <a href="https://feathercms.com/" target="_blank">Feather CMS</a> &copy; 2020 - {year}</p>
                     """,
-                  name:  "Site footer top section",
+                  
                   notes: "Top footer content placed above the footer menu"),
 
             .init(key: "siteFooterBottom",

@@ -28,7 +28,6 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
     /// path of the model relative to the module (e.g. Module/Model/) can be used as a location or key
     static var assetPath: String { get }
     
-
     static var isSearchable: Bool { get }
     static func allowedOrders() -> [FieldKey]
     static func defaultSort() -> FieldSort
@@ -36,9 +35,13 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
     
     static func permission(for action: Permission.Action) -> Permission
     static func permissions() -> [Permission]
-    static func systemPermissions() -> [UserPermission]
+    static func hookInstallPermissions() -> [PermissionCreateObject]
     
     static func getIdParameter(req: Request) -> UUID?
+    
+    static var adminLink: Link { get }
+
+    static func adminLink(for id: UUID) -> Link
 }
 
 public extension FeatherModel {
@@ -68,8 +71,8 @@ public extension FeatherModel {
         Permission.Action.crud.map { permission(for: $0) }
     }
     
-    static func systemPermissions() -> [UserPermission] {
-        permissions().map { UserPermission($0) }
+    static func hookInstallPermissions() -> [PermissionCreateObject] {
+        permissions().map { .init($0) }
     }
         
     static func info(_ req: Request) -> ModelInfo {
@@ -109,6 +112,11 @@ public extension FeatherModel {
         return uuid
     }
 
+    static var adminLink: Link { .init(label: name.plural, url: ("admin" + "/" + Module.moduleKey + "/" + modelKey).safePath()) }
+
+    static func adminLink(for id: UUID) -> Link {
+        .init(label: name.singular, url: (adminLink.url + "/" + id.uuidString).safePath())
+    }
 }
 
 

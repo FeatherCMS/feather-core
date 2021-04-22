@@ -45,28 +45,13 @@ final class SystemModule: FeatherModule {
         }
         return req.eventLoop.future(nil)
     }
-    
 
-    #warning("add back permissions")
-    func adminMenuHook(args: HookArguments) -> FrontendMenu {
+    func adminMenuHook(args: HookArguments) -> HookObjects.AdminMenu {
         .init(key: "system",
-              link: .init(label: "System",
-                          url: "/admin/system/",
-                          icon: "system",
-                          permission: nil),
-              items: [
-                .init(label: "Dashboard",
-                      url: "/admin/system/dashboard/",
-                      permission: nil),
-                .init(label: "Settings",
-                      url: "/admin/system/settings/",
-                      permission: nil),
-//                .init(label: "Modules",
-//                      url: "#",
-//                      permission: nil),
-//                .init(label: "Tools",
-//                      url: "#",
-//                      permission: nil),
+              item: .init(icon: "system", link: Self.adminLink, permission: Self.permission(for: .custom("admin")).identifier),
+              children: [
+                .init(link: .init(label: "Dashboard", url: "/admin/system/dashboard/"), permission: nil),
+                .init(link: .init(label: "Settings", url: "/admin/system/settings/"), permission: nil),
               ])
     }    
 }

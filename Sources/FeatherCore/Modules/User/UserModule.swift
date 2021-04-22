@@ -46,24 +46,13 @@ final class UserModule: FeatherModule {
   
     // MARK: - hooks
     
-
-    #warning("add back permissions")
-    func adminMenuHook(args: HookArguments) -> FrontendMenu {
+    func adminMenuHook(args: HookArguments) -> HookObjects.AdminMenu {
         .init(key: "user",
-              link: .init(label: "User",
-                          url: "/admin/user/",
-                          icon: "user",
-                          permission: nil),
-              items: [
-                .init(label: "Accounts",
-                      url: "/admin/user/accounts/",
-                      permission: nil),
-                .init(label: "Permissions",
-                      url: "/admin/user/permissions/",
-                      permission: nil),
-                .init(label: "Roles",
-                      url: "/admin/user/roles/",
-                      permission: nil),
+              item: .init(icon: "user", link: Self.adminLink, permission: Self.permission(for: .custom("admin")).identifier),
+              children: [
+                .init(link: UserAccountModel.adminLink, permission: UserAccountModel.permission(for: .list).identifier),
+                .init(link: UserPermissionModel.adminLink, permission: UserPermissionModel.permission(for: .list).identifier),
+                .init(link: UserRoleModel.adminLink, permission: UserRoleModel.permission(for: .list).identifier),
               ])
     }
 

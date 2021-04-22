@@ -34,7 +34,7 @@ struct UserPermissionApi: FeatherApiRepresentable {
     }
     
     func mapCreate(model: Model, input: CreateObject) {
-        model.namespace = input.module
+        model.namespace = input.namespace
         model.context = input.context
         model.action = input.action
         model.name = input.name

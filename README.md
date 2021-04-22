@@ -5,7 +5,6 @@ Core dependencies for Feather CMS.
 
 ## TODO
 
-- [ ] fix hardcoded menu links (frontend menu item controller, admin menu)
 - [ ] export / import feature
 - [ ] common file controllers
 - [ ] basic widgets

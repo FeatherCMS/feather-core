@@ -12,7 +12,7 @@ extension UserModule {
         let req = args.req
 
         /// gather the main menu items through a hook function then map them
-        let permissionItems: [[UserPermission]] = req.invokeAll(.installPermissions)
+        let permissionItems: [[PermissionCreateObject]] = req.invokeAll(.installPermissions)
         let permissionModels = permissionItems.flatMap { $0 }.map {
             UserPermissionModel(namespace: $0.namespace, context: $0.context, action: $0.action, name: $0.name, notes: $0.notes)
         }
@@ -32,13 +32,13 @@ extension UserModule {
         ])
     }
     
-    func installPermissionsHook(args: HookArguments) -> [UserPermission] {
-        var permissions: [UserPermission] = [
-            UserModule.systemPermission(for: .custom("admin"))
+    func installPermissionsHook(args: HookArguments) -> [PermissionCreateObject] {
+        var permissions: [PermissionCreateObject] = [
+            UserModule.hookInstallPermission(for: .custom("admin"))
         ]
-        permissions += UserAccountModel.systemPermissions()
-        permissions += UserRoleModel.systemPermissions()
-        permissions += UserPermissionModel.systemPermissions()
+        permissions += UserAccountModel.hookInstallPermissions()
+        permissions += UserRoleModel.hookInstallPermissions()
+        permissions += UserPermissionModel.hookInstallPermissions()
         
         return permissions
     }

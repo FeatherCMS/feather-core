@@ -81,10 +81,10 @@ struct FrontendMenuItemController: FeatherController {
     func getContext(req: Request, model: Model) -> DetailContext {
         let menuId = FrontendMenuModel.getIdParameter(req: req)!
         return .init(model: Model.info(req), fields: detailFields(req: req, model: model), nav: [], bc: [
-            .init(label: "Frontend", url: "/admin/frontend/"),
-            .init(label: "Menus", url: "/admin/frontend/menus/"),
-            .init(label: "Menu", url: "/admin/frontend/menus/" + menuId.uuidString + "/"),
-            .init(label: "Items", url: "/admin/frontend/menus/" + menuId.uuidString + "/items/"),
+            FrontendModule.adminLink,
+            FrontendMenuModel.adminLink,
+            FrontendMenuModel.adminLink(for: menuId),
+            FrontendMenuItemModel.adminLink(menuId: menuId),
             .init(label: "View", url: req.url.path.safePath()),
         ])
     }
@@ -96,10 +96,10 @@ struct FrontendMenuItemController: FeatherController {
     func deleteContext(req: Request, id: String, token: String, model: FrontendMenuItemModel) -> DeleteContext {
         let menuId = FrontendMenuModel.getIdParameter(req: req)!
         return .init(model: Model.info(req), id: id, token: token, context: deleteContext(req: req, model: model), bc: [
-            .init(label: "Frontend", url: "/admin/frontend/"),
-            .init(label: "Menus", url: "/admin/frontend/menus/"),
-            .init(label: "Menu", url: "/admin/frontend/menus/" + menuId.uuidString + "/"),
-            .init(label: "Items", url: "/admin/frontend/menus/" + menuId.uuidString + "/items/"),
+            FrontendModule.adminLink,
+            FrontendMenuModel.adminLink,
+            FrontendMenuModel.adminLink(for: menuId),
+            FrontendMenuItemModel.adminLink(menuId: menuId),
             .init(label: "Delete", url: req.url.path.safePath()),
         ])
     }
