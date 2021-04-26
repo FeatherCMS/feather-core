@@ -5,7 +5,9 @@ Create directory
 #enddefine
 
 #define(breadcrumb):
-    <a href="#($req.url.path.trimLast())browser/#if(path ?? false):?path=#(path)#endif">File browser</a>
+    <a href="/admin/common/">Common</a>
+    <a href="#($req.url.path.trimLast())#if(path ?? false):?path=#(path)#endif">Files</a>
+    <a class="selected">Directory</a>
 #enddefine
 
 #define(body):
@@ -13,7 +15,7 @@ Create directory
 <div class="container">
 
     <header class="lead">
-        <p class="note">Destination &middot; <a href="#($req.url.path.trimLast())browser/#if(path ?? false):?path=#(path)#endif">/#(path ?? "")</a></p>
+        <p class="note">Destination &middot; <a href="#($req.url.path.trimLast())#if(path ?? false):?path=#(path)#endif">/#(path ?? "")</a></p>
         <h1>Create directory</h1>
     </header>
     
