@@ -5,6 +5,27 @@
 //  Created by Tibor Bodecs on 2021. 04. 09..
 //
 
+struct AFilter: ContentFilter {
+    var key: String = "a"
+    
+    func filter(_ input: String, _ req: Request) -> EventLoopFuture<String> {
+        req.eventLoop.future(input.replacingOccurrences(of: "a", with: "b").replacingOccurrences(of: "A", with: "b"))
+    }
+    
+    
+}
+
+struct BFilter: ContentFilter {
+    var key: String = "b"
+    var priority: Int = 1000
+    
+    func filter(_ input: String, _ req: Request) -> EventLoopFuture<String> {
+        req.eventLoop.future(input.replacingOccurrences(of: "b", with: "c"))
+    }
+}
+
+
+
 final class SystemModule: FeatherModule {
 
     static var moduleKey: String = "system"
@@ -32,6 +53,15 @@ final class SystemModule: FeatherModule {
         app.hooks.register(.apiAdminRoutes, use: router.apiAdminRoutesHook)
         /// pages
         app.hooks.register(.response, use: responseHook)
+        
+//        app.hooks.register(.contentFilters, use: contentFiltersHook)
+    }
+    
+    func contentFiltersHook(args: HookArguments) -> [ContentFilter] {
+        [
+            AFilter(),
+            BFilter(),
+        ]
     }
   
     // MARK: - hooks

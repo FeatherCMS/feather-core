@@ -67,7 +67,8 @@ final class FrontendModule: FeatherModule {
                 return page.filter(content, req: req).flatMap {
                     var ctx = page.encodeToTemplateData().dictionary!
                     ctx["content"] = .string($0)
-                    return req.tau.render(template: "System/Page", context: .init(ctx)).encodeOptionalResponse(for: req)
+                    ctx["metadata"] = page.joinedMetadata?.encodeToTemplateData()
+                    return req.tau.render(template: "Frontend/Page", context: .init(ctx)).encodeOptionalResponse(for: req)
                 }
             }
     }

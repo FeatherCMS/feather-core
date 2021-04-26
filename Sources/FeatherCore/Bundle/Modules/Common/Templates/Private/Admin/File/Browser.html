@@ -64,7 +64,7 @@ tr {
         #if(parent ?? false):
         <tr>
             <td class="field"><a href="#($req.url.path)?key=#(parent.key ?? "")">#svg("folder")</a></td>
-            <td class="field last"><a href="#($req.url.path)?key=#(parent.key ?? "")">&bull;&bull;&bull;</a></td>
+            <td class="field last"><a href="#($req.url.path)?key=#(parent.key ?? "")">#svg("corner-up-left")</a></td>
             #if(UserHasPermission("common.files.delete")):
             <th class="action">&nbsp;</th>
             #endif

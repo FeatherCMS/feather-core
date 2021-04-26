@@ -39,7 +39,7 @@ final class CommonModule: FeatherModule {
 
     func adminMenuHook(args: HookArguments) -> HookObjects.AdminMenu {
         .init(key: "common",
-              item: .init(icon: "chevrons-right", link: Self.adminLink, permission: Self.permission(for: .custom("admin")).identifier),
+              item: .init(icon: "common", link: Self.adminLink, permission: Self.permission(for: .custom("admin")).identifier),
               children: [
                 .init(link: CommonVariableModel.adminLink, permission: CommonVariableModel.permission(for: .list).identifier),
                 .init(link: .init(label: "Files", url: "/admin/common/files/"), permission: nil),

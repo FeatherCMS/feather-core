@@ -26,7 +26,7 @@ struct FrontendMenuController: FeatherController {
                 TableRow(id: model.identifier, cells: [TableCell(model.name), TableCell(model.key)])
               },
               action: TableRowAction(label: "Items",
-                                     icon: "system",
+                                     icon: "list",
                                      url: "/items/",
                                      permission: FrontendMenuItemModel.permission(for: .list).identifier))
     }

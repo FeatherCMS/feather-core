@@ -88,11 +88,13 @@ struct FrontendMetadataEditForm: FeatherForm {
                 .read { $1.output.value = context.model?.feedItem ?? false }
                 .write { context.model?.feedItem = $1.input },
             
-            MultiSelectionField(key: "filters")
+            CheckboxField(key: "filters")
                 .load { req, field -> Void in
                     let contentFilters: [[ContentFilter]] = req.invokeAll(.contentFilters)
                     field.output.options = contentFilters.flatMap { $0 }.map(\.formFieldOption)
-                },
+                }
+                .read { $1.output.values = context.model?.filters ?? [] }
+                .write { context.model?.filters = $1.input },
             
             TextField(key: "date")
                 .validators { [
