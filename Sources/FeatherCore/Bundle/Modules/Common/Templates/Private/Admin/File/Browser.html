@@ -100,7 +100,7 @@ tr {
 
             #if(UserHasPermission("common.files.delete")):
             <td class="action">
-                <a href="#($req.url.path.trimLast())delete/?key=#(item.key)&cancel=#($req.url.path)?key=#Request(query: "key")">
+                <a href="#($req.url.path)delete/?key=#(item.key)&cancel=#($req.url.path)?key=#Request(query: "key")">
                     #svg("delete")
                 </a>
             </td>

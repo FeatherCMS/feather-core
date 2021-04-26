@@ -134,61 +134,58 @@ struct CommonFileController {
                     return renderUploadView(req: req, form: form).encodeResponse(for: req)
                 }
                 return form.read(req: req).flatMap {
-                    print(form.files)
-                    return renderUploadView(req: req, form: form).encodeResponse(for: req)
+                    let key = req.query["key"] ?? ""
+                    let queryString = key.isEmpty ? "" : "?key=\(key)"
+                    let futures = form.files.map { file -> EventLoopFuture<String> in
+                        let fileKey = String((key + "/" + file.filename).safePath().dropFirst())
+                        return req.fs.upload(key: fileKey, data: file.dataValue!)
+                    }
+                    return req.eventLoop.flatten(futures).flatMap { _ in
+                        req.redirect(to: "/admin/common/files/" + queryString).encodeResponse(for: req)
+                    }
                 }
-
-
-//                let futures = form.files.values.map { file -> EventLoopFuture<String> in
-//                    /// NOTE: better key validation on long term...
-//                    let fileKey = String((form.key.value! + "/" + file.filename).safePath().dropFirst())
-//                    return req.fs.upload(key: fileKey, data: file.dataValue!)
-//                }
-//                return req.eventLoop.flatten(futures).flatMap { _ in
-//                    req.redirect(to: "/admin/file/browser/?key=\(form.key.value!)").encodeResponse(for: req)
-//                }
             }
     }
     
     // MARK: - delete
     
-//    func deleteView(req: Request) throws -> EventLoopFuture<Response>  {
-//        let formId = UUID().uuidString
-//        let nonce = req.generateNonce(for: "file-delete-form", id: formId)
+    func deleteView(req: Request) throws -> EventLoopFuture<Response>  {
+        let formId = UUID().uuidString
+        let nonce = req.generateNonce(for: formId)
+
+        var key: String? = nil
+        /// if there is a key, check if it exists
+        var future: EventLoopFuture<Bool> = req.eventLoop.future(true)
+        if let keyValue = try? req.query.get(String.self, at: "key"), !keyValue.isEmpty {
+            future = req.fs.exists(key: keyValue)
+            key = keyValue
+        }
+
+        /// check if directory exists, then make some assumption about the list items...
+        return future.flatMap { exists -> EventLoopFuture<Response> in
+            guard exists else {
+                return req.eventLoop.future(error: Abort(.notFound))
+            }
+            return req.tau.render(template: "Common/Admin/File/Delete", context: [
+                "formId": .string(formId),
+                "formToken": .string(nonce),
+                "name": .string(key),
+            ]).encodeResponse(for: req)
+        }
+    }
 //
-//        var key: String? = nil
-//        /// if there is a key, check if it exists
-//        var future: EventLoopFuture<Bool> = req.eventLoop.future(true)
-//        if let keyValue = try? req.query.get(String.self, at: "key"), !keyValue.isEmpty {
-//            future = req.fs.exists(key: keyValue)
-//            key = keyValue
-//        }
-//
-//        /// check if directory exists, then make some assumption about the list items...
-//        return future.flatMap { exists -> EventLoopFuture<Response> in
-//            guard exists else {
-//                return req.eventLoop.future(error: Abort(.notFound))
-//            }
-//            return req.tau.render(template: "File/Admin/Delete", context: [
-//                "formId": .string(formId),
-//                "formToken": .string(nonce),
-//                "name": .string(key),
-//            ]).encodeResponse(for: req)
-//        }
-//    }
-//
-//    func delete(req: Request) throws -> EventLoopFuture<Response> {
+    func delete(req: Request) throws -> EventLoopFuture<Response> {
 //        try req.validateFormToken(for: "file-delete-form")
-//
-//        struct Context: Decodable {
-//            let key: String
-//            let redirect: String
-//        }
-//        let context = try req.content.decode(Context.self)
-//        return req.fs.delete(key: context.key).flatMap {
-//            req.redirect(to: context.redirect).encodeResponse(for: req)
-//        }
-//    }
+
+        struct Context: Decodable {
+            let key: String
+            let redirect: String
+        }
+        let context = try req.content.decode(Context.self)
+        return req.fs.delete(key: context.key).flatMap {
+            req.redirect(to: context.redirect).encodeResponse(for: req)
+        }
+    }
 
     
 }

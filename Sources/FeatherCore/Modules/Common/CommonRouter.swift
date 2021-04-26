@@ -41,9 +41,8 @@ struct CommonRouter: RouteCollection {
 
         let deletePath = modulePath.grouped("files").grouped("delete")
             .grouped(AccessGuardMiddleware(.init(namespace: "common", context: "files", action: .delete)))
-//        deletePath.get(use: fileController.deleteView)
-//        deletePath.post(use: fileController.delete)
-        
+        deletePath.get(use: fileController.deleteView)
+        deletePath.post(use: fileController.delete)
         
         adminRoutes.register(variableController)
         

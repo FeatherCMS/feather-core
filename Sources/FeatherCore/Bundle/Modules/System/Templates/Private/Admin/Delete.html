@@ -41,10 +41,6 @@ Confirm deletion
         <input type="hidden" name="formId" value="#(id ?? "")">
         <input type="hidden" name="formToken" value="#(token ?? "")">
         <input type="hidden" name="redirect" value="#(listUrl ?? $req.url.path.trimLast(2))">
-
-        #if(delete.key ?? false):
-        <input type="hidden" name="key" value="#(delete.key ?? "")">
-        #endif
         
         <input type="submit" value="Delete" class="button destructive" style="display: inline;"> &nbsp;
         <a href="#(Request(query: "cancel") ?? listUrl)" class="button cancel" >Cancel</a>

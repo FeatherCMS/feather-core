@@ -1,12 +1,34 @@
-#let(delete = [
-    "id": formId,
-    "token": formToken,
-    "context": name,
-    "type": "file",
-    "key": Request(query: "key"),
-    "list": [
-        "title": "File browser",
-        "url": Request(query: "cancel")
-    ]
-])
-#inline("Admin/Delete")
+#define(js):
+document.onkeydown=function(evt){
+    var keyCode = evt ? (evt.which ? evt.which : evt.keyCode) : event.keyCode;
+    if ( keyCode == 13 ) {
+        document.forms["delete-form"].submit();
+    }
+}
+#enddefine
+
+#define(title):
+Confirm deletion
+#enddefine
+
+
+#define(body):
+<div class="lead container center">
+    <span class="icon">🗑</span>
+    <h1>#title()</h1>
+    <p>You are about to permanently delete the<br>`#Request(query: "key")` file or directory.</p>
+
+    <form id="delete-form" action="#($req.url.path)" method="post">
+        <input type="hidden" name="formId" value="#(id ?? "")">
+        <input type="hidden" name="formToken" value="#(token ?? "")">
+        <input type="hidden" name="redirect" value="/admin/common/files/">
+        
+        <input type="submit" value="Delete" class="button destructive" style="display: inline;"> &nbsp;
+        <a href="#(Request(query: "cancel") ?? "/admin/common/files/")" class="button cancel" >Cancel</a>
+    </form>
+</div>
+
+#enddefine
+
+#inline("System/Admin/Index")
+
