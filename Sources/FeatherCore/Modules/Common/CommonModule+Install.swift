@@ -34,27 +34,27 @@ extension CommonModule {
         [
             // MARK: - not found
 
-            .init(key: "notFoundPageIcon",
+            .init(key: "pageNotFoundIcon",
                   name: "Page not found icon",
                   value:  "🙉",
                   notes: "Icon for the not found page"),
             
-            .init(key: "notFoundPageTitle",
+            .init(key: "pageNotFoundTitle",
                   name: "Page not found title",
                   value: "Page not found",
                   notes: "Title of the not found page"),
             
-            .init(key: "notFoundPageExcerpt",
+            .init(key: "pageNotFoundExcerpt",
                   name: "Page not found excerpt",
                   value: "Unfortunately the requested page is not available.",
                   notes: "Excerpt for the not found page"),
 
-            .init(key: "notFoundPageLinkLabel",
+            .init(key: "pageNotFoundLinkLabel",
                   name: "Page not found link label",
                   value: "Go to the home page →",
                   notes: "Retry link text for the not found page"),
 
-            .init(key: "notFoundPageLinkUrl",
+            .init(key: "pageNotFoundLinkUrl",
                   name: "Page not found link URL",
                   value: "/",
                   notes: "Retry link URL for the not found page"),
