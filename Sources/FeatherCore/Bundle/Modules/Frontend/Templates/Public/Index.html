@@ -7,6 +7,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
   
+    <meta name="description" content="#(head.excerpt ?? metadata.excerpt ?? $variables.siteExcerpt ?? "")">
+      
     #if(metadata ?? false):
     <meta property="og:title" content="#(metadata.title ?? "") - #($variables.siteTitle)">
     <meta property="og:description" content="#(metadata.excerpt ?? "")">
@@ -18,8 +20,12 @@
     <meta name="twitter:description" content="#(metadata.excerpt ?? "")">
     <meta name="twitter:image" content="#(metadata.imageKey.resolve() ?? "/images/placeholder.jpg".absoluteUrl())">
     #endif
+    
+    #if(head.noindex ?? metadata.status ?? "" != "published" || $variables.siteNoindex == "true"):
+    <meta name="robots" content="noindex">
+    #endif
 
-    <title>#($variables.siteTitle ?? "")</title>
+    <title>#(head.title ?? metadata.title ?? "") - #($variables.siteTitle ?? "")</title>
     
     <link rel="manifest" href="/manifest.json">
     
@@ -46,9 +52,17 @@
     <link rel="stylesheet" href="/css/style.min.css">
     #endif
 
+    #if(head.canonicalUrl ?? metadata.canonicalUrl ?? false):
+    <link rel="canonical" href="#(head.canonicalUrl ?? metadata.canonicalUrl ?? "")">
+    #endif
+
+    #if(Request(query: "page") != nil || Request(query: "search") != nil):
+    <link rel="canonical" href="#($req.url.path.absoluteUrl())">
+    #endif
+
     <style type="text/css">
         #evaluate(css ?? "")
-        #($vars.siteCss ?? "")
+        #($variables.siteCss ?? "")
         #(metadata.css ?? "")
     </style>
 </head>

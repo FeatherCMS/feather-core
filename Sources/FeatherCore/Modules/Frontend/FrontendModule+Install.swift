@@ -37,8 +37,8 @@ extension FrontendModule {
             FrontendPageModel(title: $0.title, content: $0.content)
         }
         
-        /// create home page with a hookable page content
-        let homePage = FrontendPageModel(title: "Home", content: "[home-page]")
+        /// create welcome page with a hookable page content
+        let welcomePage = FrontendPageModel(title: "Welcome", content: "[welcome-page]")
         
         /// create a sample about page
         let aboutPage = FrontendPageModel(title: "About", content: "About.html")
@@ -46,9 +46,9 @@ extension FrontendModule {
 
         /// we persist the pages to the database
         return req.eventLoop.flatten([
-            /// save home page and set it as a published root page by altering the metadata
-            homePage.create(on: req.db).flatMap {
-                homePage.publishMetadataAsHome(on: req.db)
+            /// save welcome page and set it as a published home page by altering the metadata
+            welcomePage.create(on: req.db).flatMap {
+                welcomePage.publishMetadataAsHome(on: req.db)
             },
             /// save pages, then we publish the associated metadatas
             pageModels.create(on: req.db).flatMap { _ in
@@ -74,30 +74,30 @@ extension FrontendModule {
     
     func installVariablesHook(args: HookArguments) -> [VariableCreateObject] {
         [
-            .init(key: "homePageIcon",
-                  name: "Home page icon",
+            .init(key: "welcomePageIcon",
+                  name: "Welcome page icon",
                   value: "🪶",
-                  notes: "Icon of the home page"),
+                  notes: "Icon of the welcome page"),
 
-            .init(key: "homePageTitle",
-                  name: "Home page title",
+            .init(key: "welcomePageTitle",
+                  name: "Welcome page title",
                   value: "Welcome",
-                  notes: "Title of the home page"),
+                  notes: "Title of the welcome page"),
             
-            .init(key: "homePageExcerpt",
-                  name: "Home page excerpt",
+            .init(key: "welcomePageExcerpt",
+                  name: "Welcome page excerpt",
                   value: "This is your brand new Feather CMS powered website",
-                  notes: "Excerpt for the home page"),
+                  notes: "Excerpt for the welcome page"),
 
-            .init(key: "homePageLinkLabel",
-                  name: "Home page link label",
+            .init(key: "welcomePageLinkLabel",
+                  name: "Welcome page link label",
                   value: "Start customizing →",
-                  notes: "Link label of the home page"),
+                  notes: "Link label of the welcome page"),
 
-            .init(key: "homePageLinkUrl",
-                  name: "Home page link url",
+            .init(key: "welcomePageLinkUrl",
+                  name: "Welcome page link url",
                   value: "/admin/",
-                  notes: "Link URL of the home page"),
+                  notes: "Link URL of the welcome page"),
         ]
     }
 

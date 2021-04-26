@@ -37,7 +37,7 @@ final class FrontendModule: FeatherModule {
         app.hooks.register(.apiAdminRoutes, use: router.apiAdminRoutesHook)
         /// pages
         app.hooks.register(.response, use: responseHook)
-        app.hooks.register("home-page", use: homePageHook)
+        app.hooks.register("welcome-page", use: welcomePageHook)
     }
   
     // MARK: - hooks
@@ -74,10 +74,10 @@ final class FrontendModule: FeatherModule {
     }
     
     /// renders the [home-page] content
-    func homePageHook(args: HookArguments) -> EventLoopFuture<Response?> {
+    func welcomePageHook(args: HookArguments) -> EventLoopFuture<Response?> {
         let req = args.req
         
-        return req.view.render("Frontend/Home", ["metadata": args.metadata]).encodeOptionalResponse(for: req)
+        return req.view.render("Frontend/Welcome", ["metadata": args.metadata]).encodeOptionalResponse(for: req)
     }
 
     func adminMenuHook(args: HookArguments) -> HookObjects.AdminMenu {
