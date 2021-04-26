@@ -55,6 +55,19 @@ final class SystemModule: FeatherModule {
         app.hooks.register(.response, use: responseHook)
         
 //        app.hooks.register(.contentFilters, use: contentFiltersHook)
+//        app.hooks.register(.adminWidget, use: adminWidgetHook)
+    }
+    
+    
+    func adminWidgetHook(args: HookArguments) -> EventLoopFuture<View> {
+        let req = args.req
+
+        return CommonVariableModel.query(on: req.db).count().and(FrontendPageModel.query(on: req.db).count()).flatMap { pages, variables in
+            req.view.render("System/Admin/Widgets/Statistics", [
+                "variables": variables,
+                "pages": pages,
+            ])
+        }
     }
     
     func contentFiltersHook(args: HookArguments) -> [ContentFilter] {

@@ -15,9 +15,9 @@ struct SystemAdminController {
     }
     
     func dashboardView(req: Request) throws -> EventLoopFuture<View> {
-        return req.eventLoop.flatten([
-            req.view.render("System/Admin/Widgets/Variables", ["name": "foo", "count": "15"])
-        ])
+        let widgets: [EventLoopFuture<View>] = req.invokeAll(.adminWidget)
+        
+        return req.eventLoop.flatten(widgets)
         .mapEach { $0.data.getString(at: 0, length: $0.data.readableBytes) }
         .flatMap { items -> EventLoopFuture<View> in
             let widgets = items.compactMap { $0 }

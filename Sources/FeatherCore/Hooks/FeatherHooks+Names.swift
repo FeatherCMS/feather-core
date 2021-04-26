@@ -20,8 +20,9 @@ public extension FeatherHook {
     static let adminRoutes: FeatherHook = "admin-routes"
     static let apiRoutes: FeatherHook = "api-routes"
     static let apiAdminRoutes: FeatherHook = "api-admin-routes"
-    /// admin menu
+    /// admin 
     static let adminMenu: FeatherHook = "admin-menu"
+    static let adminWidget: FeatherHook = "admin-widget"
     /// acl
     static let permission: FeatherHook = "permission"
     static let access: FeatherHook = "access"
