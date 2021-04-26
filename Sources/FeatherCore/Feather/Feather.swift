@@ -207,7 +207,7 @@ public struct Feather {
                 continue
             }
             let source = bundleUrl.appendingPathComponent(Application.Directories.templates).appendingPathComponent("Public")
-            let destination = templatesUrl.appendingPathComponent(type(of: module).self.moduleKey)
+            let destination = templatesUrl.appendingPathComponent(type(of: module).self.moduleKey.capitalized)
             try FileManager.default.copy(at: source, to: destination)
         }
     }
