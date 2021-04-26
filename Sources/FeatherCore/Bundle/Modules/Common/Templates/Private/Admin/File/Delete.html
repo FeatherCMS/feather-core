@@ -19,9 +19,10 @@ Confirm deletion
     <p>You are about to permanently delete the<br>`#Request(query: "key")` file or directory.</p>
 
     <form id="delete-form" action="#($req.url.path)" method="post">
-        <input type="hidden" name="formId" value="#(id ?? "")">
-        <input type="hidden" name="formToken" value="#(token ?? "")">
+        <input type="hidden" name="formId" value="#(formId)">
+        <input type="hidden" name="formToken" value="#(formToken)">
         <input type="hidden" name="redirect" value="/admin/common/files/">
+        <input type="hidden" name="key" value="#Request(query: "key")">
         
         <input type="submit" value="Delete" class="button destructive" style="display: inline;"> &nbsp;
         <a href="#(Request(query: "cancel") ?? "/admin/common/files/")" class="button cancel" >Cancel</a>

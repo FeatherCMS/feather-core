@@ -173,15 +173,18 @@ struct CommonFileController {
             ]).encodeResponse(for: req)
         }
     }
-//
-    func delete(req: Request) throws -> EventLoopFuture<Response> {
-//        try req.validateFormToken(for: "file-delete-form")
 
+    func delete(req: Request) throws -> EventLoopFuture<Response> {
         struct Context: Decodable {
+            let formId: String
+            let formToken: String
             let key: String
             let redirect: String
         }
         let context = try req.content.decode(Context.self)
+        
+        try req.useNonce(id: context.formId, token: context.formToken)
+
         return req.fs.delete(key: context.key).flatMap {
             req.redirect(to: context.redirect).encodeResponse(for: req)
         }
