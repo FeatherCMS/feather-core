@@ -6,7 +6,7 @@ Upload files
 
 #define(breadcrumb):
     <a href="/admin/common/">Common</a>
-    <a href="#($req.url.path.trimLast())#if(path ?? false):?path=#(path)#endif">Files</a>
+    <a href="#($req.url.path.trimLast())#if(key ?? false):?key=#(key)#endif">Files</a>
     <a class="selected">Upload</a>
 #enddefine
 

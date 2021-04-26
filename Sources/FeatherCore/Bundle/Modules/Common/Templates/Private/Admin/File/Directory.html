@@ -1,4 +1,4 @@
-#let(path = Request(query: "path"))
+#let(key = Request(query: "key"))
 
 #define(title):
 Create directory
@@ -6,7 +6,7 @@ Create directory
 
 #define(breadcrumb):
     <a href="/admin/common/">Common</a>
-    <a href="#($req.url.path.trimLast())#if(path ?? false):?path=#(path)#endif">Files</a>
+    <a href="#($req.url.path.trimLast())#if(key ?? false):?key=#(key)#endif">Files</a>
     <a class="selected">Directory</a>
 #enddefine
 
@@ -15,7 +15,7 @@ Create directory
 <div class="container">
 
     <header class="lead">
-        <p class="note">Destination &middot; <a href="#($req.url.path.trimLast())#if(path ?? false):?path=#(path)#endif">/#(path ?? "")</a></p>
+        <p class="note">Destination &middot; <a href="#($req.url.path.trimLast())#if(key ?? false):?key=#(key)#endif">/#(key ?? "")</a></p>
         <h1>Create directory</h1>
     </header>
     
