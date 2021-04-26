@@ -10,7 +10,7 @@ final class SystemModule: FeatherModule {
     static var moduleKey: String = "system"
 
     var bundleUrl: URL? {
-        Bundle.module.resourceURL?.appendingPathComponent("Bundle")
+        Self.moduleBundleUrl
     }
 
     func boot(_ app: Application) throws {

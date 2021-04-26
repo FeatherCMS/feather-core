@@ -1,0 +1,9 @@
+<section>
+    #inline("Common/Fields/Label")
+    <select name="#(field.key)[]" multiple>
+        #for(item in field.options):
+        <option #if(field.values.contains(item.key)): selected="selected" #endif value="#(item.key)">#(item.label)</option>
+        #endfor
+    </select>
+    #inline("Common/Fields/Error")
+</section>

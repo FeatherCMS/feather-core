@@ -10,7 +10,7 @@ final class CommonModule: FeatherModule {
     static var moduleKey: String = "common"
 
     var bundleUrl: URL? {
-        Bundle.module.resourceURL?.appendingPathComponent("Bundle")
+        Self.moduleBundleUrl
     }
 
     func boot(_ app: Application) throws {

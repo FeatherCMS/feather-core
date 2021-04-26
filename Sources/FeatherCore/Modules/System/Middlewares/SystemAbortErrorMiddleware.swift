@@ -23,6 +23,6 @@ struct SystemAbortErrorMiddleware: Middleware {
             let reason: String
         }
         let err = Error(code: Int(error.status.code), reason: error.reason)
-        return req.view.render("System/Common/Error", ["error": err])
+        return req.view.render("Common/Error", ["error": err])
     }
 }

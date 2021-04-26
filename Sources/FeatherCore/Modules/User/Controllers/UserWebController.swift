@@ -10,7 +10,7 @@ struct UserWebController {
     // MARK: - private
     
     private func render(req: Request, form: Form) -> EventLoopFuture<Response> {
-        return req.view.render("System/Login", ["form": form]).encodeResponse(for: req)
+        return req.view.render("User/Login", ["form": form]).encodeResponse(for: req)
     }
 
     private func getCustomRedirect(req: Request) -> String {

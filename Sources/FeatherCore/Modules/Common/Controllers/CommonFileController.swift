@@ -6,6 +6,7 @@
 //
 
 struct CommonFileController {
+
     struct File: TemplateDataRepresentable {
         let name: String
         let key: String
@@ -66,7 +67,7 @@ struct CommonFileController {
                 /// filter tmp folder and hidden files & directories
                 .filter { !($0.name == "tmp" && $0.ext == nil) && !$0.name.hasPrefix(".") }
                 
-                return req.tau.render(template: "System/Admin/File/Browser", context: [
+                return req.tau.render(template: "Common/Admin/File/Browser", context: [
                     "current": current?.templateData ?? .trueNil,
                     "parent": parent?.templateData ?? .trueNil,
                     "children": .array(sortedChildren),
@@ -77,7 +78,7 @@ struct CommonFileController {
     }
 
     private func renderDirectoryView(req: Request, form: CommonFileDirectoryForm) -> EventLoopFuture<View> {
-        return req.view.render("System/Admin/File/Directory", ["form": CommonFileDirectoryForm()])
+        return req.view.render("Common/Admin/File/Directory", ["form": CommonFileDirectoryForm()])
     }
     
     func directoryView(req: Request) -> EventLoopFuture<View> {
@@ -115,7 +116,7 @@ struct CommonFileController {
             let maxUploadSize: String
         }
 
-        return req.view.render("System/Admin/File/Upload", Context(form: form, maxUploadSize: maxUploadSize))
+        return req.view.render("Common/Admin/File/Upload", Context(form: form, maxUploadSize: maxUploadSize))
     }
     
     func uploadView(req: Request) -> EventLoopFuture<View> {

@@ -31,15 +31,15 @@ struct FrontendWebController {
     }
 
     func sitemap(_ req: Request) throws -> EventLoopFuture<Response> {
-        renderContentList(req, using: "System/Sitemap")
+        renderContentList(req, using: "Frontend/Sitemap")
     }
     
     func rss(_ req: Request) throws -> EventLoopFuture<Response> {
-        renderContentList(req, using: "System/Rss") { $0.filter(\.$feedItem == true) }
+        renderContentList(req, using: "Frontend/Rss") { $0.filter(\.$feedItem == true) }
     }
 
     func robots(_ req: Request) throws -> EventLoopFuture<Response> {
-        req.view.render("System/Robots").encodeResponse(status: .ok, headers: ["Content-Type": "text/plain; charset=utf-8"], for: req)
+        req.view.render("Frontend/Robots").encodeResponse(status: .ok, headers: ["Content-Type": "text/plain; charset=utf-8"], for: req)
     }
     
 }

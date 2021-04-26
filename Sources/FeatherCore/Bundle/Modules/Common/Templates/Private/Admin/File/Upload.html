@@ -1,0 +1,24 @@
+#let(key = Request(query: "key"))
+
+#define(title):
+Upload files
+#enddefine
+
+#define(breadcrumb):
+    <a href="#($req.url.path.trimLast())browser/#if(key ?? false):?key=#(key)#endif">File browser</a>
+#enddefine
+
+#define(body):
+
+<div class="container">
+
+    <header class="lead">
+        <p class="note">Destination &middot; <a href="#($req.url.path.trimLast())browser/#if(key ?? false):?key=#(key)#endif">/#(key)</a></p>
+        <h1>Upload files</h1>
+    </header>
+    
+    #inline("Common/Form")
+
+</div>
+#enddefine
+#inline("System/Admin/Index")

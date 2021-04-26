@@ -1,7 +1,0 @@
-<section>
-    #inline("System/Common/Fields/Label")
-    <input id="#(field.key)" name="#(field.key)[]" type="file"#if(field.accept ?? false): accept="#(field.accept)"#endif #if(field.required ?? false): aria-required="true"#endif multiple>
-    
-    <input id="files" name="files[]" type="file" multiple>
-    #inline("System/Common/Fields/Error")
-</section>

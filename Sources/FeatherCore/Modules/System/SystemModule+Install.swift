@@ -8,10 +8,9 @@
 extension SystemModule {
 
     func installPermissionsHook(args: HookArguments) -> [PermissionCreateObject] {
-        var permissions: [PermissionCreateObject] = [
+        [
             SystemModule.hookInstallPermission(for: .custom("admin"))
         ]
-        return permissions
     }
     
     func installVariablesHook(args: HookArguments) -> [VariableCreateObject] {

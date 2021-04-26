@@ -1,0 +1,21 @@
+<section>
+    #inline("Common/Fields/Label")
+    #for(option in field.options):
+    <fieldset>
+        <legend>#(option.name)</legend>
+
+        <div>
+        #for(group in option.groups):
+            <section>
+                <label class="block">#(group.name)</label>
+                #for(p in group.options):
+                <input type="checkbox" name="#(field.key)[]" value="#(p.key)" id="#(p.key)" #if(field.values.contains(p.key)):checked#endif>
+                <label for="#(p.key)">#(p.label)</label><br>
+                #endfor
+            </section>
+        #endfor
+        </div>
+    </fieldset>
+    #endfor
+    #inline("Common/Fields/Error")
+</section>

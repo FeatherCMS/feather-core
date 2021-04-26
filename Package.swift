@@ -45,7 +45,7 @@ let package = Package(
             .product(name: "VaporHooks", package: "vapor-hooks"),
             .target(name: "FeatherApi")
         ], resources: [
-            .copy("Modules/System/Bundle"),
+            .copy("Bundle"),
         ]),
         .testTarget(name: "FeatherCoreTests", dependencies: [
             .target(name: "FeatherCore"),

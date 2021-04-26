@@ -61,3 +61,10 @@ public extension FeatherModule {
     static var adminLink: Link { .init(label: name, url: ("admin" + "/" + moduleKey).safePath()) }
 }
 
+
+internal extension FeatherModule {
+
+    static var moduleBundleUrl: URL? {
+        Bundle.module.resourceURL?.appendingPathComponent("Bundle").appendingPathComponent("Modules").appendingPathComponent(name.capitalized)
+    }
+}

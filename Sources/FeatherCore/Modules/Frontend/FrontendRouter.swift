@@ -25,7 +25,6 @@ struct FrontendRouter: RouteCollection {
     func routesHook(args: HookArguments) {
         let app = args.app
         let routes = args.routes
-        #warning("web-middlewares")
         /// if there are other middlewares we add them, finally we append the not found middleware
         let middlewares: [[Middleware]] = app.invokeAll(.webMiddlewares)
         var frontendMiddlewares = middlewares.flatMap { $0 }
@@ -50,8 +49,7 @@ struct FrontendRouter: RouteCollection {
     }
     
     func apiRoutesHook(args: HookArguments) {
-        let publicApiRoutes = args.routes
-
+//        let publicApiRoutes = args.routes
     }
 
     func apiAdminRoutesHook(args: HookArguments) {

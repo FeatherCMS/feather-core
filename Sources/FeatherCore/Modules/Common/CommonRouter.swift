@@ -12,21 +12,28 @@ struct CommonRouter: RouteCollection {
     let fileController = CommonFileController()
     let variableController = CommonVariableController()
     
+    let fileGroupController = CommonFileGroupController()
+    
     func boot(routes: RoutesBuilder) throws {
     
     }
-    
-    
     
     func adminRoutesHook(args: HookArguments) {
         let adminRoutes = args.routes
 
         adminRoutes.get("common", use: SystemAdminMenuController(key: "common").moduleView)
         
+        
+        adminRoutes.register(fileGroupController)
+        
         let modulePath = adminRoutes.grouped(CommonModule.moduleKeyPathComponent)
         modulePath
             .grouped(AccessGuardMiddleware(.init(namespace: "common", context: "files", action: .list)))
             .get("files", use: fileController.browserView)
+        
+        
+        
+        
 
         let directoryPath = modulePath.grouped("files").grouped("directory")
             .grouped(AccessGuardMiddleware(.init(namespace: "common", context: "files", action: .create)))
@@ -49,9 +56,7 @@ struct CommonRouter: RouteCollection {
     }
     
     func apiRoutesHook(args: HookArguments) {
-        let publicApiRoutes = args.routes
-
-        
+//        let publicApiRoutes = args.routes
     }
 
     func apiAdminRoutesHook(args: HookArguments) {

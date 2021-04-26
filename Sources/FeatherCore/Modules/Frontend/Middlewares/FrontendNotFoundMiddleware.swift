@@ -18,6 +18,6 @@ struct FrontendNotFoundMiddleware: Middleware {
     }
 
     func notFound(_ req: Request) -> EventLoopFuture<Response> {
-        req.view.render("System/NotFound").encodeResponse(status: .notFound, for: req)
+        req.view.render("Frontend/NotFound").encodeResponse(status: .notFound, for: req)
     }
 }

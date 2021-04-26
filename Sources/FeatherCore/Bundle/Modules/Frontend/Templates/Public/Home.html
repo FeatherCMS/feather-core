@@ -1,0 +1,9 @@
+#define(body):
+<div class="lead container center">
+    <span class="icon">#($variables.homePageIcon ?? "🪶")</span>
+    <h1>#($variables.homePageTitle ?? "Welcome")</h1>
+    <p>#($variables.homePageExcerpt ?? "This is your brand new Feather CMS powered website")</p>
+    <a href="#($variables.homePageLinkUrl ?? "/admin/")">#($variables.homePageLinkLabel ?? "Start customizing →")</a>
+</div>
+#enddefine
+#inline("Frontend/Index")

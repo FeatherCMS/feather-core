@@ -10,7 +10,7 @@ final class UserModule: FeatherModule {
     static var moduleKey: String = "user"
 
     var bundleUrl: URL? {
-        Bundle.module.resourceURL?.appendingPathComponent("Bundle")
+        Self.moduleBundleUrl
     }
 
     func boot(_ app: Application) throws {

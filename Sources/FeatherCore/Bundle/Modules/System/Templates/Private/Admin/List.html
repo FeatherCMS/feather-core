@@ -1,0 +1,134 @@
+#var(tableActions = [])
+
+#if(table.action ?? false):
+    #if(UserHasPermission(table.action.permission) ?? true):
+        #(tableActions.append(["url": table.action.url, "label": table.action.label, "icon": table.action.icon, "width": "4rem"]))
+    #endif
+#endif
+
+#if(model.permissions.update):
+    #(tableActions.append(["url": "/update/", "label": "Edit", "icon": "edit", "width": "4rem"]))
+#endif
+
+#if(model.permissions.delete):
+    #(tableActions.append(["url": "/delete/", "label": "Delete", "icon": "delete", "width": "4rem"]))
+#endif
+
+#define(css):
+tr {
+    grid-template-columns: repeat(#max(1, tableActions.count()), 1fr);
+}
+td.field {
+    grid-column: span #(tableActions.count());
+}
+@media (min-width: 600px) {
+    tr {
+        grid-template-columns:#for(f in table.columns ?? []): #(f.width ?? "1fr")#endfor #for(a in tableActions): #(a.width ?? "1fr")#endfor;
+    }
+    td.field {
+        grid-column: span 1;
+    }
+}
+#enddefine
+
+#define(title):
+#(model.name.plural)
+#enddefine
+
+#define(breadcrumb):
+#if(bc.isEmpty()):
+    <a href="#($req.url.path.trimLast())">#(model.module.name)</a>
+    <a href="#($req.url.path)" class="selected">#title()</a>
+#else:
+    #for(b in bc):
+        <a href="#(b.url)"#if(isLast): class="selected"#endif>#(b.label)</a>
+    #endfor
+#endif
+#enddefine
+
+#define(body):
+<div class="lead">
+    <h1>#title()</h1>
+    <p>
+        #var(nav = nav ?? [])
+        #if(model.permissions.create):
+            #(nav.append(["url": $req.url.path + "create/", "label": "Create new"]))
+        #endif
+        #for(item in nav):
+            #if(!isFirst): &middot; #endif<a href="#(item.url)"#if(item.isBlank ?? false): target="_blank"#endif>#(item.label)</a>
+        #endfor
+    </p>
+</div>
+
+#if(model.isSearchable):
+<form id="search-form" action="#($req.url.path)" method="get">
+    #if(Request(query: "sort") != nil):
+    <input type="hidden" id="sort" name="sort" value="#Request(query: "sort")">
+    #endif
+    #if(Request(query: "order") != nil):
+    <input type="hidden" id="order" name="order" value="#Request(query: "order")">
+    #endif
+    <input type="text" id="search" name="search" placeholder="Search..." value="#Request(query: "search")">
+</form>
+#endif
+
+
+#if(table.rows.isEmpty()):
+    #inline("System/Admin/Empty")
+#else:
+<table>
+    <thead>
+        <tr>
+            #for(column in table.columns):
+            <td class="field#if(isLast): last#endif">
+                #if(model.allowedOrders.contains(column.id)):
+                    #let(link = [
+                         "key": column.id,
+                         "default": model.defaultOrder == column.id,
+                         "sort": model.defaultSort,
+                         "label": column.label
+                    ])
+                    #inline("Common/SortLink")
+                #else:
+                    #(column.label)
+                #endif
+            </td>
+            #endfor
+            #for(action in tableActions):
+            <td class="action">#(action.label)</td>
+            #endfor
+        </tr>
+    </thead>
+    <tbody>
+        #for(row in table.rows):
+        <tr>
+            #for(cell in row.cells):
+            <td class="field#if(isLast): last#endif">
+
+                #var(value = cell.value)
+                #if(cell.type == "image"): #var(value = "<img src='" + cell.value +"'>") #endif
+
+                #if(model.permissions.get):
+                    <a href="#($req.url.path)#(row.id)/">#(value)</a>
+                #else:
+                    #(value)
+                #endif
+            </td>
+            #endfor
+            #for(action in tableActions):
+            <td class="action">
+                <a href="#($req.url.path)#(row.id)#(action.url)">#svg(action.icon)</a>
+            </td>
+            #endfor
+        </tr>
+        #endfor
+    </tbody>
+</table>
+
+#inline("Common/Pagination")
+
+#endif
+
+#enddefine
+
+#inline("System/Admin/Index")

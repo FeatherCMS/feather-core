@@ -1,0 +1,11 @@
+
+#define(body):
+    <div class="lead container">
+        <h1>#(form.label ?? "")</h1>
+        <p>#(form.description ?? "")</p>
+    </div>
+
+    #inline("Common/Form")
+#enddefine
+
+#inline("Frontend/Index")

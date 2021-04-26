@@ -16,12 +16,14 @@ struct UserMigration_v1: Migration {
                 .field(UserAccountModel.FieldKeys.root, .bool, .required)
                 .unique(on: UserAccountModel.FieldKeys.email)
                 .create(),
+            
             db.schema(UserTokenModel.schema)
                 .id()
                 .field(UserTokenModel.FieldKeys.value, .string, .required)
                 .field(UserTokenModel.FieldKeys.userId, .uuid, .required)
                 .foreignKey(UserTokenModel.FieldKeys.userId, references: UserAccountModel.schema, .id)
                 .unique(on: UserTokenModel.FieldKeys.value)
+                
                 .create(),
             db.schema(UserRoleModel.schema)
                 .id()
@@ -30,6 +32,7 @@ struct UserMigration_v1: Migration {
                 .field(UserRoleModel.FieldKeys.notes, .string)
                 .unique(on: UserRoleModel.FieldKeys.key)
                 .create(),
+            
             db.schema(UserPermissionModel.schema)
                 .id()
                 .field(UserPermissionModel.FieldKeys.namespace, .string, .required)
@@ -41,11 +44,13 @@ struct UserMigration_v1: Migration {
                             UserPermissionModel.FieldKeys.context,
                             UserPermissionModel.FieldKeys.action)
                 .create(),
+            
             db.schema(UserAccountRoleModel.schema)
                 .id()
                 .field(UserAccountRoleModel.FieldKeys.userId, .uuid, .required)
                 .field(UserAccountRoleModel.FieldKeys.roleId, .uuid, .required)
                 .create(),
+
             db.schema(UserRolePermissionModel.schema)
                 .id()
                 .field(UserRolePermissionModel.FieldKeys.roleId, .uuid, .required)

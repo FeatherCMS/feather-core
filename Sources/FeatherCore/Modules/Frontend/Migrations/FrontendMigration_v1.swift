@@ -32,11 +32,13 @@ struct FrontendMigration_v1: Migration {
                 .unique(on: FrontendMetadataModel.FieldKeys.slug)
                 .unique(on: FrontendMetadataModel.FieldKeys.module, FrontendMetadataModel.FieldKeys.model, FrontendMetadataModel.FieldKeys.reference)
                 .create(),
+            
             db.schema(FrontendPageModel.schema)
                 .id()
                 .field(FrontendPageModel.FieldKeys.title, .string, .required)
                 .field(FrontendPageModel.FieldKeys.content, .string)
                 .create(),
+            
             db.schema(FrontendMenuModel.schema)
                 .id()
                 .field(FrontendMenuModel.FieldKeys.key, .string, .required)
@@ -44,6 +46,7 @@ struct FrontendMigration_v1: Migration {
                 .field(FrontendMenuModel.FieldKeys.notes, .string)
                 .unique(on: FrontendMenuModel.FieldKeys.key)
                 .create(),
+            
             db.schema(FrontendMenuItemModel.schema)
                 .id()
                 .field(FrontendMenuItemModel.FieldKeys.icon, .string)

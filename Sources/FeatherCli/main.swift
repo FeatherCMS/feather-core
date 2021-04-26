@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2020. 08. 29..
 //
 
-import Vapor
+@_exported import Vapor
 
 let console: Console = Terminal()
 var input = CommandInput(arguments: CommandLine.arguments)
@@ -13,7 +13,7 @@ var context = CommandContext(console: console, input: input)
 
 var commands = Commands(enableAutocomplete: true)
 
-commands.use(ApiCommandGroup(), as: ApiCommandGroup.name)
+commands.use(GenerateCommandGroup(), as: GenerateCommandGroup.name)
 
 //commands.use(HelloCommand(), as: HelloCommand.name, isDefault: false)
 

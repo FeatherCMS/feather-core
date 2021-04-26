@@ -10,7 +10,7 @@ final class FrontendModule: FeatherModule {
     static var moduleKey: String = "frontend"
 
     var bundleUrl: URL? {
-        Bundle.module.resourceURL?.appendingPathComponent("Bundle")
+        Self.moduleBundleUrl
     }
 
     func boot(_ app: Application) throws {
@@ -76,7 +76,7 @@ final class FrontendModule: FeatherModule {
     func homePageHook(args: HookArguments) -> EventLoopFuture<Response?> {
         let req = args.req
         
-        return req.view.render("System/Home", ["metadata": args.metadata]).encodeOptionalResponse(for: req)
+        return req.view.render("Frontend/Home", ["metadata": args.metadata]).encodeOptionalResponse(for: req)
     }
 
     func adminMenuHook(args: HookArguments) -> HookObjects.AdminMenu {
