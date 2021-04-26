@@ -14,11 +14,17 @@ struct UserRouter: RouteCollection {
     let permissionController = UserPermissionController()
     
     func boot(routes: RoutesBuilder) throws {
+        
+    }
+    
+    func webRoutesHook(args: HookArguments) {
+        let routes = args.routes
+
         routes.grouped(UserAccountSessionAuthenticator()).get("login", use: webController.loginView)
         routes.grouped(UserAccountCredentialsAuthenticator()).post("login", use: webController.login)
         routes.grouped(UserAccountSessionAuthenticator()).get("logout", use: webController.logout)
-    } 
-    
+    }
+
     func adminRoutesHook(args: HookArguments) {
         let adminRoutes = args.routes
 

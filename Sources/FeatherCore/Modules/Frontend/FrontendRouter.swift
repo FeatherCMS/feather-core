@@ -27,9 +27,13 @@ struct FrontendRouter: RouteCollection {
         let middlewares: [[Middleware]] = app.invokeAll(.webMiddlewares)
         var frontendMiddlewares = middlewares.flatMap { $0 }
         frontendMiddlewares.append(UserAccountSessionAuthenticator())
-        frontendMiddlewares.append(FrontendNotFoundMiddleware())
-        
+        frontendMiddlewares.append(FrontendErrorMiddleware())
         let frontendRoutes = routes.grouped(frontendMiddlewares)
+        
+        var webArgs = HookArguments()
+        webArgs.routes = frontendRoutes
+        let _: [Void] = app.invokeAll(.webRoutes, args: webArgs)
+        
         /// handle root path and everything else via the controller method
         frontendRoutes.get(use: frontendController.catchAllView)
         frontendRoutes.get(.catchall, use: frontendController.catchAllView)

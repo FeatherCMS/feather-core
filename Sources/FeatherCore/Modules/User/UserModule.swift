@@ -38,6 +38,7 @@ final class UserModule: FeatherModule {
         /// routes
         let router = UserRouter()
         try router.boot(routes: app.routes)
+        app.hooks.register(.webRoutes, use: router.webRoutesHook)
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         app.hooks.register(.apiRoutes, use: router.apiRoutesHook)
         app.hooks.register(.apiAdminRoutes, use: router.apiAdminRoutesHook)

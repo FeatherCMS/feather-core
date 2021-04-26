@@ -16,6 +16,7 @@ public extension FeatherHook {
 
     /// routes
     static let routes: FeatherHook = "routes"
+    static let webRoutes: FeatherHook = "web-routes"
     static let adminRoutes: FeatherHook = "admin-routes"
     static let apiRoutes: FeatherHook = "api-routes"
     static let apiAdminRoutes: FeatherHook = "api-admin-routes"
