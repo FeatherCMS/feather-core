@@ -7,7 +7,7 @@
 
 final class CommonFileUploadForm: Form {
 
-    var name: String?
+    var files: [File] = []
 
     init() {
         super.init()
@@ -16,7 +16,7 @@ final class CommonFileUploadForm: Form {
 
     private func createFormFields() -> [FormComponent] {
         [
-            TextField(key: "files").read { [unowned self] req, field in self.name = field.input }
+            MultifileField(key: "files").read { [unowned self] req, field in self.files = field.input }
         ]
     }
 }

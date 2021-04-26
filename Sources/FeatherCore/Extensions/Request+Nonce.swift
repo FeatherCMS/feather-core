@@ -22,6 +22,7 @@ public extension Request {
     /// validates a nonce, then removes a given nonce from the session storage
     func useNonce(id: String, token: String) throws {
         let nonceSessionKey = getNonceSessionKey(id: id)
+        
         guard let existingToken = session.data[nonceSessionKey] else {
             throw Abort(.forbidden)
         }

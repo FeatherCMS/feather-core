@@ -52,7 +52,7 @@ open class Form: FormComponent {
     open var fields: [FormComponent] {
         didSet {
             /// NOTE: maybe a requiresMultipart: Bool FormComponent protocol property would be a better idea... ?
-            self.action.multipart = fields.reduce(false, { $0 || ($1 is ImageField /*|| $1 is FileField*/) })
+            self.action.multipart = fields.reduce(false, { $0 || ($1 is ImageField || $1 is FileField || $1 is MultifileField) })
         }
     }
 

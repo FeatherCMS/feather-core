@@ -12,8 +12,6 @@ struct CommonRouter: RouteCollection {
     let fileController = CommonFileController()
     let variableController = CommonVariableController()
     
-    let fileGroupController = CommonFileGroupController()
-    
     func boot(routes: RoutesBuilder) throws {
     
     }
@@ -24,26 +22,22 @@ struct CommonRouter: RouteCollection {
         adminRoutes.get("common", use: SystemAdminMenuController(key: "common").moduleView)
         
         
-        adminRoutes.register(fileGroupController)
-        
         let modulePath = adminRoutes.grouped(CommonModule.moduleKeyPathComponent)
         modulePath
             .grouped(AccessGuardMiddleware(.init(namespace: "common", context: "files", action: .list)))
             .get("files", use: fileController.browserView)
         
         
-        
-        
 
         let directoryPath = modulePath.grouped("files").grouped("directory")
             .grouped(AccessGuardMiddleware(.init(namespace: "common", context: "files", action: .create)))
         directoryPath.get(use: fileController.directoryView)
-//        directoryPath.post(use: fileController.directory)
+        directoryPath.post(use: fileController.directory)
 
         let uploadPath = modulePath.grouped("files").grouped("upload")
             .grouped(AccessGuardMiddleware(.init(namespace: "common", context: "files", action: .create)))
         uploadPath.get(use: fileController.uploadView)
-//        uploadPath.post(use: fileController.upload)
+        uploadPath.post(use: fileController.upload)
 
         let deletePath = modulePath.grouped("files").grouped("delete")
             .grouped(AccessGuardMiddleware(.init(namespace: "common", context: "files", action: .delete)))

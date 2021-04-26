@@ -25,8 +25,8 @@ public protocol FeatherModule {
     /// boots the module as the first step of the configuration flow
     func boot(_ app: Application) throws
     
-    static func permission(for action: Permission.Action) -> Permission
-    static func hookInstallPermission(for action: Permission.Action) -> PermissionCreateObject
+    static func permission(for action: Permission.Action, context: String?) -> Permission
+    static func hookInstallPermission(for action: Permission.Action, context: String?) -> PermissionCreateObject
     
     static var adminLink: Link { get }
 }
@@ -50,14 +50,14 @@ public extension FeatherModule {
     func boot(_ app: Application) throws {}
 
 
-    static func permission(for action: Permission.Action) -> Permission {
-        .init(namespace: moduleKey, context: "module", action: action)
+    static func permission(for action: Permission.Action, context: String? = nil) -> Permission {
+        .init(namespace: moduleKey, context: context ?? "module", action: action)
     }
 
-    static func hookInstallPermission(for action: Permission.Action) -> PermissionCreateObject {
-        PermissionCreateObject(permission(for: action))
+    static func hookInstallPermission(for action: Permission.Action, context: String? = nil) -> PermissionCreateObject {
+        PermissionCreateObject(permission(for: action, context: context))
     }
-    
+
     static var adminLink: Link { .init(label: name, url: ("admin" + "/" + moduleKey).safePath()) }
 }
 

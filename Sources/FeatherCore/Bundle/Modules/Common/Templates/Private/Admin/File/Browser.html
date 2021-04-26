@@ -21,7 +21,7 @@ tr {
         margin: 0;
     }
     tr {
-        #if(UserHasPermission("file.browser.delete")):
+        #if(UserHasPermission("common.files.delete")):
         grid-template-columns: 4rem 1fr 4rem;
         #else:
         grid-template-columns: 4rem 1fr;
@@ -33,9 +33,9 @@ tr {
 #define(body):
 <header class="lead">
     #var(navItems = [])
-    #if(UserHasPermission("file.browser.create")):
-    #(navItems.append(["url": $req.url.path.trimLast() + "directory/?key=" + Request(query: "key"), "label": "Create directory"]))
-        #(navItems.append(["url": $req.url.path.trimLast() + "upload/?key=" + Request(query: "key"), "label": "Upload files"]))
+    #if(UserHasPermission("common.files.create")):
+    #(navItems.append(["url": $req.url.path + "directory/?key=" + Request(query: "key"), "label": "Create directory"]))
+        #(navItems.append(["url": $req.url.path + "upload/?key=" + Request(query: "key"), "label": "Upload files"]))
     #endif
     #let(segmentItems = navItems + table.nav ?? [])
     #if(!segmentItems.isEmpty()):
@@ -55,17 +55,17 @@ tr {
         <tr>
             <td class="field">Icon</th>
             <td class="field last">Name</th>
-            #if(UserHasPermission("file.browser.delete")):
+            #if(UserHasPermission("common.files.delete")):
             <td class="action">Delete</th>
             #endif
         </tr>
     </thead>
     <tbody>
-        #if(parent != nil):
+        #if(parent ?? false):
         <tr>
-            <td class="field"><a href="#($req.url.path)?key=#(parent.key)">#svg("folder")</a></td>
-            <td class="field last"><a href="#($req.url.path)?key=#(parent.key)">&bull;&bull;&bull;</a></td>
-            #if(UserHasPermission("file.browser.delete")):
+            <td class="field"><a href="#($req.url.path)?key=#(parent.key ?? "")">#svg("folder")</a></td>
+            <td class="field last"><a href="#($req.url.path)?key=#(parent.key ?? "")">&bull;&bull;&bull;</a></td>
+            #if(UserHasPermission("common.files.delete")):
             <th class="action">&nbsp;</th>
             #endif
         </tr>
@@ -74,15 +74,15 @@ tr {
         #for(item in children):
         <tr>
             <td class="field">
-                #if(item.ext != nil):
+                #if(item.ext ?? false):
                 <a href="#(item.key.resolve())" target="_blank">
                 #else:
                 <a href="#($req.url.path)?key=#(item.key)">
                 #endif
 
-                    #if(item.ext == nil):
+                    #if(item.ext ?? nil == nil):
                         #svg("folder", "class": "size-width")
-                    #elseif(["png", "jpg", "jpeg"].contains(item.ext)):
+                    #elseif(["png", "jpg", "jpeg"].contains(item.ext ?? "")):
                         <div class="preview-image" style="background-image: url('#(item.key.resolve())');"></div>
                     #else:
                         #svg("file")
@@ -91,17 +91,17 @@ tr {
             </td>
 
             <td class="field last">
-                #if(item.ext != nil):
+                #if(item.ext ?? false):
                 <a href="#(item.key.resolve())" target="_blank">#(item.name)</a>
                 #else:
                 <a href="#($req.url.path)?key=#(item.key)">#(item.name)</a>
                 #endif
             </td>
 
-            #if(UserHasPermission("file.browser.delete")):
+            #if(UserHasPermission("common.files.delete")):
             <td class="action">
                 <a href="#($req.url.path.trimLast())delete/?key=#(item.key)&cancel=#($req.url.path)?key=#Request(query: "key")">
-                    #svg("trash")
+                    #svg("delete")
                 </a>
             </td>
             #endif

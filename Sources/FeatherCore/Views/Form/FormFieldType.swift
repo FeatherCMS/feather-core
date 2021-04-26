@@ -21,6 +21,7 @@ public enum FormFieldType: String, Encodable {
     case multigroupoption
     
     case file
+    case multifile
     case image
     
     case submit

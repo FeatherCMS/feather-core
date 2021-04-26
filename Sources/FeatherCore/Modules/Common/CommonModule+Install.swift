@@ -21,29 +21,12 @@ extension CommonModule {
         var permissions: [PermissionCreateObject] = [
             CommonModule.hookInstallPermission(for: .custom("admin"))
         ]
-        
         permissions += CommonVariableModel.hookInstallPermissions()
-//        FileModule.permissions +
-//        [
-//            [
-//                "module": Self.name.lowercased(),
-//                "context": "browser",
-//                "action": "list",
-//                "name": "List items",
-//            ],
-//            [
-//                "module": Self.name.lowercased(),
-//                "context": "browser",
-//                "action": "create",
-//                "name": "Upload items",
-//            ],
-//            [
-//                "module": Self.name.lowercased(),
-//                "context": "browser",
-//                "action": "delete",
-//                "name": "Remove items",
-//            ]
-//        ]
+        permissions += [
+            CommonModule.hookInstallPermission(for: .list, context: "files"),
+            CommonModule.hookInstallPermission(for: .create, context: "files"),
+            CommonModule.hookInstallPermission(for: .delete, context: "files"),
+        ]
         return permissions
     }
     
