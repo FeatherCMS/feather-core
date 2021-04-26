@@ -18,8 +18,6 @@ struct FrontendRouter: RouteCollection {
         routes.get("sitemap.xml", use: frontendController.sitemap)
         routes.get("rss.xml", use: frontendController.rss)
         routes.get("robots.txt", use: frontendController.robots)
-        
-        
     }
     
     func routesHook(args: HookArguments) {

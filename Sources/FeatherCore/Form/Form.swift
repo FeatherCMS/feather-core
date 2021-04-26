@@ -42,6 +42,7 @@ open class Form: FormComponent {
         case notification
         case error
         case fields
+        case submit
     }
 
     open var action: Action
@@ -49,6 +50,9 @@ open class Form: FormComponent {
     open var token: String
     open var notification: Notification?
     open var error: String?
+
+    open var submit: String?
+
     open var fields: [FormComponent] {
         didSet {
             /// NOTE: maybe a requiresMultipart: Bool FormComponent protocol property would be a better idea... ?
@@ -61,7 +65,8 @@ open class Form: FormComponent {
                 token: String = UUID().uuidString,
                 notification: Notification? = nil,
                 error: String? = nil,
-                fields: [FormComponent] = []) {
+                fields: [FormComponent] = [],
+                submit: String? = nil) {
         
         self.action = action
         self.id = id
@@ -69,6 +74,7 @@ open class Form: FormComponent {
         self.notification = notification
         self.error = error
         self.fields = fields
+        self.submit = submit
     }
 
     open func encode(to encoder: Encoder) throws {
@@ -79,6 +85,7 @@ open class Form: FormComponent {
         try container.encodeIfPresent(token, forKey: .token)
         try container.encodeIfPresent(notification, forKey: .notification)
         try container.encodeIfPresent(error, forKey: .error)
+        try container.encodeIfPresent(submit, forKey: .submit)
 
         var fieldsArrayContainer = container.superEncoder(forKey: .fields).unkeyedContainer()
         for field in fields {

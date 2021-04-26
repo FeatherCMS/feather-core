@@ -10,6 +10,7 @@ final class UserLoginForm: Form {
     init() {
         super.init()
 
+        submit = "Sign in"
         fields = createFormFields()
     }
 
