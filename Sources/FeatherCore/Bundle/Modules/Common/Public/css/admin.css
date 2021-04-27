@@ -59,3 +59,39 @@ body > header {
     animation-delay: 1s;
     animation-fill-mode: forwards;
 }
+
+.content-action-toolbar {
+    padding: 4px;
+    margin-bottom: var(--space-xs);
+    display: block;
+    white-space: nowrap;
+    overflow: scroll;
+    overflow-y: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+@media screen and (min-width: 600px) {
+    .content-action-toolbar {
+        white-space: normal;
+    }
+}
+.content-action-toolbar::-webkit-scrollbar, .content-action-toolbar ::-webkit-scrollbar {
+    display: none;
+}
+a.content-action-button {
+    padding: 4px 8px;
+    background: var(--bg-color);
+    border: 2px solid var(--bg-color-3);
+    border-radius: 4px;
+    font-size: var(--font-size-s);
+}
+a.content-action-button svg {
+    width: var(--font-size-s);
+    height: var(--font-size-s);
+    color: var(--color-1);
+    position: relative;
+    top: 2px;
+}
+a.content-action-button svg ~ span {
+    margin-left: 8px;
+}

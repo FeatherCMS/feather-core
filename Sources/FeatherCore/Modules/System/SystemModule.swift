@@ -56,6 +56,8 @@ final class SystemModule: FeatherModule {
         
 //        app.hooks.register(.contentFilters, use: contentFiltersHook)
 //        app.hooks.register(.adminWidget, use: adminWidgetHook)
+        
+//        app.hooks.register("content-actions-template", use: contentActionsTemplate)
     }
     
     
@@ -75,6 +77,30 @@ final class SystemModule: FeatherModule {
             AFilter(),
             BFilter(),
         ]
+    }
+    
+    func contentActionsTemplate(args: HookArguments) -> TemplateDataRepresentable {
+        TemplateData.dictionary([
+            "js": """
+                function clear() {
+                    const el = document.getElementsByClassName('editor')[0];
+                    //el.value = '';
+                    el.select();
+                    document.execCommand('copy');
+                    window.getSelection().removeAllRanges();
+                }
+            """,
+            "css": """
+                
+            """,
+            "actions": .array([
+                .dictionary([
+                    "title": "Copy",
+                    "icon": "edit",
+                    "action": "clear()",
+                ]),
+            ]),
+        ])
     }
   
     // MARK: - hooks

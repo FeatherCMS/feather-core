@@ -8,7 +8,7 @@
 class ToggleField: FormField<Bool, ToggleFieldView> {
 
     convenience init(key: String) {
-        self.init(key: key, input: false, output: ToggleFieldView(key: key))
+        self.init(key: key, input: false, output: .init(key: key))
     }
     
     override func process(req: Request) -> EventLoopFuture<Void> {

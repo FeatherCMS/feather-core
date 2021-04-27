@@ -11,6 +11,7 @@ public enum FormFieldType: String, Encodable {
     
     case text
     case textarea
+    case content
     
     case selection
     case multiselection

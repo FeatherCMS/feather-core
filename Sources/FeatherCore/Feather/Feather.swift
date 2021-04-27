@@ -95,6 +95,8 @@ public struct Feather {
         TemplateEngine.entities.use(AbsoluteUrlEntity(), asMethod: "absoluteUrl")
         TemplateEngine.entities.use(InlineSvgEntity(), asFunction: "svg")
         TemplateEngine.entities.use(UserHasPermissionEntity(), asFunction: "UserHasPermission")
+        TemplateEngine.entities.use(InvokeHookEntity(), asFunction: "InvokeHook")
+        TemplateEngine.entities.use(InvokeAllHooksEntity(), asFunction: "InvokeAllHooks")
 //        TemplateEngine.entities.use(TranslationEntity(), asMethod: "t")
     }
     
