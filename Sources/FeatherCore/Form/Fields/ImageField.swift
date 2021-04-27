@@ -20,7 +20,7 @@ open class ImageField: FormField<ImageInput, ImageFieldView> {
 
     let path: String
     
-    var imageKey: String? = nil {
+    public var imageKey: String? = nil {
         didSet {
             output.currentKey = imageKey
         }
