@@ -7,11 +7,12 @@
 
 public extension Application {
     
-    static let baseUrl: String = Environment.fetch("BASE_URL")
+    static let baseUrl: String = (Feather.https ? "https" : "http") + "://" + Feather.hostname + ":" + (Feather.port == 80 ? "" : String(Feather.port)) + "/"
+
 
     // paths are always absolute, with a trailing slash
     struct Paths {
-        public static let base = URL(fileURLWithPath: Environment.path("BASE_PATH"))
+        public static let base = URL(fileURLWithPath: Feather.workDir)
 
         public static let resources = base.appendingPathComponent(Directories.resources)
         public static let templates = resources.appendingPathComponent(Directories.templates)

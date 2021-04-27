@@ -14,7 +14,21 @@
 /// - More details about [Feather CMS](https://github.com/FeatherCMS/feather).
 public struct Feather {
 
-    public static var modulesLocation: String = "Sources/App/Modules/"
+    /*
+     # .env example
+     FEATHER_WORK_DIR=/Users/me/feather
+     FEATHER_HTTPS=false
+     FEATHER_DOMAIN=localhost
+     FEATHER_PORT=8080
+     FEATHER_MAX_BODY_SIZE=10mb
+     */
+    public static let workDir: String = Environment.fetch("FEATHER_WORK_DIR")
+    public static let https: Bool = Bool(Environment.get("FEATHER_HTTPS") ?? "true") ?? true
+    public static let hostname: String = Environment.get("FEATHER_HOSTNAME") ?? "127.0.0.1"
+    public static let port: Int = Int(Environment.get("FEATHER_PORT") ?? "8080") ?? 8080
+    public static let maxBodySize: ByteCount = ByteCount(stringLiteral: Environment.get("FEATHER_MAX_BODY_SIZE") ?? "10mb")
+    
+    //public static var modulesLocation: String = "Sources/App/Modules/"
 
     public private(set) var modules: [FeatherModule]
     private unowned var app: Application
@@ -44,11 +58,14 @@ public struct Feather {
             fatalError("Missing file storage configuration")
         }
 
+        app.http.server.configuration.hostname = Self.hostname
+        app.http.server.configuration.port = Self.port
+        app.routes.defaultMaxBodySize = Self.maxBodySize
+        
         setupTemplateEngineEntities()
 
         app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
-        app.routes.defaultMaxBodySize = "10mb"
-
+        
         app.sessions.use(.fluent)
         app.migrations.add(SessionRecord.migration)
         app.middleware.use(app.sessions.middleware)
