@@ -56,7 +56,6 @@ final class SystemModule: FeatherModule {
         
 //        app.hooks.register(.contentFilters, use: contentFiltersHook)
 //        app.hooks.register(.adminWidget, use: adminWidgetHook)
-        
 //        app.hooks.register("content-actions-template", use: contentActionsTemplate)
     }
     
