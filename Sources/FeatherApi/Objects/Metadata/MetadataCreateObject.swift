@@ -1,14 +1,14 @@
 //
-//  FrontendMetadataObject.swift
-//  FrontendModuleApi
+//  File.swift
+//  
 //
-//  Created by Tibor Bodecs on 2020. 12. 11..
+//  Created by Tibor Bodecs on 2021. 04. 27..
 //
 
 import Foundation
 
-public struct MetadataGetObject: Codable {
-    public var id: UUID
+public struct MetadataCreateObject: Codable {
+
     public var module: String
     public var model: String
     public var reference: UUID
@@ -26,22 +26,20 @@ public struct MetadataGetObject: Codable {
     public var css: String?
     public var js: String?
     
-    public init(id: UUID,
-                module: String,
+    public init(module: String,
                 model: String,
                 reference: UUID,
                 slug: String,
                 title: String? = nil,
                 excerpt: String? = nil,
                 imageKey: String? = nil,
-                date: Date,
-                status: MetadataStatus,
-                feedItem: Bool,
+                date: Date = Date(),
+                status: MetadataStatus = .draft,
+                feedItem: Bool = false,
                 canonicalUrl: String? = nil,
                 filters: [String],
                 css: String? = nil,
                 js: String? = nil) {
-        self.id = id
         self.module = module
         self.model = model
         self.reference = reference

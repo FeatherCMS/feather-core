@@ -12,24 +12,14 @@ struct FrontendMetadataController: FeatherController {
     
     typealias CreateForm = FrontendMetadataEditForm
     typealias UpdateForm = FrontendMetadataEditForm
-    
-    #warning("fixme")
-    typealias GetApi = CommonVariableApi
-    typealias ListApi = CommonVariableApi
-    typealias CreateApi = CommonVariableApi
-    typealias UpdateApi = CommonVariableApi
-    typealias PatchApi = CommonVariableApi
-    typealias DeleteApi = CommonVariableApi
-    
-//        "title": "Metadatas",
-//        "key": "frontend.metadatas",
-//        "create": false,
-//        "delete": false,
-//        "fields": [
-//            ["key": "slug", "default": true, "placeholder": "home"]
-//        ]
-    
-    
+
+    typealias GetApi = FrontendMetadataApi
+    typealias ListApi = FrontendMetadataApi
+    typealias CreateApi = FrontendMetadataApi
+    typealias UpdateApi = FrontendMetadataApi
+    typealias PatchApi = FrontendMetadataApi
+    typealias DeleteApi = FrontendMetadataApi
+
     func listTable(_ models: [Model]) -> Table {
         Table(columns: ["title", "slug"], rows: models.map { model in
             TableRow(id: model.identifier, cells: [TableCell(model.title), TableCell(model.slug)])
@@ -71,5 +61,23 @@ struct FrontendMetadataController: FeatherController {
     
     func deleteContext(req: Request, model: FrontendMetadataModel) -> String {
         model.title ?? model.identifier
+    }
+    
+    // MARK: - routes
+    
+    /// do not register create & delete routes
+    func setupRoutes(on builder: RoutesBuilder) {
+        let base = builder.grouped(Model.Module.moduleKeyPathComponent).grouped(Model.modelKeyPathComponent)
+        setupListRoute(on: base)
+        setupGetRoute(on: base)
+        setupUpdateRoutes(on: base, as: Model.updatePathComponent)
+    }
+
+    func setupApiRoutes(on builder: RoutesBuilder) {
+        let base = builder.grouped(Model.Module.moduleKeyPathComponent).grouped(Model.modelKeyPathComponent)
+        setupListApiRoute(on: base)
+        setupGetApiRoute(on: base)
+        setupUpdateApiRoute(on: base)
+        setupPatchApiRoute(on: base)
     }
 }

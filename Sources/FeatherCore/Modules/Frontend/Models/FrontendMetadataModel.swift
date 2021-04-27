@@ -128,6 +128,30 @@ final class FrontendMetadataModel: FeatherModel {
             \.$title ~~ term,
         ]
     }
+    
+    // MARK: - info
+    
+    /// disable create & delete operations
+    static func info(_ req: Request) -> ModelInfo {
+        let list = req.checkPermission(for: permission(for: .list))
+        let get = req.checkPermission(for: permission(for: .get))
+        let create = false
+        let update = req.checkPermission(for: permission(for: .update))
+        let patch = req.checkPermission(for: permission(for: .patch))
+        let delete = false
+    
+        let permissions = ModelInfo.AvailablePermissions(list: list, get: get, create: create, update: update, patch: patch, delete: delete)
+        return ModelInfo(idKey: modelKey,
+                         idParamKey: idParamKey,
+                         name: .init(singular: name.singular, plural: name.plural),
+                         assetPath: assetPath,
+                         module: .init(idKey: Module.moduleKey, name: Module.name, assetPath: Module.assetPath),
+                         permissions: permissions,
+                         isSearchable: isSearchable,
+                         allowedOrders: allowedOrders().map(\.description),
+                         defaultOrder: allowedOrders().first?.description,
+                         defaultSort: defaultSort().rawValue)
+    }
 }
 
 // MARK: - view

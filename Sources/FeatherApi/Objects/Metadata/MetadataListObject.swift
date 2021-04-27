@@ -1,13 +1,13 @@
 //
-//  FrontendMetadataObject.swift
-//  FrontendModuleApi
+//  File.swift
+//  
 //
-//  Created by Tibor Bodecs on 2020. 12. 11..
+//  Created by Tibor Bodecs on 2021. 04. 27..
 //
 
 import Foundation
 
-public struct MetadataGetObject: Codable {
+public struct MetadataListObject: Codable {
     public var id: UUID
     public var module: String
     public var model: String

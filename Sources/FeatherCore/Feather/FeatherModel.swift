@@ -37,6 +37,8 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
     static func permissions() -> [Permission]
     static func hookInstallPermissions() -> [PermissionCreateObject]
     
+    static func info(_ req: Request) -> ModelInfo
+    
     static func getIdParameter(req: Request) -> UUID?
     
     static var adminLink: Link { get }
