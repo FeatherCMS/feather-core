@@ -17,11 +17,11 @@ open class FeatherFormContext<T: FeatherModel>: FormComponent {
     
     private var modelInfo: ModelInfo?
 
-    var form: Form
-    var model: T?
-    var nav: [Link]
-    var metadata: Metadata?
-    var breadcrumb: [Link]
+    open var form: Form
+    open var model: T?
+    open var nav: [Link]
+    open var metadata: Metadata?
+    open var breadcrumb: [Link]
 
     public init(form: Form = .init(), model: T? = nil, nav: [Link] = [], breadcrumb: [Link] = []) {
         self.form = form

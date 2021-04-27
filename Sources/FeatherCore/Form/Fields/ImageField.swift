@@ -6,7 +6,7 @@
 //
 
 /// represents a file data value
-class ImageField: FormField<ImageInput, ImageFieldView> {
+open class ImageField: FormField<ImageInput, ImageFieldView> {
 
     public struct TemporaryImage {
         public let key: String
@@ -46,13 +46,13 @@ class ImageField: FormField<ImageInput, ImageFieldView> {
         return temporaryImage == nil && imageKey == nil
     }
     
-    init(key: String, path: String) {
+    public init(key: String, path: String) {
         self.path = path
          
         super.init(key: key, input: .init(key: key), output: .init(key: key))
     }
 
-    override func write(req: Request) -> EventLoopFuture<Void> {
+    override open func write(req: Request) -> EventLoopFuture<Void> {
         var future: EventLoopFuture<String?> = req.eventLoop.future(nil)
         /// if there is a delete flag we simply remove the original file
         if shouldRemoveImage {
@@ -86,7 +86,7 @@ class ImageField: FormField<ImageInput, ImageFieldView> {
         }
     }
     
-    override func process(req: Request) -> EventLoopFuture<Void> {
+    override open func process(req: Request) -> EventLoopFuture<Void> {
         /// process input
         input.process(req: req)
         /// set current image key
