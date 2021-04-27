@@ -22,7 +22,7 @@ struct GenerateCommandGroup: CommandGroup {
         self.help = "Generate command group help"
 
         self.commands = [
-            GenerateModelCommand.name: GenerateModelCommand(),
+            GenerateModuleCommand.name: GenerateModuleCommand(),
         ]
     }
 }

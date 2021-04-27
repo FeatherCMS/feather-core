@@ -9,8 +9,7 @@ import Foundation
 
 struct ModelDescription {
 
-    var module: String
     var name: String
-    var fields: [FieldDescription]
+    var properties: [PropertyDescription]
 //    var isMetadataRepresentable: Bool
 }

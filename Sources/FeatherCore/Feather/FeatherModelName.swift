@@ -12,7 +12,7 @@ public struct FeatherModelName {
     public let singular: String
     public var plural: String { pluralException ?? singular + "s" }
 
-    init(singular: String, plural exception: String? = nil) {
+    public init(singular: String, plural exception: String? = nil) {
         self.singular = singular
         self.pluralException = exception
     }

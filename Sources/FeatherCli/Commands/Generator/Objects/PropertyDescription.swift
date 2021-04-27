@@ -7,16 +7,14 @@
 
 import Foundation
 
-struct FieldDescription {
+struct PropertyDescription {
 
     enum FieldType: String, CaseIterable {
         case string
         case int
-        case bool
-        
-        
+        case bool  
     }
-    
+
     public enum FormFieldType: String, CaseIterable {
         case text
         case textarea
