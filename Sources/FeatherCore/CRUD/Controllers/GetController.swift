@@ -34,12 +34,14 @@ public struct DetailContext: Encodable {
 
     public let model: ModelInfo
     public let fields: [Field]
-    public let nav: [Link]
-    public let bc: [Link]
+    public var metadata: Metadata?
+    public var nav: [Link]
+    public var bc: [Link]
 
-    public init(model: ModelInfo, fields: [DetailContext.Field], nav: [Link] = [], bc: [Link] = []) {
+    public init(model: ModelInfo, fields: [DetailContext.Field], metadata: Metadata? = nil, nav: [Link] = [], bc: [Link] = []) {
         self.model = model
         self.fields = fields
+        self.metadata = metadata
         self.nav = nav
         self.bc = bc
     }
@@ -127,5 +129,29 @@ public extension GetController {
     
     func setupGetApiRoute(on builder: RoutesBuilder) {
         builder.get(Model.idParamKeyPathComponent, use: getApi)
+    }
+}
+
+public extension GetController where Model: MetadataRepresentable {
+
+    func getResponse(req: Request, model: Model) -> EventLoopFuture<Response> {
+        Model.findMetadata(reference: model.id!, on: req.db).flatMap { metadata -> EventLoopFuture<Response> in
+            var context = getContext(req: req, model: model)
+            guard let metadata = metadata else {
+                return req.view.render(getView, context).encodeResponse(for: req)
+            }
+            context.metadata = metadata
+            
+            let baseUrl = "/admin/" + FrontendModule.moduleKey + "/" + FrontendMetadataModel.modelKey + "/" + metadata.id!.uuidString + "/"
+            if req.checkPermission(for: FrontendMetadataModel.permission(for: .update)) {
+                context.nav.append(.init(label: FrontendMetadataModel.name.singular,
+                                         url: baseUrl + FrontendMetadataModel.updatePathComponent.description + "/"))
+            }
+            else if req.checkPermission(for: FrontendMetadataModel.permission(for: .get)) {
+                context.nav.append(.init(label: FrontendMetadataModel.name.singular,
+                                         url: baseUrl))
+            }
+            return req.view.render(getView, context).encodeResponse(for: req)
+        }
     }
 }
