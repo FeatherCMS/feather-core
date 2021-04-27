@@ -28,22 +28,25 @@ struct UserAccountApi: FeatherApiRepresentable {
         .init(id: model.id!, email: model.email, root: model.root)
     }
     
-    func mapCreate(model: Model, input: CreateObject) {
+    func mapCreate(_ req: Request, model: Model, input: CreateObject) -> EventLoopFuture<Void> {
         model.email = input.email
         model.password = input.password
         model.root = input.root ?? false
+        return req.eventLoop.future()
     }
     
-    func mapUpdate(model: Model, input: UpdateObject) {
+    func mapUpdate(_ req: Request, model: Model, input: UpdateObject) -> EventLoopFuture<Void> {
         model.email = input.email
         model.password = input.password
         model.root = input.root ?? false
+        return req.eventLoop.future()
     }
 
-    func mapPatch(model: Model, input: PatchObject) {
+    func mapPatch(_ req: Request, model: Model, input: PatchObject) -> EventLoopFuture<Void> {
         model.email = input.email ?? model.email
         model.password = input.password ?? model.password
         model.root = input.root ?? model.root
+        return req.eventLoop.future()
     }
     
     func validateCreate(_ req: Request) -> EventLoopFuture<Bool> {

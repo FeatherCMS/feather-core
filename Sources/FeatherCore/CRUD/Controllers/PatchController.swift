@@ -9,21 +9,9 @@ public protocol PatchApiRepresentable: ModelApi {
     
     associatedtype PatchObject: Content
     
-    func validatePatchInput(_ req: Request) -> EventLoopFuture<Bool>
-    func mapPatch(model: Model, input: PatchObject)
+    func validatePatch(_ req: Request) -> EventLoopFuture<Bool>
+    func mapPatch(_ req: Request, model: Model, input: PatchObject) -> EventLoopFuture<Void>
 }
-
-extension PatchApiRepresentable {
-
-    func validatePatchInput(_ req: Request) -> EventLoopFuture<Bool> {
-        req.eventLoop.future(true)
-    }
-
-    func processPatchInput(_ req: Request, model: Model, input: PatchObject) -> EventLoopFuture<Model> {
-        return req.eventLoop.future(model)
-    }
-}
-
 
 public protocol PatchController: IdentifiableController {
     

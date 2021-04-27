@@ -10,9 +10,8 @@ public protocol UpdateApiRepresentable: ModelApi {
     associatedtype UpdateObject: Codable
     
     func validateUpdate(_ req: Request) -> EventLoopFuture<Bool>
-    func mapUpdate(model: Model, input: UpdateObject)
+    func mapUpdate(_ req: Request, model: Model, input: UpdateObject) -> EventLoopFuture<Void>
 }
-
 
 public protocol UpdateController: IdentifiableController {
     

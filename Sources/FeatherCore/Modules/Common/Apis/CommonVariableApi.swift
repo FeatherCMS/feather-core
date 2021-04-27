@@ -28,25 +28,28 @@ struct CommonVariableApi: FeatherApiRepresentable {
         .init(id: model.id!, key: model.key, name: model.name, value: model.value, notes: model.notes)
     }
     
-    func mapCreate(model: Model, input: CreateObject) {
+    func mapCreate(_ req: Request, model: Model, input: CreateObject) -> EventLoopFuture<Void> {
         model.key = input.key
         model.name = input.name
         model.value = input.value
         model.notes = input.notes
+        return req.eventLoop.future()
     }
     
-    func mapUpdate(model: Model, input: UpdateObject) {
+    func mapUpdate(_ req: Request, model: Model, input: UpdateObject) -> EventLoopFuture<Void> {
         model.key = input.key
         model.name = input.name
         model.value = input.value ?? model.value
         model.notes = input.notes ?? model.notes
+        return req.eventLoop.future()
     }
 
-    func mapPatch(model: Model, input: PatchObject) {
+    func mapPatch(_ req: Request, model: Model, input: PatchObject) -> EventLoopFuture<Void> {
         model.key = input.key ?? model.key
         model.name = input.name ?? model.name
         model.value = input.value ?? model.value
         model.notes = input.notes ?? model.notes
+        return req.eventLoop.future()
     }
 
     func validateCreate(_ req: Request) -> EventLoopFuture<Bool> {

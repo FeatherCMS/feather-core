@@ -35,16 +35,16 @@ struct FrontendMenuItemApi: FeatherApiRepresentable {
               menuId: model.$menu.id)
     }
     
-    func mapCreate(model: Model, input: CreateObject) {
-        
+    func mapCreate(_ req: Request, model: Model, input: CreateObject) -> EventLoopFuture<Void> {
+        return req.eventLoop.future()
     }
     
-    func mapUpdate(model: Model, input: UpdateObject) {
-        
+    func mapUpdate(_ req: Request, model: Model, input: UpdateObject) -> EventLoopFuture<Void> {
+        return req.eventLoop.future()
     }
 
-    func mapPatch(model: Model, input: PatchObject) {
-        
+    func mapPatch(_ req: Request, model: Model, input: PatchObject) -> EventLoopFuture<Void> {
+        return req.eventLoop.future()
     }
     
     func validateCreate(_ req: Request) -> EventLoopFuture<Bool> {
