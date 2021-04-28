@@ -17,6 +17,7 @@ let package = Package(
         .package(url: "https://github.com/vapor/vapor", from: "4.41.0"),
         .package(url: "https://github.com/vapor/fluent", from: "4.0.0"),
         .package(url: "https://github.com/binarybirds/tau", from: "1.0.0"),
+        .package(url: "https://github.com/binarybirds/tau-kit", from: "1.0.0"),
         .package(url: "https://github.com/binarybirds/liquid", from: "1.2.0"),
         .package(url: "https://github.com/binarybirds/vapor-hooks", from: "1.0.0"),
         /// tests
@@ -32,7 +33,7 @@ let package = Package(
             .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
             .product(name: "LiquidLocalDriver", package: "liquid-local-driver"),
             
-//            .product(name: "XCTTauKit", package: "tau-kit"),
+            .product(name: "XCTTauKit", package: "tau-kit"),
             .product(name: "XCTVapor", package: "vapor"),
             .product(name: "Spec", package: "spec"),
         ]),

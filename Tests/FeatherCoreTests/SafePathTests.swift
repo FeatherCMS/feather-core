@@ -1,3 +1,10 @@
+//
+//  File.swift
+//
+//
+//  Created by Tibor Bodecs on 2021. 04. 28..
+//
+
 import XCTest
 @testable import FeatherCore
 
