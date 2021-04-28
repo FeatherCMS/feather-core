@@ -35,12 +35,12 @@ struct FrontendMenuController: FeatherController {
         .init(info: Model.info(req), table: table, pages: pages)
     }
 
-    func beforeDelete(req: Request, model: FrontendMenuModel) -> EventLoopFuture<FrontendMenuModel> {
+    func beforeDelete(req: Request, model: Model) -> EventLoopFuture<Model> {
         FrontendMenuItemModel.query(on: req.db).filter(\.$menu.$id == model.id!).delete().map { model }
     }
 
     
-    func detailFields(req: Request, model: FrontendMenuModel) -> [DetailContext.Field] {
+    func detailFields(req: Request, model: Model) -> [DetailContext.Field] {
         [
             .init(label: "Id", value: model.identifier),
             .init(label: "Key", value: model.key),
@@ -51,11 +51,11 @@ struct FrontendMenuController: FeatherController {
    
     func getContext(req: Request, model: Model) -> DetailContext {
         .init(model: Model.info(req), fields: detailFields(req: req, model: model), nav: [
-            .init(label: "Menu items", url: "/admin/system/menus/" + model.identifier + "/items/")
+            FrontendMenuItemModel.adminLink(menuId: model.id!),
         ])
     }
     
-    func deleteContext(req: Request, model: FrontendMenuModel) -> String {
+    func deleteContext(req: Request, model: Model) -> String {
         model.name
     }
 

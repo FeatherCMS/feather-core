@@ -31,6 +31,9 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
     static var isSearchable: Bool { get }
     static func allowedOrders() -> [FieldKey]
     static func defaultSort() -> FieldSort
+    
+    static func sort(queryBuilder: QueryBuilder<Self>, order: FieldKey, direction: DatabaseQuery.Sort.Direction) -> QueryBuilder<Self>
+    
     static func search(_ term: String) -> [ModelValueFilter<Self>]
     
     static func permission(for action: Permission.Action) -> Permission
@@ -118,6 +121,10 @@ public extension FeatherModel {
 
     static func adminLink(for id: UUID) -> Link {
         .init(label: name.singular, url: (adminLink.url + "/" + id.uuidString).safePath())
+    }
+    
+    static func sort(queryBuilder: QueryBuilder<Self>, order: FieldKey, direction: DatabaseQuery.Sort.Direction) -> QueryBuilder<Self> {
+        queryBuilder.sort(order, direction)
     }
 }
 

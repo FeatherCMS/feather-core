@@ -43,16 +43,16 @@ struct FrontendMenuItemController: FeatherController {
         let menuId = FrontendMenuModel.getIdParameter(req: req)!
 
         return ListContext(info: Model.info(req), table: table, pages: pages, nav: [
-            .init(label: "Menu details", url: "/admin/frontend/menus/" + menuId.uuidString + "/")
+            FrontendMenuModel.adminLink(for: menuId),
         ], breadcrumb: [
-            .init(label: "Frontend", url: "/admin/frontend/"),
-            .init(label: "Menus", url: "/admin/frontend/menus/"),
-            .init(label: "Menu", url: "/admin/frontend/menus/" + menuId.uuidString + "/"),
+            Module.adminLink,
+            FrontendMenuModel.adminLink,
+            FrontendMenuModel.adminLink(for: menuId),
             .init(label: "Items", url: req.url.path.safePath()),
         ])
     }
     
-    func beforeCreate(req: Request, model: FrontendMenuItemModel) -> EventLoopFuture<FrontendMenuItemModel> {
+    func beforeCreate(req: Request, model: Model) -> EventLoopFuture<Model> {
         guard let menuId = FrontendMenuModel.getIdParameter(req: req) else {
             return req.eventLoop.future(error: Abort(.badRequest))
         }
@@ -60,14 +60,14 @@ struct FrontendMenuItemController: FeatherController {
         return req.eventLoop.future(model)
     }
 
-    func beforeListQuery(req: Request, queryBuilder: QueryBuilder<FrontendMenuItemModel>) -> QueryBuilder<FrontendMenuItemModel> {
+    func beforeListQuery(req: Request, queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
         guard let menuId = FrontendMenuModel.getIdParameter(req: req) else {
             return queryBuilder
         }
         return queryBuilder.filter(\.$menu.$id == menuId)
     }
     
-    func detailFields(req: Request, model: FrontendMenuItemModel) -> [DetailContext.Field] {
+    func detailFields(req: Request, model: Model) -> [DetailContext.Field] {
         [
             .init(label: "Id", value: model.identifier),
             .init(label: "Icon", value: model.icon ?? ""),
@@ -81,25 +81,25 @@ struct FrontendMenuItemController: FeatherController {
     func getContext(req: Request, model: Model) -> DetailContext {
         let menuId = FrontendMenuModel.getIdParameter(req: req)!
         return .init(model: Model.info(req), fields: detailFields(req: req, model: model), nav: [], bc: [
-            FrontendModule.adminLink,
+            Module.adminLink,
             FrontendMenuModel.adminLink,
             FrontendMenuModel.adminLink(for: menuId),
-            FrontendMenuItemModel.adminLink(menuId: menuId),
+            Model.adminLink(menuId: menuId),
             .init(label: "View", url: req.url.path.safePath()),
         ])
     }
     
-    func deleteContext(req: Request, model: FrontendMenuItemModel) -> String {
+    func deleteContext(req: Request, model: Model) -> String {
         model.label
     }
     
-    func deleteContext(req: Request, id: String, token: String, model: FrontendMenuItemModel) -> DeleteContext {
+    func deleteContext(req: Request, id: String, token: String, model: Model) -> DeleteContext {
         let menuId = FrontendMenuModel.getIdParameter(req: req)!
         return .init(model: Model.info(req), id: id, token: token, context: deleteContext(req: req, model: model), bc: [
-            FrontendModule.adminLink,
+            Module.adminLink,
             FrontendMenuModel.adminLink,
             FrontendMenuModel.adminLink(for: menuId),
-            FrontendMenuItemModel.adminLink(menuId: menuId),
+            Model.adminLink(menuId: menuId),
             .init(label: "Delete", url: req.url.path.safePath()),
         ])
     }

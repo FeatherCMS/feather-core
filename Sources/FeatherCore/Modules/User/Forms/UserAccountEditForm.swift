@@ -50,7 +50,7 @@ struct UserAccountEditForm: FeatherForm {
                 .save { req, field in
                     let values = field.input.compactMap { UUID(uuidString: $0) }
                     return context.model!.$roles.reAttach(ids: values, on: req.db)
-                }
+                },
             
         ]
     }

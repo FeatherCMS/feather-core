@@ -54,7 +54,7 @@ public struct ListLoader<T: FeatherModel>  {
         }
 
         if let order = listOrder {
-            qb = qb.sort(order, listSort.direction)
+            qb = T.sort(queryBuilder: qb, order: order, direction: listSort.direction)
         }
         
         // search by terms
