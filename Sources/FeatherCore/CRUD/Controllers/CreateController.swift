@@ -11,8 +11,14 @@ public protocol CreateApiRepresentable: ModelApi {
     
     associatedtype CreateObject: Codable
     
-    func validateCreate(_ req: Request) -> EventLoopFuture<Bool>
+    func validateCreate(_ req: Request) -> EventLoopFuture<[ValidationError]>
     func mapCreate(_ req: Request, model: Model, input: CreateObject) -> EventLoopFuture<Void>
+}
+
+extension CreateApiRepresentable {
+    func validateCreate(_ req: Request) -> EventLoopFuture<[ValidationError]> {
+        return req.eventLoop.future([])
+    }
 }
 
 public protocol CreateController: ModelController {
@@ -105,9 +111,9 @@ public extension CreateController {
 
             let api = CreateApi()
 
-            return api.validateCreate(req).flatMap { isValid -> EventLoopFuture<CreateApi.Model> in
-                guard isValid else {
-                    return req.eventLoop.future(error: Abort(.badRequest))
+            return api.validateCreate(req).flatMap { errors -> EventLoopFuture<CreateApi.Model> in
+                guard errors.isEmpty else {
+                    return req.eventLoop.future(error: ValidationAbort(abort: Abort(.badRequest), errors: errors))
                 }
                 do {
                     let input = try req.content.decode(CreateApi.CreateObject.self)

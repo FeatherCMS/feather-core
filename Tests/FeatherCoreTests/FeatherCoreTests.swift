@@ -10,10 +10,6 @@ import FeatherTest
 
 final class FeatherCoreTests: FeatherTestCase {
 
-    override class func testModules() -> [FeatherModule] {
-        return []
-    }
-
     func testWelcomePage() throws {
         try app.describe("Welcome page should be available")
             .get("/")

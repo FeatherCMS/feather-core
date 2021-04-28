@@ -9,10 +9,6 @@ import FeatherTest
 @testable import FeatherCore
 
 final class FeatherAdminTests: FeatherTestCase {
-
-    override class func testModules() -> [FeatherModule] {
-        return []
-    }
     
     func testAdmin() throws {
         try app.describe("Admin page should not be available for visitors")

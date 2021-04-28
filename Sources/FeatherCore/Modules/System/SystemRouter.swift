@@ -27,7 +27,8 @@ struct SystemRouter: RouteCollection {
         // MARK: - api admin
         /// guard the api with auth middlewares, if there was no auth middlewares returned we simply stop the registration
         let apiMiddlewaresResult: [[Middleware]] = app.invokeAll(.apiMiddlewares)
-        let apiMiddlewares = apiMiddlewaresResult.flatMap { $0 }
+        var apiMiddlewares = apiMiddlewaresResult.flatMap { $0 }
+        apiMiddlewares.append(ApiErrorMiddleware(environment: app.environment))
         let adminApiRoutes = apiRoutes.grouped("admin").grouped(apiMiddlewares)
         var adminApiArgs = HookArguments()
         adminApiArgs.routes = adminApiRoutes

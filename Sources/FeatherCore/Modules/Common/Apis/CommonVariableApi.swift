@@ -52,11 +52,15 @@ struct CommonVariableApi: FeatherApiRepresentable {
         return req.eventLoop.future()
     }
 
-    func validateCreate(_ req: Request) -> EventLoopFuture<Bool> {
-//        validations.add("key", as: String.self, is: !.empty && .count(...250))
-//        validations.add("name", as: String.self, is: !.empty && .count(...250))
-
-        req.eventLoop.future(true)
+    func validateCreate(_ req: Request) -> EventLoopFuture<[ValidationError]> {
+        InputValidator([
+            ContentValidator<String>(key: "name", message: "Name is required", optional: false, validation: { value in
+                !value.isEmpty
+            }),
+            ContentValidator<String>(key: "key", message: "Key must be unique", optional: false, validation: nil, asyncValidation: { value, req in
+                Model.isUniqueBy(\.$key == value, req: req)
+            })
+        ]).validateResult(req)
     }
     
     func validateUpdate(_ req: Request) -> EventLoopFuture<Bool> {

@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 04. 28..
 //
 
-import XCTest
+import FeatherTest
 @testable import FeatherCore
 
 final class SafePathTests: XCTestCase {

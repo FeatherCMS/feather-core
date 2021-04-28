@@ -15,3 +15,5 @@ public struct ValidationError: Codable {
         self.message = message
     }
 }
+
+extension ValidationError: Content {}
