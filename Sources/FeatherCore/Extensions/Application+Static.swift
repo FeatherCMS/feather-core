@@ -37,4 +37,13 @@ public extension Application {
         public static let images: String = "images"
         public static let javascript: String = "js"
     }
+    
+    static func dateFormatter(dateStyle: DateFormatter.Style = .short, timeStyle: DateFormatter.Style = .short) -> DateFormatter {
+        let formatter = DateFormatter()
+        formatter.timeZone = Application.Config.timezone
+        formatter.locale =  Application.Config.locale
+        formatter.dateStyle = dateStyle
+        formatter.timeStyle = timeStyle
+        return formatter
+    }
 }

@@ -14,9 +14,9 @@ fileprivate extension Application {
             "timezone": .lazy(Application.Config.timezone.identifier),
             "locale": .lazy(Application.Config.locale.identifier),
             "dateFormats": .lazy([
-                "full": TemplateData.string(Application.Config.dateFormatter().dateFormat),
-                "date": TemplateData.string(Application.Config.dateFormatter(timeStyle: .none).dateFormat),
-                "time": TemplateData.string(Application.Config.dateFormatter(dateStyle: .none).dateFormat),
+                "full": TemplateData.string(Application.dateFormatter().dateFormat),
+                "date": TemplateData.string(Application.dateFormatter(timeStyle: .none).dateFormat),
+                "time": TemplateData.string(Application.dateFormatter(dateStyle: .none).dateFormat),
             ]),
         ]
     }

@@ -9,9 +9,7 @@ struct FrontendMetadataEditForm: FeatherForm {
     
     var context: FeatherFormContext<FrontendMetadataModel>
     
-    var formatter: DateFormatter {
-        Application.Config.dateFormatter()
-    }
+    var formatter: DateFormatter = Application.dateFormatter()
 
     init() {
         context = .init()

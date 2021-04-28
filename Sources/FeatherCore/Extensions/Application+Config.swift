@@ -144,12 +144,5 @@ extension Application.Config {
         }
     }
 
-    static func dateFormatter(dateStyle: DateFormatter.Style = .short, timeStyle: DateFormatter.Style = .short) -> DateFormatter {
-        let formatter = DateFormatter()
-        formatter.timeZone = timezone
-        formatter.locale =  locale
-        formatter.dateStyle = dateStyle
-        formatter.timeStyle = timeStyle
-        return formatter
-    }
+    
 }

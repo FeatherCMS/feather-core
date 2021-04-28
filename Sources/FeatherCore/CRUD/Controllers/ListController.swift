@@ -154,3 +154,10 @@ public extension ListController {
         builder.get(use: listApi)
     }
 }
+
+//extension ListController where Model: MetadataRepresentable {
+//
+//    func beforeListQuery(req: Request, queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
+//        Model.query(on: req.db).joinMetadata()
+//    }
+//}
