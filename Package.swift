@@ -9,6 +9,7 @@ let package = Package(
     products: [
         .library(name: "FeatherCore", targets: ["FeatherCore"]),
         .library(name: "FeatherApi", targets: ["FeatherApi"]),
+        .library(name: "FeatherTest", targets: ["FeatherTest"]),
         .executable(name: "FeatherCli", targets: ["FeatherCli"]),
         .executable(name: "FeatherExample", targets: ["FeatherExample"]),
     ],
@@ -25,6 +26,16 @@ let package = Package(
         .package(url: "https://github.com/binarybirds/liquid-local-driver", from: "1.2.0"),
     ],
     targets: [
+        .target(name: "FeatherTest", dependencies: [
+            .target(name: "FeatherCore"),
+            
+            .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
+            .product(name: "LiquidLocalDriver", package: "liquid-local-driver"),
+            
+//            .product(name: "XCTTauKit", package: "tau-kit"),
+            .product(name: "XCTVapor", package: "vapor"),
+            .product(name: "Spec", package: "spec"),
+        ]),
         .target(name: "FeatherExample", dependencies: [
             .target(name: "FeatherCore"),
             
@@ -49,12 +60,7 @@ let package = Package(
         ]),
         .testTarget(name: "FeatherCoreTests", dependencies: [
             .target(name: "FeatherCore"),
-
-            .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
-            .product(name: "LiquidLocalDriver", package: "liquid-local-driver"),
-
-            .product(name: "XCTVapor", package: "vapor"),
-            .product(name: "Spec", package: "spec"),
+            .target(name: "FeatherTest"),
         ])
     ]
 )

@@ -8,7 +8,7 @@ env:
 	echo 'FEATHER_HTTPS=false' >> .env.development
 	
 env.testing:
-	echo 'FEATHER_WORK_DIR="$(CUR_DIR)/"' > .env.testing
+	echo 'FEATHER_WORK_DIR="$(CUR_DIR)/Tests/"' > .env.testing
 	echo 'FEATHER_HTTPS=false' >> .env.development
 	
 clean:

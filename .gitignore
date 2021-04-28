@@ -12,4 +12,6 @@ db.sqlite
 /Public
 /Resources
 ./feather
-Tests/tmp
+/Tests/tmp
+/Tests/Public
+/Tests/Resources

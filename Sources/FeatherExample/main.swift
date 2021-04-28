@@ -22,6 +22,5 @@ if app.isDebug {
 
 try Feather.boot(app)
 
-
 try app.run()
 

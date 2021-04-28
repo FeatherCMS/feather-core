@@ -1,66 +1,86 @@
-import XCTest
-import XCTVapor
-import Spec
-import FluentSQLiteDriver
-import LiquidLocalDriver
-
+import FeatherTest
 @testable import FeatherCore
 
-final class FeatherCoreTests: XCTestCase {
-    
-    private func featherInstall() throws {
-//        let feather = try Feather(env: .testing)
-//
-//        feather.usePublicFileMiddleware()
-//        feather.use(database: .sqlite(.memory), databaseId: .sqlite)
-//        feather.use(fileStorage: .local(publicUrl: Application.baseUrl, publicPath: Application.Paths.public.path, workDirectory: "assets"), fileStorageId: .local)
-//        try feather.configure()
-//
-//        try feather.app.describe("System install must succeed")
-//            .get("/install/")
-//            .expect(.ok)
-//            .expect(.html)
-//            .test(.inMemory)
-//
-//        return feather
+final class FeatherCoreTests: FeatherTestCase {
+
+    override class func testModules() -> [FeatherModule] {
+        return []
+    }
+
+    func testWelcomePage() throws {
+        try app.describe("Welcome page should be available")
+            .get("/")
+            .expect(.ok)
+            .expect(.html)
+            .expect { value in
+                XCTAssertTrue(value.body.string.contains("Welcome"))
+            }
+            .test(.inMemory)
+    }
+
+    func testAboutPage() throws {
+        try app.describe("About page should be available")
+            .get("/about/")
+            .expect(.ok)
+            .expect(.html)
+            .expect { value in
+                XCTAssertTrue(value.body.string.contains("About"))
+            }
+            .test(.inMemory)
     }
     
-    func testSystemInstall() throws {
-//        let feather = try featherInstall()
-//        defer { feather.stop() }
-//
-//        try feather.app.describe("Welcome page must present after install")
-//            .get("/")
-//            .expect(.ok)
-//            .expect(.html)
-//            .expect { value in
-//                XCTAssertTrue(value.body.string.contains("Welcome"))
-//            }
-//            .test(.inMemory)
+    func testLogin() throws {
+        /// NOTE: form id & token should be validated for login calls as well.
+        struct PostData: Content {
+            let formId: String
+            let formToken: String
+            let email: String
+            let password: String
+        }
+        /*
+         <input type="hidden" name="formId" value="7772E121-6FB9-4AE8-8E7E-8F2FCACDF22E">
+         <input type="hidden" name="formToken" value="ierbRg7ahXlii+Q0ztDg7itJLjiMqpBrd0iQOuwqb9U=">
+         */
+        var sessionCookie: HTTPCookies?
+
+        try app.describe("Welcome page should be available")
+            .post("/login/")
+            .body(PostData(formId: "", formToken: "", email: "root@feathercms.com", password: "FeatherCMS"))
+            .expect(.seeOther)
+            .expect { value in
+                XCTAssertNotNil(value.headers.setCookie)
+                XCTAssertTrue(value.body.string.isEmpty)
+                sessionCookie = value.headers.setCookie
+            }
+            .test(.inMemory)
+        
+        try app.describe("Welcome page should be available")
+            .get("/login/")
+            .cookie(sessionCookie)
+            .expect(.seeOther)
+            .expect { value in
+                XCTAssertTrue(value.body.string.isEmpty)
+            }
+            .test(.inMemory)
     }
     
-    private func sample() {
-//        let baseUrl = #file.split(separator: "/").dropLast().joined(separator: "/")
-//        let filePath = baseUrl + "/.env.testing"
-//        let env = Environment.testing
-//
-//
-//        let fileio = NonBlockingFileIO(threadPool: pool)
-//        let file = try DotEnvFile.read(path: filePath, fileio: fileio, on: elg.next()).wait()
-//
-//        let bucketValue = file.lines.first { $0.key == "BUCKET" }.map { $0.value } ?? ""
-//        let regionValue = file.lines.first { $0.key == "REGION" }.map { $0.value } ?? ""
-//        let regionType: Region? = Region(rawValue: regionValue)
-//
-//        guard let region = regionType else {
-//            fatalError("Invalid `.env.testing` configuration.")
-//        }
-//        let bucket = S3.Bucket(name: bucketValue)
-//        guard bucket.hasValidName() else {
-//            fatalError("Invalid Bucket name in the config file.")
-//        }
-//        try feather.app
-//            .test(.GET, "/install/") { res in XCTAssertEqual(res.status.code, 200) }
-//            .test(.GET, "/") { res in XCTAssertEqual(res.status.code, 200) }
+    func testAdmin() throws {
+        try app.describe("Admin page should not be available for visitors")
+            .get("/admin/")
+            .cookie(cookies)
+            .expect(.seeOther)
+            .test(.inMemory)
+        
+        try authenticate()
+        
+        try app.describe("Admin page should be available for authenticated users")
+            .get("/admin/")
+            .cookie(cookies)
+            .expect(.ok)
+            .expect(.html)
+            .expect { value in
+                XCTAssertTrue(value.body.string.contains("Admin"))
+            }
+            .test(.inMemory)
     }
 }
