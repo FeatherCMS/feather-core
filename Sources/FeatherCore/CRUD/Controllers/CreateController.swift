@@ -113,7 +113,7 @@ public extension CreateController {
 
             return api.validateCreate(req).flatMap { errors -> EventLoopFuture<CreateApi.Model> in
                 guard errors.isEmpty else {
-                    return req.eventLoop.future(error: ValidationAbort(abort: Abort(.badRequest), errors: errors))
+                    return req.eventLoop.future(error: ValidationAbort(abort: Abort(.badRequest), details: errors))
                 }
                 do {
                     let input = try req.content.decode(CreateApi.CreateObject.self)

@@ -98,10 +98,10 @@ final class FeatherApiTests: FeatherTestCase {
             .cookie(cookies)
             .expect(.badRequest)
             .expect(.json)
-            .expect([ValidationError].self) { content in
-                XCTAssertEqual(content.count, 1)
-                XCTAssertEqual(content[0].key, "key")
-                XCTAssertEqual(content[0].message, "Key must be unique")
+            .expect(ApiError.self) { error in
+                XCTAssertEqual(error.details.count, 1)
+                XCTAssertEqual(error.details[0].key, "key")
+                XCTAssertEqual(error.details[0].message, "Key must be unique")
             }
             .test(.inMemory)
     }
