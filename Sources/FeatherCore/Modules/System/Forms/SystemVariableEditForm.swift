@@ -20,7 +20,7 @@ struct SystemVariableEditForm: FeatherForm {
             TextField(key: "name")
                 .config { $0.output.required = true }
                 .validators { [
-                    FormFieldValidator($1, "Name is required") { !$0.input.isEmpty },
+                    FormFieldValidator.required($1),
                 ] }
                 .read {
                     $1.output.value = context.model?.name
@@ -30,7 +30,7 @@ struct SystemVariableEditForm: FeatherForm {
             TextField(key: "key")
                 .config { $0.output.required = true }
                 .validators { [
-                    FormFieldValidator($1, "Key is required") { !$0.input.isEmpty },
+                    FormFieldValidator.required($1),
                     FormFieldValidator($1, "Key must be unique", nil) { field, req in
                         Model.isUniqueBy(\.$key == field.input, req: req)
                     }

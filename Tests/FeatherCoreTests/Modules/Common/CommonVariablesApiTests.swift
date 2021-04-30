@@ -8,7 +8,7 @@
 import FeatherTest
 @testable import FeatherCore
 
-final class FeatherApiTests: FeatherTestCase {
+final class CommonVariablesApiTests: FeatherTestCase {
     
     func testListVariables() throws {
         try authenticate()

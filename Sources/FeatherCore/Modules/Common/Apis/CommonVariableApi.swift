@@ -54,9 +54,8 @@ struct CommonVariableApi: FeatherApiRepresentable {
 
     func validateCreate(_ req: Request) -> EventLoopFuture<[ValidationError]> {
         InputValidator([
-            ContentValidator<String>(key: "name", message: "Name is required", optional: false, validation: { value in
-                !value.isEmpty
-            }),
+            ContentValidator<String>.required(key: "name"),
+            ContentValidator<String>.required(key: "key"),
             ContentValidator<String>(key: "key", message: "Key must be unique", optional: false, validation: nil, asyncValidation: { value, req in
                 Model.isUniqueBy(\.$key == value, req: req)
             })

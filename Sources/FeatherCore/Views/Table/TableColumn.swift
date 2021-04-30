@@ -12,7 +12,7 @@ public struct TableColumn: Encodable {
     
     public init(id: String, label: String? = nil) {
         self.id = id
-        self.label = label ?? id.lowercased().capitalized
+        self.label = label ?? id.uppercasedFirst
     }
 }
 

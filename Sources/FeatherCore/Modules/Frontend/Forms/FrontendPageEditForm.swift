@@ -19,7 +19,7 @@ struct FrontendPageEditForm: FeatherForm {
             TextField(key: "title")
                 .config { $0.output.required = true }
                 .validators { [
-                    FormFieldValidator($1, "Title is required") { !$0.input.isEmpty },
+                    FormFieldValidator.required($1),
                 ] }
                 .read { $1.output.value = context.model?.title }
                 .write { context.model?.title = $1.input },
@@ -27,7 +27,7 @@ struct FrontendPageEditForm: FeatherForm {
             ContentField(key: "content")
                 .config { $0.output.required = true }
                 .validators { [
-                    FormFieldValidator($1, "Content is required") { !$0.input.isEmpty },
+                    FormFieldValidator.required($1),
                 ] }
                 .read { $1.output.value = context.model?.content }
                 .write { context.model?.content = $1.input },

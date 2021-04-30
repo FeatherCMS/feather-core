@@ -14,11 +14,11 @@ struct GenerateModuleCommand: Command {
     let help = "This command will generate a Feather module."
 
     func run(using context: CommandContext, signature: Signature) throws {
-        let moduleName = context.console.ask("Module name?").lowercased().capitalized
+        let moduleName = context.console.ask("Module name?").uppercasedFirst
         var models: [ModelDescription] = []
         var addNextModel = false
         repeat {
-            let modelName = context.console.ask("Model name?").lowercased().capitalized
+            let modelName = context.console.ask("Model name?").uppercasedFirst
             var properties: [PropertyDescription] = []
             var addNextProperty = false
             repeat {
@@ -278,8 +278,8 @@ struct GenerateModuleCommand: Command {
     }
 
 //    func createModel(_ description: ModelDescription) -> String {
-//        let module = description.module.lowercased().capitalized
-//        let model = description.name.lowercased().capitalized
+//        let module = description.module.uppercasedFirst
+//        let model = description.name.uppercasedFirst
 //
 //
 //        let fieldKeys = description.fields.map { f in
@@ -363,8 +363,8 @@ struct GenerateModuleCommand: Command {
 //    }
 //
 //    func createMigration(_ description: ModelDescription) -> String {
-//        let module = description.module.lowercased().capitalized
-//        let model = description.name.lowercased().capitalized
+//        let module = description.module.uppercasedFirst
+//        let model = description.name.uppercasedFirst
 //
 //
 //        let fields = description.fields.map { f in
@@ -403,8 +403,8 @@ struct GenerateModuleCommand: Command {
 //    }
 //
 //    func createEditForm(_ description: ModelDescription) -> String {
-//        let module = description.module.lowercased().capitalized
-//        let model = description.name.lowercased().capitalized
+//        let module = description.module.uppercasedFirst
+//        let model = description.name.uppercasedFirst
 //
 //
 //        let fields = description.fields.map { f in
@@ -459,8 +459,8 @@ struct GenerateModuleCommand: Command {
 //
 //
 //    func createApi(_ description: ModelDescription) -> String {
-//        let module = description.module.lowercased().capitalized
-//        let model = description.name.lowercased().capitalized
+//        let module = description.module.uppercasedFirst
+//        let model = description.name.uppercasedFirst
 //
 //        let listFields = description.fields.map { f in
 //            "\(f.name): \(f.swiftTypeValue)"
@@ -546,8 +546,8 @@ struct GenerateModuleCommand: Command {
 //
 //
 //    func createListObject(_ description: ModelDescription) -> String {
-//        let module = description.module.lowercased().capitalized
-//        let model = description.name.lowercased().capitalized
+//        let module = description.module.uppercasedFirst
+//        let model = description.name.uppercasedFirst
 //
 //        let props = description.fields.map { f in
 //            "public let \(f.name): \(f.swiftTypeValue)"
@@ -589,8 +589,8 @@ struct GenerateModuleCommand: Command {
 //    }
 //
 //    func createGetObject(_ description: ModelDescription) -> String {
-//        let module = description.module.lowercased().capitalized
-//        let model = description.name.lowercased().capitalized
+//        let module = description.module.uppercasedFirst
+//        let model = description.name.uppercasedFirst
 //
 //        let props = description.fields.map { f in
 //            "public let \(f.name): \(f.swiftTypeValue)"
@@ -632,8 +632,8 @@ struct GenerateModuleCommand: Command {
 //    }
 //
 //    func createCreateObject(_ description: ModelDescription) -> String {
-//        let module = description.module.lowercased().capitalized
-//        let model = description.name.lowercased().capitalized
+//        let module = description.module.uppercasedFirst
+//        let model = description.name.uppercasedFirst
 //
 //        let props = description.fields.map { f in
 //            "public let \(f.name): \(f.swiftTypeValue)"
@@ -672,8 +672,8 @@ struct GenerateModuleCommand: Command {
 //    }
 //
 //    func createUpdateObject(_ description: ModelDescription) -> String {
-//        let module = description.module.lowercased().capitalized
-//        let model = description.name.lowercased().capitalized
+//        let module = description.module.uppercasedFirst
+//        let model = description.name.uppercasedFirst
 //
 //        let props = description.fields.map { f in
 //            "public let \(f.name): \(f.swiftTypeValue)"
@@ -712,8 +712,8 @@ struct GenerateModuleCommand: Command {
 //    }
 //
 //    func createPatchObject(_ description: ModelDescription) -> String {
-//        let module = description.module.lowercased().capitalized
-//        let model = description.name.lowercased().capitalized
+//        let module = description.module.uppercasedFirst
+//        let model = description.name.uppercasedFirst
 //
 //        let props = description.fields.map { f in
 //            "public let \(f.name): \(f.type.rawValue.capitalized)?"

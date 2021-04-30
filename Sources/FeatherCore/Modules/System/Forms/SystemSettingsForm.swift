@@ -29,7 +29,7 @@ final class SystemSettingsForm: Form {
             TextField(key: "title")
                 .config { $0.output.required = true }
                 .validators { [
-                    FormFieldValidator($1, "Title is required") { !$0.input.isEmpty },
+                    FormFieldValidator.required($1),
                 ] }
                 .read { [unowned self] req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
                 .write { [unowned self] req, field in save(key: field.key, value: field.output.value, req: req) },
@@ -37,7 +37,7 @@ final class SystemSettingsForm: Form {
             TextareaField(key: "excerpt")
                 .config { $0.output.required = true }
                 .validators { [
-                    FormFieldValidator($1, "Excerpt is required") { !$0.input.isEmpty },
+                    FormFieldValidator.required($1),
                 ] }
                 .read { [unowned self] req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
                 .write { [unowned self] req, field in save(key: field.key, value: field.output.value, req: req) },

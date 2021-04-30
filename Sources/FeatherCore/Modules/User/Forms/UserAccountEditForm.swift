@@ -19,7 +19,7 @@ struct UserAccountEditForm: FeatherForm {
             TextField(key: "email")
                 .config { $0.output.required = true }
                 .validators { [
-                    FormFieldValidator($1, "Email is required") { !$0.input.isEmpty },
+                    FormFieldValidator.required($1),
                     FormFieldValidator($1, "Email must be unique", nil) { field, req in
                         Model.isUniqueBy(\.$email == field.input, req: req)
                     }

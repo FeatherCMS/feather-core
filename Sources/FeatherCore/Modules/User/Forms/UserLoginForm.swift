@@ -22,7 +22,7 @@ final class UserLoginForm: Form {
                     $0.output.format = .email
                 }
                 .validators { [
-                    FormFieldValidator($1, "Email is required") { !$0.input.isEmpty },
+                    FormFieldValidator.required($1),
                 ] },
             
             TextField(key: "password")
@@ -31,7 +31,7 @@ final class UserLoginForm: Form {
                     $0.output.format = .password
                 }
                 .validators { [
-                    FormFieldValidator($1, "Password is required") { !$0.input.isEmpty },
+                    FormFieldValidator.required($1),
                 ] },
         ]
     }

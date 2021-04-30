@@ -23,7 +23,7 @@ struct FrontendMenuItemEditForm: FeatherForm {
             TextField(key: "label")
                 .config { $0.output.required = true }
                 .validators { [
-                    FormFieldValidator($1, "Label is required") { !$0.input.isEmpty },
+                    FormFieldValidator.required($1),
                 ] }
                 .read { $1.output.value = context.model?.label }
                 .write { context.model?.label = $1.input },
@@ -31,7 +31,7 @@ struct FrontendMenuItemEditForm: FeatherForm {
             TextField(key: "url")
                 .config { $0.output.required = true }
                 .validators { [
-                    FormFieldValidator($1, "URL is required") { !$0.input.isEmpty },
+                    FormFieldValidator.required($1),
                 ] }
                 .read { $1.output.value = context.model?.url }
                 .write { context.model?.url = $1.input },

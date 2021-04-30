@@ -19,7 +19,7 @@ final class CommonFileDirectoryForm: Form {
             TextField(key: "name")
                 .config { $0.output.required = true }
                 .validators { [
-                    FormFieldValidator($1, "Name is required") { !$0.input.isEmpty },
+                    FormFieldValidator.required($1),
                 ] }
                 .read { [unowned self] req, field in self.name = field.input }
         ]

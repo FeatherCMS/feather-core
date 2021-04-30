@@ -19,7 +19,7 @@ struct UserPermissionEditForm: FeatherForm {
             TextField(key: "namespace")
                 .config { $0.output.required = true }
                 .validators { [
-                    FormFieldValidator($1, "Namespace is required") { !$0.input.isEmpty },
+                    FormFieldValidator.required($1),
                 ] }
                 .read { $1.output.value = context.model?.namespace }
                 .write { context.model?.namespace = $1.input },
@@ -27,7 +27,7 @@ struct UserPermissionEditForm: FeatherForm {
             TextField(key: "context")
                 .config { $0.output.required = true }
                 .validators { [
-                    FormFieldValidator($1, "Context is required") { !$0.input.isEmpty },
+                    FormFieldValidator.required($1),
                 ] }
                 .read { $1.output.value = context.model?.context }
                 .write { context.model?.context = $1.input },
@@ -35,7 +35,7 @@ struct UserPermissionEditForm: FeatherForm {
             TextField(key: "action")
                 .config { $0.output.required = true }
                 .validators { [
-                    FormFieldValidator($1, "Action is required") { !$0.input.isEmpty },
+                    FormFieldValidator.required($1),
                 ] }
                 .read { $1.output.value = context.model?.action }
                 .write { context.model?.action = $1.input },
@@ -43,7 +43,7 @@ struct UserPermissionEditForm: FeatherForm {
             TextField(key: "name")
                 .config { $0.output.required = true }
                 .validators { [
-                    FormFieldValidator($1, "Name is required") { !$0.input.isEmpty },
+                    FormFieldValidator.required($1),
                 ] }
                 .read { $1.output.value = context.model?.name }
                 .write { context.model?.name = $1.input },
