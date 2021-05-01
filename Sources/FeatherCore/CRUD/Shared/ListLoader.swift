@@ -35,7 +35,27 @@ public struct ListLoader<T: FeatherModel>  {
         self.beforeQuery = beforeQuery
     }
 
-    public func paginate(_ req: Request) -> EventLoopFuture<PaginationContainer<T>> {
+    public func paginate(_ req: Request, withDeleted deleted: Bool = false) -> EventLoopFuture<PaginationContainer<T>> {
+        return paginate(req, qbAll(req, withDeleted: deleted))
+    }
+    
+    public func paginate(_ req: Request, _ qb: QueryBuilder<T>) -> EventLoopFuture<PaginationContainer<T>> {
+       /// pagination
+       let listLimit: Int = max(req.query[limitKey] ?? limit, 1)
+       let listPage: Int = max(req.query[pageKey] ?? page, 1)
+       let start = (listPage - 1) * listLimit
+       let end = listPage * listLimit
+
+       let count = qb.count()
+       let items = qb.copy().range(start..<end).all()
+       
+       return count.and(items).map { (total, models) -> PaginationContainer<T> in
+           let totalPages = Int(ceil(Float(total) / Float(listLimit)))
+           return PaginationContainer(models, info: .init(current: listPage, limit: listLimit, total: totalPages))
+       }
+    }
+    
+    public func qbAll(_ req: Request, withDeleted deleted: Bool = false) -> QueryBuilder<T> {
         var qb = T.query(on: req.db)
         if let beforeQuery = beforeQuery {
             qb = beforeQuery(req, qb)
@@ -65,19 +85,12 @@ public struct ListLoader<T: FeatherModel>  {
                 }
             }
         }
-
-        /// pagination
-        let listLimit: Int = max(req.query[limitKey] ?? limit, 1)
-        let listPage: Int = max(req.query[pageKey] ?? page, 1)
-        let start = (listPage - 1) * listLimit
-        let end = listPage * listLimit
-
-        let count = qb.count()
-        let items = qb.copy().range(start..<end).all()
         
-        return count.and(items).map { (total, models) -> PaginationContainer<T> in
-            let totalPages = Int(ceil(Float(total) / Float(listLimit)))
-            return PaginationContainer(models, info: .init(current: listPage, limit: listLimit, total: totalPages))
+        /// Deleted
+        if deleted {
+            qb = qb.withDeleted()
         }
+           
+        return qb
     }
 }
