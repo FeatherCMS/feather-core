@@ -35,7 +35,7 @@ public struct ListLoader<T: FeatherModel>  {
         self.beforeQuery = beforeQuery
     }
 
-    public func paginate(_ req: Request) -> EventLoopFuture<PaginationContainer<T>> {
+    public func paginate(_ req: Request, withDeleted deleted: Bool = false) -> EventLoopFuture<PaginationContainer<T>> {
         var qb = T.query(on: req.db)
         if let beforeQuery = beforeQuery {
             qb = beforeQuery(req, qb)
@@ -65,7 +65,12 @@ public struct ListLoader<T: FeatherModel>  {
                 }
             }
         }
-
+        
+        /// Deleted
+        if deleted {
+            qb = qb.withDeleted()
+        }
+           
         /// pagination
         let listLimit: Int = max(req.query[limitKey] ?? limit, 1)
         let listPage: Int = max(req.query[pageKey] ?? page, 1)
