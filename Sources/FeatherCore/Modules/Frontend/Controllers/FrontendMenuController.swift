@@ -48,6 +48,14 @@ struct FrontendMenuController: FeatherController {
             .init(label: "Notes", value: model.notes ?? ""),
         ]
     }
+    
+    func findBy(_ id: UUID, on db: Database) -> EventLoopFuture<Model> {
+        Model.query(on: db)
+            .filter(\.$id == id)
+            .with(\.$items)
+            .first()
+            .unwrap(or: Abort(.notFound))
+    }
    
     func getContext(req: Request, model: Model) -> DetailContext {
         .init(model: Model.info(req), fields: detailFields(req: req, model: model), nav: [

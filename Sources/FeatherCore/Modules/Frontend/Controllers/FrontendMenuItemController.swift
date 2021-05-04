@@ -33,6 +33,20 @@ struct FrontendMenuItemController: FeatherController {
         setupDeleteRoutes(on: base, as: Model.deletePathComponent)
     }
     
+    func setupApiRoutes(on builder: RoutesBuilder) {
+        let base = builder.grouped(Module.moduleKeyPathComponent)
+                          .grouped(FrontendMenuModel.modelKeyPathComponent)
+                          .grouped(FrontendMenuModel.idParamKeyPathComponent)
+                          .grouped(Model.modelKeyPathComponent)
+        
+        setupListApiRoute(on: base)
+        setupGetApiRoute(on: base)
+        setupCreateApiRoute(on: base)
+        setupUpdateApiRoute(on: base)
+        setupPatchApiRoute(on: base)
+        setupDeleteApiRoute(on: base)
+    }
+    
     func listTable(_ models: [Model]) -> Table {
         Table(columns: ["label", "url"], rows: models.map { model in
             TableRow(id: model.identifier, cells: [TableCell(model.label), TableCell(model.url)])

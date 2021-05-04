@@ -46,3 +46,10 @@ public extension KeyedContentValidator where T == Int {
         .init(key, message ?? "\(key.uppercasedFirst) is an invalid value", optional: optional) { values.contains($0) }
     }
 }
+
+public extension KeyedContentValidator where T == UUID {
+
+    static func required(_ key: String, _ message: String? = nil, optional: Bool = false) -> KeyedContentValidator<T> {
+        .init(key, message ?? "\(key.uppercasedFirst) is required", optional: optional) { _ in true }
+    }
+}

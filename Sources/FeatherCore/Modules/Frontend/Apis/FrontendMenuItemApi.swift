@@ -36,17 +36,44 @@ struct FrontendMenuItemApi: FeatherApiRepresentable {
     }
     
     func mapCreate(_ req: Request, model: Model, input: CreateObject) -> EventLoopFuture<Void> {
+        model.label = input.label
+        model.url = input.url
+        model.icon = input.icon
+        model.isBlank = input.isBlank
+        model.priority = input.priority
+        model.permission = input.permission
+        model.$menu.id = input.menuId
         return req.eventLoop.future()
     }
     
     func mapUpdate(_ req: Request, model: Model, input: UpdateObject) -> EventLoopFuture<Void> {
+        model.label = input.label
+        model.url = input.url
+        model.icon = input.icon
+        model.isBlank = input.isBlank
+        model.priority = input.priority
+        model.permission = input.permission
+        model.$menu.id = input.menuId
         return req.eventLoop.future()
     }
 
     func mapPatch(_ req: Request, model: Model, input: PatchObject) -> EventLoopFuture<Void> {
+        model.label = input.label ?? model.label
+        model.url = input.url ?? model.url
+        model.icon = input.icon ?? model.icon
+        model.isBlank = input.isBlank ?? model.isBlank
+        model.priority = input.priority ?? model.priority
+        model.permission = input.permission ?? model.permission
+        model.$menu.id = input.menuId ?? model.$menu.id
         return req.eventLoop.future()
     }
-    
-    func validators(optional: Bool) -> [AsyncValidator] { [] }
+
+    func validators(optional: Bool) -> [AsyncValidator] {
+        [
+            KeyedContentValidator<String>.required("label", optional: optional),
+            KeyedContentValidator<String>.required("url", optional: optional),
+            KeyedContentValidator<UUID>.required("menuId", optional: optional),
+        ]
+    }
 }
 
