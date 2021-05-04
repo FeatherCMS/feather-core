@@ -25,28 +25,42 @@ struct FrontendMenuApi: FeatherApiRepresentable {
     }
     
     func mapGet(model: Model) -> GetObject {
-        let itemsApi = FrontendMenuItemApi()
-        return .init(id: model.id!,
+        .init(id: model.id!,
               key: model.key,
               name: model.name,
               notes: model.notes,
-              items: model.items.map { itemsApi.mapList(model: $0) })
+              items: (model.$items.value ?? []).map { FrontendMenuItemApi().mapList(model: $0) })
     }
     
     func mapCreate(_ req: Request, model: Model, input: CreateObject) -> EventLoopFuture<Void> {
+        model.key = input.key
+        model.name = input.name
+        model.notes = input.notes
         return req.eventLoop.future()
     }
         
     func mapUpdate(_ req: Request, model: Model, input: UpdateObject) -> EventLoopFuture<Void> {
+        model.key = input.key
+        model.name = input.name
+        model.notes = input.notes
         return req.eventLoop.future()
     }
 
     func mapPatch(_ req: Request, model: Model, input: PatchObject) -> EventLoopFuture<Void> {
+        model.key = input.key ?? model.key
+        model.name = input.name ?? model.name
+        model.notes = input.notes ?? model.notes
         return req.eventLoop.future()
     }
-    
+
     func validators(optional: Bool) -> [AsyncValidator] {
-        []
+        [
+            KeyedContentValidator<String>.required("name", optional: optional),
+            KeyedContentValidator<String>.required("key", optional: optional),
+            KeyedContentValidator<String>("key", "Key must be unique", optional: optional, nil) { value, req in
+                Model.isUniqueBy(\.$key == value, req: req)
+            }
+        ]
     }
     
 }
