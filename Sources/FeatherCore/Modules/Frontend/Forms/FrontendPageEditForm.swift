@@ -20,6 +20,12 @@ struct FrontendPageEditForm: FeatherForm {
                 .config { $0.output.required = true }
                 .validators { [
                     FormFieldValidator.required($1),
+                    FormFieldValidator($1, "Title must be unique", nil) { field, req in
+                        guard Model.getIdParameter(req: req) == nil else {
+                            return req.eventLoop.future(true)
+                        }
+                        return Model.isUniqueBy(\.$title == field.input, req: req)
+                    }
                 ] }
                 .read { $1.output.value = context.model?.title }
                 .write { context.model?.title = $1.input },

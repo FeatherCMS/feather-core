@@ -6,7 +6,7 @@
 //
 //
 
-struct SystemVariableEditForm: FeatherForm {
+struct CommonVariableEditForm: FeatherForm {
 
     var context: FeatherFormContext<CommonVariableModel>
     

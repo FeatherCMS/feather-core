@@ -10,8 +10,8 @@ struct CommonVariableController: FeatherController {
     typealias Module = CommonModule
     typealias Model = CommonVariableModel
     
-    typealias CreateForm = SystemVariableEditForm
-    typealias UpdateForm = SystemVariableEditForm
+    typealias CreateForm = CommonVariableEditForm
+    typealias UpdateForm = CommonVariableEditForm
     
     typealias GetApi = CommonVariableApi
     typealias ListApi = CommonVariableApi

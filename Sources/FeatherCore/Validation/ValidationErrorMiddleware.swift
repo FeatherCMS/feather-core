@@ -5,9 +5,13 @@
 //  Created by Tibor Bodecs on 2021. 04. 28..
 //
 
-struct ValidationErrorMiddleware: Middleware {
+public struct ValidationErrorMiddleware: Middleware {
 
-    let environment: Environment
+    public let environment: Environment
+    
+    public init(environment: Environment) {
+        self.environment = environment
+    }
 
     public func respond(to request: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
         return next.respond(to: request).flatMapErrorThrowing { error in

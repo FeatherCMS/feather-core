@@ -9,17 +9,11 @@ Core dependencies for Feather CMS.
 - [ ] common translation labels
 - [ ] export / import feature
 - [ ] proper file (media) api 
-- [ ] review feather API access control (Swift)
-
-
-
-
 
 ```json
+
 {
-    // optional:
     "message": "There is a general issue with the input",
-    
     "details": [
         {
            "key": "key",
@@ -31,4 +25,6 @@ Core dependencies for Feather CMS.
         },
     ]
 }
+
+
 ```

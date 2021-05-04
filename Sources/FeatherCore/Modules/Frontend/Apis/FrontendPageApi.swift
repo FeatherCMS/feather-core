@@ -29,18 +29,35 @@ struct FrontendPageApi: FeatherApiRepresentable {
     }
     
     func mapCreate(_ req: Request, model: Model, input: CreateObject) -> EventLoopFuture<Void> {
+        model.title = input.title
+        model.content = input.content
         return req.eventLoop.future()
     }
         
     func mapUpdate(_ req: Request, model: Model, input: UpdateObject) -> EventLoopFuture<Void> {
+        model.title = input.title
+        model.content = input.content
         return req.eventLoop.future()
     }
 
     func mapPatch(_ req: Request, model: Model, input: PatchObject) -> EventLoopFuture<Void> {
+        model.title = input.title ?? model.title
+        model.content = input.content ?? model.content
         return req.eventLoop.future()
     }
     
-    func validators(optional: Bool) -> [AsyncValidator] { [] }
+    func validators(optional: Bool) -> [AsyncValidator] {
+        [
+            KeyedContentValidator<String>.required("title", optional: optional),
+            KeyedContentValidator<String>.required("content", optional: optional),
+            KeyedContentValidator<String>("title", "Title must be unique", optional: optional, nil) { value, req in
+                guard Model.getIdParameter(req: req) == nil else {
+                    return req.eventLoop.future(true)
+                }
+                return Model.isUniqueBy(\.$title == value, req: req)
+            }
+        ]
+    }
 
 }
 

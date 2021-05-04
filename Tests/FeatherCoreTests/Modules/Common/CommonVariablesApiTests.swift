@@ -8,193 +8,97 @@
 import FeatherTest
 @testable import FeatherCore
 
-final class CommonVariablesApiTests: FeatherTestCase {
+extension VariableGetObject: UUIDContent {}
+
+final class CommonVariablesApiTests: FeatherApiTestCase {
+    
+    override func modelName() -> String {
+        "Variable"
+    }
+    
+    override func endpoint() -> String {
+        "common/variables"
+    }
     
     func testListVariables() throws {
-        try authenticate()
-
-        try app.describe("Variables list should be available")
-            .get("/api/admin/common/variables/")
-            .cookie(cookies)
-            .expect(.ok)
-            .expect(.json)
-            .expect(PaginationContainer<VariableListObject>.self)
-            .test(.inMemory)
+        try list(VariableListObject.self)
     }
     
     func testCreateVariable() throws {
-        try authenticate()
-
         let uuid = UUID().uuidString
-        
-        try app.describe("Variables list")
-            .post("/api/admin/common/variables/")
-            .body(VariableCreateObject(key: "testKey" + uuid, name: "testName", value: "testValue", notes: "testNotes"))
-            .cookie(cookies)
-            .expect(.created)
-            .expect(.json)
-            .expect(VariableGetObject.self) { item in
-                XCTAssertEqual(item.key, "testKey" + uuid)
-                XCTAssertEqual(item.name, "testName")
-                XCTAssertEqual(item.value, "testValue")
-                XCTAssertEqual(item.notes, "testNotes")
-            }
-            .test(.inMemory)
+        let input = VariableCreateObject(key: "testKey" + uuid, name: "testName", value: "testValue", notes: "testNotes")
+        try create(input, VariableGetObject.self) { item in
+            XCTAssertEqual(item.key, "testKey" + uuid)
+            XCTAssertEqual(item.name, "testName")
+            XCTAssertEqual(item.value, "testValue")
+            XCTAssertEqual(item.notes, "testNotes")
+        }
     }
     
     func testCreateInvalidVariable() throws {
-        try authenticate()
-        
-        try app.describe("Variable with missing key or name shouldn't be created")
-            .post("/api/admin/common/variables/")
-            .body(VariableCreateObject(key: "", name: ""))
-            .cookie(cookies)
-            .expect(.badRequest)
-            .expect(.json)
-            .expect(ValidationError.self) { error in
-                XCTAssertEqual(error.details.count, 2)
-                for detail in error.details {
-                    XCTAssertTrue(["name", "key"].contains(detail.key))
-                    XCTAssertTrue(["Name is required", "Key is required"].contains(detail.message))
-                }
+        let input = VariableCreateObject(key: "", name: "")
+        try createInvalid(input) { error in
+            XCTAssertEqual(error.details.count, 2)
+            for detail in error.details {
+                XCTAssertTrue(["name", "key"].contains(detail.key))
+                XCTAssertTrue(["Name is required", "Key is required"].contains(detail.message))
             }
-            .test(.inMemory)
+        }
     }
     
     func testUpdateVariable() throws {
-        try authenticate()
-
-        var variable: VariableGetObject!
-        
         let uuid = UUID().uuidString
-        
-        try app.describe("Variable create")
-            .post("/api/admin/common/variables/")
-            .body(VariableCreateObject(key: "testUpdateKey" + uuid, name: "testUpdateName", value: "testUpdateValue", notes: "testUpdateNotes"))
-            .cookie(cookies)
-            .expect(.created)
-            .expect(.json)
-            .expect(VariableGetObject.self) { item in
-                variable = item
-                XCTAssertNotNil(variable)
-            }
-            .test(.inMemory)
+        let input = VariableCreateObject(key: "testUpdateKey" + uuid, name: "testUpdateName", value: "testUpdateValue", notes: "testUpdateNotes")
         
         let uuid2 = UUID().uuidString
+        let up = VariableUpdateObject(key: "testUpdateKey" + uuid2, name: "testUpdateName2", value: "testUpdateValue2", notes: "testUpdateNotes2")
         
-        try app.describe("Variable update")
-            .put("/api/admin/common/variables/\(variable.id.uuidString)/")
-            .body(VariableUpdateObject(key: "testUpdateKey" + uuid2, name: "testUpdateName2", value: "testUpdateValue2", notes: "testUpdateNotes2"))
-            .cookie(cookies)
-            .expect(.ok)
-            .expect(.json)
-            .expect(VariableGetObject.self) { item in
-                XCTAssertEqual(item.key, "testUpdateKey" + uuid2)
-                XCTAssertEqual(item.name, "testUpdateName2")
-                XCTAssertEqual(item.value, "testUpdateValue2")
-                XCTAssertEqual(item.notes, "testUpdateNotes2")
-            }
-            .test(.inMemory)
+        try update(input, up, VariableGetObject.self) { item in
+            XCTAssertEqual(item.key, "testUpdateKey" + uuid2)
+            XCTAssertEqual(item.name, "testUpdateName2")
+            XCTAssertEqual(item.value, "testUpdateValue2")
+            XCTAssertEqual(item.notes, "testUpdateNotes2")
+        }
     }
     
     func testPatchVariable() throws {
-        try authenticate()
-
-        var variable: VariableGetObject!
-        
         let uuid = UUID().uuidString
+        let input = VariableCreateObject(key: "testPatchKey" + uuid, name: "testPatchName", value: "testPatchValue", notes: "testPatchNotes")
         
-        try app.describe("Variable create")
-            .post("/api/admin/common/variables/")
-            .body(VariableCreateObject(key: "testPatchKey" + uuid, name: "testPatchName", value: "testPatchValue", notes: "testPatchNotes"))
-            .cookie(cookies)
-            .expect(.created)
-            .expect(.json)
-            .expect(VariableGetObject.self) { item in
-                variable = item
-                XCTAssertNotNil(variable)
-            }
-            .test(.inMemory)
+        let uuid2 = UUID().uuidString
+        let up = VariablePatchObject(name: "testPatchName2" + uuid2)
         
-        try app.describe("Variable patch")
-            .patch("/api/admin/common/variables/\(variable.id.uuidString)/")
-            .body(VariablePatchObject(name: "testPatchName2"))
-            .cookie(cookies)
-            .expect(.ok)
-            .expect(.json)
-            .expect(VariableGetObject.self) { item in
-                XCTAssertEqual(item.key, "testPatchKey" + uuid)
-                XCTAssertEqual(item.name, "testPatchName2")
-                XCTAssertEqual(item.value, "testPatchValue")
-                XCTAssertEqual(item.notes, "testPatchNotes")
-            }
-            .test(.inMemory)
+        try patch(input, up, VariableGetObject.self) { item in
+            XCTAssertEqual(item.key, "testPatchKey" + uuid)
+            XCTAssertEqual(item.name, "testPatchName2" + uuid2)
+            XCTAssertEqual(item.value, "testPatchValue")
+            XCTAssertEqual(item.notes, "testPatchNotes")
+        }
     }
     
     func testUniqueKeyFailure() throws {
-        try authenticate()
-
+        
         let uuid = UUID().uuidString
-        
-        try app.describe("Variable create")
-            .post("/api/admin/common/variables/")
-            .body(VariableCreateObject(key: "testUpdateKey" + uuid, name: "testUpdateName", value: "testUpdateValue", notes: "testUpdateNotes"))
-            .cookie(cookies)
-            .expect(.created)
-            .expect(.json)
-            .expect(VariableGetObject.self)
-            .test(.inMemory)
-        
-        try app.describe("Variable create")
-            .post("/api/admin/common/variables/")
-            .body(VariableCreateObject(key: "testUpdateKey" + uuid, name: "testUpdateName", value: "testUpdateValue", notes: "testUpdateNotes"))
-            .cookie(cookies)
-            .expect(.badRequest)
-            .expect(.json)
-            .expect(ValidationError.self) { error in
-                XCTAssertEqual(error.details.count, 1)
-                XCTAssertEqual(error.details[0].key, "key")
-                XCTAssertEqual(error.details[0].message, "Key must be unique")
-            }
-            .test(.inMemory)
+        let input = VariableCreateObject(key: "testUpdateKey" + uuid, name: "testUpdateName", value: "testUpdateValue", notes: "testUpdateNotes")
+        try create(input, VariableGetObject.self) { item in
+            /// ok
+        }
+
+        try createInvalid(input) { error in
+            XCTAssertEqual(error.details.count, 1)
+            XCTAssertEqual(error.details[0].key, "key")
+            XCTAssertEqual(error.details[0].message, "Key must be unique")
+        }
     }
     
     func testDeleteVariable() throws {
-        try authenticate()
-
-        var variable: VariableGetObject!
-
         let uuid = UUID().uuidString
-
-        try app.describe("Variable create")
-            .post("/api/admin/common/variables/")
-            .body(VariableCreateObject(key: "testDeleteKey" + uuid, name: "testDeleteName", value: "testDeleteValue", notes: "testDeleteNotes"))
-            .cookie(cookies)
-            .expect(.created)
-            .expect(.json)
-            .expect(VariableGetObject.self) { item in
-                variable = item
-                XCTAssertNotNil(variable)
-            }
-            .test(.inMemory)
-
-        try app.describe("Variable delete should return with no content response")
-            .delete("/api/admin/common/variables/\(variable.id.uuidString)/")
-            .cookie(cookies)
-            .expect(.noContent)
-            .test(.inMemory)
+        let input = VariableCreateObject(key: "testDeleteKey" + uuid, name: "testDeleteName", value: "testDeleteValue", notes: "testDeleteNotes")
+        try delete(input, VariableGetObject.self)
     }
     
     func testMissingDeleteVariable() throws {
-        try authenticate()
-        
-        let uuid = UUID().uuidString
-
-        try app.describe("Missing variable delete should return not found error")
-            .delete("/api/admin/common/variables/\(uuid)/")
-            .cookie(cookies)
-            .expect(.notFound)
-            .test(.inMemory)
+        try deleteMissing()
     }
 }
 
