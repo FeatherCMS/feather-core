@@ -138,7 +138,7 @@ public extension ListController {
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
-            return listLoader.paginate(req).map { pc -> PaginationContainer<ListApi.ListObject> in
+            return listLoader.paginate(req, withDeleted: true).map { pc -> PaginationContainer<ListApi.ListObject> in
                 let api = ListApi()
                 let items = pc.map { api.mapList(model: $0 as! ListApi.Model) }
                 return items
