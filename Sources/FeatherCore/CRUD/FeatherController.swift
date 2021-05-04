@@ -26,7 +26,22 @@ public protocol FeatherApiRepresentable:
     PatchApiRepresentable,
     DeleteApiRepresentable
 {
-    
+    func validators(optional: Bool) -> [AsyncValidator]
+}
+
+extension FeatherApiRepresentable {
+
+    func createValidators() -> [AsyncValidator] {
+        validators(optional: false)
+    }
+
+    func updateValidators() -> [AsyncValidator] {
+        validators(optional: false)
+    }
+
+    func patchValidators() -> [AsyncValidator] {
+        validators(optional: true)
+    }
 }
 
 

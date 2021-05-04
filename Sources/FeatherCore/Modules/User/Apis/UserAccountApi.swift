@@ -49,21 +49,8 @@ struct UserAccountApi: FeatherApiRepresentable {
         return req.eventLoop.future()
     }
     
-    func validateCreate(_ req: Request) -> EventLoopFuture<Bool> {
-//        validations.add("email", as: String.self, is: .email)
-//        validations.add("password", as: String.self, is: !.empty && .count(8...250))
-        req.eventLoop.future(true)
-    }
-    
-    func validateUpdate(_ req: Request) -> EventLoopFuture<Bool> {
-//        validations.add("email", as: String.self, is: .email)
-//        validations.add("password", as: String.self, is: !.empty && .count(8...250))
-        req.eventLoop.future(true)
-    }
-    
-    func validatePatch(_ req: Request) -> EventLoopFuture<Bool> {
-//        validations.add("email", as: String.self, is: .email, required: false)
-//        validations.add("password", as: String.self, is: !.empty && .count(8...250), required: false)
-        req.eventLoop.future(true)
-    }
+    //        validations.add("email", as: String.self, is: .email)
+    //        validations.add("password", as: String.self, is: !.empty && .count(8...250))
+
+    func validators(optional: Bool) -> [AsyncValidator] { [] }
 }

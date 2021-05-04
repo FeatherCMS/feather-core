@@ -15,9 +15,6 @@ public protocol CreateApiRepresentable: ModelApi {
     func mapCreate(_ req: Request, model: Model, input: CreateObject) -> EventLoopFuture<Void>
 }
 
-extension CreateApiRepresentable {
-    func createValidators() -> [AsyncValidator] { [] }
-}
 
 public protocol CreateController: ModelController {
 

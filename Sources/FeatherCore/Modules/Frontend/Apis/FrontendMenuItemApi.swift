@@ -47,16 +47,6 @@ struct FrontendMenuItemApi: FeatherApiRepresentable {
         return req.eventLoop.future()
     }
     
-    func validateCreate(_ req: Request) -> EventLoopFuture<Bool> {
-        req.eventLoop.future(true)
-    }
-    
-    func validateUpdate(_ req: Request) -> EventLoopFuture<Bool> {
-        req.eventLoop.future(true)
-    }
-    
-    func validatePatch(_ req: Request) -> EventLoopFuture<Bool> {
-        req.eventLoop.future(true)
-    }
+    func validators(optional: Bool) -> [AsyncValidator] { [] }
 }
 

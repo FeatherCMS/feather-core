@@ -52,21 +52,9 @@ struct UserRoleApi: FeatherApiRepresentable {
         return req.eventLoop.future()
     }
     
-    func validateCreate(_ req: Request) -> EventLoopFuture<Bool> {
-//        validations.add("key", as: String.self, is: !.empty && .count(...250))
-//        validations.add("name", as: String.self, is: !.empty && .count(...250))
-        req.eventLoop.future(true)
+    func validators(optional: Bool) -> [AsyncValidator] {
+        []
     }
-    
-    func validateUpdate(_ req: Request) -> EventLoopFuture<Bool> {
-//        validations.add("key", as: String.self, is: !.empty && .count(...250))
-//        validations.add("name", as: String.self, is: !.empty && .count(...250))
-        req.eventLoop.future(true)
-    }
-    
-    func validatePatch(_ req: Request) -> EventLoopFuture<Bool> {
-//        validations.add("key", as: String.self, is: !.empty && .count(...250), required: false)
-//        validations.add("name", as: String.self, is: !.empty && .count(...250), required: false)
-        req.eventLoop.future(true)
-    }
+    //        validations.add("key", as: String.self, is: !.empty && .count(...250))
+    //        validations.add("name", as: String.self, is: !.empty && .count(...250))
 }

@@ -12,9 +12,6 @@ public protocol PatchApiRepresentable: ModelApi {
     func patchValidators() -> [AsyncValidator]
     func mapPatch(_ req: Request, model: Model, input: PatchObject) -> EventLoopFuture<Void>
 }
-extension PatchApiRepresentable {
-    func patchValidators() -> [AsyncValidator] { [] }
-}
 
 public protocol PatchController: IdentifiableController {
     

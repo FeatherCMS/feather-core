@@ -13,10 +13,6 @@ public protocol UpdateApiRepresentable: ModelApi {
     func mapUpdate(_ req: Request, model: Model, input: UpdateObject) -> EventLoopFuture<Void>
 }
 
-extension UpdateApiRepresentable {
-    func updateValidators() -> [AsyncValidator] { [] }
-}
-
 public protocol UpdateController: IdentifiableController {
     
     associatedtype UpdateApi: UpdateApiRepresentable & GetApiRepresentable

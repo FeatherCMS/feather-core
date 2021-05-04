@@ -60,27 +60,11 @@ struct UserPermissionApi: FeatherApiRepresentable {
         return req.eventLoop.future()
     }
     
-    func validateCreate(_ req: Request) -> EventLoopFuture<Bool> {
-//        validations.add("module", as: String.self, is: !.empty && .count(...250))
-//        validations.add("context", as: String.self, is: !.empty && .count(...250))
-//        validations.add("action", as: String.self, is: !.empty && .count(...250))
-//        validations.add("name", as: String.self, is: !.empty && .count(...250))
-        req.eventLoop.future(true)
+    func validators(optional: Bool) -> [AsyncValidator] {
+        []
     }
-    
-    func validateUpdate(_ req: Request) -> EventLoopFuture<Bool> {
-//        validations.add("module", as: String.self, is: !.empty && .count(...250))
-//        validations.add("context", as: String.self, is: !.empty && .count(...250))
-//        validations.add("action", as: String.self, is: !.empty && .count(...250))
-//        validations.add("name", as: String.self, is: !.empty && .count(...250))
-        req.eventLoop.future(true)
-    }
-    
-    func validatePatch(_ req: Request) -> EventLoopFuture<Bool> {
-//        validations.add("module", as: String.self, is: !.empty && .count(...250), required: false)
-//        validations.add("context", as: String.self, is: !.empty && .count(...250), required: false)
-//        validations.add("action", as: String.self, is: !.empty && .count(...250), required: false)
-//        validations.add("name", as: String.self, is: !.empty && .count(...250), required: false)
-        req.eventLoop.future(true)
-    }
+    //        validations.add("module", as: String.self, is: !.empty && .count(...250))
+    //        validations.add("context", as: String.self, is: !.empty && .count(...250))
+    //        validations.add("action", as: String.self, is: !.empty && .count(...250))
+    //        validations.add("name", as: String.self, is: !.empty && .count(...250))
 }

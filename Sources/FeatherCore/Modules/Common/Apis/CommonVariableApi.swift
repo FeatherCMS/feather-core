@@ -52,34 +52,13 @@ struct CommonVariableApi: FeatherApiRepresentable {
         return req.eventLoop.future()
     }
 
-    func createValidators() -> [AsyncValidator] {
+    func validators(optional: Bool) -> [AsyncValidator] {
         [
-            ContentValidator<String>.required(key: "name"),
-            ContentValidator<String>.required(key: "key"),
-            ContentValidator<String>(key: "key", message: "Key must be unique", optional: false, validation: nil, asyncValidation: { value, req in
+            ContentValidator<String>.required(key: "name", optional: optional),
+            ContentValidator<String>.required(key: "key", optional: optional),
+            ContentValidator<String>(key: "key", message: "Key must be unique", optional: optional, validation: nil, asyncValidation: { value, req in
                 Model.isUniqueBy(\.$key == value, req: req)
             })
         ]
     }
-
-    func updateValidators() -> [AsyncValidator] {
-        [
-            ContentValidator<String>.required(key: "name"),
-            ContentValidator<String>.required(key: "key"),
-            ContentValidator<String>(key: "key", message: "Key must be unique", optional: false, validation: nil, asyncValidation: { value, req in
-                Model.isUniqueBy(\.$key == value, req: req)
-            })
-        ]
-    }
-    
-    func patchValidators() -> [AsyncValidator] {
-        [
-            ContentValidator<String>.required(key: "name", optional: true),
-            ContentValidator<String>.required(key: "key", optional: true),
-            ContentValidator<String>(key: "key", message: "Key must be unique", optional: true, validation: nil, asyncValidation: { value, req in
-                Model.isUniqueBy(\.$key == value, req: req)
-            })
-        ]
-    }
-
 }
