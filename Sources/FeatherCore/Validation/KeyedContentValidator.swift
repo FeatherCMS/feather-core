@@ -14,11 +14,11 @@ public struct KeyedContentValidator<T: Codable>: AsyncValidator {
     public let validation: ((T) -> Bool)?
     public let asyncValidation: ((T, Request) -> EventLoopFuture<Bool>)?
     
-    public init(key: String,
-                message: String,
+    public init(_ key: String,
+                _ message: String,
                 optional: Bool = false,
-                validation: ((T) -> Bool)? = nil,
-                asyncValidation: ((T, Request) -> EventLoopFuture<Bool>)? = nil) {
+                _ validation: ((T) -> Bool)? = nil,
+                _ asyncValidation: ((T, Request) -> EventLoopFuture<Bool>)? = nil) {
         self.key = key
         self.message = message
         self.optional = optional

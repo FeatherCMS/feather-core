@@ -54,11 +54,11 @@ struct CommonVariableApi: FeatherApiRepresentable {
 
     func validators(optional: Bool) -> [AsyncValidator] {
         [
-            KeyedContentValidator<String>.required(key: "name", optional: optional),
-            KeyedContentValidator<String>.required(key: "key", optional: optional),
-            KeyedContentValidator<String>(key: "key", message: "Key must be unique", optional: optional, validation: nil, asyncValidation: { value, req in
+            KeyedContentValidator<String>.required("name", optional: optional),
+            KeyedContentValidator<String>.required("key", optional: optional),
+            KeyedContentValidator<String>("key", "Key must be unique", optional: optional, nil) { value, req in
                 Model.isUniqueBy(\.$key == value, req: req)
-            })
+            }
         ]
     }
 }

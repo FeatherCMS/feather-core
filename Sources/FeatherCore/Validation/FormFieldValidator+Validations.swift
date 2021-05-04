@@ -5,7 +5,6 @@
 //  Created by Tibor Bodecs on 2021. 04. 30..
 //
 
-
 public extension FormFieldValidator where Input == String {
 
     static func required(_ field: FormField<Input, Output>, _ message: String? = nil) -> FormFieldValidator<Input, Output> {

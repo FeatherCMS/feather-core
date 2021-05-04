@@ -11,7 +11,6 @@ public struct FormFieldValidator<Input: Decodable, Output: FormFieldView>: Async
     public let message: String
     public var key: String { field.key }
 
-
     public let validation: ((FormField<Input, Output>) -> Bool)?
     public let asyncValidation: ((FormField<Input, Output>, Request) -> EventLoopFuture<Bool>)?
     
