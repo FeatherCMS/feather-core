@@ -128,9 +128,9 @@ public struct Feather {
         TemplateEngine.sources = templateSources
 
         /// renderer configuration
-        Renderer.Option.timeout = 1.500 // 1500ms
+        TemplateRenderer.Option.timeout = 1.500 // 1500ms
         if app.isDebug {
-            Renderer.Option.caching = .bypass
+            TemplateRenderer.Option.caching = .bypass
         }
         app.views.use(.tau)
     }
