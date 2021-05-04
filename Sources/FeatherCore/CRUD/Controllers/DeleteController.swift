@@ -110,7 +110,7 @@ public extension DeleteController {
 //                .flatMap { beforeDelete(req: req, model: $0) }
                 .flatMap { $0.delete(on: req.db) }
 //                .flatMap { afterDelete(req: req) }
-                .transform(to: .ok)
+                .transform(to: .noContent)
         }
     }
 

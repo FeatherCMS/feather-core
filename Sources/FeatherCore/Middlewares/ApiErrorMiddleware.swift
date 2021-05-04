@@ -67,6 +67,11 @@ struct ApiErrorMiddleware: Middleware {
                 headers = abort.abort.headers
                 message = abort.message
                 details = abort.details
+            case let abort as Abort:
+                status = abort.status
+                headers = abort.headers
+                message = abort.reason
+                details = []
             default:
                 status = .internalServerError
                 headers = [:]

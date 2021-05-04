@@ -31,13 +31,32 @@ final class CommonVariablesApiTests: FeatherTestCase {
             .post("/api/admin/common/variables/")
             .body(VariableCreateObject(key: "testKey" + uuid, name: "testName", value: "testValue", notes: "testNotes"))
             .cookie(cookies)
-            .expect(.ok)
+            .expect(.created)
             .expect(.json)
             .expect(VariableGetObject.self) { item in
                 XCTAssertEqual(item.key, "testKey" + uuid)
                 XCTAssertEqual(item.name, "testName")
                 XCTAssertEqual(item.value, "testValue")
                 XCTAssertEqual(item.notes, "testNotes")
+            }
+            .test(.inMemory)
+    }
+    
+    func testCreateInvalidVariable() throws {
+        try authenticate()
+        
+        try app.describe("Variable with missing key or name shouldn't be created")
+            .post("/api/admin/common/variables/")
+            .body(VariableCreateObject(key: "", name: ""))
+            .cookie(cookies)
+            .expect(.badRequest)
+            .expect(.json)
+            .expect(ApiError.self) { error in
+                XCTAssertEqual(error.details.count, 2)
+                for detail in error.details {
+                    XCTAssertTrue(["name", "key"].contains(detail.key))
+                    XCTAssertTrue(["Name is required", "Key is required"].contains(detail.message))
+                }
             }
             .test(.inMemory)
     }
@@ -53,7 +72,7 @@ final class CommonVariablesApiTests: FeatherTestCase {
             .post("/api/admin/common/variables/")
             .body(VariableCreateObject(key: "testUpdateKey" + uuid, name: "testUpdateName", value: "testUpdateValue", notes: "testUpdateNotes"))
             .cookie(cookies)
-            .expect(.ok)
+            .expect(.created)
             .expect(.json)
             .expect(VariableGetObject.self) { item in
                 variable = item
@@ -87,7 +106,7 @@ final class CommonVariablesApiTests: FeatherTestCase {
             .post("/api/admin/common/variables/")
             .body(VariableCreateObject(key: "testUpdateKey" + uuid, name: "testUpdateName", value: "testUpdateValue", notes: "testUpdateNotes"))
             .cookie(cookies)
-            .expect(.ok)
+            .expect(.created)
             .expect(.json)
             .expect(VariableGetObject.self)
             .test(.inMemory)
@@ -103,6 +122,44 @@ final class CommonVariablesApiTests: FeatherTestCase {
                 XCTAssertEqual(error.details[0].key, "key")
                 XCTAssertEqual(error.details[0].message, "Key must be unique")
             }
+            .test(.inMemory)
+    }
+    
+    func testDeleteVariable() throws {
+        try authenticate()
+
+        var variable: VariableGetObject!
+
+        let uuid = UUID().uuidString
+
+        try app.describe("Variable create")
+            .post("/api/admin/common/variables/")
+            .body(VariableCreateObject(key: "testDeleteKey" + uuid, name: "testDeleteName", value: "testDeleteValue", notes: "testDeleteNotes"))
+            .cookie(cookies)
+            .expect(.created)
+            .expect(.json)
+            .expect(VariableGetObject.self) { item in
+                variable = item
+                XCTAssertNotNil(variable)
+            }
+            .test(.inMemory)
+
+        try app.describe("Variable delete should return with no content response")
+            .delete("/api/admin/common/variables/\(variable.id.uuidString)/")
+            .cookie(cookies)
+            .expect(.noContent)
+            .test(.inMemory)
+    }
+    
+    func testMissingDeleteVariable() throws {
+        try authenticate()
+        
+        let uuid = UUID().uuidString
+
+        try app.describe("Missing variable delete should return not found error")
+            .delete("/api/admin/common/variables/\(uuid)/")
+            .cookie(cookies)
+            .expect(.notFound)
             .test(.inMemory)
     }
 }

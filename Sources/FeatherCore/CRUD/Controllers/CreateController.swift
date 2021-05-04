@@ -35,7 +35,7 @@ public protocol CreateController: ModelController {
 
     func createView(req: Request) throws -> EventLoopFuture<View>
     func create(req: Request) throws -> EventLoopFuture<Response>
-    func createApi(_ req: Request) throws -> EventLoopFuture<CreateApi.GetObject>
+    func createApi(_ req: Request) throws -> EventLoopFuture<Response>
 
     func setupCreateRoutes(on: RoutesBuilder, as: PathComponent)
     func setupCreateApiRoute(on builder: RoutesBuilder)
@@ -103,7 +103,7 @@ public extension CreateController {
         }
     }    
 
-    func createApi(_ req: Request) throws -> EventLoopFuture<CreateApi.GetObject> {
+    func createApi(_ req: Request) throws -> EventLoopFuture<Response> {
         accessCreate(req: req).throwingFlatMap { hasAccess in
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
@@ -128,6 +128,7 @@ public extension CreateController {
             }
             .flatMap { model in model.create(on: req.db).map { model } }
             .map { api.mapGet(model: $0) }
+            .encodeResponse(status: .created, for: req)
         }
     }
 
