@@ -25,8 +25,8 @@ public struct FormFieldValidator<Input: Decodable, Output: FormFieldView>: Async
         self.asyncValidation = asyncValidation
     }
     
-    public func validate(_ req: Request) -> EventLoopFuture<ValidationError?> {
-        var future: EventLoopFuture<ValidationError?> = req.eventLoop.future(nil)
+    public func validate(_ req: Request) -> EventLoopFuture<ValidationErrorDetail?> {
+        var future: EventLoopFuture<ValidationErrorDetail?> = req.eventLoop.future(nil)
         if let validation = validation {
             future = req.eventLoop.future(validation(field) ? nil : error)
         }

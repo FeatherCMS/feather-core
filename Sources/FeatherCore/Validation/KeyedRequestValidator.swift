@@ -18,7 +18,7 @@ public struct KeyedRequestValidator: AsyncValidator {
         self.asyncValidation = asyncValidation
     }
 
-    public func validate(_ req: Request) -> EventLoopFuture<ValidationError?> {
+    public func validate(_ req: Request) -> EventLoopFuture<ValidationErrorDetail?> {
         asyncValidation(req).map { $0 ? nil : error }
     }
 }

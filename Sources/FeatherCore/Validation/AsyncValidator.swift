@@ -10,12 +10,14 @@ public protocol AsyncValidator {
     var key: String { get }
     var message: String { get }
 
-    func validate(_ req: Request) -> EventLoopFuture<ValidationError?>
+    func validate(_ req: Request) -> EventLoopFuture<ValidationErrorDetail?>
 }
 
 public extension AsyncValidator {
 
-    var error: ValidationError {
+    var error: ValidationErrorDetail {
         .init(key: key, message: message)
     }
 }
+
+

@@ -51,7 +51,7 @@ final class CommonVariablesApiTests: FeatherTestCase {
             .cookie(cookies)
             .expect(.badRequest)
             .expect(.json)
-            .expect(ApiError.self) { error in
+            .expect(ValidationError.self) { error in
                 XCTAssertEqual(error.details.count, 2)
                 for detail in error.details {
                     XCTAssertTrue(["name", "key"].contains(detail.key))
@@ -151,7 +151,7 @@ final class CommonVariablesApiTests: FeatherTestCase {
             .cookie(cookies)
             .expect(.badRequest)
             .expect(.json)
-            .expect(ApiError.self) { error in
+            .expect(ValidationError.self) { error in
                 XCTAssertEqual(error.details.count, 1)
                 XCTAssertEqual(error.details[0].key, "key")
                 XCTAssertEqual(error.details[0].message, "Key must be unique")

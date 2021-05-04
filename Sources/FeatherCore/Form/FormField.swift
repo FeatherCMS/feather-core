@@ -122,7 +122,7 @@ open class FormField<Input: Decodable, Output: Encodable>: FormComponent {
         guard let validators = validatorsBlock else {
             return req.eventLoop.future(true)
         }
-        return InputValidator(validators(req, self)).validate(req)
+        return RequestValidator(validators(req, self)).isValid(req)
     }
     
     open func write(req: Request) -> EventLoopFuture<Void> {

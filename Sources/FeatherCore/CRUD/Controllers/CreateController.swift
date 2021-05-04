@@ -104,21 +104,16 @@ public extension CreateController {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
             let api = CreateApi()
-            return InputValidator(api.createValidators())
-                .validateResult(req)
-                .throwingFlatMap { errors -> EventLoopFuture<CreateApi.Model> in
-                    guard errors.isEmpty else {
-                        return req.eventLoop.future(error: ValidationAbort(abort: Abort(.badRequest), details: errors))
-                    }
+            return RequestValidator(api.createValidators())
+                .validate(req)
+                .throwingFlatMap {
                     let input = try req.content.decode(CreateApi.CreateObject.self)
                     let model = Model() as! CreateApi.Model
-                    return api.mapCreate(req, model: model, input: input).flatMap {
-                        req.eventLoop.future(model)
-                    }
+                    return api.mapCreate(req, model: model, input: input)
+                        .flatMap { model.create(on: req.db).map { model } }
+                        .map { api.mapGet(model: $0) }
+                        .encodeResponse(status: .created, for: req)
                 }
-                .flatMap { model in model.create(on: req.db).map { model } }
-                .map { api.mapGet(model: $0) }
-                .encodeResponse(status: .created, for: req)
         }
     }
 

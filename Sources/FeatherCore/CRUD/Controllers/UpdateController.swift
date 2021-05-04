@@ -105,13 +105,10 @@ public extension UpdateController {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
             let api = UpdateApi()
-            return InputValidator(api.updateValidators())
-                .validateResult(req)
-                .throwingFlatMap { errors -> EventLoopFuture<UpdateApi.GetObject> in
-                    guard errors.isEmpty else {
-                        return req.eventLoop.future(error: ValidationAbort(abort: Abort(.badRequest), details: errors))
-                    }
-                    return try findBy(identifier(req), on: req.db).throwingFlatMap { model in
+            return RequestValidator(api.updateValidators())
+                .validate(req)
+                .throwingFlatMap {
+                    try findBy(identifier(req), on: req.db).throwingFlatMap { model in
                         let input = try req.content.decode(UpdateApi.UpdateObject.self)
                         return api.mapUpdate(req, model: model as! UpdateApi.Model, input: input)
                             .flatMap { beforeUpdate(req: req, model: model) }

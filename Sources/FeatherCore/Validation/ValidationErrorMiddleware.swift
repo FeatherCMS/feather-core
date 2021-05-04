@@ -5,53 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 04. 28..
 //
 
-/*
-API error format:
+struct ValidationErrorMiddleware: Middleware {
 
-```json
-{
-    // optional:
-    "message": "There is a general issue with the input",
-    
-    "details": [
-        {
-           "key": "key",
-           "message": "Key must be unique",
-        },
-        {
-           "key": "name",
-           "message": "Name is required",
-        },
-    ]
-}
-```
-*/
-
-struct ValidationAbort: AbortError {
-
-    var abort: Abort
-    var message: String?
-    var details: [ValidationError]
-
-    var reason: String { abort.reason }
-    var status: HTTPStatus { abort.status }
-    
-    init(abort: Abort, message: String? = nil, details: [ValidationError]) {
-        self.abort = abort
-        self.message = message
-        self.details = details
-    }
-}
-
-struct ApiError: Codable {
-    let message: String?
-    let details: [ValidationError]
-}
-
-extension ApiError: Content {}
-
-struct ApiErrorMiddleware: Middleware {
-    
     let environment: Environment
 
     public func respond(to request: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
@@ -59,7 +14,7 @@ struct ApiErrorMiddleware: Middleware {
             let status: HTTPResponseStatus
             let headers: HTTPHeaders
             let message: String?
-            let details: [ValidationError]
+            let details: [ValidationErrorDetail]
 
             switch error {
             case let abort as ValidationAbort:
@@ -84,7 +39,7 @@ struct ApiErrorMiddleware: Middleware {
             let response = Response(status: status, headers: headers)
 
             do {
-                response.body = try .init(data: JSONEncoder().encode(ApiError(message: message, details: details)))
+                response.body = try .init(data: JSONEncoder().encode(ValidationError(message: message, details: details)))
                 response.headers.replaceOrAdd(name: .contentType, value: "application/json; charset=utf-8")
             }
             catch {

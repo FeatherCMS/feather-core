@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 04. 02..
 //
 
-public struct ContentValidator<T: Codable>: AsyncValidator {
+public struct KeyedContentValidator<T: Codable>: AsyncValidator {
 
     public let key: String
     public let message: String
@@ -26,7 +26,7 @@ public struct ContentValidator<T: Codable>: AsyncValidator {
         self.asyncValidation = asyncValidation
     }
     
-    public func validate(_ req: Request) -> EventLoopFuture<ValidationError?> {
+    public func validate(_ req: Request) -> EventLoopFuture<ValidationErrorDetail?> {
         let optionalValue = try? req.content.get(T.self, at: key)
 
         if let value = optionalValue {

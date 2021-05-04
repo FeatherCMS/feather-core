@@ -40,13 +40,10 @@ public extension PatchController {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
             let api = PatchApi()
-            return InputValidator(api.patchValidators())
-                .validateResult(req)
-                .throwingFlatMap { errors -> EventLoopFuture<PatchApi.GetObject> in
-                    guard errors.isEmpty else {
-                        return req.eventLoop.future(error: ValidationAbort(abort: Abort(.badRequest), details: errors))
-                    }
-                    return try findBy(identifier(req), on: req.db).throwingFlatMap { model in
+            return RequestValidator(api.patchValidators())
+                .validate(req)
+                .throwingFlatMap {
+                    try findBy(identifier(req), on: req.db).throwingFlatMap { model in
                         let input = try req.content.decode(PatchApi.PatchObject.self)
                         return api.mapPatch(req, model: model as! PatchApi.Model, input: input)
                             .flatMap { beforePatch(req: req, model: model) }
