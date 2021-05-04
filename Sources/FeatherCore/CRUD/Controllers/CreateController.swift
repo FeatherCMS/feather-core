@@ -11,14 +11,12 @@ public protocol CreateApiRepresentable: ModelApi {
     
     associatedtype CreateObject: Codable
     
-    func validateCreate(_ req: Request) -> EventLoopFuture<[ValidationError]>
+    func createValidators() -> [AsyncValidator]
     func mapCreate(_ req: Request, model: Model, input: CreateObject) -> EventLoopFuture<Void>
 }
 
 extension CreateApiRepresentable {
-    func validateCreate(_ req: Request) -> EventLoopFuture<[ValidationError]> {
-        return req.eventLoop.future([])
-    }
+    func createValidators() -> [AsyncValidator] { [] }
 }
 
 public protocol CreateController: ModelController {
@@ -108,27 +106,22 @@ public extension CreateController {
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
-
             let api = CreateApi()
-
-            return api.validateCreate(req).flatMap { errors -> EventLoopFuture<CreateApi.Model> in
-                guard errors.isEmpty else {
-                    return req.eventLoop.future(error: ValidationAbort(abort: Abort(.badRequest), details: errors))
-                }
-                do {
+            return InputValidator(api.createValidators())
+                .validateResult(req)
+                .throwingFlatMap { errors -> EventLoopFuture<CreateApi.Model> in
+                    guard errors.isEmpty else {
+                        return req.eventLoop.future(error: ValidationAbort(abort: Abort(.badRequest), details: errors))
+                    }
                     let input = try req.content.decode(CreateApi.CreateObject.self)
                     let model = Model() as! CreateApi.Model
                     return api.mapCreate(req, model: model, input: input).flatMap {
                         req.eventLoop.future(model)
                     }
                 }
-                catch {
-                    return req.eventLoop.future(error: Abort(.badRequest))
-                }
-            }
-            .flatMap { model in model.create(on: req.db).map { model } }
-            .map { api.mapGet(model: $0) }
-            .encodeResponse(status: .created, for: req)
+                .flatMap { model in model.create(on: req.db).map { model } }
+                .map { api.mapGet(model: $0) }
+                .encodeResponse(status: .created, for: req)
         }
     }
 

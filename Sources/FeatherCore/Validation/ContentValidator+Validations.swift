@@ -5,17 +5,12 @@
 //  Created by Tibor Bodecs on 2021. 04. 02..
 //
 
-public extension ContentValidator {
-
-    static func required(key: String, message: String? = nil) -> ContentValidator<T> {
-        .init(key: key, message: message ?? "\(key.uppercasedFirst) is required")
-    }
-}
-
 public extension ContentValidator where T == String {
 
-    static func required(key: String, message: String? = nil) -> ContentValidator<T> {
-        .init(key: key, message: message ?? "\(key.uppercasedFirst) is required", validation: { !$0.isEmpty })
+    static func required(key: String, message: String? = nil, optional: Bool = false) -> ContentValidator<T> {
+        .init(key: key, message: message ?? "\(key.uppercasedFirst) is required", optional: optional, validation: {
+            !$0.isEmpty
+        })
     }
         
     static func min(key: String, length: Int, message: String? = nil) -> ContentValidator<T> {

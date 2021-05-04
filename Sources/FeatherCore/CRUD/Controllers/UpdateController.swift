@@ -9,8 +9,12 @@ public protocol UpdateApiRepresentable: ModelApi {
     
     associatedtype UpdateObject: Codable
     
-    func validateUpdate(_ req: Request) -> EventLoopFuture<Bool>
+    func updateValidators() -> [AsyncValidator]
     func mapUpdate(_ req: Request, model: Model, input: UpdateObject) -> EventLoopFuture<Void>
+}
+
+extension UpdateApiRepresentable {
+    func updateValidators() -> [AsyncValidator] { [] }
 }
 
 public protocol UpdateController: IdentifiableController {
@@ -105,20 +109,21 @@ public extension UpdateController {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
             let api = UpdateApi()
-
-            return api.validateUpdate(req).throwingFlatMap { isValid -> EventLoopFuture<UpdateApi.GetObject> in
-                guard isValid else {
-                    return req.eventLoop.future(error: Abort(.badRequest))
+            return InputValidator(api.updateValidators())
+                .validateResult(req)
+                .throwingFlatMap { errors -> EventLoopFuture<UpdateApi.GetObject> in
+                    guard errors.isEmpty else {
+                        return req.eventLoop.future(error: ValidationAbort(abort: Abort(.badRequest), details: errors))
+                    }
+                    return try findBy(identifier(req), on: req.db).throwingFlatMap { model in
+                        let input = try req.content.decode(UpdateApi.UpdateObject.self)
+                        return api.mapUpdate(req, model: model as! UpdateApi.Model, input: input)
+                            .flatMap { beforeUpdate(req: req, model: model) }
+                            .flatMap { $0.update(on: req.db) }
+                            .flatMap { afterUpdate(req: req, model: model) }
+                            .map { api.mapGet(model: model as! UpdateApi.Model) }
+                    }
                 }
-                return try findBy(identifier(req), on: req.db).throwingFlatMap { model in
-                    let input = try req.content.decode(UpdateApi.UpdateObject.self)
-                    return api.mapUpdate(req, model: model as! UpdateApi.Model, input: input)
-                        .flatMap { beforeUpdate(req: req, model: model) }
-                        .flatMap { $0.update(on: req.db) }
-                        .flatMap { afterUpdate(req: req, model: model) }
-                        .map { api.mapGet(model: model as! UpdateApi.Model) }
-                }   
-            }
         }
     }
 

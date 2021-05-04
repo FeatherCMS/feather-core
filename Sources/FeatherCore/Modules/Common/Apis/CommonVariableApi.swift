@@ -52,27 +52,34 @@ struct CommonVariableApi: FeatherApiRepresentable {
         return req.eventLoop.future()
     }
 
-    func validateCreate(_ req: Request) -> EventLoopFuture<[ValidationError]> {
-        InputValidator([
+    func createValidators() -> [AsyncValidator] {
+        [
             ContentValidator<String>.required(key: "name"),
             ContentValidator<String>.required(key: "key"),
             ContentValidator<String>(key: "key", message: "Key must be unique", optional: false, validation: nil, asyncValidation: { value, req in
                 Model.isUniqueBy(\.$key == value, req: req)
             })
-        ]).validateResult(req)
+        ]
+    }
+
+    func updateValidators() -> [AsyncValidator] {
+        [
+            ContentValidator<String>.required(key: "name"),
+            ContentValidator<String>.required(key: "key"),
+            ContentValidator<String>(key: "key", message: "Key must be unique", optional: false, validation: nil, asyncValidation: { value, req in
+                Model.isUniqueBy(\.$key == value, req: req)
+            })
+        ]
     }
     
-    func validateUpdate(_ req: Request) -> EventLoopFuture<Bool> {
-//        validations.add("key", as: String.self, is: !.empty && .count(...250))
-//        validations.add("name", as: String.self, is: !.empty && .count(...250))
-
-        req.eventLoop.future(true)
+    func patchValidators() -> [AsyncValidator] {
+        [
+            ContentValidator<String>.required(key: "name", optional: true),
+            ContentValidator<String>.required(key: "key", optional: true),
+            ContentValidator<String>(key: "key", message: "Key must be unique", optional: true, validation: nil, asyncValidation: { value, req in
+                Model.isUniqueBy(\.$key == value, req: req)
+            })
+        ]
     }
-    
-    func validatePatch(_ req: Request) -> EventLoopFuture<Bool> {
-//        validations.add("key", as: String.self, is: !.empty && .count(...250), required: false)
-//        validations.add("name", as: String.self, is: !.empty && .count(...250), required: false)
 
-        req.eventLoop.future(true)
-    }
 }

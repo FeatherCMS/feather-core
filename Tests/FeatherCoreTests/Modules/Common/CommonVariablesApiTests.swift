@@ -97,6 +97,40 @@ final class CommonVariablesApiTests: FeatherTestCase {
             .test(.inMemory)
     }
     
+    func testPatchVariable() throws {
+        try authenticate()
+
+        var variable: VariableGetObject!
+        
+        let uuid = UUID().uuidString
+        
+        try app.describe("Variable create")
+            .post("/api/admin/common/variables/")
+            .body(VariableCreateObject(key: "testPatchKey" + uuid, name: "testPatchName", value: "testPatchValue", notes: "testPatchNotes"))
+            .cookie(cookies)
+            .expect(.created)
+            .expect(.json)
+            .expect(VariableGetObject.self) { item in
+                variable = item
+                XCTAssertNotNil(variable)
+            }
+            .test(.inMemory)
+        
+        try app.describe("Variable patch")
+            .patch("/api/admin/common/variables/\(variable.id.uuidString)/")
+            .body(VariablePatchObject(name: "testPatchName2"))
+            .cookie(cookies)
+            .expect(.ok)
+            .expect(.json)
+            .expect(VariableGetObject.self) { item in
+                XCTAssertEqual(item.key, "testPatchKey" + uuid)
+                XCTAssertEqual(item.name, "testPatchName2")
+                XCTAssertEqual(item.value, "testPatchValue")
+                XCTAssertEqual(item.notes, "testPatchNotes")
+            }
+            .test(.inMemory)
+    }
+    
     func testUniqueKeyFailure() throws {
         try authenticate()
 

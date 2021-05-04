@@ -8,6 +8,7 @@ Core dependencies for Feather CMS.
 - [ ] api tests
 - [ ] common translation labels
 - [ ] export / import feature
+- [ ] proper file (media) api 
 - [ ] review feather API access control (Swift)
 
 
