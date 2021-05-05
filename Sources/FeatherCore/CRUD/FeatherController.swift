@@ -29,7 +29,7 @@ public protocol FeatherApiRepresentable:
     func validators(optional: Bool) -> [AsyncValidator]
 }
 
-extension FeatherApiRepresentable {
+public extension FeatherApiRepresentable {
 
     func createValidators() -> [AsyncValidator] {
         validators(optional: false)

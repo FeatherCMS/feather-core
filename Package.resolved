@@ -249,8 +249,8 @@
         "repositoryURL": "https://github.com/vapor/vapor",
         "state": {
           "branch": null,
-          "revision": "ad3fb7f87d47eaca4d97bf515c0d7e93093b38ad",
-          "version": "4.44.4"
+          "revision": "07a105b295a0b191e69761feede58edb2ebeb580",
+          "version": "4.45.0"
         }
       },
       {
