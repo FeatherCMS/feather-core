@@ -8,8 +8,8 @@
 public protocol TimestampFieldKeys { }
 
 public extension TimestampFieldKeys {
-    static var updated_at: FieldKey { "updated_at" }
-    static var created_at: FieldKey { "created_at" }
-    static var deleted_at: FieldKey { "deleted_at" }
+    static var updatedAt: FieldKey { "updated_at" }
+    static var createdAt: FieldKey { "created_at" }
+    static var deletedAt: FieldKey { "deleted_at" }
 }
 
