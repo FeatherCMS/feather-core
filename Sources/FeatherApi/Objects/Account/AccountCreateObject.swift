@@ -11,14 +11,14 @@ public struct AccountCreateObject: Codable {
 
     public var email: String
     public var password: String
-    public var root: Bool?
+    public var root: Bool
 
     public init(email: String,
                 password: String,
-                root: Bool? = nil)
+                root: Bool = false)
     {
         self.email = email
         self.password = password
-        self.root = root ?? false
+        self.root = root
     }
 }

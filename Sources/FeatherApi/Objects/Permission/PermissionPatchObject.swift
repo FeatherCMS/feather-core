@@ -9,18 +9,18 @@ import Foundation
 
 public struct PermissionPatchObject: Codable {
 
-    public var module: String?
+    public var namespace: String?
     public var context: String?
     public var action: String?
     public var name: String?
     public var notes: String?
 
-    public init(module: String? = nil,
+    public init(namespace: String? = nil,
                 context: String? = nil,
                 action: String? = nil,
                 name: String? = nil,
                 notes: String? = nil) {
-        self.module = module
+        self.namespace = namespace
         self.context = context
         self.action = action
         self.name = name

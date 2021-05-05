@@ -31,14 +31,14 @@ struct UserAccountApi: FeatherApiRepresentable {
     func mapCreate(_ req: Request, model: Model, input: CreateObject) -> EventLoopFuture<Void> {
         model.email = input.email
         model.password = input.password
-        model.root = input.root ?? false
+        model.root = input.root
         return req.eventLoop.future()
     }
     
     func mapUpdate(_ req: Request, model: Model, input: UpdateObject) -> EventLoopFuture<Void> {
         model.email = input.email
         model.password = input.password
-        model.root = input.root ?? false
+        model.root = input.root
         return req.eventLoop.future()
     }
 
@@ -48,9 +48,14 @@ struct UserAccountApi: FeatherApiRepresentable {
         model.root = input.root ?? model.root
         return req.eventLoop.future()
     }
-    
-    //        validations.add("email", as: String.self, is: .email)
-    //        validations.add("password", as: String.self, is: !.empty && .count(8...250))
 
-    func validators(optional: Bool) -> [AsyncValidator] { [] }
+    func validators(optional: Bool) -> [AsyncValidator] {
+        [
+            KeyedContentValidator<String>.required("email", optional: optional),
+            KeyedContentValidator<String>.required("password", optional: optional),
+            KeyedContentValidator<String>("email", "Email must be unique", optional: optional, nil) { value, req in
+                Model.isUniqueBy(\.$email == value, req: req)
+            }
+        ]
+    }
 }
