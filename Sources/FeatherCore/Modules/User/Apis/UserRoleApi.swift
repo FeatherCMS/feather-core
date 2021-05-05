@@ -53,8 +53,12 @@ struct UserRoleApi: FeatherApiRepresentable {
     }
     
     func validators(optional: Bool) -> [AsyncValidator] {
-        []
+        [
+            KeyedContentValidator<String>.required("name", optional: optional),
+            KeyedContentValidator<String>.required("key", optional: optional),
+            KeyedContentValidator<String>("key", "Key must be unique", optional: optional, nil) { value, req in
+                Model.isUniqueBy(\.$key == value, req: req)
+            }
+        ]
     }
-    //        validations.add("key", as: String.self, is: !.empty && .count(...250))
-    //        validations.add("name", as: String.self, is: !.empty && .count(...250))
 }
