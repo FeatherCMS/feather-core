@@ -44,7 +44,7 @@ extension SystemModule {
             .init(key: "siteFooterTop",
                   name:  "Site footer top section",
                   value: """
-                        <img class="size" src="/images/icons/icon.png" alt="Logo of Feather" title="Feather">
+                        <img class="size" src="/img/icons/icon.png" alt="Logo of Feather" title="Feather">
                         <p>This site is powered by <a href="https://feathercms.com/" target="_blank">Feather CMS</a> &copy; 2020 - {year}</p>
                     """,
                   

@@ -17,8 +17,7 @@ struct InlineSvgEntity: NonMutatingMethod, Invariant, StringReturn {
     func evaluate(_ params: CallValues) -> TemplateData {
         let name = params[0].string!
         
-        let path = Application.Paths.images
-            .appendingPathComponent("svgs")
+        let path = Application.Paths.svg
             .appendingPathComponent(name)
             .appendingPathExtension("svg")
 

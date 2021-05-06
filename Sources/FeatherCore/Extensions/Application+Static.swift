@@ -23,6 +23,7 @@ public extension Application {
         public static let css = `public`.appendingPathComponent(Directories.css)
         public static let images = `public`.appendingPathComponent(Directories.images)
         public static let javascript = `public`.appendingPathComponent(Directories.javascript)
+        public static let svg = `public`.appendingPathComponent(Directories.svg)
     }
 
     // locations are always relative with a trailing slash
@@ -34,8 +35,9 @@ public extension Application {
         public static let `public`: String = "Public"
         public static let assets: String = "assets"
         public static let css: String = "css"
-        public static let images: String = "images"
+        public static let images: String = "img"
         public static let javascript: String = "js"
+        public static let svg: String = "svg"
     }
     
     static func dateFormatter(dateStyle: DateFormatter.Style = .short, timeStyle: DateFormatter.Style = .short) -> DateFormatter {

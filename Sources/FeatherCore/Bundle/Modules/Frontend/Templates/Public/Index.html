@@ -13,12 +13,12 @@
     <meta property="og:title" content="#(metadata.title ?? "") - #($variables.siteTitle)">
     <meta property="og:description" content="#(metadata.excerpt ?? "")">
     <meta property="og:url" content="#($req.url.path.absoluteUrl())">
-    <meta property="og:image" content="#(metadata.imageKey.resolve() ?? "/images/placeholder.jpg".absoluteUrl())">
+    <meta property="og:image" content="#(metadata.imageKey.resolve() ?? "/img/placeholder.jpg".absoluteUrl())">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="#(metadata.title ?? "") - #($variables.siteTitle)">
     <meta name="twitter:description" content="#(metadata.excerpt ?? "")">
-    <meta name="twitter:image" content="#(metadata.imageKey.resolve() ?? "/images/placeholder.jpg".absoluteUrl())">
+    <meta name="twitter:image" content="#(metadata.imageKey.resolve() ?? "/img/placeholder.jpg".absoluteUrl())">
     #endif
     
     #if(head.noindex ?? metadata.status ?? "" != "published" || $variables.siteNoindex == "true"):
@@ -29,20 +29,20 @@
     
     <link rel="manifest" href="/manifest.json">
     
-    <link rel="mask-icon" sizes="any" href="/images/icons/icon.svg">
+    <link rel="mask-icon" sizes="any" href="/img/logos/feather-logo-shape.svg">
     
-    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="/images/icons/icon.png" type="image/png">
+    <link rel="shortcut icon" href="/img/favicons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/img/favicons/favicon.png" type="image/png">
         
-    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" href="/img/apple/192.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple/57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple/72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple/76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple/114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple/120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple/144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple/152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple/180.png">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/binarybirds/peacock-css@1.0.0-beta.5/peacock.min.css">
 
@@ -72,7 +72,7 @@
     <header>
         <div id="navigation">
             <a id="site-logo" href="/">
-                <img src="#($variables.siteLogo.resolve() ?? "/images/logo-text.png")" alt="Logo of #($variables.siteTitle ?? "")" title="#($variables.siteTitle ?? "")">
+                <img src="#($variables.siteLogo.resolve() ?? "/img/logos/feather-logo-text.png")" alt="Logo of #($variables.siteTitle ?? "")" title="#($variables.siteTitle ?? "")">
             </a>
 
             <nav id="primary-menu">
