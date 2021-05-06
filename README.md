@@ -3,7 +3,7 @@
 Core dependencies for Feather CMS.
 
 
-## TODO
+## Todo
 
 - [ ] common translation labels
 - [ ] export / import feature
@@ -27,3 +27,9 @@ Core dependencies for Feather CMS.
 
 
 ```
+
+## Credits
+
+- [feathericons.com](https://feathericons.com/) - Simply beautiful open source icons
+
+

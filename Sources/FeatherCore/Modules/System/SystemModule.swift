@@ -95,7 +95,7 @@ final class SystemModule: FeatherModule {
             "actions": .array([
                 .dictionary([
                     "title": "Copy",
-                    "icon": "edit",
+                    "icon": "edit-2",
                     "action": "clear()",
                 ]),
             ]),
