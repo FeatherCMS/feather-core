@@ -1,10 +1,14 @@
 <section>
     #inline("Common/Fields/Label")
 
-    #for(item in field.options):
-    <input type="checkbox" name="#(field.key)[]" value="#(item.key)" id="#(field.key)-#(item.key)" #if(field.values.contains(item.key)):checked#endif>
-    <label for="#(field.key)-#(item.key)">#(item.label)</label><br>
-    #endfor
+    #if(field.options.isEmpty()):
+        <label><span class="more">No available options</span></label>
+    #else:
+        #for(item in field.options):
+        <input type="checkbox" name="#(field.key)[]" value="#(item.key)" id="#(field.key)-#(item.key)" #if(field.values.contains(item.key)):checked#endif>
+        <label for="#(field.key)-#(item.key)">#(item.label)</label><br>
+        #endfor
+    #endif
     
     #inline("Common/Fields/Error")
 </section>

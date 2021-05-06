@@ -7,8 +7,8 @@
 
 public extension Application {
     
-    static let baseUrl: String = (Feather.https ? "https" : "http") + "://" + Feather.hostname + ":" + (Feather.port == 80 ? "" : String(Feather.port)) + "/"
-
+    /// without trailing slash
+    static let baseUrl: String = (Feather.https ? "https" : "http") + "://" + Feather.hostname + ":" + (Feather.port == 80 ? "" : String(Feather.port))
 
     // paths are always absolute, with a trailing slash
     struct Paths {

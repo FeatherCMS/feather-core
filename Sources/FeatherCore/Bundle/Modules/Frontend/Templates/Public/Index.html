@@ -103,7 +103,9 @@
     
     <footer>
         <section>
-
+            
+            #($variables.siteFooterTop.replaceYear() ?? "")
+            
             <nav>
                 #if($user.isAuthenticated):
                     #if(UserHasPermission("system.module.admin")):
@@ -123,6 +125,8 @@
                     #endif
                 #endfor
             </nav>
+            
+            #($variables.siteFooterBottom.replaceYear() ?? "")
 
         </section>
     </footer>

@@ -13,16 +13,16 @@ final class SystemSettingsForm: Form {
     }
 
     private func load(key: String, req: Request) -> EventLoopFuture<String?> {
-        CommonVariableModel.query(on: req.db).filter(\.$key == "site" + key.capitalized).first().map { $0?.value }
+        CommonVariableModel.query(on: req.db).filter(\.$key == "site" + key.uppercasedFirst).first().map { $0?.value }
     }
 
     private func save(key: String, value: String?, req: Request) -> EventLoopFuture<Void> {
-        CommonVariableModel.query(on: req.db).filter(\.$key == "site" + key.capitalized).set(\.$value, to: value).update()
+        CommonVariableModel.query(on: req.db).filter(\.$key == "site" + key.uppercasedFirst).set(\.$value, to: value).update()
     }
     
     private func createFormFields() -> [FormComponent] {
         [
-            ImageField(key: "image", path: "feather")
+            ImageField(key: "logo", path: "feather/")
                 .read { [unowned self] req, field in load(key: field.key, req: req).map { (field as! ImageField).imageKey = $0 } }
                 .write { [unowned self] req, field in save(key: field.key, value: (field as! ImageField).imageKey, req: req) },
 
@@ -43,6 +43,10 @@ final class SystemSettingsForm: Form {
                 .write { [unowned self] req, field in save(key: field.key, value: field.output.value, req: req) },
 
             ToggleField(key: "noindex")
+                .config {
+                    $0.output.label = "Disable site index"
+                    $0.output.more = "SEO related"
+                }
                 .read { [unowned self] req, field in load(key: field.key, req: req).map { field.output.value = Bool($0 ?? "false") ?? false } }
                 .write { [unowned self] req, field in save(key: field.key, value: String(field.output.value), req: req) },
             
@@ -61,7 +65,10 @@ final class SystemSettingsForm: Form {
                 ///NOTE: validate
                 .write { Application.Config.timezone = TimeZone(identifier: $1.input)! },
             
-            MultiSelectionField(key: "filters")
+            CheckboxField(key: "filters")
+                .config {
+                    $0.output.more = "global content filters"
+                }
                 .load { req, field -> Void in
                     let contentFilters: [[ContentFilter]] = req.invokeAll(.contentFilters)
                     field.output.options = contentFilters.flatMap { $0 }.map(\.formFieldOption)
@@ -69,7 +76,11 @@ final class SystemSettingsForm: Form {
                 }
                 .write { Application.Config.filters = $1.input },
             
-            TextField(key: "template").config { $0.output.value = Application.Config.template }
+            TextField(key: "template")
+                .config {
+                    $0.output.more = "folder name"
+                    $0.output.value = Application.Config.template
+                }
                 .write { Application.Config.template = $1.input },
             
             SelectionField(key: "defaultListLimit",
@@ -84,20 +95,39 @@ final class SystemSettingsForm: Form {
                     }
                 },
             
-            
             TextareaField(key: "css")
+                .config {
+                    $0.output.label = "CSS"
+                    $0.output.more = "Code injection"
+                    $0.output.size = .xl
+                }
                 .read { [unowned self] req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
                 .write { [unowned self] req, field in save(key: field.key, value: field.output.value, req: req) },
             
             TextareaField(key: "js")
+                .config {
+                    $0.output.label = "JavaScript"
+                    $0.output.more = "Code injection"
+                    $0.output.size = .xl
+                }
                 .read { [unowned self] req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
                 .write { [unowned self] req, field in save(key: field.key, value: field.output.value, req: req) },
             
             TextareaField(key: "footerTop")
+                .config {
+                    $0.output.label = "Footer top"
+                    $0.output.more = "HTML content"
+                    $0.output.size = .xl
+                }
                 .read { [unowned self] req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
                 .write { [unowned self] req, field in save(key: field.key, value: field.output.value, req: req) },
             
             TextareaField(key: "footerBottom")
+                .config {
+                    $0.output.label = "Footer bottom"
+                    $0.output.more = "HTML content"
+                    $0.output.size = .xl
+                }
                 .read { [unowned self] req, field in load(key: field.key, req: req).map { field.output.value = $0 } }
                 .write { [unowned self] req, field in save(key: field.key, value: field.output.value, req: req) },
         ]

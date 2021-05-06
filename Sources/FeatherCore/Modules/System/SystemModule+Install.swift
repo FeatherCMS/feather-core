@@ -44,14 +44,17 @@ extension SystemModule {
             .init(key: "siteFooterTop",
                   name:  "Site footer top section",
                   value: """
-                        <img class="size" src="/img/icons/icon.png" alt="Logo of Feather" title="Feather">
-                        <p>This site is powered by <a href="https://feathercms.com/" target="_blank">Feather CMS</a> &copy; 2020 - {year}</p>
+                        <img class="size" src="/img/logos/feather-logo.png" alt="Logo of Feather" title="Feather">
+                        <p>This site is powered by <a href="https://feathercms.com/" target="_blank">Feather CMS</a>.</p>
                     """,
                   
                   notes: "Top footer content placed above the footer menu"),
 
             .init(key: "siteFooterBottom",
-                  name: "Site footer bottom",
+                  name: "Site footer bottom section",
+                  value: """
+                        <p><br><small>Copyright &copy; 2020 - {year}</small></p>
+                    """,
                   notes: "Bottom footer content placed under the footer menu"),
         ]
     }
