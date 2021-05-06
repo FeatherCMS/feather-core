@@ -27,6 +27,7 @@ public struct Feather {
     public static let hostname: String = Environment.get("FEATHER_HOSTNAME") ?? "127.0.0.1"
     public static let port: Int = Int(Environment.get("FEATHER_PORT") ?? "8080") ?? 8080
     public static let maxBodySize: ByteCount = ByteCount(stringLiteral: Environment.get("FEATHER_MAX_BODY_SIZE") ?? "10mb")
+    public static let disableFileMiddleware: Bool = Bool(Environment.get("FEATHER_DISABLE_FILE_MIDDLEWARE") ?? "false") ?? false
     
     //public static var modulesLocation: String = "Sources/App/Modules/"
 
@@ -64,7 +65,9 @@ public struct Feather {
         
         setupTemplateEngineEntities()
 
-        app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+        if !disableFileMiddleware {
+            app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+        }
         
         app.sessions.use(.fluent)
         app.migrations.add(SessionRecord.migration)
