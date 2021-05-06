@@ -1,0 +1,109 @@
+<div class="container">
+<p><img src="https://github.com/FeatherCMS/feather/blob/main/Assets/GitHub-Lead.png?raw=true" alt="Feather CMS"></p>
+<h1 id="feather-cms-">Feather CMS 🪶</h1>
+<p>🪶 Feather is a modern Swift-based content management system powered by Vapor 4.</p>
+<p>💬 Click to join the chat on <a href="https://discord.gg/wMSkxCUXAD">Discord</a>.</p>
+<h2 id="requirements">Requirements</h2>
+<p>To use Feather you&#39;ll have to install <strong>Swift 5.3</strong> or greater (using Linux or macOS is recommended).</p>
+<p>If you need help installing Swift, you should follow the official instructions available on <a href="https://swift.org/download/#releases">swift.org</a>.</p>
+<h2 id="installation">Installation</h2>
+<p>Clone or download the source files using the <a href="https://github.com/feathercms/feather/">Feather</a> repository.</p>
+<pre><code class="lang-shell">git <span class="hljs-keyword">clone</span> <span class="hljs-title">https</span>://github.com/FeatherCMS/feather.git
+</code></pre>
+<p>Change the current working directory (located under the target setting when using <a href="https://theswiftdev.com/beginners-guide-to-server-side-swift-using-vapor-4/">Xcode</a>) to the project directory.</p>
+<pre><code class="lang-shell"><span class="hljs-built_in">cd</span> feather
+</code></pre>
+<p>Create a dotenv file ( <code>.env</code> or <code>.env.development</code>) based on your environment) and config the following values.</p>
+<pre><code class="lang-shell"><span class="hljs-comment"># the base path (absolute) of the working directory</span>
+<span class="hljs-attr">FEATHER_WORK_DIR</span>=<span class="hljs-string">"/path/to/feather/"</span>
+
+<span class="hljs-comment"># Optional Feather related env variables</span>
+
+<span class="hljs-comment"># the hostname (domain) of your web server, default localhost</span>
+<span class="hljs-attr">FEATHER_HOSTNAME</span>=feathercms.com
+<span class="hljs-comment"># the port to listen on, default 8080</span>
+<span class="hljs-attr">FEATHER_PORT</span>=<span class="hljs-number">80</span>
+<span class="hljs-comment"># use HTTPS, default false (needs cert &amp; key setup on the Vapor app)</span>
+<span class="hljs-attr">FEATHER_HTTPS</span>=<span class="hljs-literal">true</span>
+<span class="hljs-comment"># maximum body size for file uploads</span>
+<span class="hljs-attr">FEATHER_MAX_BODY_SIZE</span>=<span class="hljs-number">10</span>mb
+<span class="hljs-comment"># disable file middleware, default false (if disabled you can serve files with nginx)</span>
+<span class="hljs-attr">FEATHER_DISABLE_FILE_MIDDLEWARE</span>=<span class="hljs-literal">true</span>
+
+<span class="hljs-comment"># Database related env variables</span>
+
+<span class="hljs-comment"># Available database types: sqlite (default) / mysql / postgres</span>
+<span class="hljs-attr">DB_TYPE</span>=<span class="hljs-string">"mysql"</span>
+<span class="hljs-attr">DB_HOST</span>=<span class="hljs-string">"127.0.0.1"</span>
+<span class="hljs-attr">DB_USER</span>=<span class="hljs-string">"feather"</span>
+<span class="hljs-attr">DB_PASS</span>=<span class="hljs-string">"feather"</span>
+<span class="hljs-attr">DB_NAME</span>=<span class="hljs-string">"feather"</span>
+<span class="hljs-comment"># Default port numbers: mysql - 3306 / postgres - 5432</span>
+<span class="hljs-attr">DB_PORT</span>=<span class="hljs-number">3306</span>
+</code></pre>
+<p>You can run the <code>make env</code> command to quickly create a development environment with the curret directory as a base path.</p>
+<p>Start the server using the <code>swift run Feather</code> command (alternatively you can use the <code>make run</code> command).</p>
+<h3 id="notes-about-using-xcode">Notes about using Xcode</h3>
+<ul>
+<li>⚠️ Warning: DO NOT USE the <code>swift package generate-xcodeproj</code> command, it&#39;s deprecated.</li>
+<li>⚠️ Make sure that you open the project by double clicking the <code>Package.swift</code> file.</li>
+<li>⚠️ Set the <a href="https://theswiftdev.com/beginners-guide-to-server-side-swift-using-vapor-4/">custom working directory</a> for the <code>Feather</code> scheme to the root of the project directory.</li>
+<li>⚠️ If needed setup a <a href="https://theswiftdev.com/10-short-advices-that-will-make-you-a-better-vapor-developer-right-away/">post-action script</a> to automatically shut-down previous server instances (to avoid address in use errors).</li>
+<li>✅ Build and run the project as usual and enjoy your Feather powered site.</li>
+</ul>
+<h3 id="docker-support">Docker support</h3>
+<p>Feather is also available on <a href="https://hub.docker.com/r/feathercms/feathercms">DockerHub</a>, you can use the following command to pull the latest version.</p>
+<pre><code class="lang-shell">docker pull feathercms/<span class="hljs-string">feathercms:</span>latest
+</code></pre>
+<p>You can also build your own images using <code>docker-compose</code> for more information check the following <a href="https://github.com/FeatherCMS/feather/wiki/Docker">wiki page</a></p>
+<h2 id="configuration">Configuration</h2>
+<p>The <a href="https://github.com/feathercms/feather-core">FeatherCore framework</a> provides all the necessary API to configure your Feather application.</p>
+<h3 id="database-driver">Database driver</h3>
+<p>By default Feather uses the SQLite driver, but it is possible to use PostgreSQL, MySQL (MariaDB) or even MongoDB as your database driver through the <a href="https://docs.vapor.codes/4.0/fluent/overview/">Fluent</a> framework.</p>
+<p>You should follow the instructions using the official Vapor docs to setup the right driver, but please note that the preferred drivers are PosgreSQL and SQLite for really small projects and development purposes.</p>
+<h3 id="file-storage-driver">File storage driver</h3>
+<p>The <a href="https://github.com/binarybirds/liquid/">Liquid framework</a> is an abstract file storage library that works with a local file storage driver, but it is also possible to use Amazon S3 as a cloud-based solution.</p>
+<p>You can replace the default local driver with the <a href="https://github.com/BinaryBirds/liquid-aws-s3-driver">S3 driver</a>, which is powered by the <a href="https://github.com/soto-project/soto">Soto for AWS</a> SDK.</p>
+<h3 id="modules">Modules</h3>
+<p>Feather is a modular CMS system, you can add new modules as Swift package dependencies or place them under the Modules directory.</p>
+<p>Feather gives you just a few <strong>core modules</strong>, they provide basic functionalies such as the route system, web frontend, admin interface or API layer.</p>
+<p>The usage of <a href="https://github.com/FeatherCMS?q=-module&amp;type=&amp;language=">other modules</a> can be completely customized (just alter the SPM dependency &amp; configuration file).</p>
+<p>💡 Feel free to fork this repository and create your own configuration as per needed.</p>
+<h2 id="using-feather-cms">Using Feather CMS</h2>
+<p>After the server is running Feather will setup everything you need to run your site.</p>
+<ul>
+<li><p>Bundled resources (public files and templates) will be copied to the project folder (if needed).</p>
+</li>
+<li><p>The first time when you open your page Feather will run in a &quot;system install&quot; mode, during this process:</p>
+<ul>
+<li>All the necesseary models will be saved to the configured database</li>
+<li>All the seed assets will be uploaded to the file storage</li>
+<li>The &quot;root&quot; user account will be created</li>
+<li>Sample content will be created</li>
+</ul>
+</li>
+<li><p>You are ready to use your Feather-based website.</p>
+</li>
+</ul>
+<h4 id="root-user-account">Root user account</h4>
+<p>You can log in to the admin interface using the <code>root@feathercms.com</code> &amp; <code>FeatherCMS</code> user account.</p>
+<p>⚠️ For security reasons, please change the default email &amp; password using the user menu after the first login.</p>
+<h4 id="user-guide">User guide</h4>
+<p>You can read more about how to use Feather in the <a href="https://github.com/FeatherCMS/feather/wiki">wiki</a>.</p>
+<h4 id="custom-templates">Custom templates</h4>
+<p>You can create your very own stylesheet by overriding the files inside the <code>Public</code> folder.</p>
+<p>It is also possible to create custom theme for Feather by altering the templates inside the <code>Resources/Templates/Default</code> folder.</p>
+<p>⚠️ Keep in mind that these files are ignored from the git repository by default.</p>
+<p>👻 You might want to change this behavior by updating your <code>.gitignore</code> file.</p>
+<p>⭐️ If you delete a file from these folders the next time you run Feather it&#39;ll be restored automatically.</p>
+<p>You can also add your own template directory and use that instead of the <code>Default</code> one, you can configure this using the Settings admin menu.</p>
+<h2 id="contribution-and-support">Contribution and support</h2>
+<p>🪶 Feather is an open source software and your contributions are more than welcome.</p>
+<p>🔀 If you wish to make a change, please open a <a href="https://github.com/FeatherCMS/feather/pulls">Pull Request</a>.</p>
+<p>🙏 Please don&#39;t hesitate to send your feedbacks, thoughts and ideas about Feather.</p>
+<h2 id="credits">Credits</h2>
+<ul>
+<li><a href="https://vapor.codes/">Vapor</a> - underlying framework</li>
+<li><a href="https://feathericons.com/">Feather icons</a> - Simply beautiful open source icons</li>
+</ul>
+</div>

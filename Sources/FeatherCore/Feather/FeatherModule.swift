@@ -29,6 +29,8 @@ public protocol FeatherModule {
     static func hookInstallPermission(for action: Permission.Action, context: String?) -> PermissionCreateObject
     
     static var adminLink: Link { get }
+    
+    func sample(named name: String) -> String
 }
 
 ///default module implementation
@@ -59,6 +61,18 @@ public extension FeatherModule {
     }
 
     static var adminLink: Link { .init(label: name, url: ("admin" + "/" + moduleKey).safePath()) }
+
+    func sample(named name: String) -> String {
+        do {
+            guard let url = bundleUrl?.appendingPathComponent("Samples").appendingPathComponent(name) else {
+                return ""
+            }
+            return try String(contentsOf: url, encoding: .utf8)
+        }
+        catch {
+            return ""
+        }
+    }
 }
 
 
