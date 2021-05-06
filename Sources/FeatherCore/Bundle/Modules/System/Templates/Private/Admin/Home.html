@@ -28,7 +28,7 @@ Admin
 
 <section class="grid-321">
     #for(menu in menus):
-        #if(UserHasPermission(menu.item.link.permission) ?? true):
+        #if(UserHasPermission(menu.item.permission) ?? true):
         <div class="card">
             <div class="content">
             <span>#svg(menu.item.icon ?? "")</span>
