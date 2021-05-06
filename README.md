@@ -23,8 +23,6 @@ Core dependencies for Feather CMS.
 - aggregator news item fixes
 - analytics fixes
 
-- update feather readme with new params
-
 - [ ] common translation labels
 - [ ] export / import feature
 - [ ] proper file (media) api 
@@ -52,6 +50,5 @@ Core dependencies for Feather CMS.
 
 ## Credits
 
-- [feathericons.com](https://feathericons.com/) - Simply beautiful open source icons
-
-
+- [Vapor](https://vapor.codes/) - underlying framework
+- [Feather icons](https://feathericons.com/) - Simply beautiful open source icons
