@@ -27,7 +27,7 @@ final class CommonModule: FeatherModule {
         /// admin menus
         app.hooks.register(.adminMenu, use: adminMenuHook)
         /// routes
-        try CommonRouter().bootAndregisterHooks(app)
+        try CommonRouter().bootAndRegisterHooks(app)
     }
   
     // MARK: - hooks

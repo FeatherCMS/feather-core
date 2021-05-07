@@ -33,7 +33,7 @@ final class UserModule: FeatherModule {
         /// admin menus
         app.hooks.register(.adminMenu, use: adminMenuHook)
         /// routes
-        try UserRouter().bootAndregisterHooks(app)
+        try UserRouter().bootAndRegisterHooks(app)
     }
   
     // MARK: - hooks

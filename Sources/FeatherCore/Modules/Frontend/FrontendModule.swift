@@ -27,7 +27,7 @@ final class FrontendModule: FeatherModule {
         app.hooks.register(.frontendCss, use: frontendCssHook)
 //        app.hooks.register(.frontendCssInline, use: frontendCssInlineHook)
         /// routes
-        try FrontendRouter().bootAndregisterHooks(app)
+        try FrontendRouter().bootAndRegisterHooks(app)
         /// pages
         app.hooks.register(.response, use: responseHook)
         app.hooks.register("welcome-page", use: welcomePageHook)

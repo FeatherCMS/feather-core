@@ -15,7 +15,7 @@ public protocol FeatherRouter: RouteCollection {
     func apiRoutesHook(args: HookArguments)
     func apiAdminRoutesHook(args: HookArguments)
     
-    func bootAndregisterHooks(_ app: Application) throws
+    func bootAndRegisterHooks(_ app: Application) throws
 }
 
 public extension FeatherRouter {
@@ -34,7 +34,7 @@ public extension FeatherRouter {
 
     func apiAdminRoutesHook(args: HookArguments) {}
 
-    func bootAndregisterHooks(_ app: Application) throws {
+    func bootAndRegisterHooks(_ app: Application) throws {
         try boot(routes: app.routes)
         app.hooks.register(.routes, use: routesHook)
         app.hooks.register(.webRoutes, use: webRoutesHook)

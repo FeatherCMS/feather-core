@@ -48,7 +48,7 @@ final class SystemModule: FeatherModule {
         app.hooks.register(.adminJs, use: adminJsHook)
 //        app.hooks.register(.adminJsInline, use: adminJsInlineHook)
         /// routes
-        try SystemRouter().bootAndregisterHooks(app)
+        try SystemRouter().bootAndRegisterHooks(app)
         /// pages
         app.hooks.register(.response, use: responseHook)
 
