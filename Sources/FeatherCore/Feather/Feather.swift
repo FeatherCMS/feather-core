@@ -28,6 +28,7 @@ public struct Feather {
     public static let port: Int = Int(Environment.get("FEATHER_PORT") ?? "8080") ?? 8080
     public static let maxBodySize: ByteCount = ByteCount(stringLiteral: Environment.get("FEATHER_MAX_BODY_SIZE") ?? "10mb")
     public static let disableFileMiddleware: Bool = Bool(Environment.get("FEATHER_DISABLE_FILE_MIDDLEWARE") ?? "false") ?? false
+    public static let disableApiSessionAuthMiddleware: Bool = Bool(Environment.get("FEATHER_DISABLE_API_SESSION_AUTH_MIDDLEWARE") ?? "false") ?? false
     
     //public static var modulesLocation: String = "Sources/App/Modules/"
 

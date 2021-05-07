@@ -38,5 +38,5 @@ struct CommonVariableController: FeatherController {
     
     func deleteContext(req: Request, model: CommonVariableModel) -> String {
         model.name
-    }    
+    }
 }

@@ -23,6 +23,8 @@ Core dependencies for Feather CMS.
 - aggregator news item fixes
 - analytics fixes
 
+- fix tau / taukit context memory leak
+
 - [ ] common translation labels
 - [ ] export / import feature
 - [ ] proper file (media) api 

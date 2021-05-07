@@ -224,7 +224,7 @@ struct GenerateModuleCommand: Command {
                 
                 var webArgs = HookArguments()
                 webArgs.routes = frontendRoutes
-                let _: [Void] = app.invokeAll(.webRoutes, args: webArgs)
+                let _: [Void] = app.invokeAll(.frontendRoutes, args: webArgs)
                 
                 /// handle root path and everything else via the controller method
                 frontendRoutes.get(use: frontendController.catchAllView)

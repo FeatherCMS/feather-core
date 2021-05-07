@@ -17,8 +17,7 @@ final class CommonModule: FeatherModule {
         /// database
         app.migrations.add(CommonMigration_v1())
         /// middlewares
-        app.middleware.use(CommonTemplateScopeMiddleware())
-        
+        app.hooks.register(.webMiddlewares, use: webMiddlewaresHook)
         /// install
         app.hooks.register(.installModels, use: installModelsHook)
         app.hooks.register(.installPermissions, use: installPermissionsHook)
@@ -28,14 +27,16 @@ final class CommonModule: FeatherModule {
         /// admin menus
         app.hooks.register(.adminMenu, use: adminMenuHook)
         /// routes
-        let router = CommonRouter()
-        try router.boot(routes: app.routes)
-        app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
-        app.hooks.register(.apiRoutes, use: router.apiRoutesHook)
-        app.hooks.register(.apiAdminRoutes, use: router.apiAdminRoutesHook)
+        try CommonRouter().bootAndregisterHooks(app)
     }
   
     // MARK: - hooks
+
+    func webMiddlewaresHook(args: HookArguments) -> [Middleware] {
+        [
+            CommonTemplateScopeMiddleware(),
+        ]
+    }
 
     func adminMenuHook(args: HookArguments) -> HookObjects.AdminMenu {
         .init(key: "common",

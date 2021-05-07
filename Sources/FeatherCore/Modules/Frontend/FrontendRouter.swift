@@ -6,7 +6,8 @@
 //
 
 
-struct FrontendRouter: RouteCollection {
+struct FrontendRouter: FeatherRouter {
+    
 
     let frontendController = FrontendWebController()
     var metadataController = FrontendMetadataController()
@@ -19,20 +20,19 @@ struct FrontendRouter: RouteCollection {
         routes.get("rss.xml", use: frontendController.rss)
         routes.get("robots.txt", use: frontendController.robots)
     }
-    
-    func routesHook(args: HookArguments) {
+
+    func webRoutesHook(args: HookArguments) {
         let app = args.app
         let routes = args.routes
         /// if there are other middlewares we add them, finally we append the not found middleware
-        let middlewares: [[Middleware]] = app.invokeAll(.webMiddlewares)
-        var frontendMiddlewares = middlewares.flatMap { $0 }
+        let frontendMiddlewaresResult: [[Middleware]] = app.invokeAll(.frontendMiddlewares)
+        var frontendMiddlewares = frontendMiddlewaresResult.flatMap { $0 }
         frontendMiddlewares.append(UserAccountSessionAuthenticator())
         frontendMiddlewares.append(FrontendErrorMiddleware())
         let frontendRoutes = routes.grouped(frontendMiddlewares)
-        
         var webArgs = HookArguments()
         webArgs.routes = frontendRoutes
-        let _: [Void] = app.invokeAll(.webRoutes, args: webArgs)
+        let _: [Void] = app.invokeAll(.frontendRoutes, args: webArgs)
         
         /// handle root path and everything else via the controller method
         frontendRoutes.get(use: frontendController.catchAllView)
@@ -48,10 +48,6 @@ struct FrontendRouter: RouteCollection {
         adminRoutes.register(metadataController)
         adminRoutes.register(menuController)
         adminRoutes.register(menuItemController)
-    }
-    
-    func apiRoutesHook(args: HookArguments) {
-//        let publicApiRoutes = args.routes
     }
 
     func apiAdminRoutesHook(args: HookArguments) {

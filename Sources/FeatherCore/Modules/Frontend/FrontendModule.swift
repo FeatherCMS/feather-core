@@ -15,13 +15,10 @@ final class FrontendModule: FeatherModule {
 
     func boot(_ app: Application) throws {
         /// database
-        app.databases.middleware.use(MetadataModelMiddleware<FrontendPageModel>())
         app.migrations.add(FrontendMigration_v1())
+        app.databases.middleware.use(MetadataModelMiddleware<FrontendPageModel>())
         /// middlewares
-        app.middleware.use(FrontendTemplateScopeMiddleware())
-        app.middleware.use(FrontendSafePathMiddleware())
-        
-
+        app.hooks.register(.webMiddlewares, use: webMiddlewaresHook)
         /// install
         app.hooks.register(.installModels, use: installModelsHook)
         app.hooks.register(.installPermissions, use: installPermissionsHook)
@@ -29,18 +26,20 @@ final class FrontendModule: FeatherModule {
         /// admin menus
         app.hooks.register(.adminMenu, use: adminMenuHook)
         /// routes
-        let router = FrontendRouter()
-        try router.boot(routes: app.routes)
-        app.hooks.register(.routes, use: router.routesHook)
-        app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
-        app.hooks.register(.apiRoutes, use: router.apiRoutesHook)
-        app.hooks.register(.apiAdminRoutes, use: router.apiAdminRoutesHook)
+        try FrontendRouter().bootAndregisterHooks(app)
         /// pages
         app.hooks.register(.response, use: responseHook)
         app.hooks.register("welcome-page", use: welcomePageHook)
     }
   
     // MARK: - hooks
+    
+    func webMiddlewaresHook(args: HookArguments) -> [Middleware] {
+        [
+            FrontendTemplateScopeMiddleware(),
+            FrontendSafePathMiddleware(),
+        ]
+    }
     
     func responseHook(args: HookArguments) -> EventLoopFuture<Response?> {
         let req = args.req

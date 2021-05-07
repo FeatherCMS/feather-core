@@ -16,11 +16,8 @@ final class UserModule: FeatherModule {
     func boot(_ app: Application) throws {
         /// database
         app.databases.middleware.use(UserAccountModelSafeEmailMiddleware())
-        
         app.migrations.add(UserMigration_v1())
-        /// middlewares
-        app.middleware.use(UserTemplateScopeMiddleware())
-
+        
         /// install
         app.hooks.register(.installModels, use: installModelsHook)
         app.hooks.register(.installPermissions, use: installPermissionsHook)
@@ -31,18 +28,12 @@ final class UserModule: FeatherModule {
         
         app.hooks.register(.adminMiddlewares, use: adminMiddlewaresHook)
         app.hooks.register(.apiMiddlewares, use: apiMiddlewaresHook)
-        
+        app.hooks.register(.webMiddlewares, use: webMiddlewaresHook)
 
         /// admin menus
         app.hooks.register(.adminMenu, use: adminMenuHook)
         /// routes
-        let router = UserRouter()
-        try router.boot(routes: app.routes)
-        app.hooks.register(.webRoutes, use: router.webRoutesHook)
-        app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
-        app.hooks.register(.apiRoutes, use: router.apiRoutesHook)
-        app.hooks.register(.apiAdminRoutes, use: router.apiAdminRoutesHook)
-        
+        try UserRouter().bootAndregisterHooks(app)
     }
   
     // MARK: - hooks
@@ -73,6 +64,12 @@ final class UserModule: FeatherModule {
     func accessHook(args: HookArguments) -> EventLoopFuture<Bool> {
         args.req.eventLoop.future(permissionHook(args: args))
     }
+
+    func webMiddlewaresHook(args: HookArguments) -> [Middleware] {
+        [
+            UserTemplateScopeMiddleware()
+        ]
+    }
     
     func adminMiddlewaresHook(args: HookArguments) -> [Middleware] {
         [
@@ -81,12 +78,14 @@ final class UserModule: FeatherModule {
         ]
     }
 
-    #warning("Session auth is only for testing purposes!")
     func apiMiddlewaresHook(args: HookArguments) -> [Middleware] {
-        [
-            UserAccountSessionAuthenticator(),
+        var middlewares = [
             UserTokenModel.authenticator(),
             User.guardMiddleware(),
         ]
+        if !Feather.disableApiSessionAuthMiddleware {
+            middlewares.append(UserAccountSessionAuthenticator())
+        }
+        return middlewares
     }
 }

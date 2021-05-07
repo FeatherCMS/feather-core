@@ -6,18 +6,14 @@
 //
 
 
-struct UserRouter: RouteCollection {
+struct UserRouter: FeatherRouter {
     
     let webController = UserWebController()
     let userController = UserAccountController()
     let roleController = UserRoleController()
     let permissionController = UserPermissionController()
     
-    func boot(routes: RoutesBuilder) throws {
-        
-    }
-    
-    func webRoutesHook(args: HookArguments) {
+    func frontendRoutesHook(args: HookArguments) {
         let routes = args.routes
 
         routes.grouped(UserAccountSessionAuthenticator()).get("login", use: webController.loginView)

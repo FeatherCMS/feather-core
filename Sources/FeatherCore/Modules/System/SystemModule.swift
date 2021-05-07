@@ -36,29 +36,28 @@ final class SystemModule: FeatherModule {
 
     func boot(_ app: Application) throws {
         /// middlewares
-        app.middleware.use(SystemTemplateScopeMiddleware())
-        app.middleware.use(SystemInstallGuardMiddleware())
-        
+        app.hooks.register(.webMiddlewares, use: webMiddlewaresHook)
         /// install
         app.hooks.register(.installPermissions, use: installPermissionsHook)
         app.hooks.register(.installVariables, use: installVariablesHook)
         /// admin menus
         app.hooks.register(.adminMenu, use: adminMenuHook)
         /// routes
-        let router = SystemRouter()
-        try router.boot(routes: app.routes)
-        app.hooks.register(.routes, use: router.routesHook)
-        app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
-        app.hooks.register(.apiRoutes, use: router.apiRoutesHook)
-        app.hooks.register(.apiAdminRoutes, use: router.apiAdminRoutesHook)
+        try SystemRouter().bootAndregisterHooks(app)
         /// pages
         app.hooks.register(.response, use: responseHook)
-        
+
 //        app.hooks.register(.contentFilters, use: contentFiltersHook)
 //        app.hooks.register(.adminWidget, use: adminWidgetHook)
 //        app.hooks.register("content-actions-template", use: contentActionsTemplate)
     }
     
+    func webMiddlewaresHook(args: HookArguments) -> [Middleware] {
+        [
+            SystemTemplateScopeMiddleware(),
+            SystemInstallGuardMiddleware(),
+        ]
+    }
     
     func adminWidgetHook(args: HookArguments) -> EventLoopFuture<View> {
         let req = args.req

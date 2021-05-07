@@ -17,6 +17,7 @@ public extension FeatherHook {
     /// routes
     static let routes: FeatherHook = "routes"
     static let webRoutes: FeatherHook = "web-routes"
+    static let frontendRoutes: FeatherHook = "frontend-routes"
     static let adminRoutes: FeatherHook = "admin-routes"
     static let apiRoutes: FeatherHook = "api-routes"
     static let apiAdminRoutes: FeatherHook = "api-admin-routes"
@@ -28,8 +29,9 @@ public extension FeatherHook {
     static let access: FeatherHook = "access"
     /// middlewaress
     static let webMiddlewares: FeatherHook = "web-middlewares"
-    static let apiMiddlewares: FeatherHook = "api-middlewares"
+    static let frontendMiddlewares: FeatherHook = "frontend-middlewares"
     static let adminMiddlewares: FeatherHook = "admin-middlewares"
+    static let apiMiddlewares: FeatherHook = "api-middlewares"
     /// content filters
     static let contentFilters: FeatherHook = "content-filters"
     /// response

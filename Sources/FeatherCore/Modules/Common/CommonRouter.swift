@@ -6,16 +6,11 @@
 //
 
 
-struct CommonRouter: RouteCollection {
+struct CommonRouter: FeatherRouter {
 
-    
     let fileController = CommonFileController()
     let variableController = CommonVariableController()
-    
-    func boot(routes: RoutesBuilder) throws {
-    
-    }
-    
+        
     func adminRoutesHook(args: HookArguments) {
         let adminRoutes = args.routes
 
@@ -47,11 +42,7 @@ struct CommonRouter: RouteCollection {
         adminRoutes.register(variableController)
         
     }
-    
-    func apiRoutesHook(args: HookArguments) {
-//        let publicApiRoutes = args.routes
-    }
-
+        
     func apiAdminRoutesHook(args: HookArguments) {
         let apiRoutes = args.routes
 
