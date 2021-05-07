@@ -23,8 +23,7 @@ final class CommonModule: FeatherModule {
         app.hooks.register(.installPermissions, use: installPermissionsHook)
         app.hooks.register(.installVariables, use: installVariablesHook)
         /// template
-        app.hooks.register(.frontendCss, use: webCssHook)
-        app.hooks.register(.adminCss, use: webCssHook)
+        app.hooks.register(.webCss, use: webCssHook)
         /// acl
         //app.hooks.register("system-variables-list-access", use: systemVariablesAccessHook)
         /// admin menus

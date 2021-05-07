@@ -43,7 +43,7 @@ struct UserWebController {
             .flatMap { form.validate(req: req) }
             .flatMap { isValid in
                 if isValid {
-                    form.error = "Invalid username or password"
+                    form.error = "Invalid email or password"
                 }
                 return render(req: req, form: form)
             }

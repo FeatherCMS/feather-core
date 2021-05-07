@@ -45,11 +45,19 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/img/apple/180.png">
     
     #if($app.isDebug ?? false):
+        #for(file in InvokeAllHooksOrdered("web-css")):
+        <link rel="stylesheet" href="/css/#(file).css">
+        #endfor
         #for(file in InvokeAllHooksOrdered("frontend-css")):
         <link rel="stylesheet" href="/css/#(file).css">
         #endfor
     #else:
-        <link rel="stylesheet" href="/css/style.min.css">
+        #for(file in InvokeAllHooksOrdered("web-css")):
+        <link rel="stylesheet" href="/css/#(file).min.css">
+        #endfor
+        #for(file in InvokeAllHooksOrdered("frontend-css")):
+        <link rel="stylesheet" href="/css/#(file).min.css">
+        #endfor
     #endif
 
     #if(head.canonicalUrl ?? metadata.canonicalUrl ?? false):
@@ -61,6 +69,7 @@
     #endif
 
     <style type="text/css">
+        #for(script in InvokeAllHooksOrdered("web-css-inline")):#(script)#endfor
         #for(script in InvokeAllHooksOrdered("frontend-css-inline")):#(script)#endfor
         #evaluate(css ?? "")
         #($variables.siteCss ?? "")
@@ -132,7 +141,15 @@
         </section>
     </footer>
 
+    #for(file in InvokeAllHooksOrdered("web-js")):
+    <script src="/js/#(file).js"></script>
+    #endfor
+    #for(file in InvokeAllHooksOrdered("frontend-js")):
+    <script src="/js/#(file).js"></script>
+    #endfor
     <script type="text/javascript">
+        #for(script in InvokeAllHooksOrdered("web-js-inline")):#(script)#endfor
+        #for(script in InvokeAllHooksOrdered("frontend-js-inline")):#(script)#endfor
         #evaluate(js ?? "")
         #($variables.siteJs ?? "")
         #(metadata.js ?? "")

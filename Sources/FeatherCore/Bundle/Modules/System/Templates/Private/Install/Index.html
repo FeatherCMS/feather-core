@@ -11,16 +11,26 @@
     <link rel="shortcut icon" href="/img/favicons/favicon.ico" type="image/x-icon">
 
     #if($app.isDebug ?? false):
-        #for(file in InvokeAllHooksOrdered("admin-css")):
+        #for(file in InvokeAllHooksOrdered("web-css")):
+        <link rel="stylesheet" href="/css/#(file).css">
+        #endfor
+        #for(file in InvokeAllHooksOrdered("install-css")):
         <link rel="stylesheet" href="/css/#(file).css">
         #endfor
     #else:
-        #for(file in InvokeAllHooksOrdered("admin-css")):
+        #for(file in InvokeAllHooksOrdered("web-css")):
+        <link rel="stylesheet" href="/css/#(file).min.css">
+        #endfor
+        #for(file in InvokeAllHooksOrdered("install-css")):
         <link rel="stylesheet" href="/css/#(file).min.css">
         #endfor
     #endif
 
     <style type="text/css">
+        #for(script in InvokeAllHooksOrdered("web-css-inline")):#(script)#endfor
+        #for(script in InvokeAllHooksOrdered("install-css-inline")):#(script)#endfor
+        #evaluate(css ?? "")
+
         #site-logo {
             text-align: center;
         }
@@ -45,5 +55,19 @@
             </div>
         </main>
     </div>
+    
+    #for(file in InvokeAllHooksOrdered("web-js")):
+    <script src="/js/#(file).js"></script>
+    #endfor
+    #for(file in InvokeAllHooksOrdered("install-js")):
+    <script src="/js/#(file).js"></script>
+    #endfor
+    <script type="text/javascript">
+        #for(script in InvokeAllHooksOrdered("web-js-inline")):#(script)#endfor
+        #for(script in InvokeAllHooksOrdered("install-js-inline")):#(script)#endfor
+        #evaluate(js ?? "")
+        #($variables.siteJs ?? "")
+        #(metadata.js ?? "")
+    </script>
 </body>
 </html>

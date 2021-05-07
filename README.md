@@ -7,7 +7,6 @@ Core dependencies for Feather CMS.
 
 - css checkbox + label issue
 - install public files recursively
-- proper / fix css hook
 - blog: post + category & author relation + validation
 - blog frontend: fix search
 - proper blog articles
@@ -31,7 +30,6 @@ Core dependencies for Feather CMS.
 
 
 ```json
-
 {
     "message": "There is a general issue with the input",
     "details": [

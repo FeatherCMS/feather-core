@@ -13,7 +13,7 @@ final class UserInstallForm: Form {
     init() {
         super.init()
 
-        submit = "Sign in"
+        submit = "Create user"
         action.url = "/install/user/?next=true"
         fields = createFormFields()
     }

@@ -26,7 +26,7 @@ struct UserInstallController {
             .flatMap { form.validate(req: req) }
             .flatMap { isValid in
                 guard isValid else {
-                    form.error = "Invalid username or password"
+                    form.error = "Invalid email or password"
                     return render(req: req, form: form).encodeOptionalResponse(for: req)
                 }
                 return form.write(req: req)

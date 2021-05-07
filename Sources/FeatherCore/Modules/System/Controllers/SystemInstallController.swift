@@ -7,10 +7,8 @@
 
 struct SystemInstallController {
     
-    /// @TODO: we should add a steppable hook system for adding custom install steps...
     func startStep(req: Request) -> EventLoopFuture<View> {
         req.view.render("System/Install/Start")
-
     }
 
     func performStartStep(req: Request, nextStep: String) -> EventLoopFuture<Void> {
