@@ -7,9 +7,6 @@ body > header {
 body > footer img {
     width: 64px;
 }
-label {
-    display: inline-block;
-}
 .block {
     display: block;
 }

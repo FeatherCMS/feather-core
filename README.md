@@ -5,8 +5,6 @@ Core dependencies for Feather CMS.
 
 ## Todo
 
-- css checkbox + label issue
-- install public files recursively
 - blog: post + category & author relation + validation
 - blog frontend: fix search
 - proper blog articles

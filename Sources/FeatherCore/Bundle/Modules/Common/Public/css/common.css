@@ -316,6 +316,10 @@ label {
     display: block;
     margin: var(--space-2xs);
 }
+input + label {
+    display: inline-block;
+    margin: var(--space-2xs) 0;
+}
 input[type=checkbox] + label, input[type=radio] + label {
     position: relative;
     top: var(--space-4xs);
