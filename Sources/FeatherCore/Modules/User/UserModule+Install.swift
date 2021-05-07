@@ -19,16 +19,16 @@ extension UserModule {
         let roles = [
             UserRoleModel(key: "editors", name: "Editors", notes: "Just an example role for editors, feel free to select permissions."),
         ]
-        let users = [
-            UserAccountModel(email: "root@feathercms.com", password: try! Bcrypt.hash("FeatherCMS"), root: true),
-        ]
+//        let users = [
+            //UserAccountModel(email: "root@feathercms.com", password: try! Bcrypt.hash("FeatherCMS"), root: true),
+//        ]
 
         /// we persist the pages to the database
         return req.eventLoop.flatten([
             /// save home page and set it as a published root page by altering the metadata
             permissionModels.create(on: req.db),
             roles.create(on: req.db),
-            users.create(on: req.db),
+//            users.create(on: req.db),
         ])
     }
     

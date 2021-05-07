@@ -8,12 +8,12 @@
 struct SystemInstallController {
     
     /// @TODO: we should add a steppable hook system for adding custom install steps...
-    func performInstall(req: Request) -> EventLoopFuture<View> {
-        /// if the system path equals install, we render the start install screen
-        guard req.url.path == "/install/" else {
-            return req.view.render("System/Install/Start")
-        }
-    
+    func startStep(req: Request) -> EventLoopFuture<View> {
+        req.view.render("System/Install/Start")
+
+    }
+
+    func performStartStep(req: Request, nextStep: String) -> EventLoopFuture<Void> {
         /// upload bundled images using the file storage if there are some files under the Install folder inside the module bundle
         var fileUploadFutures: [EventLoopFuture<Void>] = []
         for module in req.application.feather.modules {
@@ -44,12 +44,19 @@ struct SystemInstallController {
                 fileUploadFutures.append(future)
             }
         }
-
-        /// we request the install futures for the database models & execute them together with the file upload futures in parallel
         let modelInstallFutures: [EventLoopFuture<Void>] = req.invokeAll(.installModels)
-        return req.eventLoop.flatten(modelInstallFutures + fileUploadFutures)
-            .map { Application.Config.installed = true }
-            .flatMap { req.view.render("System/Install/Finish") }
-            .flatMapError { req.view.render("System/Install/Error", ["error": $0.localizedDescription]) }
+        return req.eventLoop.flatten(modelInstallFutures + fileUploadFutures).map {
+            Application.Config.installStep = nextStep
+        }
+    }
+
+    func finishStep(req: Request) -> EventLoopFuture<View> {
+        req.view.render("System/Install/Finish")
+    }
+
+    func performFinishStep(req: Request) -> EventLoopFuture<Void> {
+        Application.Config.installed = true
+        Application.Config.installStep = InstallStep.finish.key
+        return req.eventLoop.future()
     }
 }

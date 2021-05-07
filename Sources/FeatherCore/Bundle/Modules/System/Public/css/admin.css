@@ -1,3 +1,9 @@
+#site-logo {
+    text-align: left;
+}
+body > header {
+    border: none;
+}
 body > footer img {
     width: 64px;
 }
@@ -7,21 +13,6 @@ label {
 .block {
     display: block;
 }
-
-#site-logo {
-    text-align: left;
-}
-body > header {
-    border: none;
-}
-@media (max-width: 599px) {
-    .compact-center { text-align: center; }
-    .compact-hidden { display: none; }
-    .compact-col2 { grid-column: span 2; }
-    .compact-col3 { grid-column: span 3; }
-    .compact-col3 { grid-column: span 4; }
-}
-
 .uploader img {
     display: block;
     width: 100%;

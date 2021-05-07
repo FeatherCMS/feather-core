@@ -101,6 +101,7 @@ public struct Feather {
         TemplateEngine.entities.use(UserHasPermissionEntity(), asFunction: "UserHasPermission")
         TemplateEngine.entities.use(InvokeHookEntity(), asFunction: "InvokeHook")
         TemplateEngine.entities.use(InvokeAllHooksEntity(), asFunction: "InvokeAllHooks")
+        TemplateEngine.entities.use(InvokeAllHooksOrderedEntity(), asFunction: "InvokeAllHooksOrdered")
 //        TemplateEngine.entities.use(TranslationEntity(), asMethod: "t")
     }
     
@@ -132,7 +133,7 @@ public struct Feather {
         TemplateEngine.sources = templateSources
 
         /// renderer configuration
-        TemplateRenderer.Option.timeout = 1.500 // 1500ms
+        TemplateRenderer.Option.timeout = 1.5 // 1500ms
         if app.isDebug {
             TemplateRenderer.Option.caching = .bypass
         }
@@ -201,6 +202,7 @@ public struct Feather {
                 }
             }
         }
+        try minifyExistingCssFiles()
     }
 
     private static func copyBundleResources(_ app: Application) throws {

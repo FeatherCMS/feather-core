@@ -10,8 +10,12 @@ struct SystemInstallGuardMiddleware: Middleware {
 
     /// only allow the root path or the /system/ paths if the system has benn not installed yet, otherwise redirect to the root
     func respond(to req: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
-        if !Application.Config.installed && req.url.path != "/install/" && req.url.path != "/" {
-            return req.eventLoop.future(req.redirect(to: "/"))
+        var acceptedUrl = "/install/"
+        if let step = Application.Config.installStep, step != InstallStep.start.key {
+            acceptedUrl += step + "/"
+        }
+        if !Application.Config.installed && req.url.path != acceptedUrl {
+            return req.eventLoop.future(req.redirect(to: acceptedUrl))
         }
         return next.respond(to: req)
         

@@ -114,7 +114,6 @@
         --text-color-2: #999;
         --text-color-3: #ccc;
 
-
         --blue-color: #0d79ff;
         --green-color: #2acb4e;
         --indigo-color: #5352e2;
@@ -128,7 +127,6 @@
         --gray-color: #8d8d92;
     }
 }
-
 
 * {
     margin: 0;

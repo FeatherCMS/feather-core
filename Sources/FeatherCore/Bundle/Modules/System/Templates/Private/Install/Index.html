@@ -10,28 +10,30 @@
     
     <link rel="shortcut icon" href="/img/favicons/favicon.ico" type="image/x-icon">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/binarybirds/peacock-css@1.0.0-beta.5/peacock.min.css">
-        
     #if($app.isDebug ?? false):
-        #for(file in $app.css ?? []):
-            <link rel="stylesheet" href="/css/#(file).css">
+        #for(file in InvokeAllHooksOrdered("admin-css")):
+        <link rel="stylesheet" href="/css/#(file).css">
         #endfor
     #else:
-        <link rel="stylesheet" href="/css/style.min.css">
+        #for(file in InvokeAllHooksOrdered("admin-css")):
+        <link rel="stylesheet" href="/css/#(file).min.css">
+        #endfor
     #endif
 
-    <style>
+    <style type="text/css">
+        #site-logo {
+            text-align: center;
+        }
         #navigation {
             grid-template-columns: 1fr;
         }
-        
    </style>
 
 </head>
 
 <body>
     <div id="navigation" class="center">
-        <a href="/" id="site-logo">
+        <a id="site-logo" href="/">
             <img src="/img/logos/feather-logo-text.png" alt="Logo of Feather CMS" title="Feather CMS">
         </a>
     </div>
@@ -43,6 +45,5 @@
             </div>
         </main>
     </div>
-    
 </body>
 </html>

@@ -10,6 +10,9 @@ struct FrontendWebController {
     // MARK: - private
     
     func catchAllView(req: Request) throws -> EventLoopFuture<Response> {
+        guard req.method == .GET || !Application.Config.installed else {
+            return req.eventLoop.future(error: Abort(.notFound))
+        }
         let futures: [EventLoopFuture<Response?>] = req.invokeAll(.response)
         return req.eventLoop.findFirstValue(futures).unwrap(or: Abort(.notFound))
     }

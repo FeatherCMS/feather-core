@@ -51,4 +51,13 @@ public extension HookArguments {
             self["metadata"] = newValue
         }
     }
+
+    var nextInstallStep: String {
+        get {
+            self["next-install-step"] as! String
+        }
+        set {
+            self["next-install-step"] = newValue
+        }
+    }
 }

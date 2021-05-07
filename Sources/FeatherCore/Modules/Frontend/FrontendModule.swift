@@ -25,6 +25,9 @@ final class FrontendModule: FeatherModule {
         app.hooks.register(.installVariables, use: installVariablesHook)
         /// admin menus
         app.hooks.register(.adminMenu, use: adminMenuHook)
+        ///template
+        app.hooks.register(.frontendCss, use: frontendCssHook)
+//        app.hooks.register(.frontendCssInline, use: frontendCssInlineHook)
         /// routes
         try FrontendRouter().bootAndregisterHooks(app)
         /// pages
@@ -34,6 +37,18 @@ final class FrontendModule: FeatherModule {
   
     // MARK: - hooks
     
+    func frontendCssHook(args: HookArguments) -> [OrderedTemplateData] {
+        [
+            .init("frontend", order: 500),
+        ]
+    }
+
+    func frontendCssInlineHook(args: HookArguments) -> [OrderedTemplateData] {
+        [
+            .init("main { background-color: red !important; }", order: 500),
+        ]
+    }
+        
     func webMiddlewaresHook(args: HookArguments) -> [Middleware] {
         [
             FrontendTemplateScopeMiddleware(),

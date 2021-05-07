@@ -2,10 +2,10 @@
 //  File.swift
 //  
 //
-//  Created by Tibor Bodecs on 2021. 04. 27..
+//  Created by Tibor Bodecs on 2021. 05. 07..
 //
 
-struct InvokeAllHooksEntity: UnsafeEntity, NonMutatingMethod, StringReturn {
+struct InvokeAllHooksOrderedEntity: UnsafeEntity, NonMutatingMethod, StringReturn {
     var unsafeObjects: UnsafeObjects? = nil
 
     static var callSignature: [CallParameter] { [.string] }
@@ -15,9 +15,10 @@ struct InvokeAllHooksEntity: UnsafeEntity, NonMutatingMethod, StringReturn {
     func evaluate(_ params: CallValues) -> TemplateData {
         guard let app = app else { return .error("Needs unsafe access to Application") }
         let name = params[0].string! + "-template"
-        let result: [TemplateDataRepresentable] = app.invokeAll(name)
-        return .array(result.map(\.templateData))
+
+        let result: [[OrderedTemplateData]] = app.invokeAll(name)
+        let sortedFlatResult = result.flatMap { $0 }.sorted { $0.order > $1.order }.map { $0.object }
+        return .array(sortedFlatResult.map(\.templateData))
     }
 }
-
 

@@ -19,6 +19,8 @@ final class UserModule: FeatherModule {
         app.migrations.add(UserMigration_v1())
         
         /// install
+        app.hooks.register(.installStep, use: installStepHook)
+        app.hooks.register(.installResponse, use: installResponseHook)
         app.hooks.register(.installModels, use: installModelsHook)
         app.hooks.register(.installPermissions, use: installPermissionsHook)
         
@@ -87,5 +89,33 @@ final class UserModule: FeatherModule {
             middlewares.append(UserAccountSessionAuthenticator())
         }
         return middlewares
+    }
+    
+    func installStepHook(args: HookArguments) -> [InstallStep] {
+        [
+            .init(key: "user", priority: 9000)
+        ]
+    }
+
+    func installResponseHook(args: HookArguments) -> EventLoopFuture<Response?> {
+        let req = args.req
+        let currentStep = Application.Config.installStep
+        guard currentStep == "user" else {
+            return req.eventLoop.future(nil)
+        }
+
+        let nextStep = args.nextInstallStep
+        let performStep: Bool = req.query["next"] ?? false
+        let controller = UserInstallController()
+        
+        if performStep {
+            return controller.performUserStep(req: req, nextStep: nextStep).map {
+                if let response = $0 {
+                    return response
+                }
+                return req.redirect(to: "/install/" + nextStep + "/")
+            }
+        }
+        return controller.userStep(req: req).encodeOptionalResponse(for: req)
     }
 }

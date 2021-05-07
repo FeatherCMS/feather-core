@@ -44,12 +44,12 @@
     <link rel="apple-touch-icon" sizes="152x152" href="/img/apple/152.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/img/apple/180.png">
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/binarybirds/peacock-css@1.0.0-beta.5/peacock.min.css">
-
-    #if($app.isDebug):
-    <link rel="stylesheet" href="/css/style.css">
+    #if($app.isDebug ?? false):
+        #for(file in InvokeAllHooksOrdered("frontend-css")):
+        <link rel="stylesheet" href="/css/#(file).css">
+        #endfor
     #else:
-    <link rel="stylesheet" href="/css/style.min.css">
+        <link rel="stylesheet" href="/css/style.min.css">
     #endif
 
     #if(head.canonicalUrl ?? metadata.canonicalUrl ?? false):
@@ -61,6 +61,7 @@
     #endif
 
     <style type="text/css">
+        #for(script in InvokeAllHooksOrdered("frontend-css-inline")):#(script)#endfor
         #evaluate(css ?? "")
         #($variables.siteCss ?? "")
         #(metadata.css ?? "")

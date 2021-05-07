@@ -11,6 +11,7 @@ extension Application {
 
         enum Keys: String {
             case installed
+            case installStep
             case template
             case timezone
             case locale
@@ -68,8 +69,6 @@ extension Application {
 }
 
 extension Application.Config {
-    
-    
 
     static var installed: Bool {
         get {
@@ -80,6 +79,17 @@ extension Application.Config {
         }
         set {
             set(.installed, value: String(newValue))
+        }
+    }
+
+    static var installStep: String? {
+        get {
+            get(.installStep)
+        }
+        set {
+            if let step = newValue {
+                set(.installStep, value: step)
+            }
         }
     }
     

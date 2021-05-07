@@ -9,24 +9,23 @@
 
     <link rel="shortcut icon" href="/img/favicons/favicon.ico" type="image/x-icon">
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/binarybirds/peacock-css@1.0.0-beta.5/peacock.min.css">
-
     #if($app.isDebug ?? false):
-        #for(file in $app.css ?? []):
+        #for(file in InvokeAllHooksOrdered("admin-css")):
         <link rel="stylesheet" href="/css/#(file).css">
         #endfor
     #else:
-        <link rel="stylesheet" href="/css/style.min.css">
+        #for(file in InvokeAllHooksOrdered("admin-css")):
+        <link rel="stylesheet" href="/css/#(file).min.css">
+        #endfor
     #endif
-    
-    <link rel="stylesheet" href="/css/admin.css">
 
     <style type="text/css">
+        #for(script in InvokeAllHooksOrdered("admin-css-inline")):#(script)#endfor
         #evaluate(css ?? "")
     </style>
 </head>
 <body>
-    
+
     <div id="navigation">
         <a id="site-logo" href="/">
             <img src="/img/logos/feather-logo-text.png" alt="Feather CMS" title="Feather CMS">
@@ -72,8 +71,11 @@
         </section>
     </footer>
 
-    <script src="/js/admin.js"></script>
+    #for(file in InvokeAllHooksOrdered("admin-js")):
+    <script src="/js/#(file).js"></script>
+    #endfor
     <script type="text/javascript">
+        #for(script in InvokeAllHooksOrdered("admin-js-inline")):#(script)#endfor
         #evaluate(js ?? "")
     </script>
 

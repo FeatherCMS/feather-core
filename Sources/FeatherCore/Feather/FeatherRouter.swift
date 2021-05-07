@@ -10,6 +10,7 @@ public protocol FeatherRouter: RouteCollection {
 
     func routesHook(args: HookArguments)
     func webRoutesHook(args: HookArguments)
+    func frontendRoutesHook(args: HookArguments)
     func adminRoutesHook(args: HookArguments)
     func apiRoutesHook(args: HookArguments)
     func apiAdminRoutesHook(args: HookArguments)
@@ -24,6 +25,8 @@ public extension FeatherRouter {
     func routesHook(args: HookArguments) {}
 
     func webRoutesHook(args: HookArguments) {}
+    
+    func frontendRoutesHook(args: HookArguments) {}
 
     func adminRoutesHook(args: HookArguments) {}
     
@@ -35,6 +38,7 @@ public extension FeatherRouter {
         try boot(routes: app.routes)
         app.hooks.register(.routes, use: routesHook)
         app.hooks.register(.webRoutes, use: webRoutesHook)
+        app.hooks.register(.frontendRoutes, use: frontendRoutesHook)
         app.hooks.register(.adminRoutes, use: adminRoutesHook)
         app.hooks.register(.apiRoutes, use: apiRoutesHook)
         app.hooks.register(.apiAdminRoutes, use: apiAdminRoutesHook)

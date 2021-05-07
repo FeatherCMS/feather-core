@@ -21,8 +21,8 @@ open class Form: FormComponent {
             case get
             case post
         }
-        public let method: Method
-        public let url: String?
+        public var method: Method
+        public var url: String?
         public var multipart: Bool
         
         public init(method: Method = .post,

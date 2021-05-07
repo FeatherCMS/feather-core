@@ -37,6 +37,8 @@ struct FrontendRouter: FeatherRouter {
         /// handle root path and everything else via the controller method
         frontendRoutes.get(use: frontendController.catchAllView)
         frontendRoutes.get(.catchall, use: frontendController.catchAllView)
+        /// NOTE: we only support catching post requests if the app is not installed yet maybe this should be moved to the system module...
+        frontendRoutes.post(.catchall, use: frontendController.catchAllView)
     }
 
     func adminRoutesHook(args: HookArguments) {

@@ -22,6 +22,9 @@ final class CommonModule: FeatherModule {
         app.hooks.register(.installModels, use: installModelsHook)
         app.hooks.register(.installPermissions, use: installPermissionsHook)
         app.hooks.register(.installVariables, use: installVariablesHook)
+        /// template
+        app.hooks.register(.frontendCss, use: webCssHook)
+        app.hooks.register(.adminCss, use: webCssHook)
         /// acl
         //app.hooks.register("system-variables-list-access", use: systemVariablesAccessHook)
         /// admin menus
@@ -31,6 +34,12 @@ final class CommonModule: FeatherModule {
     }
   
     // MARK: - hooks
+    
+    func webCssHook(args: HookArguments) -> [OrderedTemplateData] {
+        [
+            .init("common", order: 1000),
+        ]
+    }
 
     func webMiddlewaresHook(args: HookArguments) -> [Middleware] {
         [
