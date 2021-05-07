@@ -62,8 +62,7 @@ struct SystemRouter: FeatherRouter {
 
         let systemAdminRoutes = adminRoutes.grouped(SystemModule.moduleKeyPathComponent)
         systemAdminRoutes.get("dashboard", use: adminController.dashboardView)
-        systemAdminRoutes.get("settings", use: adminController.settingsView)
-        systemAdminRoutes.post("settings", use: adminController.updateSettings)
+        systemAdminRoutes.get("modules", use: adminController.modulesView)
     }
 
 }

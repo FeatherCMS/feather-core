@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 04. 21..
 //
 
-struct UserWebController {
+struct UserFrontendController {
 
     // MARK: - private
     

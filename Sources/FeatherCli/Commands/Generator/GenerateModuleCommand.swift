@@ -200,7 +200,7 @@ struct GenerateModuleCommand: Command {
 
         struct FrontendRouter: RouteCollection {
 
-            let frontendController = FrontendWebController()
+            let frontendController = FrontendController()
             var metadataController = FrontendMetadataController()
             let menuController = FrontendMenuController()
             let menuItemController = FrontendMenuItemController()

@@ -60,8 +60,6 @@ final class SystemModule: FeatherModule {
     }
     
 
-    
-    
     func adminCssHook(args: HookArguments) -> [OrderedTemplateData] {
         [
             .init("admin", order: 500),
@@ -191,10 +189,10 @@ final class SystemModule: FeatherModule {
 
     func adminMenuHook(args: HookArguments) -> HookObjects.AdminMenu {
         .init(key: "system",
-              item: .init(icon: "settings", link: Self.adminLink, permission: Self.permission(for: .custom("admin")).identifier),
+              item: .init(icon: "settings", link: Self.adminLink, priority: 90, permission: Self.permission(for: .custom("admin")).identifier),
               children: [
                 .init(link: .init(label: "Dashboard", url: "/admin/system/dashboard/"), permission: nil),
-                .init(link: .init(label: "Settings", url: "/admin/system/settings/"), permission: nil),
+                .init(link: .init(label: "Modules", url: "/admin/system/modules/"), permission: nil),
               ])
     }    
 }

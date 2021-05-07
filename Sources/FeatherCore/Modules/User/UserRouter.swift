@@ -8,7 +8,7 @@
 
 struct UserRouter: FeatherRouter {
     
-    let webController = UserWebController()
+    let webController = UserFrontendController()
     let userController = UserAccountController()
     let roleController = UserRoleController()
     let permissionController = UserPermissionController()

@@ -7,9 +7,9 @@
 
 import Foundation
 
-extension String {
+public extension String {
     
-    var minifiedCss: String {
+    public var minifiedCss: String {
         var css = self
         let patterns = [
             "/[*](.*?)[*]/": "",    /// comments
@@ -30,9 +30,7 @@ extension String {
                                                  options: [],
                                                  range: range,
                                                  withTemplate: pattern.value)
-        }
-        
-        
+        }        
         return css
     }
 }

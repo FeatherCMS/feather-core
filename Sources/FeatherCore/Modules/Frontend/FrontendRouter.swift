@@ -9,7 +9,8 @@
 struct FrontendRouter: FeatherRouter {
     
 
-    let frontendController = FrontendWebController()
+    let adminController = FrontendAdminController()
+    let frontendController = FrontendController()
     var metadataController = FrontendMetadataController()
     let menuController = FrontendMenuController()
     let menuItemController = FrontendMenuItemController()
@@ -46,6 +47,10 @@ struct FrontendRouter: FeatherRouter {
 
         adminRoutes.get("frontend", use: SystemAdminMenuController(key: "frontend").moduleView)
         
+        let frontendAdminRoutes = adminRoutes.grouped(FrontendModule.moduleKeyPathComponent)
+        frontendAdminRoutes.get("settings", use: adminController.settingsView)
+        frontendAdminRoutes.post("settings", use: adminController.updateSettings)
+        
         adminRoutes.register(pageController)
         adminRoutes.register(metadataController)
         adminRoutes.register(menuController)
@@ -54,7 +59,7 @@ struct FrontendRouter: FeatherRouter {
 
     func apiAdminRoutesHook(args: HookArguments) {
         let apiRoutes = args.routes
-
+        
         apiRoutes.registerApi(pageController)
         apiRoutes.registerApi(metadataController)
         apiRoutes.registerApi(menuController)
