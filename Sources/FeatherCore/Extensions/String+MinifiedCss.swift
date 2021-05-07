@@ -9,7 +9,7 @@ import Foundation
 
 public extension String {
     
-    public var minifiedCss: String {
+    var minifiedCss: String {
         var css = self
         let patterns = [
             "/[*](.*?)[*]/": "",    /// comments

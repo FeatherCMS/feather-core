@@ -41,7 +41,7 @@ extension FrontendModule {
         let welcomePage = FrontendPageModel(title: "Welcome", content: "[welcome-page]")
         
         /// create a sample about page
-        let aboutPage = FrontendPageModel(title: "About", content: sample(named: "About.html"))
+        let aboutPage = FrontendPageModel(title: "About", content: Self.sample(named: "About.html"))
         pageModels.append(aboutPage)
 
         /// we persist the pages to the database

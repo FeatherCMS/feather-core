@@ -9,9 +9,7 @@ final class CommonModule: FeatherModule {
 
     static var moduleKey: String = "common"
 
-    var bundleUrl: URL? {
-        Self.moduleBundleUrl
-    }
+    static var bundleUrl: URL? { moduleBundleUrl }
 
     func boot(_ app: Application) throws {
         /// database

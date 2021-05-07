@@ -9,9 +9,7 @@ final class FrontendModule: FeatherModule {
 
     static var moduleKey: String = "frontend"
 
-    var bundleUrl: URL? {
-        Self.moduleBundleUrl
-    }
+    static var bundleUrl: URL? { moduleBundleUrl }
 
     func boot(_ app: Application) throws {
         /// database

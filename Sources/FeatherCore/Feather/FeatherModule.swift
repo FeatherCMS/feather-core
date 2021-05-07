@@ -20,17 +20,18 @@ public protocol FeatherModule {
     /// module priority
     var priority: Int { get }
     /// bundle url
-    var bundleUrl: URL? { get }
 
     /// boots the module as the first step of the configuration flow
     func boot(_ app: Application) throws
+    
+    static var bundleUrl: URL? { get }
     
     static func permission(for action: Permission.Action, context: String?) -> Permission
     static func hookInstallPermission(for action: Permission.Action, context: String?) -> PermissionCreateObject
     
     static var adminLink: Link { get }
     
-    func sample(named name: String) -> String
+    static func sample(named name: String) -> String
 }
 
 ///default module implementation
@@ -45,8 +46,11 @@ public extension FeatherModule {
     
     /// default module priority 
     var priority: Int { 1000 }
+    
     /// bundle url of the module
-    var bundleUrl: URL? { nil }
+    static var bundleUrl: URL? { nil }
+
+    var bundleUrl: URL? { Self.bundleUrl }
 
     /// boots the module as the first step of the configuration flow
     func boot(_ app: Application) throws {}
@@ -62,7 +66,7 @@ public extension FeatherModule {
 
     static var adminLink: Link { .init(label: name, url: ("admin" + "/" + moduleKey).safePath()) }
 
-    func sample(named name: String) -> String {
+    static func sample(named name: String) -> String {
         do {
             guard let url = bundleUrl?.appendingPathComponent("Samples").appendingPathComponent(name) else {
                 return ""
