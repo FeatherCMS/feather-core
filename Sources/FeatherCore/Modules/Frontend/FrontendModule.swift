@@ -98,7 +98,7 @@ final class FrontendModule: FeatherModule {
         .init(key: "frontend",
               item: .init(icon: "layout", link: Self.adminLink, priority: 100, permission: Self.permission(for: .custom("admin")).identifier),
               children: [
-                .init(link: .init(label: "Settings", url: "/admin/frontend/settings/"), permission: nil),
+                .init(link: .init(label: "Settings", url: "/admin/frontend/settings/"), permission: Self.permission(for: .custom("admin")).identifier),
                 .init(link: FrontendPageModel.adminLink, permission: FrontendPageModel.permission(for: .list).identifier),
                 .init(link: FrontendMenuModel.adminLink, permission: FrontendMenuModel.permission(for: .list).identifier),
                 .init(link: FrontendMetadataModel.adminLink, permission: FrontendMetadataModel.permission(for: .list).identifier),

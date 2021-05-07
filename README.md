@@ -11,7 +11,6 @@ Core dependencies for Feather CMS.
 - blog frontend: fix search
 - proper blog articles
 
-- fix RSS feed
 - frontend widget-like home page?
 - check frontend metadatas (noindex, etc)
 
