@@ -27,7 +27,6 @@ Core dependencies for Feather CMS.
 - [ ] proper file (media) api 
 
 
-
 ```json
 {
     "message": "There is a general issue with the input",

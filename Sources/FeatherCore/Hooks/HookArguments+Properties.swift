@@ -60,4 +60,13 @@ public extension HookArguments {
             self["next-install-step"] = newValue
         }
     }
+    
+    var currentInstallStep: String {
+        get {
+            self["current-install-step"] as! String
+        }
+        set {
+            self["current-install-step"] = newValue
+        }
+    }
 }

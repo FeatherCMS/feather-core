@@ -134,12 +134,13 @@ final class SystemModule: FeatherModule {
         /// if system is not installed yet, perform install process
         guard Application.Config.installed else {
             
+            let currentStep = Application.Config.installStep ?? InstallStep.start.key
             let steps: [[InstallStep]] = req.invokeAll(.installStep)
             let orderedFlatSteps = steps.flatMap { $0 }.sorted { $0.priority > $1.priority }.map { $0.key }
             
             var hookArguments = HookArguments()
             hookArguments.nextInstallStep = InstallStep.finish.key
-            let currentStep = Application.Config.installStep ?? InstallStep.start.key
+            hookArguments.currentInstallStep = currentStep
             
             if let currentIndex = orderedFlatSteps.firstIndex(of: currentStep) {
                 let nextIndex = orderedFlatSteps.index(after: currentIndex)

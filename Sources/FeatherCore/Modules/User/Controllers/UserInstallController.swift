@@ -31,10 +31,8 @@ struct UserInstallController {
                 }
                 return form.write(req: req)
                     .flatMap { form.save(req: req) }
-                    .flatMap {
-                        Application.Config.installStep = nextStep
-                        return req.eventLoop.future(nil)
-                    }
+                    .flatMap { req.continueInstall(with: nextStep) }
+                    .map { nil }
             }
     }
 }

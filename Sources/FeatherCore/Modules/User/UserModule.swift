@@ -93,14 +93,14 @@ final class UserModule: FeatherModule {
     
     func installStepHook(args: HookArguments) -> [InstallStep] {
         [
-            .init(key: "user", priority: 9000)
+            .init(key: Self.moduleKey, priority: 9000)
         ]
     }
 
     func installResponseHook(args: HookArguments) -> EventLoopFuture<Response?> {
         let req = args.req
-        let currentStep = Application.Config.installStep
-        guard currentStep == "user" else {
+        let currentStep = args.currentInstallStep
+        guard currentStep == Self.moduleKey else {
             return req.eventLoop.future(nil)
         }
 
