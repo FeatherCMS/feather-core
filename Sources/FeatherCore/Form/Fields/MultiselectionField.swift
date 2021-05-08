@@ -9,6 +9,7 @@ open class MultiSelectionField: FormField<[String], MultiSelectionFieldView> {
 
     public convenience init(key: String, values: [String] = [], options: [FormFieldOption] = []) {
         self.init(key: key, input: values, output: .init(key: key, values: values, options: options))
+        self.output.label = key.🐣(self.output.label)
     }
     
     override open func process(req: Request) -> EventLoopFuture<Void> {

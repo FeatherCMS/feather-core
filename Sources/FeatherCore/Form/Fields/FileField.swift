@@ -9,6 +9,7 @@ open class FileField: FormField<File?, FileFieldView> {
 
     public convenience init(key: String) {
         self.init(key: key, input: nil, output: .init(key: key))
+        self.output.label = key.🐣(self.output.label)
     }
     
     override open func process(req: Request) -> EventLoopFuture<Void> {

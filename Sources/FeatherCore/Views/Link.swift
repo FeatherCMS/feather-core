@@ -14,7 +14,7 @@ public struct Link: Codable {
     public let isBlank: Bool
 
     public init(label: String, url: String, isBlank: Bool = false) {
-        self.label = label
+        self.label = label.🦅
         self.url = url
         self.isBlank = isBlank
     }

@@ -50,6 +50,7 @@ open class ImageField: FormField<ImageInput, ImageFieldView> {
         self.path = path
          
         super.init(key: key, input: .init(key: key), output: .init(key: key))
+        self.output.label = key.🐣(self.output.label)
     }
 
     override open func write(req: Request) -> EventLoopFuture<Void> {

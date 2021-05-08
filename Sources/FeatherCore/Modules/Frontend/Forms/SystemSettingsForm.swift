@@ -83,6 +83,13 @@ final class SystemSettingsForm: Form {
                 }
                 .write { Application.Config.template = $1.input },
             
+            TextField(key: "fields")
+                .config {
+                    $0.output.more = "folder name"
+                    $0.output.value = Application.Config.fields
+                }
+                .write { Application.Config.fields = $1.input },
+            
             SelectionField(key: "defaultListLimit",
                            value: String(Application.Config.defaultListLimit),
                            options: FormFieldOption.numbers([5, 10, 15, 20, 25, 30, 50, 100]))

@@ -32,7 +32,7 @@ public struct SelectionFieldView: FormFieldView {
         self.error = error
         self.value = value
         self.options = options
-        self.label = label
+        self.label = label?.🦅
         self.more = more        
     }
 }

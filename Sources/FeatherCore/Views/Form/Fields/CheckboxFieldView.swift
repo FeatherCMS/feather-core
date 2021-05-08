@@ -32,7 +32,7 @@ public struct CheckboxFieldView: FormFieldView {
         self.error = error
         self.values = values
         self.options = options
-        self.label = label
+        self.label = label?.🦅
         self.more = more
     }
 }

@@ -9,6 +9,7 @@ open class ToggleField: FormField<Bool, ToggleFieldView> {
 
     public convenience init(key: String) {
         self.init(key: key, input: false, output: .init(key: key))
+        self.output.label = key.🐣(self.output.label)
     }
     
     override open func process(req: Request) -> EventLoopFuture<Void> {

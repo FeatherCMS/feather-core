@@ -27,7 +27,7 @@ public struct DetailContext: Encodable {
         
         public init(type: DetailContext.Field.`Type` = .text, label: String, value: String) {
             self.type = type
-            self.label = label
+            self.label = label.🦅
             self.value = value
         }
     }

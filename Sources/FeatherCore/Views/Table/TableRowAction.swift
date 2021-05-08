@@ -14,7 +14,7 @@ public struct TableRowAction: Encodable {
     
 
     public init(label: String, icon: String, url: String, permission: String? = nil) {
-        self.label = label
+        self.label = label.🦅
         self.icon = icon
         self.permission = permission
         self.url = url

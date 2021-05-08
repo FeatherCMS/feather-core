@@ -24,6 +24,8 @@ public extension Application {
         public static let images = `public`.appendingPathComponent(Directories.images)
         public static let javascript = `public`.appendingPathComponent(Directories.javascript)
         public static let svg = `public`.appendingPathComponent(Directories.svg)
+        public static let fields = resources.appendingPathComponent(Directories.fields)
+
     }
 
     // locations are always relative with a trailing slash
@@ -31,7 +33,7 @@ public extension Application {
         public static let resources: String = "Resources"
         public static let templates: String = "Templates"
         public static let defaultTemplate: String = "Default"
-        
+        public static let fields: String = "Labels/\(Config.fields)"
         public static let `public`: String = "Public"
         public static let assets: String = "assets"
         public static let css: String = "css"

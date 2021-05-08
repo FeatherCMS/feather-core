@@ -13,6 +13,7 @@ extension Application {
             case installed
             case installStep
             case template
+            case fields
             case timezone
             case locale
             case filters
@@ -105,6 +106,17 @@ extension Application.Config {
         }
     }
     
+    static var fields: String {
+        get {
+            if let value = get(.fields) {
+                return value
+            }
+            return ""
+        }
+        set {
+            set(.fields, value: newValue)
+        }
+    }
 
     static var timezone: TimeZone {
         get {

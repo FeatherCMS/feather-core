@@ -13,6 +13,6 @@ public struct FormFieldOption: Encodable {
 
     public init(key: String, label: String) {
         self.key = key
-        self.label = label
+        self.label = label.🦅
     }
 }

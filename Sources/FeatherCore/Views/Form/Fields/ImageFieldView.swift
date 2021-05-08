@@ -35,7 +35,7 @@ public struct ImageFieldView: FormFieldView {
         self.key = key
         self.required = required
         self.error = error
-        self.label = label
+        self.label = label?.🦅
         self.more = more
         self.accept = accept
         self.currentKey = currentKey

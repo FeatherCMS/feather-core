@@ -30,7 +30,7 @@ public struct ContentFieldView: FormFieldView {
         self.required = required
         self.error = error
         self.value = value
-        self.label = label
+        self.label = label?.🦅
         self.placeholder = placeholder
         self.more = more
     }

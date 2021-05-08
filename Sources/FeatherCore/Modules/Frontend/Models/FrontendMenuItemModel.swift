@@ -53,7 +53,7 @@ final class FrontendMenuItemModel: FeatherModel {
     {
         self.id = id
         self.icon = icon
-        self.label = label
+        self.label = label.🦅
         self.url = url
         self.priority = priority
         self.isBlank = isBlank
