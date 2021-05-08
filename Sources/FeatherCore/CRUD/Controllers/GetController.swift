@@ -115,6 +115,18 @@ public extension GetController {
         }
     }
     
+    func getPublicApi(_ req: Request) throws -> EventLoopFuture<GetApi.GetObject> {
+        accessGet(req: req).throwingFlatMap { hasAccess in
+            guard hasAccess else {
+                return req.eventLoop.future(error: Abort(.forbidden))
+            }
+            let id = try identifier(req)
+            return findBy(id, on: req.db).map { model in
+                GetApi().mapGet(model: model as! GetApi.Model)
+            }
+        }
+    }
+    
     func getContext(req: Request, model: Model) -> DetailContext {
         .init(model: Model.info(req), fields: detailFields(req: req, model: model))
     }
@@ -129,6 +141,10 @@ public extension GetController {
     
     func setupGetApiRoute(on builder: RoutesBuilder) {
         builder.get(Model.idParamKeyPathComponent, use: getApi)
+    }
+    
+    func setupGetPublicApiRoute(on builder: RoutesBuilder) {
+        builder.get(Model.idParamKeyPathComponent, use: getPublicApi)
     }
 }
 

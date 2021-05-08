@@ -146,12 +146,24 @@ public extension ListController {
         }
     }
     
+    func listPublicApi(_ req: Request) throws -> EventLoopFuture<PaginationContainer<ListApi.ListObject>> {
+        return listLoader.paginate(req, withDeleted: true).map { pc -> PaginationContainer<ListApi.ListObject> in
+            let api = ListApi()
+            let items = pc.map { api.mapList(model: $0 as! ListApi.Model) }
+            return items
+        }
+    }
+    
     func setupListRoute(on builder: RoutesBuilder) {
         builder.get(use: listView)
     }
 
     func setupListApiRoute(on builder: RoutesBuilder) {
         builder.get(use: listApi)
+    }
+    
+    func setupListPublicApiRoute(on builder: RoutesBuilder) {
+        builder.get(use: listPublicApi)
     }
 }
 
