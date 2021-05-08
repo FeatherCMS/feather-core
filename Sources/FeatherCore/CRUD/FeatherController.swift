@@ -112,7 +112,7 @@ public extension RoutesBuilder {
     }
     
     func registerPublicApi<T: FeatherController>(_ controller: T) {
-        controller.setupApiRoutes(on: self)
+        controller.setupPublicApiRoutes(on: self)
     }
 }
 
