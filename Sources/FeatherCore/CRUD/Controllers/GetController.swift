@@ -114,14 +114,7 @@ public extension GetController {
             }
         }
     }
-    
-    func getPublicApi(_ req: Request) throws -> EventLoopFuture<GetApi.GetObject> {
-        let id = try identifier(req)
-        return findBy(id, on: req.db).map { model in
-            GetApi().mapGet(model: model as! GetApi.Model)
-        }
-    }
-    
+        
     func getContext(req: Request, model: Model) -> DetailContext {
         .init(model: Model.info(req), fields: detailFields(req: req, model: model))
     }
@@ -137,14 +130,9 @@ public extension GetController {
     func setupGetApiRoute(on builder: RoutesBuilder) {
         builder.get(Model.idParamKeyPathComponent, use: getApi)
     }
-    
-    func setupGetPublicApiRoute(on builder: RoutesBuilder) {
-        builder.get(Model.idParamKeyPathComponent, use: getPublicApi)
-    }
 }
 
 public extension GetController where Model: MetadataRepresentable {
-
     func getResponse(req: Request, model: Model) -> EventLoopFuture<Response> {
         Model.findMetadata(reference: model.id!, on: req.db).flatMap { metadata -> EventLoopFuture<Response> in
             var context = getContext(req: req, model: model)
@@ -164,5 +152,26 @@ public extension GetController where Model: MetadataRepresentable {
             }
             return req.view.render(getView, context).encodeResponse(for: req)
         }
+    }
+}
+
+public protocol PublicGetController: GetController {
+    func getPublicApi(_ req: Request) throws -> EventLoopFuture<GetApi.GetObject>
+
+    func setupGetPublicApiRoute(on builder: RoutesBuilder)
+}
+
+public extension PublicGetController {
+    
+    func getPublicApi(_ req: Request) throws -> EventLoopFuture<GetApi.GetObject> {
+        let id = try identifier(req)
+        return findBy(id, on: req.db)
+            .map { model in
+            GetApi().mapGet(model: model as! GetApi.Model)
+        }
+    }
+
+    func setupGetPublicApiRoute(on builder: RoutesBuilder) {
+        builder.get(Model.idParamKeyPathComponent, use: getPublicApi)
     }
 }

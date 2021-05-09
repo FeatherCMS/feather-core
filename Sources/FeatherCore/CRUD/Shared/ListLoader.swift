@@ -94,3 +94,13 @@ public struct ListLoader<T: FeatherModel>  {
         return qb
     }
 }
+
+extension ListLoader where T: MetadataRepresentable {
+    
+    public func qbFromMeta(_ req: Request, withDeleted deleted: Bool = false) -> QueryBuilder<T> {
+        return qbAll(req, withDeleted: deleted)
+            .filterMetadata(status: .published)
+            .sortMetadataByDate()
+    }
+
+}
