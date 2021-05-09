@@ -80,7 +80,7 @@ public protocol ListController: ModelController {
     func setupListRoute(on: RoutesBuilder)
     
     func setupListApiRoute(on builder: RoutesBuilder)
-        
+
 }
 
 
