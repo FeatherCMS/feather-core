@@ -163,14 +163,16 @@ public protocol PublicListController: ListController {
     func setupListPublicApiRoute(on builder: RoutesBuilder)
 }
 
-public extension PublicListController {
+public extension PublicListController where Model: MetadataRepresentable {
     
-    func listPublicApi(_ req: Request) throws -> EventLoopFuture<PaginationContainer<ListApi.ListObject>> {
-        return listLoader.paginate(req, withDeleted: true).map { pc -> PaginationContainer<ListApi.ListObject> in
-            let api = ListApi()
-            let items = pc.map { api.mapList(model: $0 as! ListApi.Model) }
-            return items
-        }
+    func listPublicApi(_ req: Request) throws -> EventLoopFuture<PaginationContainer<ListApi.ListObject> > {
+        let qb = listLoader
+            .qbFromMeta(req, withDeleted: true)
+        return listLoader.paginate(req, qb).map { pc -> PaginationContainer<ListApi.ListObject> in
+                let api = ListApi()
+                let items = pc.map { api.mapList(model: $0 as! ListApi.Model) }
+                return items
+            }
     }
     
     func setupListPublicApiRoute(on builder: RoutesBuilder) {
