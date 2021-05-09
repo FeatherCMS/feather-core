@@ -81,6 +81,8 @@ public protocol ListController: ModelController {
     
     func setupListApiRoute(on builder: RoutesBuilder)
     
+    func setupListPublicApiRoute(on builder: RoutesBuilder)
+    
 }
 
 
