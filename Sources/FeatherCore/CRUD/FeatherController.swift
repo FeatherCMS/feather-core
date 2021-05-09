@@ -87,6 +87,18 @@ public extension FeatherController {
         setupPatchApiRoute(on: base)
         setupDeleteApiRoute(on: base)
     }
+    
+    /*
+     Routes & associated controller methods:
+     --------------------------------------------------
+     GET    /[module]/[model]/          listPublicApi
+     GET    /[module]/[model]/:id       getPublicApi
+     */
+    func setupPublicApiRoutes(on builder: RoutesBuilder) {
+        let base = builder.grouped(Model.Module.moduleKeyPathComponent).grouped(Model.modelKeyPathComponent)
+        setupListPublicApiRoute(on: base)
+        setupGetPublicApiRoute(on: base)
+    }
 }
 
 public extension RoutesBuilder {
@@ -97,6 +109,10 @@ public extension RoutesBuilder {
 
     func registerApi<T: FeatherController>(_ controller: T) {
         controller.setupApiRoutes(on: self)
+    }
+    
+    func registerPublicApi<T: FeatherController>(_ controller: T) {
+        controller.setupPublicApiRoutes(on: self)
     }
 }
 
