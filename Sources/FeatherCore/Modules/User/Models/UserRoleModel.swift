@@ -24,7 +24,7 @@ final class UserRoleModel: FeatherModel {
     /// name of the permission
     @Field(key: FieldKeys.key) var key: String
     @Field(key: FieldKeys.name) var name: String
-    @Field(key: FieldKeys.notes) var notes: String?
+    @OptionalField(key: FieldKeys.notes) var notes: String?
     
     /// users relation
     @Siblings(through: UserAccountRoleModel.self, from: \.$role, to: \.$user) var users: [UserAccountModel]

@@ -50,17 +50,17 @@ final class FrontendMetadataModel: FeatherModel {
     /// status of the content
     @Field(key: FieldKeys.status) var status: Metadata.Status
     /// seo title of the page, also used for metatags
-    @Field(key: FieldKeys.title) var title: String?
+    @OptionalField(key: FieldKeys.title) var title: String?
     /// seo / meta excerpt of the content
-    @Field(key: FieldKeys.excerpt) var excerpt: String?
+    @OptionalField(key: FieldKeys.excerpt) var excerpt: String?
     /// preview image for the content
-    @Field(key: FieldKeys.imageKey) var imageKey: String?
+    @OptionalField(key: FieldKeys.imageKey) var imageKey: String?
     /// publish date
     @Field(key: FieldKeys.date) var date: Date
     /// is the content included in feeds such as RSS
     @Field(key: FieldKeys.feedItem) var feedItem: Bool
     /// canonical url of the content if there is one
-    @Field(key: FieldKeys.canonicalUrl) var canonicalUrl: String?
+    @OptionalField(key: FieldKeys.canonicalUrl) var canonicalUrl: String?
     /// custom stylesheet for the content
     @Field(key: FieldKeys.css) var css: String?
     /// custom javascript for the content

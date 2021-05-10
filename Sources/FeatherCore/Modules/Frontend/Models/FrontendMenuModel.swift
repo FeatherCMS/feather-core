@@ -22,7 +22,7 @@ final class FrontendMenuModel: FeatherModel {
     @ID() var id: UUID?
     @Field(key: FieldKeys.key) var key: String
     @Field(key: FieldKeys.name) var name: String
-    @Field(key: FieldKeys.notes) var notes: String?
+    @OptionalField(key: FieldKeys.notes) var notes: String?
     @Children(for: \.$menu) var items: [FrontendMenuItemModel]
     
     init() { }
