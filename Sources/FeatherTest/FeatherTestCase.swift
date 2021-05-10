@@ -30,6 +30,10 @@ open class FeatherTestCase: TauKitTestCase {
         /// NOTE: do not call super, we don't want to reset the template engine per test case
     }
 
+    open class func customInstallSteps(app: Application) throws {
+        
+    }
+    
     open override class func setUp() {
         super.setUp()
 
@@ -104,6 +108,8 @@ open class FeatherTestCase: TauKitTestCase {
                     }
                 }
                 .test(.inMemory)
+            
+            try! customInstallSteps(app: app)
             
             try! app.describe("Install step finish must succeed")
                 .get("/install/finish/?next=true")
