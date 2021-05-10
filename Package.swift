@@ -8,7 +8,6 @@ let package = Package(
     ],
     products: [
         .library(name: "FeatherCore", targets: ["FeatherCore"]),
-        .library(name: "FeatherApi", targets: ["FeatherApi"]),
         .library(name: "FeatherTest", targets: ["FeatherTest"]),
         .executable(name: "FeatherCli", targets: ["FeatherCli"]),
         .executable(name: "FeatherExample", targets: ["FeatherExample"]),
@@ -20,6 +19,7 @@ let package = Package(
         .package(url: "https://github.com/binarybirds/tau-kit", from: "1.0.0"),
         .package(url: "https://github.com/binarybirds/liquid", from: "1.2.0"),
         .package(url: "https://github.com/binarybirds/vapor-hooks", from: "1.0.0"),
+        .package(url: "https://github.com/feathercms/feather-sdk", from: "1.0.0-beta"),
         /// tests
         .package(url: "https://github.com/binarybirds/spec.git", from: "1.2.0"),
         /// drivers
@@ -46,16 +46,15 @@ let package = Package(
             .copy("Modules/README.md"),
         ]),
         .target(name: "FeatherCli", dependencies: [
-            .target(name: "FeatherCore")
+            .target(name: "FeatherCore"),
         ]),
-        .target(name: "FeatherApi"),
         .target(name: "FeatherCore", dependencies: [
             .product(name: "Tau", package: "tau"),
             .product(name: "Fluent", package: "fluent"),
             .product(name: "Liquid", package: "liquid"),
             .product(name: "Vapor", package: "vapor"),
             .product(name: "VaporHooks", package: "vapor-hooks"),
-            .target(name: "FeatherApi")
+            .product(name: "FeatherApi", package: "feather-sdk"),
         ], resources: [
             .copy("Bundle"),
         ]),
