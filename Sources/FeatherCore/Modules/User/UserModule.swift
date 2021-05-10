@@ -79,8 +79,9 @@ final class UserModule: FeatherModule {
     }
 
     func apiMiddlewaresHook(args: HookArguments) -> [Middleware] {
-        var middlewares = [
-            UserTokenModel.authenticator(),
+        var middlewares: [Middleware] = [
+//            UserTokenModel.authenticator(),
+            UserAccountTokenAuthenticator(),
         ]
         if !Feather.disableApiSessionAuthMiddleware {
             middlewares.append(UserAccountSessionAuthenticator())
