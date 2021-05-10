@@ -26,7 +26,7 @@ struct SystemRouter: FeatherRouter {
         let apiMiddlewaresResult: [[Middleware]] = app.invokeAll(.apiMiddlewares)
         var apiMiddlewares = apiMiddlewaresResult.flatMap { $0 }
         apiMiddlewares.append(ValidationErrorMiddleware(environment: app.environment))
-        let adminApiRoutes = apiRoutes.grouped("admin").grouped(apiMiddlewares)
+        let adminApiRoutes = apiRoutes.grouped(apiMiddlewares).grouped("admin")
         var adminApiArgs = HookArguments()
         adminApiArgs.routes = adminApiRoutes
         let _: [Void] = app.invokeAll(.apiAdminRoutes, args: adminApiArgs)

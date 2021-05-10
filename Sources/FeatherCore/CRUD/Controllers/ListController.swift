@@ -75,6 +75,10 @@ public protocol ListController: ModelController {
     func listView(req: Request) throws -> EventLoopFuture<View>
 
     func listApi(_ req: Request) throws -> EventLoopFuture<PaginationContainer<ListApi.ListObject>>
+    
+    func listPublicApi(_ req: Request) throws -> EventLoopFuture<PaginationContainer<ListApi.ListObject>>
+    
+    func setupListPublicApiRoute(on builder: RoutesBuilder)
 
     /// setup list related routes
     func setupListRoute(on: RoutesBuilder)
@@ -128,24 +132,33 @@ public extension ListController {
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
-            return listLoader.paginate(req)
-                .flatMap { req.view.render(listView, listContext(req: req, table: listTable($0.items), pages: $0.info)) }
+            return listLoader.paginateAll(req).flatMap {
+                req.view.render(listView, listContext(req: req, table: listTable($0.items), pages: $0.info))
+            }
         }
     }
 
+    private func listAll(_ req: Request) throws -> EventLoopFuture<PaginationContainer<ListApi.ListObject>> {
+        listLoader.paginateAll(req).map { pc -> PaginationContainer<ListApi.ListObject> in
+            let api = ListApi()
+            let items = pc.map { api.mapList(model: $0 as! ListApi.Model) }
+            return items
+        }
+    }
+    
     func listApi(_ req: Request) throws -> EventLoopFuture<PaginationContainer<ListApi.ListObject>> {
         accessList(req: req).throwingFlatMap { hasAccess in
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
-            return listLoader.paginate(req, withDeleted: true).map { pc -> PaginationContainer<ListApi.ListObject> in
-                let api = ListApi()
-                let items = pc.map { api.mapList(model: $0 as! ListApi.Model) }
-                return items
-            }
+            return try listAll(req)
         }
     }
 
+    func listPublicApi(_ req: Request) throws -> EventLoopFuture<PaginationContainer<ListApi.ListObject>> {
+        try listAll(req)
+    }
+    
     func setupListRoute(on builder: RoutesBuilder) {
         builder.get(use: listView)
     }
@@ -153,36 +166,24 @@ public extension ListController {
     func setupListApiRoute(on builder: RoutesBuilder) {
         builder.get(use: listApi)
     }
- 
-}
-
-public protocol PublicListController: ListController {
-    
-    func listPublicApi(_ req: Request) throws -> EventLoopFuture<PaginationContainer<ListApi.ListObject>>
-    
-    func setupListPublicApiRoute(on builder: RoutesBuilder)
-}
-
-public extension PublicListController where Model: MetadataRepresentable {
-    
-    func listPublicApi(_ req: Request) throws -> EventLoopFuture<PaginationContainer<ListApi.ListObject> > {
-        let qb = listLoader
-            .qbFromMeta(req, withDeleted: true)
-        return listLoader.paginate(req, qb).map { pc -> PaginationContainer<ListApi.ListObject> in
-                let api = ListApi()
-                let items = pc.map { api.mapList(model: $0 as! ListApi.Model) }
-                return items
-            }
-    }
     
     func setupListPublicApiRoute(on builder: RoutesBuilder) {
         builder.get(use: listPublicApi)
     }
+ 
 }
 
-//extension ListController where Model: MetadataRepresentable {
-//
-//    func beforeListQuery(req: Request, queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
-//        Model.query(on: req.db).joinMetadata()
-//    }
-//}
+public extension ListController where Model: MetadataRepresentable {
+
+    func beforeListQuery(req: Request, queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
+        Model.query(on: req.db).joinMetadata()
+    }
+
+    func listPublicApi(_ req: Request) throws -> EventLoopFuture<PaginationContainer<ListApi.ListObject> > {
+        listLoader.paginateAllPublic(req).map { pc -> PaginationContainer<ListApi.ListObject> in
+            let api = ListApi()
+            let items = pc.map { api.mapList(model: $0 as! ListApi.Model) }
+            return items
+        }
+    }
+}

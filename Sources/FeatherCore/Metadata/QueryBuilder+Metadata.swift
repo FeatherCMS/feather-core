@@ -38,7 +38,14 @@ public extension QueryBuilder where Model: FeatherModel & MetadataRepresentable 
     func filterMetadata(status: Metadata.Status) -> QueryBuilder<Model> {
         filter(FrontendMetadataModel.self, \.$status == status)
     }
-    
+
+    /// filter only the publicly available objects using the metadata
+    func filterPublic() -> QueryBuilder<Model> {
+        filterMetadata(status: .published)
+        .filterMetadata(before: Date())
+        .sortMetadataByDate()
+    }
+
     /// find an object with associated draft or published status
     func filterVisible() -> QueryBuilder<Model> {
         filter(FrontendMetadataModel.self, \.$status != .archived)

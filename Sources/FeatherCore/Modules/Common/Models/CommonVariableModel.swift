@@ -11,7 +11,7 @@ final class CommonVariableModel: FeatherModel {
     static let modelKey: String = "variables"
     static let name: FeatherModelName = "Variable"
 
-    struct FieldKeys {
+    struct FieldKeys: TimestampFieldKeys {
         static var key: FieldKey { "key" }
         static var name: FieldKey { "name" }
         static var value: FieldKey { "value" }
@@ -25,6 +25,11 @@ final class CommonVariableModel: FeatherModel {
     @Field(key: FieldKeys.name) var name: String
     @Field(key: FieldKeys.value) var value: String?
     @Field(key: FieldKeys.notes) var notes: String?
+    
+    @Timestamp(key: FieldKeys.createdAt, on: .create) var createdAt: Date?
+    @Timestamp(key: FieldKeys.updatedAt, on: .update) var updatedAt: Date?
+    @Timestamp(key: FieldKeys.deletedAt, on: .delete) var deletedAt: Date?
+
 
     init() {}
 

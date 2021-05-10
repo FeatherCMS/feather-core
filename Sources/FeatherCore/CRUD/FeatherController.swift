@@ -16,15 +16,9 @@ public protocol FeatherController:
     
     func setupRoutes(on builder: RoutesBuilder)
     func setupApiRoutes(on builder: RoutesBuilder)
-}
-
-public protocol PublicFeatherController:
-    FeatherController,
-    PublicListController,
-    PublicGetController
-{
     func setupPublicApiRoutes(on builder: RoutesBuilder)
 }
+
 
 public protocol FeatherApiRepresentable:
     ListApiRepresentable,
@@ -96,10 +90,6 @@ public extension FeatherController {
         setupDeleteApiRoute(on: base)
     }
     
-}
-
-public extension FeatherController where Self: PublicFeatherController {
-
     /*
      Routes & associated controller methods:
      --------------------------------------------------
@@ -122,8 +112,8 @@ public extension RoutesBuilder {
     func registerApi<T: FeatherController>(_ controller: T) {
         controller.setupApiRoutes(on: self)
     }
-    
-    func registerPublicApi<T: PublicFeatherController>(_ controller: T) {
+
+    func registerPublicApi<T: FeatherController>(_ controller: T) {
         controller.setupPublicApiRoutes(on: self)
     }
 }

@@ -56,6 +56,12 @@ struct FrontendRouter: FeatherRouter {
         adminRoutes.register(menuController)
         adminRoutes.register(menuItemController)
     }
+    
+    func apiRoutesHook(args: HookArguments) {
+        let publicApiRoutes = args.routes
+        
+        publicApiRoutes.registerPublicApi(pageController)
+    }
 
     func apiAdminRoutesHook(args: HookArguments) {
         let apiRoutes = args.routes

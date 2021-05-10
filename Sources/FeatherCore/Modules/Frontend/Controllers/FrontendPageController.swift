@@ -20,7 +20,6 @@ struct FrontendPageController: FeatherController {
     typealias PatchApi = FrontendPageApi
     typealias DeleteApi = FrontendPageApi
     
-    
     func listTable(_ models: [Model]) -> Table {
         Table(columns: ["title"], rows: models.map { model in
             TableRow(id: model.identifier, cells: [TableCell(model.title)])

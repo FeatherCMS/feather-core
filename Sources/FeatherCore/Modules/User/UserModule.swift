@@ -81,12 +81,11 @@ final class UserModule: FeatherModule {
     func apiMiddlewaresHook(args: HookArguments) -> [Middleware] {
         var middlewares = [
             UserTokenModel.authenticator(),
-            User.guardMiddleware(),
         ]
         if !Feather.disableApiSessionAuthMiddleware {
             middlewares.append(UserAccountSessionAuthenticator())
         }
-        return middlewares
+        return middlewares + [User.guardMiddleware()]
     }
     
     func installStepHook(args: HookArguments) -> [InstallStep] {

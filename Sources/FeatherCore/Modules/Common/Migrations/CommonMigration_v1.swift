@@ -15,6 +15,9 @@ struct CommonMigration_v1: Migration {
                 .field(CommonVariableModel.FieldKeys.name, .string, .required)
                 .field(CommonVariableModel.FieldKeys.value, .string)
                 .field(CommonVariableModel.FieldKeys.notes, .string)
+                .field(CommonVariableModel.FieldKeys.updatedAt, .datetime)
+                .field(CommonVariableModel.FieldKeys.createdAt, .datetime)
+                .field(CommonVariableModel.FieldKeys.deletedAt, .datetime)
                 .unique(on: CommonVariableModel.FieldKeys.key)
                 .create(),
         ])

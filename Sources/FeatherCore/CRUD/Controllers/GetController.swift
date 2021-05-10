@@ -77,6 +77,11 @@ public protocol GetController: IdentifiableController {
     func setupGetRoute(on builder: RoutesBuilder)
 
     func setupGetApiRoute(on builder: RoutesBuilder)
+    
+    func getPublicApi(_ req: Request) throws -> EventLoopFuture<GetApi.GetObject>
+
+    func setupGetPublicApiRoute(on builder: RoutesBuilder)
+
 }
 
 public extension GetController {
@@ -108,10 +113,14 @@ public extension GetController {
             guard hasAccess else {
                 return req.eventLoop.future(error: Abort(.forbidden))
             }
-            let id = try identifier(req)
-            return findBy(id, on: req.db).map { model in
-                GetApi().mapGet(model: model as! GetApi.Model)
-            }
+            return try getPublicApi(req)
+        }
+    }
+
+    func getPublicApi(_ req: Request) throws -> EventLoopFuture<GetApi.GetObject> {
+        let id = try identifier(req)
+        return findBy(id, on: req.db).map { model in
+            GetApi().mapGet(model: model as! GetApi.Model)
         }
     }
         
@@ -129,6 +138,10 @@ public extension GetController {
     
     func setupGetApiRoute(on builder: RoutesBuilder) {
         builder.get(Model.idParamKeyPathComponent, use: getApi)
+    }
+
+    func setupGetPublicApiRoute(on builder: RoutesBuilder) {
+        builder.get(Model.idParamKeyPathComponent, use: getPublicApi)
     }
 }
 
@@ -152,26 +165,5 @@ public extension GetController where Model: MetadataRepresentable {
             }
             return req.view.render(getView, context).encodeResponse(for: req)
         }
-    }
-}
-
-public protocol PublicGetController: GetController {
-    func getPublicApi(_ req: Request) throws -> EventLoopFuture<GetApi.GetObject>
-
-    func setupGetPublicApiRoute(on builder: RoutesBuilder)
-}
-
-public extension PublicGetController {
-    
-    func getPublicApi(_ req: Request) throws -> EventLoopFuture<GetApi.GetObject> {
-        let id = try identifier(req)
-        return findBy(id, on: req.db)
-            .map { model in
-            GetApi().mapGet(model: model as! GetApi.Model)
-        }
-    }
-
-    func setupGetPublicApiRoute(on builder: RoutesBuilder) {
-        builder.get(Model.idParamKeyPathComponent, use: getPublicApi)
     }
 }

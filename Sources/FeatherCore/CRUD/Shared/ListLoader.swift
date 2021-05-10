@@ -35,12 +35,13 @@ public struct ListLoader<T: FeatherModel>  {
         self.beforeQuery = beforeQuery
     }
 
-    public func paginate(_ req: Request, withDeleted deleted: Bool = false) -> EventLoopFuture<PaginationContainer<T>> {
-        return paginate(req, qbAll(req, withDeleted: deleted))
+    /// query all the objects & paginate them
+    public func paginateAll(_ req: Request) -> EventLoopFuture<PaginationContainer<T>> {
+        paginate(req, queryAll(req))
     }
     
+    /// paginate a query builder based on the request params
     public func paginate(_ req: Request, _ qb: QueryBuilder<T>) -> EventLoopFuture<PaginationContainer<T>> {
-       /// pagination
        let listLimit: Int = max(req.query[limitKey] ?? limit, 1)
        let listPage: Int = max(req.query[pageKey] ?? page, 1)
        let start = (listPage - 1) * listLimit
@@ -55,7 +56,7 @@ public struct ListLoader<T: FeatherModel>  {
        }
     }
     
-    public func qbAll(_ req: Request, withDeleted deleted: Bool = false) -> QueryBuilder<T> {
+    public func queryAll(_ req: Request) -> QueryBuilder<T> {
         var qb = T.query(on: req.db)
         if let beforeQuery = beforeQuery {
             qb = beforeQuery(req, qb)
@@ -85,8 +86,8 @@ public struct ListLoader<T: FeatherModel>  {
                 }
             }
         }
-        
-        /// Deleted
+
+        let deleted: Bool = req.query["deleted"] ?? false
         if deleted {
             qb = qb.withDeleted()
         }
@@ -95,12 +96,14 @@ public struct ListLoader<T: FeatherModel>  {
     }
 }
 
-extension ListLoader where T: MetadataRepresentable {
-    
-    public func qbFromMeta(_ req: Request, withDeleted deleted: Bool = false) -> QueryBuilder<T> {
-        return qbAll(req, withDeleted: deleted)
-            .filterMetadata(status: .published)
-            .sortMetadataByDate()
+public extension ListLoader where T: MetadataRepresentable {
+
+    /// returns all the publicly available objects
+    func queryAllPublic(_ req: Request) -> QueryBuilder<T> {
+        queryAll(req).filterPublic()
     }
 
+    func paginateAllPublic(_ req: Request) -> EventLoopFuture<PaginationContainer<T>> {
+        paginate(req, queryAllPublic(req))
+    }
 }
