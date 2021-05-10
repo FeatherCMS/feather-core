@@ -5,17 +5,16 @@ Core dependencies for Feather CMS.
 
 ## Todo
 
-
 - blog: post + category & author relation + validation
 - blog frontend: fix search
 - proper blog articles
 
 - frontend widget-like home page?
 - check frontend metadatas (noindex, etc)
-- fix unique metadata key issue (add random string if key already exists?)
 
 - relation UUID validation 
-- metadata api / public api
+- metadata api
+- figure out public api / soft delete 
 
 - aggregator news item fixes
 - analytics fixes
