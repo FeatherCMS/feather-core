@@ -62,9 +62,9 @@ final class FrontendMetadataModel: FeatherModel {
     /// canonical url of the content if there is one
     @OptionalField(key: FieldKeys.canonicalUrl) var canonicalUrl: String?
     /// custom stylesheet for the content
-    @Field(key: FieldKeys.css) var css: String?
+    @OptionalField(key: FieldKeys.css) var css: String?
     /// custom javascript for the content
-    @Field(key: FieldKeys.js) var js: String?
+    @OptionalField(key: FieldKeys.js) var js: String?
 
     /// the list of content filter identifiers that will be applied to the content during rendering
     @Field(key: FieldKeys.filters) var filters: [String]
