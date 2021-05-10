@@ -23,12 +23,16 @@ public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware
             model.use(metadata)
             
             /// avoid duplicate slug creation by appending a unique identifier
-            return FrontendMetadataModel.query(on: db).filter(\.$slug == metadata.slug!).count().flatMap { count -> EventLoopFuture<Void> in
-                if count > 0 {
-                    model.slug = model.slug + "-" + UUID().uuidString
+            return FrontendMetadataModel.query(on: db)
+                .field(\.$id)
+                .filter(\.$slug == metadata.slug!)
+                .count()
+                .flatMap { count -> EventLoopFuture<Void> in
+                    if count > 0 {
+                        model.slug = model.slug + "-" + UUID().uuidString
+                    }
+                    return model.create(on: db)
                 }
-                return model.create(on: db)
-            }
         }
     }
     
