@@ -11,7 +11,7 @@ import FluentSQLiteDriver
 extension Feather {
 
     /// use the sqlite database driver
-    static func useSQLiteDatabase(_ app: Application) {
+    static func useSQLiteDatabase() {
         app.databases.use(.sqlite(.file("Resources/db.sqlite")), as: .sqlite)
     }
 }
