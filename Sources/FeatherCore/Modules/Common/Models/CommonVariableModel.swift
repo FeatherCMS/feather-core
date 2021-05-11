@@ -23,8 +23,8 @@ final class CommonVariableModel: FeatherModel {
     @ID() var id: UUID?
     @Field(key: FieldKeys.key) var key: String
     @Field(key: FieldKeys.name) var name: String
-    @Field(key: FieldKeys.value) var value: String?
-    @Field(key: FieldKeys.notes) var notes: String?
+    @OptionalField(key: FieldKeys.value) var value: String?
+    @OptionalField(key: FieldKeys.notes) var notes: String?
     
     @Timestamp(key: FieldKeys.createdAt, on: .create) var createdAt: Date?
     @Timestamp(key: FieldKeys.updatedAt, on: .update) var updatedAt: Date?

@@ -30,13 +30,13 @@ final class FrontendMenuItemModel: FeatherModel {
     // MARK: - fields
 
     @ID() var id: UUID?
-    @Field(key: FieldKeys.icon) var icon: String?
+    @OptionalField(key: FieldKeys.icon) var icon: String?
     @Field(key: FieldKeys.label) var label: String
     @Field(key: FieldKeys.url) var url: String
     @Field(key: FieldKeys.priority) var priority: Int
     @Field(key: FieldKeys.isBlank) var isBlank: Bool
-    @Field(key: FieldKeys.permission) var permission: String?
-    @Field(key: FieldKeys.notes) var notes: String?
+    @OptionalField(key: FieldKeys.permission) var permission: String?
+    @OptionalField(key: FieldKeys.notes) var notes: String?
     @Parent(key: FieldKeys.menuId) var menu: FrontendMenuModel
 
     init() { }
