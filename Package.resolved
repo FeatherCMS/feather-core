@@ -312,8 +312,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-ssl.git",
         "state": {
           "branch": null,
-          "revision": "b2f8f353262a554d7f6598c17775c1e28d8a46f1",
-          "version": "2.13.0"
+          "revision": "6363cdf6d2fb863e82434f3c4618f4e896e37569",
+          "version": "2.13.1"
         }
       },
       {
@@ -330,8 +330,8 @@
         "repositoryURL": "https://github.com/binarybirds/tau",
         "state": {
           "branch": null,
-          "revision": "cd351776d6e7c6877f742e6f29d5707b442bcb1c",
-          "version": "1.0.1"
+          "revision": "14740e46de24b9b02ed411fbd07e920bb4c68fa2",
+          "version": "1.0.2"
         }
       },
       {
