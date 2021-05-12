@@ -54,7 +54,7 @@ public struct ListLoader<T: FeatherModel>  {
             items = qb.copy().range(start..<end).all()
         }
         else {
-            items = qb.copy().range(..<end).all()
+            items = qb.copy().limit(end).all()
         }
         
         return count.and(items).map { (total, models) -> PaginationContainer<T> in
