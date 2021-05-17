@@ -44,6 +44,10 @@ Core dependencies for Feather CMS.
 
 ```
 
+```
+
+```
+
 ## Credits
 
 - [Vapor](https://vapor.codes/) - underlying framework

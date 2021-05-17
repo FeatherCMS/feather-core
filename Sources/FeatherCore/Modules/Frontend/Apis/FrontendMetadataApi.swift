@@ -57,16 +57,47 @@ struct FrontendMetadataApi: FeatherApiRepresentable {
     }
     
     func mapCreate(_ req: Request, model: Model, input: CreateObject) -> EventLoopFuture<Void> {
-        return req.eventLoop.future()
+        fatalError("Standalone metadata should never be ceated.")
     }
         
     func mapUpdate(_ req: Request, model: Model, input: UpdateObject) -> EventLoopFuture<Void> {
+        model.slug = input.slug
+        model.title = input.title
+        model.excerpt = input.excerpt
+        model.imageKey = input.imageKey
+        model.date = input.date
+        model.status = .init(rawValue: input.status.rawValue)!
+        model.feedItem = input.feedItem
+        model.canonicalUrl = input.canonicalUrl
+        model.css = input.css
+        model.js = input.js
         return req.eventLoop.future()
     }
 
     func mapPatch(_ req: Request, model: Model, input: PatchObject) -> EventLoopFuture<Void> {
+        model.slug = input.slug ?? model.slug
+        model.title = input.title ?? model.title
+        model.excerpt = input.excerpt ?? model.excerpt
+        model.imageKey = input.imageKey ?? model.imageKey
+        model.date = input.date ?? model.date
+        if let status = input.status?.rawValue {
+            model.status = .init(rawValue: status) ?? model.status
+        }
+        model.feedItem = input.feedItem ?? model.feedItem
+        model.canonicalUrl = input.canonicalUrl ?? model.canonicalUrl
+        model.css = input.css ?? model.css
+        model.js = input.js ?? model.js
         return req.eventLoop.future()
     }
     
-    func validators(optional: Bool) -> [AsyncValidator] { [] }
+    func validators(optional: Bool) -> [AsyncValidator] {
+        [
+            KeyedContentValidator<String>("slug", "Slug must be unique", optional: optional, nil) { value, req in
+                guard Model.getIdParameter(req: req) == nil else {
+                    return req.eventLoop.future(true)
+                }
+                return Model.isUniqueBy(\.$slug == value, req: req)
+            }
+        ]
+    }
 }
