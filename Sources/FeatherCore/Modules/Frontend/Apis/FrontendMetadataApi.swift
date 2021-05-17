@@ -20,7 +20,7 @@ struct FrontendMetadataApi: FeatherApiRepresentable {
     typealias UpdateObject = MetadataUpdateObject
     typealias PatchObject = MetadataPatchObject
     
-    func mapList(model: Model) -> ListObject {
+    func mapList(model: Model) -> ListObject {    
         .init(id: model.id!,
               module: model.module,
               model: model.model,

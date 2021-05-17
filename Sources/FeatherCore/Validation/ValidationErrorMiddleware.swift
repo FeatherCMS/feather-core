@@ -24,7 +24,7 @@ public struct ValidationErrorMiddleware: Middleware {
             case let abort as ValidationAbort:
                 status = abort.abort.status
                 headers = abort.abort.headers
-                message = abort.message
+                message = abort.message ?? abort.reason
                 details = abort.details
             case let abort as Abort:
                 status = abort.status

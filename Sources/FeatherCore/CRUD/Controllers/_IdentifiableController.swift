@@ -27,3 +27,14 @@ public extension IdentifiableController {
         return id
     }
 }
+
+
+public extension IdentifiableController where Model: MetadataRepresentable {
+
+    func findBy(_ id: UUID, on db: Database) -> EventLoopFuture<Model> {
+        Model.query(on: db)
+            .joinMetadata()
+            .filter(\._$id == id).first()
+            .unwrap(or: Abort(.notFound))
+    }
+}

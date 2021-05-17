@@ -12,8 +12,8 @@ try LoggingSystem.bootstrap(from: &env)
 let app = Application(env)
 defer { app.shutdown() }
 
-//Feather.useSQLiteDatabase(app)
-try Feather.useMongoDatabase()
+Feather.useSQLiteDatabase()
+//try Feather.useMongoDatabase()
 Feather.useLocalFileStorage()
 
 if app.isDebug {
