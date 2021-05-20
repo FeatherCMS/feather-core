@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 03. 19..
 //
 
- extension Request {
+extension Request {
     
     var processing: RequestProcessing {
         get { .init(request: self) }
@@ -13,23 +13,23 @@
     }
 }
 
- struct RequestProcessing {
+struct RequestProcessing {
     
     // MARK: - internal init
     
     let request: Request
-
+    
     init(request: Request) {
         self.request = request
     }
-
+    
     // MARK: - context storage
-
+    
     private struct ContextStorageKey: StorageKey {
         typealias Value = [String: Any]
     }
-
-     var context: [String: Any] {
+    
+    var context: [String: Any] {
         get {
             if let existing = request.storage[ContextStorageKey.self] {
                 return existing

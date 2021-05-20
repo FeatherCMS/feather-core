@@ -13,7 +13,6 @@ Core dependencies for Feather CMS.
 - check frontend metadatas (noindex, etc)
 
 - relation UUID validation 
-- metadata api
 - figure out public api / soft delete 
 
 - aggregator news item fixes

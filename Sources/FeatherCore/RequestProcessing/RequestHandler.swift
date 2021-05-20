@@ -5,23 +5,23 @@
 //  Created by Tibor Bodecs on 2021. 03. 19..
 //
 
- struct RequestHandler {
-
-     let name: String?
-     let method: HTTPMethod
-     let pathPrefix: [PathComponent]
-     let pathComponents: [PathComponent]
-     let body: HTTPBodyStreamStrategy
-     let middlewares: [Middleware]
-     let controllers: () -> [RequestController]
-
-     init(name: String? = nil,
-                method: HTTPMethod = .GET,
-                pathPrefix: [PathComponent] = [],
-                pathComponents: [PathComponent] = [],
-                body: HTTPBodyStreamStrategy = .collect,
-                middlewares: [Middleware] = [],
-                controllers: @escaping () -> [RequestController]) {
+struct RequestHandler {
+    
+    let name: String?
+    let method: HTTPMethod
+    let pathPrefix: [PathComponent]
+    let pathComponents: [PathComponent]
+    let body: HTTPBodyStreamStrategy
+    let middlewares: [Middleware]
+    let controllers: () -> [RequestController]
+    
+    init(name: String? = nil,
+         method: HTTPMethod = .GET,
+         pathPrefix: [PathComponent] = [],
+         pathComponents: [PathComponent] = [],
+         body: HTTPBodyStreamStrategy = .collect,
+         middlewares: [Middleware] = [],
+         controllers: @escaping () -> [RequestController]) {
         self.name = name
         self.method = method
         self.pathPrefix = pathPrefix
@@ -30,8 +30,8 @@
         self.middlewares = middlewares
         self.controllers = controllers
     }
-
-
+    
+    
     // MARK: - helpers
     
     private var hookName: String {
@@ -46,50 +46,50 @@
     
     // MARK: - api
     
-     func handle(route routesBuilder:  RoutesBuilder) {
+    func handle(route routesBuilder:  RoutesBuilder) {
         /// NOTE: check for empty middlewares? unnecessary group call...
         routesBuilder.grouped(middlewares).on(method, pathComponents, body: body, use: handler)
     }
-
+    
     /**
-        Handle an incoming request
+     Handle an incoming request
      
-        The handler methods will be called one after another.
-  
-        **Call order**
-
-            boot
-                - bootResponse -> respond
-                - nil -> access
-            
-            access (merge bools)
-                - false -> accessResponse ?? Abort(.unauthorized)
-                - true -> load
-            
-            load
-                - load -> respond
-                - nil -> validation
-            
-            validation (merge bools)
-                - false -> invalid
-                - true -> validationResponse ?? save
-            
-            failure
-                 - failureResponse -> respond
-                 - nil -> render (invalid state)
-
-            success
-                - successResponse -> respond
-                - nil -> render (valid state)
-
-            render
-                
+     The handler methods will be called one after another.
+     
+     **Call order**
+     
+     boot
+     - bootResponse -> respond
+     - nil -> access
+     
+     access (merge bools)
+     - false -> accessResponse ?? Abort(.unauthorized)
+     - true -> load
+     
+     load
+     - load -> respond
+     - nil -> validation
+     
+     validation (merge bools)
+     - false -> invalid
+     - true -> validationResponse ?? save
+     
+     failure
+     - failureResponse -> respond
+     - nil -> render (invalid state)
+     
+     success
+     - successResponse -> respond
+     - nil -> render (valid state)
+     
+     render
+     
      */
     private func handler(req: Request) -> EventLoopFuture<Response> {
         /// find the request handlers and sort them by priority
         let otherControllers: [() -> [RequestController]] = req.invokeAll(hookName + "-request-controllers")
         let ctrls = controllers() + otherControllers.map { $0() }.flatMap { $0 }.sorted { $0.priority > $1.priority }
-
+        
         /// boot the controllers
         return req.eventLoop.flatten(ctrls.map { $0.boot(req: req) }).flatMap {
             /// return with a boot response if needed
