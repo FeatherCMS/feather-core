@@ -7,8 +7,7 @@
 
 import Vapor
 
-
-struct Feather {
+public struct Feather {
     
     /*
      # .env example
@@ -26,7 +25,11 @@ struct Feather {
     public static let disableFileMiddleware: Bool = Bool(Environment.get("FEATHER_DISABLE_FILE_MIDDLEWARE") ?? "false") ?? false
     public static let disableApiSessionAuthMiddleware: Bool = Bool(Environment.get("FEATHER_DISABLE_API_SESSION_AUTH_MIDDLEWARE") ?? "false") ?? false
 
-    func start(_ app: Application) throws {
+    public init() {
+        
+    }
+
+    public func start(_ app: Application, _ modules: [FeatherModule] = []) throws {
         let modules: [FeatherModule] = [
             SystemModule(),
             UserModule(),
@@ -34,8 +37,8 @@ struct Feather {
             ApiModule(),
             AdminModule(),
             WebModule(),
-        ]
-        
+        ] + modules
+
         for module in modules {
             try module.boot(app)
         }
@@ -44,4 +47,5 @@ struct Feather {
         }
         try app.autoMigrate().wait()
     }
+
 }

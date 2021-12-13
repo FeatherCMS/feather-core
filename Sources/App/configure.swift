@@ -3,7 +3,7 @@ import Fluent
 import FluentSQLiteDriver
 import SwiftHtml
 import SwiftCss
-
+import FeatherCore
 
 
 public func configure(_ app: Application) throws {
@@ -28,9 +28,9 @@ public func configure(_ app: Application) throws {
 //        "hello world"
 //    }
 
-    app.routes.get("style.css") { req in
-        req.css.render(Style())
-    }
+//    app.routes.get("style.css") { req in
+//        req.css.render(Style())
+//    }
 }
 
 

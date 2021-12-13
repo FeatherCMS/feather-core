@@ -11,40 +11,40 @@ import Foundation
 
 extension Feather {
     
-    struct Config: Codable {
+    public struct Config: Codable {
         
-        struct Install: Codable {
-            var isCompleted: Bool
-            var currentStep: String?
-            var nextQueryKey: String
+        public struct Install: Codable {
+            public var isCompleted: Bool
+            public var currentStep: String?
+            public var nextQueryKey: String
         }
 
-        struct Paths: Codable {
-            var admin: String
-            var api: String
-            var install: String
-            var redirectQueryKey: String
-            var login: String
-            var logout: String
-            var sitemap: String
-            var rss: String
-            var robots: String
+        public struct Paths: Codable {
+            public var admin: String
+            public var api: String
+            public var install: String
+            public var redirectQueryKey: String
+            public var login: String
+            public var logout: String
+            public var sitemap: String
+            public var rss: String
+            public var robots: String
 
-            var adminLogin: String {
+            public var adminLogin: String {
                 "/\(Feather.config.paths.login)/?\(Feather.config.paths.redirectQueryKey)=/\(Feather.config.paths.admin)/"
             }
         }
         
-        struct Locale: Codable {
-            var timezone: String
-            var locale: String
+        public struct Locale: Codable {
+            public var timezone: String
+            public var locale: String
         }
 
-        var install: Install
-        var paths: Paths
-        var locale: Locale
-        var filters: [String]
-        var listLimit: Int
+        public var install: Install
+        public var paths: Paths
+        public var locale: Locale
+        public var filters: [String]
+        public var listLimit: Int
         
         fileprivate static var `default`: Config {
             .init(install: .init(isCompleted: false,
