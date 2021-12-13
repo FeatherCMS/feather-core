@@ -22,6 +22,7 @@ extension Feather {
         struct Paths: Codable {
             var admin: String
             var api: String
+            var install: String
             var redirectQueryKey: String
             var login: String
             var logout: String
@@ -51,6 +52,7 @@ extension Feather {
                                  nextQueryKey: "next"),
                   paths: .init(admin: "admin",
                                api: "api",
+                               install: "install",
                                redirectQueryKey: "redirect",
                                login: "login",
                                logout: "logout",

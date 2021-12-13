@@ -8,9 +8,13 @@
 import Vapor
 
 public extension HookName {
+    static let installModels: HookName = "install-models"
+    
     static let webResponse: HookName = "web-response"
     static let webRoutes: HookName = "web-routes"
     static let webMiddlewares: HookName = "web-middlewares"
+    static let webInstallStep: HookName = "web-install-step"
+    static let webInstallResponse: HookName = "web-install-response"
 }
 
 struct WebModule: FeatherModule {
@@ -24,8 +28,8 @@ struct WebModule: FeatherModule {
         app.hooks.register(.webResponse, use: webResponseHook)
         app.hooks.register(.webMiddlewares, use: webMiddlewaresHook)
         app.hooks.register("web-menus", use: webMenusHook)
-        app.hooks.register("install-step", use: installStepHook)
-        app.hooks.register("install-response", use: installResponseHook)
+        app.hooks.register(.webInstallStep, use: installStepHook)
+        app.hooks.register(.webInstallResponse, use: installResponseHook)
         
         app.hooks.register(.adminWidgets, use: adminWidgetsHook)
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
@@ -36,12 +40,10 @@ struct WebModule: FeatherModule {
 
     // MARK: - hooks
 
-
     func webResponseHook(args: HookArguments) async -> Response? {
         guard Feather.config.install.isCompleted else {
-            
             let currentStep = Feather.config.install.currentStep ?? FeatherInstallStep.start.key
-            let steps: [[FeatherInstallStep]] = await args.req.invokeAll("install-step")
+            let steps: [[FeatherInstallStep]] = await args.req.invokeAll(.webInstallStep)
             let orderedSteps = steps.flatMap { $0 }.sorted { $0.priority > $1.priority }.map(\.key)
             
             var hookArguments = HookArguments()
@@ -55,7 +57,7 @@ struct WebModule: FeatherModule {
                 }
             }
             /// flat map error?
-            let res: [Response?] = await args.req.invokeAll("install-response", args: hookArguments)
+            let res: [Response?] = await args.req.invokeAll(.webInstallResponse, args: hookArguments)
             return res.compactMap({ $0 }).first
         }
 
@@ -68,13 +70,17 @@ struct WebModule: FeatherModule {
                                                               message: "Lorem ipsum dolor sit amet"))
         return args.req.html.render(template)
     }
-    
+
     func installStepHook(args: HookArguments) async -> [FeatherInstallStep] {
         [
             .start,
             .init(key: "custom", priority: 2),
             .finish,
         ]
+    }
+    
+    private func installPath(for step: String) -> String {
+        "/" + Feather.config.paths.install + "/" + step + "/"
     }
     
     func installResponseHook(args: HookArguments) async -> Response? {
@@ -84,9 +90,9 @@ struct WebModule: FeatherModule {
         
         if currentStep == FeatherInstallStep.start.key {
             if performStep {
-                let _: [Void] = await args.req.invokeAll("install-models")
+                let _: [Void] = await args.req.invokeAll(.installModels)
                 Feather.config.install.currentStep = nextStep
-                return args.req.redirect(to: "/install/" + nextStep + "/")
+                return args.req.redirect(to: installPath(for: nextStep))
             }
             
             let template = WebInstallStepTemplate(args.req, .init(icon: "🪶",
@@ -99,7 +105,7 @@ struct WebModule: FeatherModule {
         if currentStep == "custom" {
             if performStep {
                 Feather.config.install.currentStep = nextStep
-                return args.req.redirect(to: "/install/" + nextStep + "/")
+                return args.req.redirect(to: installPath(for: nextStep))
             }
             
             let template = WebInstallStepTemplate(args.req, .init(icon: "💪",
@@ -117,9 +123,10 @@ struct WebModule: FeatherModule {
             let template = WebInstallStepTemplate(args.req, .init(icon: "🪶",
                                                                   title: "Setup completed",
                                                                   message: "Your site is now ready to use.",
-                                                                  link: .init(label: "Let's get started →", url: "/install/finish/?next=true")))
+                                                                  link: .init(label: "Let's get started →", url: "/install/?next=true")))
             return args.req.html.render(template)
         }
+
         return nil
     }
 
@@ -129,7 +136,7 @@ struct WebModule: FeatherModule {
             WebErrorMiddleware(),
         ]
     }
-    
+
     func webMenusHook(args: HookArguments) async -> [LinkContext] {
         [
             .init(label: "Home", url: "/", priority: 100)
