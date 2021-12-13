@@ -27,19 +27,4 @@ install:
 	install .build/Release/Feather ./feather #./usr/local/bin/feather
 
 uninstall:
-	rm Public/css/frontend.min.css
 	rm ./feather
-
-css:
-	cat ./Sources/FeatherCore/Bundle/Modules/Common/Public/css/common.css \
-		\
-		| tr -d '\n' \
-		| tr -d '\t' \
-		| tr -s ' ' \
-		| sed -E 's/[[:space:]]*:[[:space:]]*/:/g' \
-		| sed -E 's/[[:space:]]*,[[:space:]]*/,/g' \
-		| sed -E 's/[[:space:]]*\{[[:space:]]*/{/g' \
-		| sed -E 's/[[:space:]]*\}[[:space:]]*/}/g' \
-		| sed -E 's/[[:space:]]*>[[:space:]]*/>/g' \
-		| sed -E 's/[[:space:]]*;[[:space:]]*/;/g' \
-		> ./feather.min.css

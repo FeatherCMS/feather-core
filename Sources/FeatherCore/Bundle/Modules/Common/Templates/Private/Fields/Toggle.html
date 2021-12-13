@@ -1,8 +1,0 @@
-<section>
-    #inline("Common/Fields/Label")
-
-    <input type="checkbox" name="#(field.key)" value="true" id="#(field.key)" #if(field.value == "true"):checked#endif>
-    <label for="#(field.key)">#(field.placeholder ?? "Yes")</label><br>
-
-    #inline("Common/Fields/Error")
-</section>
