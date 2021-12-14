@@ -8,7 +8,7 @@
 import Vapor
 
 public extension HookName {
-    static let installCommonVariables: HookName = "create-common-variables"
+    static let installCommonVariables: HookName = "install-common-variables"
 }
 
 
@@ -40,7 +40,7 @@ struct CommonModule: FeatherModule {
     
     func installUserPermissionsHook(args: HookArguments) async -> [UserPermission.Create] {
         var permissions: [UserPermission.Create] = []
-        permissions += CommonVariableModel.createUserPermissions()
+        permissions += CommonVariableModel.userPermissions()
         return permissions
     }
     

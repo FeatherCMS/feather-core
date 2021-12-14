@@ -13,9 +13,9 @@ public extension HookName {
     static let permission: HookName = "permission"
     static let access: HookName = "access"
     
-    static let installUserRoles: HookName = "create-user-roles"
-    static let installUserPermissions: HookName = "create-user-permissions"
-    static let installUserAccounts: HookName = "create-user-accounts"
+    static let installUserRoles: HookName = "install-user-roles"
+    static let installUserPermissions: HookName = "install-user-permissions"
+    static let installUserAccounts: HookName = "install-user-accounts"
 }
 
 struct UserModule: FeatherModule {
@@ -43,7 +43,6 @@ struct UserModule: FeatherModule {
         
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         app.hooks.register(.adminApiRoutes, use: router.adminApiRoutesHook)
-        
         
         app.hooks.register(.installUserRoles, use: installUserRolesHook)
         app.hooks.register(.installUserPermissions, use: installUserPermissionsHook)
@@ -86,9 +85,9 @@ struct UserModule: FeatherModule {
     
     func installUserPermissionsHook(args: HookArguments) async -> [UserPermission.Create] {
         var permissions: [UserPermission.Create] = []
-        permissions += UserAccountModel.createUserPermissions()
-        permissions += UserPermissionModel.createUserPermissions()
-        permissions += UserRoleModel.createUserPermissions()
+        permissions += UserAccountModel.userPermissions()
+        permissions += UserPermissionModel.userPermissions()
+        permissions += UserRoleModel.userPermissions()
         return permissions
     }
     

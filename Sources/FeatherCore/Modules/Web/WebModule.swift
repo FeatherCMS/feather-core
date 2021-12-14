@@ -9,13 +9,13 @@ import Vapor
 import FeatherCoreApi
 
 public extension HookName {
-    static let webResponse: HookName = "web-response"
+    
     static let webRoutes: HookName = "web-routes"
     static let webMiddlewares: HookName = "web-middlewares"
     /// allows to make preparations such as installing models and files
 
-    static let webInstallStep: HookName = "web-install-step"
-    static let webInstallResponse: HookName = "web-install-response"
+    static let installStep: HookName = "web-install-step"
+    static let installResponse: HookName = "web-install-response"
     
     static let install: HookName = "install"
     static let installWebPages: HookName = "install-web-pages"
@@ -29,11 +29,11 @@ struct WebModule: FeatherModule {
         app.migrations.add(WebMigrations.v1())
 
         app.hooks.register(.routes, use: router.routesHook)
-        app.hooks.register(.webResponse, use: webResponseHook)
+        app.hooks.register(.response, use: responseHook)
         app.hooks.register(.webMiddlewares, use: webMiddlewaresHook)
         app.hooks.register("web-menus", use: webMenusHook)
-        app.hooks.register(.webInstallStep, use: webInstallStepHook)
-        app.hooks.register(.webInstallResponse, use: webInstallResponseHook)
+        app.hooks.register(.installStep, use: installStepHook)
+        app.hooks.register(.installResponse, use: installResponseHook)
         
         app.hooks.register(.install, use: installHook)
         
@@ -57,10 +57,10 @@ struct WebModule: FeatherModule {
 
     func installUserPermissionsHook(args: HookArguments) async -> [UserPermission.Create] {
         var permissions: [UserPermission.Create] = []
-        permissions += WebPageModel.createUserPermissions()
-        permissions += WebMenuModel.createUserPermissions()
-        permissions += WebMenuItemModel.createUserPermissions()
-        permissions += WebMetadataModel.createUserPermissions()
+        permissions += WebPageModel.userPermissions()
+        permissions += WebMenuModel.userPermissions()
+        permissions += WebMenuItemModel.userPermissions()
+        permissions += WebMetadataModel.userPermissions()
         return permissions
     }
 
@@ -101,7 +101,7 @@ struct WebModule: FeatherModule {
         ]
     }
 
-    func webResponseHook(args: HookArguments) async -> Response? {
+    func responseHook(args: HookArguments) async -> Response? {
         guard args.req.url.path == "/" else {
             return nil
         }
@@ -112,13 +112,13 @@ struct WebModule: FeatherModule {
         return args.req.html.render(template)
     }
 
-    func webInstallStepHook(args: HookArguments) async -> [FeatherInstallStep] {
+    func installStepHook(args: HookArguments) async -> [FeatherInstallStep] {
         [
             .init(key: "custom", priority: 2),
         ]
     }
 
-    func webInstallResponseHook(args: HookArguments) async -> Response? {
+    func installResponseHook(args: HookArguments) async -> Response? {
         
         func installPath(for step: String) -> String {
             "/" + Feather.config.paths.install + "/" + step + "/"
@@ -138,7 +138,7 @@ struct WebModule: FeatherModule {
             let template = WebInstallStepTemplate(args.req, .init(icon: "🪶",
                                                                   title: "Install site",
                                                                   message: "First we have to setup the necessary components.",
-                                                                  link: .init(label: "Start installation →", url: "/install/?next=true")))
+                                                                  link: .init(label: "Start installation →", url: "/install/start/?next=true")))
             return args.req.html.render(template)
         }
         
@@ -151,7 +151,7 @@ struct WebModule: FeatherModule {
             let template = WebInstallStepTemplate(args.req, .init(icon: "💪",
                                                                   title: "Custom step site",
                                                                   message: "First we have to setup the necessary components.",
-                                                                  link: .init(label: "Start installation →", url: "/install/?next=true")))
+                                                                  link: .init(label: "Start installation →", url: "/install/custom/?next=true")))
             return args.req.html.render(template)
         }
         
@@ -163,7 +163,7 @@ struct WebModule: FeatherModule {
             let template = WebInstallStepTemplate(args.req, .init(icon: "🪶",
                                                                   title: "Setup completed",
                                                                   message: "Your site is now ready to use.",
-                                                                  link: .init(label: "Let's get started →", url: "/install/?next=true")))
+                                                                  link: .init(label: "Let's get started →", url: "/install/finish/?next=true")))
             return args.req.html.render(template)
         }
 

@@ -32,7 +32,7 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
 
     static func permission(_ action: FeatherPermission.Action) -> FeatherPermission
     
-    static func createUserPermissions() -> [UserPermission.Create]
+    static func userPermissions() -> [UserPermission.Create]
 }
 
 public extension FeatherModel {
@@ -65,7 +65,7 @@ public extension FeatherModel {
         FeatherPermission(namespace: Module.moduleKey, context: modelKey, action: action)
     }
 
-    static func createUserPermissions() -> [UserPermission.Create] {
+    static func userPermissions() -> [UserPermission.Create] {
         FeatherPermission.Action.crud.map { permission($0) }.map {
             UserPermission.Create(namespace: $0.namespace,
                                   context: $0.context,
