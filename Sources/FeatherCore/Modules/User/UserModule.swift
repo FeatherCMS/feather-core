@@ -90,9 +90,7 @@ struct UserModule: FeatherModule {
         permissions += UserRoleModel.userPermissions()
         return permissions
     }
-    
-    
-    
+
 //    func formFieldsHook(args: HookArguments) async -> [FormComponent] {
 //        return [
 //            InputField("lorem")

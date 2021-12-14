@@ -102,6 +102,9 @@ struct WebModule: FeatherModule {
     }
 
     func responseHook(args: HookArguments) async -> Response? {
+        
+        
+        
         guard args.req.url.path == "/" else {
             return nil
         }
