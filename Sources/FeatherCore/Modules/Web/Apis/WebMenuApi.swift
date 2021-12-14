@@ -20,23 +20,23 @@ struct WebMenuApi: FeatherApi {
         .init(id: model.uuid, key: model.key, name: model.name, notes: model.notes)
     }
     
-    func mapDetail(model: WebMenuModel) -> WebMenu.Detail {
+    func mapDetail(model: Model) -> WebMenu.Detail {
         .init(id: model.uuid, key: model.key, name: model.name, notes: model.notes, items: [])
     }
     
-    func mapCreate(_ req: Request, model: WebMenuModel, input: WebMenu.Create) async {
+    func mapCreate(_ req: Request, model: Model, input: WebMenu.Create) async {
         model.key = input.key
         model.name = input.name
         model.notes = input.notes
     }
     
-    func mapUpdate(_ req: Request, model: WebMenuModel, input: WebMenu.Update) async {
+    func mapUpdate(_ req: Request, model: Model, input: WebMenu.Update) async {
         model.key = input.key
         model.name = input.name
         model.notes = input.notes
     }
     
-    func mapPatch(_ req: Request, model: WebMenuModel, input: WebMenu.Patch) async {
+    func mapPatch(_ req: Request, model: Model, input: WebMenu.Patch) async {
         model.key = input.key ?? model.key
         model.name = input.name ?? model.name
         model.notes = input.notes ?? model.notes

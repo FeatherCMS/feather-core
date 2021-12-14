@@ -20,7 +20,7 @@ struct WebMenuItemApi: FeatherApi {
         .init(id: model.uuid, label: model.label, url: model.url, menuId: model.$menu.id)
     }
     
-    func mapDetail(model: WebMenuItemModel) -> WebMenuItem.Detail {
+    func mapDetail(model: Model) -> WebMenuItem.Detail {
         .init(id: model.uuid,
               label: model.label,
               url: model.url,
@@ -31,7 +31,7 @@ struct WebMenuItemApi: FeatherApi {
               menuId: model.$menu.id)
     }
     
-    func mapCreate(_ req: Request, model: WebMenuItemModel, input: WebMenuItem.Create) async {
+    func mapCreate(_ req: Request, model: Model, input: WebMenuItem.Create) async {
         model.label = input.label
         model.url = input.url
         model.icon = input.icon
@@ -41,7 +41,7 @@ struct WebMenuItemApi: FeatherApi {
         model.$menu.id = input.menuId
     }
     
-    func mapUpdate(_ req: Request, model: WebMenuItemModel, input: WebMenuItem.Update) async {
+    func mapUpdate(_ req: Request, model: Model, input: WebMenuItem.Update) async {
         model.label = input.label
         model.url = input.url
         model.icon = input.icon
@@ -51,7 +51,7 @@ struct WebMenuItemApi: FeatherApi {
         model.$menu.id = input.menuId
     }
     
-    func mapPatch(_ req: Request, model: WebMenuItemModel, input: WebMenuItem.Patch) async {
+    func mapPatch(_ req: Request, model: Model, input: WebMenuItem.Patch) async {
         model.label = input.label ?? model.label
         model.url = input.url ?? model.url
         model.icon = input.icon ?? model.icon

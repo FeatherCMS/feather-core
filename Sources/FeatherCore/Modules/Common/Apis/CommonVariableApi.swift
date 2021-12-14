@@ -20,25 +20,25 @@ struct CommonVariableApi: FeatherApi {
         .init(id: model.uuid, key: model.key, value: model.value)
     }
     
-    func mapDetail(model: CommonVariableModel) -> CommonVariable.Detail {
+    func mapDetail(model: Model) -> CommonVariable.Detail {
         .init(id: model.uuid, key: model.key, name: model.name, value: model.value, notes: model.notes)
     }
     
-    func mapCreate(_ req: Request, model: CommonVariableModel, input: CommonVariable.Create) async {
+    func mapCreate(_ req: Request, model: Model, input: CommonVariable.Create) async {
         model.key = input.key
         model.name = input.name
         model.value = input.value
         model.notes = input.notes
     }
     
-    func mapUpdate(_ req: Request, model: CommonVariableModel, input: CommonVariable.Update) async {
+    func mapUpdate(_ req: Request, model: Model, input: CommonVariable.Update) async {
         model.key = input.key
         model.name = input.name
         model.value = input.value ?? model.value
         model.notes = input.notes ?? model.notes
     }
     
-    func mapPatch(_ req: Request, model: CommonVariableModel, input: CommonVariable.Patch) async {
+    func mapPatch(_ req: Request, model: Model, input: CommonVariable.Patch) async {
         model.key = input.key ?? model.key
         model.name = input.name ?? model.name
         model.value = input.value ?? model.value

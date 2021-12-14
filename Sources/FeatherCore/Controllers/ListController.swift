@@ -40,28 +40,27 @@ extension PaginationContext: Content {}
 
 public struct ListConfiguration {
 
-    let orderKey: String
-    let sortKey: String
-    let searchKey: String
-    let limitKey: String
-    let pageKey: String
-    let defaultLimit: Int
-    let defaultPage: Int
-    let allowedOrders: [FieldKey]
-    let defaultSort: FieldSort
-    let isSearchable: Bool
+    public let orderKey: String
+    public let sortKey: String
+    public let searchKey: String
+    public let limitKey: String
+    public let pageKey: String
+    public let defaultLimit: Int
+    public let defaultPage: Int
+    public let allowedOrders: [FieldKey]
+    public let defaultSort: FieldSort
+    public let isSearchable: Bool
 
-    init(orderKey: String = "order",
-         sortKey: String = "sort",
-         searchKey: String = "search",
-         limitKey: String = "limit",
-         pageKey: String = "page",
-         defaultLimit: Int = Feather.config.listLimit,
-         defaultPage: Int = 1,
-         allowedOrders: [FieldKey] = [],
-         defaultSort: FieldSort = .asc,
-         isSearchable: Bool = true
-    ) {
+    public init(orderKey: String = "order",
+                sortKey: String = "sort",
+                searchKey: String = "search",
+                limitKey: String = "limit",
+                pageKey: String = "page",
+                defaultLimit: Int = Feather.config.listLimit,
+                defaultPage: Int = 1,
+                allowedOrders: [FieldKey] = [],
+                defaultSort: FieldSort = .asc,
+                isSearchable: Bool = true) {
         self.orderKey = orderKey
         self.sortKey = sortKey
         self.searchKey = searchKey

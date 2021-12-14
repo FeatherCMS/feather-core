@@ -16,27 +16,27 @@ extension UserAccount.Patch: Content {}
 struct UserAccountApi: FeatherApi {
     typealias Model = UserAccountModel
     
-    func mapList(model: UserAccountModel) -> UserAccount.List {
+    func mapList(model: Model) -> UserAccount.List {
         .init(id: model.uuid, email: model.email)
     }
     
-    func mapDetail(model: UserAccountModel) -> UserAccount.Detail {
+    func mapDetail(model: Model) -> UserAccount.Detail {
         .init(id: model.uuid, email: model.email, root: model.isRoot)
     }
     
-    func mapCreate(_ req: Request, model: UserAccountModel, input: UserAccount.Create) async {
+    func mapCreate(_ req: Request, model: Model, input: UserAccount.Create) async {
         model.email = input.email
         model.password = input.password
         model.isRoot = input.root
     }
     
-    func mapUpdate(_ req: Request, model: UserAccountModel, input: UserAccount.Update) async {
+    func mapUpdate(_ req: Request, model: Model, input: UserAccount.Update) async {
         model.email = input.email
         model.password = input.password
         model.isRoot = input.root
     }
     
-    func mapPatch(_ req: Request, model: UserAccountModel, input: UserAccount.Patch) async {
+    func mapPatch(_ req: Request, model: Model, input: UserAccount.Patch) async {
         model.email = input.email ?? model.email
         model.password = input.password ?? model.password
         model.isRoot = input.root ?? model.isRoot

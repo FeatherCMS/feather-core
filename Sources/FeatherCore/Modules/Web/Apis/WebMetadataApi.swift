@@ -34,7 +34,7 @@ struct WebMetadataApi: FeatherApi {
               js: model.js)
     }
     
-    func mapDetail(model: WebMetadataModel) -> WebMetadata.Detail {
+    func mapDetail(model: Model) -> WebMetadata.Detail {
         .init(id: model.uuid,
               module: model.module,
               model: model.model,
@@ -52,15 +52,15 @@ struct WebMetadataApi: FeatherApi {
               js: model.js)
     }
     
-    func mapCreate(_ req: Request, model: WebMetadataModel, input: WebMetadata.Create) async {
+    func mapCreate(_ req: Request, model: Model, input: WebMetadata.Create) async {
         
     }
     
-    func mapUpdate(_ req: Request, model: WebMetadataModel, input: WebMetadata.Update) async {
+    func mapUpdate(_ req: Request, model: Model, input: WebMetadata.Update) async {
         
     }
     
-    func mapPatch(_ req: Request, model: WebMetadataModel, input: WebMetadata.Patch) async {
+    func mapPatch(_ req: Request, model: Model, input: WebMetadata.Patch) async {
         
     }
 }

@@ -20,21 +20,21 @@ struct WebPageApi: FeatherApi {
         .init(id: model.uuid, title: model.title)
     }
     
-    func mapDetail(model: WebPageModel) -> WebPage.Detail {
+    func mapDetail(model: Model) -> WebPage.Detail {
         .init(id: model.uuid, title: model.title, content: model.content)
     }
     
-    func mapCreate(_ req: Request, model: WebPageModel, input: WebPage.Create) async {
+    func mapCreate(_ req: Request, model: Model, input: WebPage.Create) async {
         model.title = input.title
         model.content = input.content
     }
     
-    func mapUpdate(_ req: Request, model: WebPageModel, input: WebPage.Update) async {
+    func mapUpdate(_ req: Request, model: Model, input: WebPage.Update) async {
         model.title = input.title
         model.content = input.content
     }
     
-    func mapPatch(_ req: Request, model: WebPageModel, input: WebPage.Patch) async {
+    func mapPatch(_ req: Request, model: Model, input: WebPage.Patch) async {
         model.title = input.title ?? model.title
         model.content = input.content ?? model.content
     }
