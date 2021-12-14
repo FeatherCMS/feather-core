@@ -20,7 +20,7 @@ extension BlogCategory {
                     imageKey: String? = nil,
                     excerpt: String? = nil,
                     color: String? = nil,
-                    priority: Int = 0) {
+                    priority: Int = 100) {
             self.title = title
             self.imageKey = imageKey
             self.excerpt = excerpt
