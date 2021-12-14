@@ -15,7 +15,7 @@ extension Feather {
         
         public struct Install: Codable {
             public var isCompleted: Bool
-            public var currentStep: String?
+            public var currentStep: String
             public var nextQueryKey: String
         }
 
@@ -48,7 +48,7 @@ extension Feather {
         
         fileprivate static var `default`: Config {
             .init(install: .init(isCompleted: false,
-                                 currentStep: nil,
+                                 currentStep: FeatherInstallStep.start.key,
                                  nextQueryKey: "next"),
                   paths: .init(admin: "admin",
                                api: "api",

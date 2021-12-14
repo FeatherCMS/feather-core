@@ -17,6 +17,8 @@ public struct FeatherPermission: Equatable, Codable, RawRepresentable {
         case patch
         case delete
         case custom(String)
+        
+        public static var crud: [Action] { [.list, .detail, .create, .update, .patch, .delete] }
 
         public init(stringLiteral value: String) {
             switch value {
@@ -66,6 +68,8 @@ public struct FeatherPermission: Equatable, Codable, RawRepresentable {
     public var rawValue: String {
         components.joined(separator: "-")
     }
+    
+    public var name: String { "\(namespace) \(context) \(action.description)" }
 }
 
 

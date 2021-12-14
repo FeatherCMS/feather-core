@@ -47,6 +47,11 @@ public extension Request {
         invokeAll(hook.description, args: args)
     }
     
+    func invokeAllFirst<ReturnType>(_ hook: HookName, args: HookArguments = [:]) -> ReturnType? {
+        let result: [ReturnType?] = invokeAll(hook.description, args: args)
+        return result.compactMap({ $0 }).first
+    }
+    
     func invokeAllFlat<ReturnType>(_ hook: HookName, args: HookArguments = [:]) -> [ReturnType] {
         let result: [[ReturnType]] = invokeAll(hook.description, args: args)
         return result.flatMap { $0 }
@@ -63,6 +68,11 @@ public extension Request {
     func invokeAllFlat<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async -> [ReturnType] {
         let result: [[ReturnType]] = await invokeAll(hook.description, args: args)
         return result.flatMap { $0 }
+    }
+    
+    func invokeAllFirst<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async -> ReturnType? {
+        let result: [ReturnType?] = await invokeAll(hook.description, args: args)
+        return result.compactMap({ $0 }).first
     }
 }
 
@@ -76,6 +86,11 @@ public extension Application {
         invokeAll(hook.description, args: args)
     }
     
+    func invokeAllFirst<ReturnType>(_ hook: HookName, args: HookArguments = [:]) -> ReturnType? {
+        let result: [ReturnType?] = invokeAll(hook.description, args: args)
+        return result.compactMap({ $0 }).first
+    }
+    
     func invokeAllFlat<ReturnType>(_ hook: HookName, args: HookArguments = [:]) -> [ReturnType] {
         let result: [[ReturnType]] = invokeAll(hook.description, args: args)
         return result.flatMap { $0 }
@@ -92,6 +107,11 @@ public extension Application {
     func invokeAllFlat<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async -> [ReturnType] {
         let result: [[ReturnType]] = await invokeAll(hook.description, args: args)
         return result.flatMap { $0 }
+    }
+    
+    func invokeAllFirst<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async -> ReturnType? {
+        let result: [ReturnType?] = await invokeAll(hook.description, args: args)
+        return result.compactMap({ $0 }).first
     }
 }
 

@@ -8,7 +8,7 @@ env:
 	echo 'FEATHER_HTTPS=false' >> .env.development
 
 clean:
-	rm -rf ./Resources/ ./Public/
+	rm -rf ./Resources/*
 
 
 env.testing:

@@ -12,6 +12,10 @@ public extension HookName {
 
     static let permission: HookName = "permission"
     static let access: HookName = "access"
+    
+    static let installUserRoles: HookName = "create-user-roles"
+    static let installUserPermissions: HookName = "create-user-permissions"
+    static let installUserAccounts: HookName = "create-user-accounts"
 }
 
 struct UserModule: FeatherModule {
@@ -27,6 +31,7 @@ struct UserModule: FeatherModule {
         app.middleware.use(app.sessions.middleware)
 
         app.hooks.register(.webMiddlewares, use: webMiddlewaresHook)
+        app.hooks.register(.install, use: installHook)
         
         app.hooks.register(.adminMiddlewares, use: adminMiddlewaresHook)
         app.hooks.register(.adminWidgets, use: adminWidgetsHook)
@@ -39,10 +44,55 @@ struct UserModule: FeatherModule {
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         app.hooks.register(.adminApiRoutes, use: router.adminApiRoutesHook)
         
+        
+        app.hooks.register(.installUserRoles, use: installUserRolesHook)
+        app.hooks.register(.installUserPermissions, use: installUserPermissionsHook)
+        app.hooks.register(.installUserAccounts, use: installUserAccountsHook)
+        
 //        app.hooks.register("form-fields", use: formFieldsHook)
         
         try router.boot(app)
     }
+    
+    func installHook(args: HookArguments) async {
+        let roles: [UserRole.Create] = await args.req.invokeAllFlat(.installUserRoles)
+        try! await roles.map { UserRoleModel(key: $0.key, name: $0.name, notes: $0.notes) }.create(on: args.req.db)
+
+        let permissions: [UserPermission.Create] = await args.req.invokeAllFlat(.installUserPermissions)
+        try! await permissions.map { UserPermissionModel(namespace: $0.namespace,
+                                                         context: $0.context,
+                                                         action: $0.action,
+                                                         name: $0.name,
+                                                         notes: $0.notes) }.create(on: args.req.db)
+        
+        let accounts: [UserAccount.Create] = await args.req.invokeAllFlat(.installUserAccounts)
+        try! await accounts.map { UserAccountModel(email: $0.email,
+                                                   password: try! Bcrypt.hash($0.password)) }.create(on: args.req.db)
+
+    }
+
+    func installUserRolesHook(args: HookArguments) async -> [UserRole.Create] {
+        [
+            .init(key: "editors", name: "Editors", notes: "Editor user role"),
+        ]
+    }
+    
+    func installUserAccountsHook(args: HookArguments) async -> [UserAccount.Create] {
+        [
+            .init(email: "root@feathercms.com", password: "FeatherCMS", root: true),
+            .init(email: "user@feathercms.com", password: "FeatherCMS"),
+        ]
+    }
+    
+    func installUserPermissionsHook(args: HookArguments) async -> [UserPermission.Create] {
+        var permissions: [UserPermission.Create] = []
+        permissions += UserAccountModel.createUserPermissions()
+        permissions += UserPermissionModel.createUserPermissions()
+        permissions += UserRoleModel.createUserPermissions()
+        return permissions
+    }
+    
+    
     
 //    func formFieldsHook(args: HookArguments) async -> [FormComponent] {
 //        return [

@@ -6,15 +6,19 @@
 //
 
 import Vapor
+import FeatherCoreApi
 
 public extension HookName {
-    static let installModels: HookName = "install-models"
-    
     static let webResponse: HookName = "web-response"
     static let webRoutes: HookName = "web-routes"
     static let webMiddlewares: HookName = "web-middlewares"
+    /// allows to make preparations such as installing models and files
+
     static let webInstallStep: HookName = "web-install-step"
     static let webInstallResponse: HookName = "web-install-response"
+    
+    static let install: HookName = "install"
+    static let installWebPages: HookName = "install-web-pages"
 }
 
 struct WebModule: FeatherModule {
@@ -28,8 +32,14 @@ struct WebModule: FeatherModule {
         app.hooks.register(.webResponse, use: webResponseHook)
         app.hooks.register(.webMiddlewares, use: webMiddlewaresHook)
         app.hooks.register("web-menus", use: webMenusHook)
-        app.hooks.register(.webInstallStep, use: installStepHook)
-        app.hooks.register(.webInstallResponse, use: installResponseHook)
+        app.hooks.register(.webInstallStep, use: webInstallStepHook)
+        app.hooks.register(.webInstallResponse, use: webInstallResponseHook)
+        
+        app.hooks.register(.install, use: installHook)
+        
+        app.hooks.register(.installWebPages, use: installWebPagesHook)
+        app.hooks.register(.installCommonVariables, use: installCommonVariablesHook)
+        app.hooks.register(.installUserPermissions, use: installUserPermissionsHook)
         
         app.hooks.register(.adminWidgets, use: adminWidgetsHook)
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
@@ -39,27 +49,59 @@ struct WebModule: FeatherModule {
     }
 
     // MARK: - hooks
+    
+    func installHook(args: HookArguments) async {
+        let pages: [WebPage.Create] = await args.req.invokeAllFlat(.installWebPages)
+        try! await pages.map { WebPageModel(title: $0.title, content: $0.content) }.create(on: args.req.db)
+    }
+
+    func installUserPermissionsHook(args: HookArguments) async -> [UserPermission.Create] {
+        var permissions: [UserPermission.Create] = []
+        permissions += WebPageModel.createUserPermissions()
+        permissions += WebMenuModel.createUserPermissions()
+        permissions += WebMenuItemModel.createUserPermissions()
+        permissions += WebMetadataModel.createUserPermissions()
+        return permissions
+    }
+
+    func installWebPagesHook(args: HookArguments) async -> [WebPage.Create] {
+        [
+            .init(title: "Lorem", content: "ipsum")
+        ]
+    }
+    
+    func installCommonVariablesHook(args: HookArguments) async -> [CommonVariable.Create] {
+        [
+            // MARK: - not found
+            
+            .init(key: "welcomePageIcon",
+                  name: "Welcome page icon",
+                  value: "🪶",
+                  notes: "Icon of the welcome page"),
+
+            .init(key: "welcomePageTitle",
+                  name: "Welcome page title",
+                  value: "Welcome",
+                  notes: "Title of the welcome page"),
+            
+            .init(key: "welcomePageExcerpt",
+                  name: "Welcome page excerpt",
+                  value: "This is your brand new Feather CMS powered website",
+                  notes: "Excerpt for the welcome page"),
+
+            .init(key: "welcomePageLinkLabel",
+                  name: "Welcome page link label",
+                  value: "Start customizing →",
+                  notes: "Link label of the welcome page"),
+
+            .init(key: "welcomePageLinkUrl",
+                  name: "Welcome page link url",
+                  value: "/admin/",
+                  notes: "Link URL of the welcome page"),
+        ]
+    }
 
     func webResponseHook(args: HookArguments) async -> Response? {
-        guard Feather.config.install.isCompleted else {
-            let currentStep = Feather.config.install.currentStep ?? FeatherInstallStep.start.key
-            let steps: [FeatherInstallStep] = await args.req.invokeAllFlat(.webInstallStep)
-            let orderedSteps = steps.sorted { $0.priority > $1.priority }.map(\.key)
-            
-            var hookArguments = HookArguments()
-            hookArguments.nextInstallStep = FeatherInstallStep.finish.key
-            hookArguments.currentInstallStep = currentStep
-
-            if let currentIndex = orderedSteps.firstIndex(of: currentStep) {
-                let nextIndex = orderedSteps.index(after: currentIndex)
-                if nextIndex < orderedSteps.count {
-                    hookArguments.nextInstallStep = orderedSteps[nextIndex]
-                }
-            }
-            let res: [Response?] = await args.req.invokeAll(.webInstallResponse, args: hookArguments)
-            return res.compactMap({ $0 }).first
-        }
-
         guard args.req.url.path == "/" else {
             return nil
         }
@@ -70,26 +112,25 @@ struct WebModule: FeatherModule {
         return args.req.html.render(template)
     }
 
-    func installStepHook(args: HookArguments) async -> [FeatherInstallStep] {
+    func webInstallStepHook(args: HookArguments) async -> [FeatherInstallStep] {
         [
-            .start,
             .init(key: "custom", priority: 2),
-            .finish,
         ]
     }
-    
-    private func installPath(for step: String) -> String {
-        "/" + Feather.config.paths.install + "/" + step + "/"
-    }
-    
-    func installResponseHook(args: HookArguments) async -> Response? {
-        let currentStep = Feather.config.install.currentStep ?? FeatherInstallStep.start.key
+
+    func webInstallResponseHook(args: HookArguments) async -> Response? {
+        
+        func installPath(for step: String) -> String {
+            "/" + Feather.config.paths.install + "/" + step + "/"
+        }
+        
+        let currentStep = Feather.config.install.currentStep
         let nextStep = args.nextInstallStep
         let performStep: Bool = args.req.query[Feather.config.install.nextQueryKey] ?? false
         
         if currentStep == FeatherInstallStep.start.key {
             if performStep {
-                let _: [Void] = await args.req.invokeAll(.installModels)
+                let _: [Void] = await args.req.invokeAll(.install)
                 Feather.config.install.currentStep = nextStep
                 return args.req.redirect(to: installPath(for: nextStep))
             }
