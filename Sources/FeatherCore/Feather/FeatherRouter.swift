@@ -7,10 +7,10 @@
 
 import Vapor
 
-protocol FeatherRouter {
+public protocol FeatherRouter {
     func boot(_ app: Application) throws
 }
 
-extension FeatherRouter {
+public extension FeatherRouter {
     func boot(_ app: Application) throws {}
 }

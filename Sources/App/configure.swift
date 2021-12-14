@@ -16,7 +16,10 @@ public func configure(_ app: Application) throws {
                                 publicPath: Application.Paths.public.path,
                                 workDirectory: Application.Directories.assets), as: .local)
     
-    try Feather().start(app)
+    let modules: [FeatherModule] = [
+        BlogModule()
+    ]
+    try Feather().start(app, modules)
 
 //    app.routes.get("style.css") { req in
 //        req.css.render(Style())

@@ -17,7 +17,7 @@ public protocol FeatherModule {
     func config(_ app: Application) throws
 }
 
-extension FeatherModule {
+public extension FeatherModule {
     
     static var moduleKey: String {
         String(describing: self).dropLast(6).lowercased()
