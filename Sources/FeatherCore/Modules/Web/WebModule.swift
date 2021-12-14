@@ -120,8 +120,8 @@ struct WebModule: FeatherModule {
 
     func installResponseHook(args: HookArguments) async -> Response? {
         
-        func installPath(for step: String) -> String {
-            "/" + Feather.config.paths.install + "/" + step + "/"
+        func installPath(for step: String, next: Bool = false) -> String {
+            "/" + Feather.config.paths.install + "/" + step + "/" + ( next ? "?next=true" : "")
         }
         
         let currentStep = Feather.config.install.currentStep
@@ -138,7 +138,8 @@ struct WebModule: FeatherModule {
             let template = WebInstallStepTemplate(args.req, .init(icon: "🪶",
                                                                   title: "Install site",
                                                                   message: "First we have to setup the necessary components.",
-                                                                  link: .init(label: "Start installation →", url: "/install/start/?next=true")))
+                                                                  link: .init(label: "Start installation →",
+                                                                              url: installPath(for: nextStep, next: true))))
             return args.req.html.render(template)
         }
         
@@ -151,7 +152,8 @@ struct WebModule: FeatherModule {
             let template = WebInstallStepTemplate(args.req, .init(icon: "💪",
                                                                   title: "Custom step site",
                                                                   message: "First we have to setup the necessary components.",
-                                                                  link: .init(label: "Start installation →", url: "/install/custom/?next=true")))
+                                                                  link: .init(label: "Start installation →",
+                                                                              url: installPath(for: nextStep, next: true))))
             return args.req.html.render(template)
         }
         
@@ -163,7 +165,8 @@ struct WebModule: FeatherModule {
             let template = WebInstallStepTemplate(args.req, .init(icon: "🪶",
                                                                   title: "Setup completed",
                                                                   message: "Your site is now ready to use.",
-                                                                  link: .init(label: "Let's get started →", url: "/install/finish/?next=true")))
+                                                                  link: .init(label: "Let's get started →",
+                                                                              url: installPath(for: nextStep, next: true))))
             return args.req.html.render(template)
         }
 
