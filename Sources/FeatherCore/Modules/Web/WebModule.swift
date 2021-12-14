@@ -43,8 +43,8 @@ struct WebModule: FeatherModule {
     func webResponseHook(args: HookArguments) async -> Response? {
         guard Feather.config.install.isCompleted else {
             let currentStep = Feather.config.install.currentStep ?? FeatherInstallStep.start.key
-            let steps: [[FeatherInstallStep]] = await args.req.invokeAll(.webInstallStep)
-            let orderedSteps = steps.flatMap { $0 }.sorted { $0.priority > $1.priority }.map(\.key)
+            let steps: [FeatherInstallStep] = await args.req.invokeAllFlat(.webInstallStep)
+            let orderedSteps = steps.sorted { $0.priority > $1.priority }.map(\.key)
             
             var hookArguments = HookArguments()
             hookArguments.nextInstallStep = FeatherInstallStep.finish.key
@@ -56,7 +56,6 @@ struct WebModule: FeatherModule {
                     hookArguments.nextInstallStep = orderedSteps[nextIndex]
                 }
             }
-            /// flat map error?
             let res: [Response?] = await args.req.invokeAll(.webInstallResponse, args: hookArguments)
             return res.compactMap({ $0 }).first
         }

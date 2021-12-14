@@ -19,8 +19,8 @@ struct WebRouter: FeatherRouter {
     }
 
     func routesHook(args: HookArguments) {
-        let middlewares: [[Middleware]] = args.app.invokeAll(.webMiddlewares)
-        let webRoutes = args.routes.grouped(middlewares.flatMap { $0 })
+        let middlewares: [Middleware] = args.app.invokeAllFlat(.webMiddlewares)
+        let webRoutes = args.routes.grouped(middlewares)
         var arguments = HookArguments()
         arguments.routes = webRoutes
         let _: [Void] = args.app.invokeAll(.webRoutes, args: arguments)

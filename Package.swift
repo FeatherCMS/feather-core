@@ -33,7 +33,6 @@ let package = Package(
             .product(name: "SwiftCss", package: "swift-css"),
 //            .product(name: "VaporHooks", package: "vapor-hooks"),
         ]),
-        
         .executableTarget(name: "Run", dependencies: ["App"]),
         .testTarget(name: "AppTests", dependencies: [
             .target(name: "App"),

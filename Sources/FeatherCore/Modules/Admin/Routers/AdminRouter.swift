@@ -10,9 +10,8 @@ import Vapor
 struct AdminRouter: FeatherRouter {
     
     func routesHook(args: HookArguments) {
-        let middlewares: [[Middleware]] = args.app.invokeAll(.adminMiddlewares)
-        let adminRoutes = args.routes.grouped(Feather.config.paths.admin.pathComponent)
-            .grouped(middlewares.flatMap { $0 })
+        let middlewares: [Middleware] = args.app.invokeAllFlat(.adminMiddlewares)
+        let adminRoutes = args.routes.grouped(Feather.config.paths.admin.pathComponent).grouped(middlewares)
         var arguments = HookArguments()
         arguments.routes = adminRoutes
         let _: [Void] = args.app.invokeAll(.adminRoutes, args: arguments)

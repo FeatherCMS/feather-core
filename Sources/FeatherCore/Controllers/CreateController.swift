@@ -37,8 +37,8 @@ public extension CreateController {
         let editor = CreateModelEditor(model: .init())
 //        var arguments = HookArguments()
 //        arguments["model"] = editor.model
-//        let fields: [[FormComponent]] = await req.invokeAll("form-fields", args: arguments)
-        let form = FeatherForm(fields: editor.formFields)// + fields.flatMap { $0 })
+//        let fields: [FormComponent] = await req.invokeAllFlat("form-fields", args: arguments)
+        let form = FeatherForm(fields: editor.formFields)// + fields)
         await form.load(req: req)
         return render(req, editor: editor, form: form)
     }

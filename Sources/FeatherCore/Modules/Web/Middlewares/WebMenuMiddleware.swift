@@ -33,8 +33,8 @@ public extension Request {
 struct WebMenuMiddleware: AsyncMiddleware {
 
     func respond(to req: Request, chainingTo next: AsyncResponder) async throws -> Response {
-        let menus: [[LinkContext]] = await req.invokeAll("web-menus")
-        let items = menus.flatMap { $0 }.sorted { $0.priority > $1.priority }
+        let menus: [LinkContext] = await req.invokeAllFlat("web-menus")
+        let items = menus.sorted { $0.priority > $1.priority }
         req.application.menus = [
             .init(key: "main", children: items)
         ]

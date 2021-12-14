@@ -47,12 +47,22 @@ public extension Request {
         invokeAll(hook.description, args: args)
     }
     
+    func invokeAllFlat<ReturnType>(_ hook: HookName, args: HookArguments = [:]) -> [ReturnType] {
+        let result: [[ReturnType]] = invokeAll(hook.description, args: args)
+        return result.flatMap { $0 }
+    }
+    
     func invoke<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async -> ReturnType? {
         await invoke(hook.description, args: args)
     }
 
     func invokeAll<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async -> [ReturnType] {
         await invokeAll(hook.description, args: args)
+    }
+
+    func invokeAllFlat<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async -> [ReturnType] {
+        let result: [[ReturnType]] = await invokeAll(hook.description, args: args)
+        return result.flatMap { $0 }
     }
 }
 
@@ -66,12 +76,22 @@ public extension Application {
         invokeAll(hook.description, args: args)
     }
     
+    func invokeAllFlat<ReturnType>(_ hook: HookName, args: HookArguments = [:]) -> [ReturnType] {
+        let result: [[ReturnType]] = invokeAll(hook.description, args: args)
+        return result.flatMap { $0 }
+    }
+    
     func invoke<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async -> ReturnType? {
         await invoke(hook.description, args: args)
     }
 
     func invokeAll<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async -> [ReturnType] {
         await invokeAll(hook.description, args: args)
+    }
+    
+    func invokeAllFlat<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async -> [ReturnType] {
+        let result: [[ReturnType]] = await invokeAll(hook.description, args: args)
+        return result.flatMap { $0 }
     }
 }
 

@@ -16,8 +16,8 @@ public extension HookName {
 struct SystemModule: FeatherModule {
     
     func config(_ app: Application) throws {
-        let middlewares: [[Middleware]] = app.invokeAll(.middlewares)
-        let routes = app.routes.grouped(middlewares.flatMap { $0 })
+        let middlewares: [Middleware] = app.invokeAllFlat(.middlewares)
+        let routes = app.routes.grouped(middlewares)
         var arguments = HookArguments()
         arguments.routes = routes
         let _: [Void] = app.invokeAll(.routes, args: arguments)
