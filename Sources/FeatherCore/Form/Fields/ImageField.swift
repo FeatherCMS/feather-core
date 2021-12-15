@@ -8,20 +8,6 @@
 import Vapor
 import Liquid
 
-public struct ImageInput: Codable {
-    
-    public var key: String
-    public var file: File?
-    public var data: FormImageData
-
-    public init(key: String, file: File? = nil, data: FormImageData? = nil) {
-        self.key = key
-        self.file = file
-        self.data = data ?? .init()
-    }
-}
-
-
 public final class ImageField: FormField<ImageInput, ImageFieldTemplate> {
 
     public var currentKey: String?
@@ -51,15 +37,14 @@ public final class ImageField: FormField<ImageInput, ImageFieldTemplate> {
             }
         }
         else if let file = input.file, let data = file.dataValue, !data.isEmpty {
-
             if let tmpKey = input.data.temporaryFile?.key {
                 try? await req.fs.delete(key: tmpKey)
             }
             let key = "tmp/\(UUID().uuidString).tmp"
             // TODO: proper error handler...
-            let newKey = try! await req.fs.upload(key: key, data: data)
+            _ = try! await req.fs.upload(key: key, data: data)
             /// update the temporary image
-            input.data.temporaryFile = .init(key: newKey, name: file.filename)
+            input.data.temporaryFile = .init(key: key, name: file.filename)
         }
         /// update output values
         output.context.data = input.data
