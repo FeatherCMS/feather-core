@@ -101,7 +101,7 @@ public struct TableTemplate: TemplateRepresentable {
                             }
                             return Td {
                                 A(action.label)
-                                    .href(req.url.path + "/" + row.id + action.url)
+                                    .href(action.url.replacingOccurrences(of: ":rowId", with: row.id))
                             }
                             .class("field")
                         }

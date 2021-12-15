@@ -9,6 +9,7 @@ import Vapor
 import Fluent
 import FeatherCore
 
+
 struct BlogCategoryAdminController: AdminController {
     
     typealias Model = BlogCategoryModel
@@ -37,34 +38,16 @@ struct BlogCategoryAdminController: AdminController {
         ]
     }
     
-    func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext {
-        let rows = list.items.map {
-            RowContext(id: $0.identifier, cells: [
-//                .init($0.key, link: .init(label: $0.key, url: "/", permission: detailPermission())),
-//                .init($0.value),
-            ])
-        }
-        let table = TableContext(id: "",
-                                 columns: [
-//                                    .init(Model.FieldKeys.v1.key.description, isDefault: true),
-//                                    .init(Model.FieldKeys.v1.value.description),
-                                 ],
-                                 rows: rows,
-                                 actions: [
-                                    .init(label: "Update", url: "/update/", permission: updatePermission()),
-                                    .init(label: "Delete", url: "/delete/", permission: deletePermission()),
-                                 ])
-
-        return .init(title: context.model.name.plural,
-                     isSearchable: listConfig.isSearchable,
-                     table: table,
-                     pagination: list.info,
-                     navigation: [
-                        .init(label: "Create new", url: "/create/", permission: createPermission()),
-                     ],
-                     breadcrumbs: [
-                        .init(label: "Common", url: "/admin/common/")
-                     ])
+    func listColumns() -> [ColumnContext] {
+        [
+            .init(Model.FieldKeys.v1.title.description, isDefault: true),
+        ]
+    }
+    
+    func listCells(for model: Model) -> [CellContext] {
+        [
+            .init(model.title, link: detailLink(model.title, id: model.uuid)),
+        ]
     }
     
     // MARK: - detail

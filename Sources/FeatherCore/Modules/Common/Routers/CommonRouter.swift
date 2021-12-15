@@ -8,7 +8,7 @@
 import Vapor
 
 struct CommonRouter: FeatherRouter {
-    let variableController = CommonVariableController()
+    let variableController = CommonVariableAdminController()
 
     func adminRoutesHook(args: HookArguments) {
         variableController.setupAdminRoutes(args.routes)

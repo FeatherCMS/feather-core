@@ -37,26 +37,16 @@ struct UserPermissionAdminController: AdminController {
         ]
     }
 
-    func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext {
-        let rows = list.items.map {
-            RowContext(id: $0.identifier, cells: [
-                .init($0.name),
-            ])
-        }
-        let table = TableContext(id: "",
-                                 columns: [
-                                    .init("email", isDefault: true),
-                                 ],
-                                 rows: rows,
-                                 actions: [
-                                    .init(label: "Update", url: "/update/", permission: Model.permission(.update).rawValue),
-                                    .init(label: "Delete", url: "/delete/", permission: Model.permission(.delete).rawValue),
-                                 ])
-
-        return AdminListPageContext(title: "Model.name.plural",
-                                    isSearchable: listConfig.isSearchable,
-                                    table: table,
-                                    pagination: list.info)
+    func listColumns() -> [ColumnContext] {
+        [
+            .init(Model.FieldKeys.v1.name.description, isDefault: true),
+        ]
+    }
+    
+    func listCells(for model: Model) -> [CellContext] {
+        [
+            .init(model.name, link: detailLink(model.name, id: model.uuid)),
+        ]
     }
     
     // MARK: - detail

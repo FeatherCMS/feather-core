@@ -8,53 +8,53 @@
 import Foundation
 import Vapor
 
-public struct AdminContext {
-
-    public struct ModuleInfo: Encodable {
-        public let name: String
-        public let key: String
-        public let path: String
-        
-        public init(key: String,
-                    name: String,
-                    path: String) {
-            self.key = key
-            self.name = name
-            self.path = path
-        }
-    }
-
-    public struct ModelInfo {
-        
-        public struct Name {
-            public let singular: String
-            public let plural: String
-            
-            public init(singular: String, plural: String) {
-                self.singular = singular
-                self.plural = plural
-            }
-        }
-        
-        public let key: String
-        public let name: AdminContext.ModelInfo.Name
-        public let path: String
-        public let idParamKey: String
-
-        
-        internal init(key: String,
-                      name: AdminContext.ModelInfo.Name,
-                      path: String, idParamKey: String) {
-            self.key = key
-            self.name = name
-            self.path = path
-            self.idParamKey = idParamKey
-        }
-    }
-
-    public let module: ModuleInfo
-    public let model: ModelInfo
-}
+//public struct AdminContext {
+//
+//    public struct ModuleInfo: Encodable {
+//        public let name: String
+//        public let key: String
+//        public let path: String
+//
+//        public init(key: String,
+//                    name: String,
+//                    path: String) {
+//            self.key = key
+//            self.name = name
+//            self.path = path
+//        }
+//    }
+//
+//    public struct ModelInfo {
+//
+//        public struct Name {
+//            public let singular: String
+//            public let plural: String
+//
+//            public init(singular: String, plural: String) {
+//                self.singular = singular
+//                self.plural = plural
+//            }
+//        }
+//
+//        public let key: String
+//        public let name: AdminContext.ModelInfo.Name
+//        public let path: String
+//        public let idParamKey: String
+//
+//
+//        internal init(key: String,
+//                      name: AdminContext.ModelInfo.Name,
+//                      path: String, idParamKey: String) {
+//            self.key = key
+//            self.name = name
+//            self.path = path
+//            self.idParamKey = idParamKey
+//        }
+//    }
+//
+//    public let module: ModuleInfo
+//    public let model: ModelInfo
+//}
 
 public protocol AdminController: FeatherController {
 
@@ -62,17 +62,18 @@ public protocol AdminController: FeatherController {
     var updatePathComponent: PathComponent { get }
     var deletePathComponent: PathComponent { get }
     
-    var context: AdminContext { get }
-    
+//    var context: AdminContext { get }
     func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext
+    func listColumns() -> [ColumnContext]
+    func listCells(for model: Model) -> [CellContext]
     func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext
     func deleteContext(_ req: Request, _ model: Model, _ form: DeleteForm) -> AdminDeletePageContext
     
-    var listLink: LinkContext { get }
-    func createLink() -> LinkContext
-    func detailLink(for id: UUID) -> LinkContext
-    func updateLink(for id: UUID) -> LinkContext
-    func deleteLink(for id: UUID) -> LinkContext
+//    var listLink: LinkContext { get }
+//    func createLink() -> LinkContext
+//    func detailLink(for id: UUID) -> LinkContext
+//    func updateLink(for id: UUID) -> LinkContext
+//    func deleteLink(for id: UUID) -> LinkContext
     
     func listPermission() -> FeatherPermission
     func detailPermission() -> FeatherPermission
@@ -92,22 +93,63 @@ public protocol AdminController: FeatherController {
     func hasUpdatePermission(_ req: Request) -> Bool
     func hasDeletePermission(_ req: Request) -> Bool
     
+    
+    
     func setupAdminRoutes(_ routes: RoutesBuilder)
     func setupAdminApiRoutes(_ routes: RoutesBuilder)
     func setupPublicApiRoutes(_ routes: RoutesBuilder)
 }
 
 public extension AdminController {
-    
-    var context: AdminContext {
-        .init(module: .init(key: Model.Module.moduleKey,
-                            name: Model.Module.moduleKey.uppercasedFirst,
-                            path: Model.Module.moduleKey),
-              model: .init(key: Model.modelKey,
-                           name: .init(singular: String(Model.modelKey.dropLast()).uppercasedFirst, plural: String(Model.modelKey.dropLast()).uppercasedFirst + "s"),
-                           path: Model.modelKey,
-                           idParamKey: Model.idParamKey))
+
+    func modulePath() -> String {
+        "/admin/" + Model.Module.moduleKey
     }
+
+    func listPath() -> String {
+        "/admin/" + Model.Module.moduleKey + "/" + Model.modelKey
+    }
+
+    func createPath() -> String {
+        listPath() + "/create/"
+    }
+
+    func moduleLink(_ label: String) -> LinkContext {
+        .init(label: label, url: modulePath())
+    }
+    
+    func listLink(_ label: String = "List") -> LinkContext {
+        .init(label: label, url: listPath(), permission: listPermission())
+    }
+    
+    func createLink(_ label: String = "Create new") -> LinkContext {
+        .init(label: label, url: createPath(), permission: createPermission())
+    }
+
+    func detailLink(_ label: String = "Details", id: UUID) -> LinkContext {
+        .init(label: label, url: listPath() + "/" + id.uuidString + "/", permission: detailPermission())
+    }
+    
+    func updateTableAction(_ label: String = "Update") -> LinkContext {
+        .init(label: label, url: listPath() + "/:rowId/update/", permission: updatePermission())
+    }
+    
+    func deleteTableAction(_ label: String = "Delete") -> LinkContext {
+        .init(label: label, url: listPath() + "/:rowId/delete/", permission: deletePermission())
+    }
+}
+
+public extension AdminController {
+    
+//    var context: AdminContext {
+//        .init(module: .init(key: Model.Module.moduleKey,
+//                            name: Model.Module.moduleKey.uppercasedFirst,
+//                            path: Model.Module.moduleKey),
+//              model: .init(key: Model.modelKey,
+//                           name: .init(singular: String(Model.modelKey.dropLast()).uppercasedFirst, plural: String(Model.modelKey.dropLast()).uppercasedFirst + "s"),
+//                           path: Model.modelKey,
+//                           idParamKey: Model.idParamKey))
+//    }
     
     // MARK: - permission helpers
     
@@ -177,58 +219,83 @@ public extension AdminController {
     var updatePathComponent: PathComponent { "update" }
     var deletePathComponent: PathComponent { "delete" }
     
-    private var listComponents: [PathComponent] {
-        [
-            Feather.config.paths.admin.pathComponent,
-            Model.Module.modulePathComponent,
-            Model.modelPathComponent
-        ]
-    }
+//    private var listComponents: [PathComponent] {
+//        [
+//            Feather.config.paths.admin.pathComponent,
+//            Model.Module.modulePathComponent,
+//            Model.modelPathComponent
+//        ]
+//    }
 
-    var listLink: LinkContext {
-        return .init(label: context.model.name.plural,
-                     url: listComponents.string.safePath(),
-                     permission: Model.permission(.list).rawValue)
-    }
-
-    func createLink() -> LinkContext {
-        var components = listComponents
-        components.append(createPathComponent)
-        return .init(label: context.model.name.singular,
-                     url: components.string.safePath(),
-                     permission: Model.permission(.create).rawValue)
-    }
-    
-    func detailLink(for id: UUID) -> LinkContext {
-        var components = listComponents
-        components.append(.init(stringLiteral: id.uuidString))
-        return .init(label: context.model.name.singular,
-                     url: components.string.safePath(),
-                     permission: Model.permission(.detail).rawValue)
-    }
-    
-    func updateLink(for id: UUID) -> LinkContext {
-        var components = listComponents
-        components.append(.init(stringLiteral: id.uuidString))
-        components.append(updatePathComponent)
-        return .init(label: context.model.name.singular,
-                     url: components.string.safePath(),
-                     permission: Model.permission(.update).rawValue)
-    }
-    
-    func deleteLink(for id: UUID) -> LinkContext {
-        var components = listComponents
-        components.append(.init(stringLiteral: id.uuidString))
-        components.append(deletePathComponent)
-        return .init(label: context.model.name.singular,
-                     url: components.string.safePath(),
-                     permission: Model.permission(.delete).rawValue)
-    }
+//    var listLink: LinkContext {
+//        return .init(label: context.model.name.plural,
+//                     url: listComponents.string.safePath(),
+//                     permission: Model.permission(.list).rawValue)
+//    }
+//
+//    func createLink() -> LinkContext {
+//        var components = listComponents
+//        components.append(createPathComponent)
+//        return .init(label: context.model.name.singular,
+//                     url: components.string.safePath(),
+//                     permission: Model.permission(.create).rawValue)
+//    }
+//
+//    func detailLink(for id: UUID) -> LinkContext {
+//        var components = listComponents
+//        components.append(.init(stringLiteral: id.uuidString))
+//        return .init(label: context.model.name.singular,
+//                     url: components.string.safePath(),
+//                     permission: Model.permission(.detail).rawValue)
+//    }
+//
+//    func updateLink(for id: UUID) -> LinkContext {
+//        var components = listComponents
+//        components.append(.init(stringLiteral: id.uuidString))
+//        components.append(updatePathComponent)
+//        return .init(label: context.model.name.singular,
+//                     url: components.string.safePath(),
+//                     permission: Model.permission(.update).rawValue)
+//    }
+//
+//    func deleteLink(for id: UUID) -> LinkContext {
+//        var components = listComponents
+//        components.append(.init(stringLiteral: id.uuidString))
+//        components.append(deletePathComponent)
+//        return .init(label: context.model.name.singular,
+//                     url: components.string.safePath(),
+//                     permission: Model.permission(.delete).rawValue)
+//    }
 
     // MARK: - templates
     
     func listTemplate(_ req: Request, _ list: ListContainer<Model>) -> TemplateRepresentable {
         AdminListPageTemplate(req, listContext(req, list))
+    }
+    
+    func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext {
+        let rows = list.items.map {
+            RowContext(id: $0.identifier, cells: listCells(for: $0))
+        }
+        let table = TableContext(id: "",
+                                 columns: listColumns(),
+                                 rows: rows,
+                                 actions: [
+                                    updateTableAction(),
+                                    deleteTableAction(),
+                                 ])
+
+        return .init(title: "Variables",
+                     isSearchable: listConfig.isSearchable,
+                     table: table,
+                     pagination: list.info,
+                     navigation: [
+                        createLink()
+                     ],
+                     breadcrumbs: [
+                        moduleLink("Common"),
+                        listLink("Variables")
+                     ])
     }
     
     func detailTemplate(_ req: Request, _ model: Model) -> TemplateRepresentable {
@@ -285,3 +352,5 @@ public extension AdminController {
         // do not expose anything by default
     }
 }
+
+
