@@ -36,7 +36,7 @@ public struct ImageFieldTemplate: TemplateRepresentable {
             .class("field")
             .accept(context.accept)
         
-        if let temporaryFile = context.temporaryFile {
+        if let temporaryFile = context.data?.temporaryFile {
             Input()
                 .key(context.key + "TemporaryFileKey")
                 .value(temporaryFile.key)
@@ -48,7 +48,7 @@ public struct ImageFieldTemplate: TemplateRepresentable {
                 .type(.hidden)
         }
         
-        if let key = context.originalKey {
+        if let key = context.data?.originalKey {
             Input()
                 .key(context.key + "OriginalKey")
                 .value(key)
@@ -57,10 +57,10 @@ public struct ImageFieldTemplate: TemplateRepresentable {
 
         if !context.label.required {
             Input()
-                .key(context.key + "Remove")
+                .key(context.key + "ShouldRemove")
                 .value(String(true))
                 .type(.checkbox)
-                .checked(context.remove)
+                .checked(context.data?.shouldRemove ?? false)
 
             Label("Remove")
                 .for(context.key + "Remove")

@@ -8,67 +8,95 @@
 import Vapor
 import Liquid
 
-public struct ImageInput: Decodable {
+public struct ImageInput: Codable {
     
     public var key: String
-    
     public var file: File?
-    public var originalKey: String?
-    public var temporaryKey: String?
-    public var temporaryName: String?
-    public var remove: Bool
+    public var data: FormImageData
 
-    public init(key: String,
-                file: File? = nil,
-                originalKey: String? = nil,
-                temporaryKey: String? = nil,
-                temporaryName: String? = nil,
-                remove: Bool = false) {
+    public init(key: String, file: File? = nil, data: FormImageData? = nil) {
         self.key = key
         self.file = file
-        self.originalKey = originalKey
-        self.temporaryKey = temporaryKey
-        self.temporaryName = temporaryName
-        self.remove = remove
-    }
-
-    public mutating func process(req: Request) {
-        file = try? req.content.get(File.self, at: key)
-        originalKey = try? req.content.get(String.self, at: key + "OriginalKey")
-        temporaryKey = try? req.content.get(String.self, at: key + "TemporaryKey")
-        temporaryName = try? req.content.get(String.self, at: key + "TemporaryName")
-        remove = (try? req.content.get(Bool.self, at: key + "Remove")) ?? false
+        self.data = data ?? .init()
     }
 }
 
 
 public final class ImageField: FormField<ImageInput, ImageFieldTemplate> {
 
-    public convenience init(_ key: String) {
-        self.init(key: key, input: .init(key: key), output: .init(.init(key: key)))
+    public var currentKey: String?
+    public var path: String
+
+    public init(_ key: String, path: String) {
+        self.path = path
+        super.init(key: key, input: .init(key: key), output: .init(.init(key: key)))
     }
 
     public override func process(req: Request) async {
-        input.process(req: req)
+        /// process input
+        input.file = try? req.content.get(File.self, at: key)
+        input.data.originalKey = try? req.content.get(String.self, at: key + "OriginalKey")
+        if
+            let temporaryFileKey = try? req.content.get(String.self, at: key + "TemporaryFileKey"),
+            let temporaryFileName = try? req.content.get(String.self, at: key + "TemporaryFileName")
+        {
+            input.data.temporaryFile = .init(key: temporaryFileKey, name: temporaryFileName)
+        }
+        input.data.shouldRemove = (try? req.content.get(Bool.self, at: key + "ShouldRemove")) ?? false
 
-        if input.remove {
-            if let originalKey = input.originalKey {
+        /// remove & upload file
+        if input.data.shouldRemove {
+            if let originalKey = input.data.originalKey {
                 try? await req.fs.delete(key: originalKey)
             }
         }
         else if let file = input.file, let data = file.dataValue, !data.isEmpty {
-            
-            if let tmpKey = input.temporaryKey {
+
+            if let tmpKey = input.data.temporaryFile?.key {
                 try? await req.fs.delete(key: tmpKey)
             }
             let key = "tmp/\(UUID().uuidString).tmp"
-            let newKey = try? await req.fs.upload(key: key, data: data)
-            print(newKey)
+            // TODO: proper error handler...
+            let newKey = try! await req.fs.upload(key: key, data: data)
+            /// update the temporary image
+            input.data.temporaryFile = .init(key: newKey, name: file.filename)
         }
-        // update output
-    
-        // process other actions, but do not call super here...
+        /// update output values
+        output.context.data = input.data
+        /// process other actions, but do not call super here...
         await processBlock?(req, self)
+    }
+    
+    public override func write(req: Request) async {
+        /// if there is a delete flag we simply remove the original file
+        
+        if input.data.shouldRemove {
+            if let key = input.data.originalKey {
+                try? await req.fs.delete(key: key)
+            }
+            currentKey = nil
+        }
+        else if let file = input.data.temporaryFile {
+            var newKey = path + file.name
+            if await req.fs.exists(key: newKey) {
+                let formatter = DateFormatter()
+                formatter.dateFormat="y-MM-dd-HH-mm-ss-"
+                let prefix = formatter.string(from: .init())
+                newKey = path + prefix + file.name
+            }
+            _ = try! await req.fs.move(key: file.key, to: newKey)
+            input.data.temporaryFile = nil
+            if let key = input.data.originalKey {
+                try? await req.fs.delete(key: key)
+            }
+            currentKey = newKey
+        }
+        input.data.originalKey = currentKey
+
+//        if shouldRemoveImage || key != nil {
+//            imageKey = key
+//        }
+        await super.write(req: req)
     }
     
 
