@@ -7,45 +7,25 @@
 
 import Vapor
 
-private extension Application {
-    
-    struct VariablesStorageKey: StorageKey {
-        typealias Value = [String: String]
-    }
-
-    var variables: [String: String] {
-        get {
-            self.storage[VariablesStorageKey.self] ?? [:]
-        }
-        set {
-            self.storage[VariablesStorageKey.self] = newValue
-        }
-    }
-}
-
 public extension Request {
     
     func variable(_ key: String) -> String? {
-        application.variables[key]
+        globals.get(key, scope: "variables")
     }
 }
 
 struct CommonVariablesMiddleware: AsyncMiddleware {
 
     func respond(to req: Request, chainingTo next: AsyncResponder) async throws -> Response {
-        // TODO: this won't work, we need a better solution (same for menu items)
-        guard req.application.variables.isEmpty else {
-            return try await next.respond(to: req)
-        }
         let variables = try await CommonVariableModel.query(on: req.db).all()
-        var tmp: [String: String] = [:]
         for variable in variables {
-            /// NOTE: this might be wrong and we don't have to check value existance
             if let value = variable.value {
-                tmp[variable.key] = value
+                req.globals.set(variable.key, value: value, scope: "variables")
+            }
+            else {
+                req.globals.unset(variable.key, scope: "variables")
             }
         }
-        req.application.variables = tmp
         return try await next.respond(to: req)
     }
 }
