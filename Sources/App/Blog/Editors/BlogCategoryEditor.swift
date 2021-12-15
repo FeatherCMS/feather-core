@@ -16,6 +16,11 @@ struct BlogCategoryEditor: FeatherModelEditor {
 
     @FormComponentBuilder
     var formFields: [FormComponent] {
+        
+        ImageField("image")
+//            .read { $1.output.context.value = model.title }
+//            .write { model.title = $1.input }
+        
         InputField("title")
             .validators {
                 FormFieldValidator.required($1)

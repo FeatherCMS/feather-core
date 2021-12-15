@@ -30,6 +30,10 @@ public struct Feather {
     }
 
     public func start(_ app: Application, _ modules: [FeatherModule] = []) throws {
+        
+        // NOTE: set proper max body size...
+        app.routes.defaultMaxBodySize = "10mb"
+        
         let modules: [FeatherModule] = [
             SystemModule(),
             UserModule(),
