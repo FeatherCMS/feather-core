@@ -25,7 +25,8 @@ struct BlogCategoryAdminController: AdminController {
     typealias DeleteModelApi = BlogCategoryApi
     
     // MARK: - list
-    
+
+ 
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
             Model.FieldKeys.v1.title,

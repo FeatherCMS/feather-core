@@ -10,7 +10,7 @@ import SwiftHtml
 
 public struct TextareaFieldTemplate: TemplateRepresentable {
     
-    var context: TextareaFieldContext
+    public var context: TextareaFieldContext
     
     public init(_ context: TextareaFieldContext) {
         self.context = context

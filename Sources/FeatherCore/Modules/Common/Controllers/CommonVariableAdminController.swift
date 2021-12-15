@@ -21,6 +21,7 @@ struct CommonVariableAdminController: AdminController {
     typealias UpdateModelApi = CommonVariableApi
     typealias PatchModelApi = CommonVariableApi
     typealias DeleteModelApi = CommonVariableApi
+
     
     // MARK: - list
     

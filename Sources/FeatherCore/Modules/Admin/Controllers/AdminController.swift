@@ -8,61 +8,17 @@
 import Foundation
 import Vapor
 
-//public struct AdminContext {
-//
-//    public struct ModuleInfo: Encodable {
-//        public let name: String
-//        public let key: String
-//        public let path: String
-//
-//        public init(key: String,
-//                    name: String,
-//                    path: String) {
-//            self.key = key
-//            self.name = name
-//            self.path = path
-//        }
-//    }
-//
-//    public struct ModelInfo {
-//
-//        public struct Name {
-//            public let singular: String
-//            public let plural: String
-//
-//            public init(singular: String, plural: String) {
-//                self.singular = singular
-//                self.plural = plural
-//            }
-//        }
-//
-//        public let key: String
-//        public let name: AdminContext.ModelInfo.Name
-//        public let path: String
-//        public let idParamKey: String
-//
-//
-//        internal init(key: String,
-//                      name: AdminContext.ModelInfo.Name,
-//                      path: String, idParamKey: String) {
-//            self.key = key
-//            self.name = name
-//            self.path = path
-//            self.idParamKey = idParamKey
-//        }
-//    }
-//
-//    public let module: ModuleInfo
-//    public let model: ModelInfo
-//}
-
 public protocol AdminController: FeatherController {
 
     var createPathComponent: PathComponent { get }
     var updatePathComponent: PathComponent { get }
     var deletePathComponent: PathComponent { get }
     
-//    var context: AdminContext { get }
+    var context: AdminContext { get }
+
+//    var moduleName: String { get }
+//    var modelName: FeatherModelName { get }
+
     func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext
     func listColumns() -> [ColumnContext]
     func listCells(for model: Model) -> [CellContext]
@@ -93,8 +49,6 @@ public protocol AdminController: FeatherController {
     func hasUpdatePermission(_ req: Request) -> Bool
     func hasDeletePermission(_ req: Request) -> Bool
     
-    
-    
     func setupAdminRoutes(_ routes: RoutesBuilder)
     func setupAdminApiRoutes(_ routes: RoutesBuilder)
     func setupPublicApiRoutes(_ routes: RoutesBuilder)
@@ -102,6 +56,8 @@ public protocol AdminController: FeatherController {
 
 public extension AdminController {
 
+//    var moduleName: String { Model.Module.moduleKey.uppercasedFirst }
+    
     func modulePath() -> String {
         "/admin/" + Model.Module.moduleKey
     }
@@ -141,15 +97,15 @@ public extension AdminController {
 
 public extension AdminController {
     
-//    var context: AdminContext {
-//        .init(module: .init(key: Model.Module.moduleKey,
-//                            name: Model.Module.moduleKey.uppercasedFirst,
-//                            path: Model.Module.moduleKey),
-//              model: .init(key: Model.modelKey,
-//                           name: .init(singular: String(Model.modelKey.dropLast()).uppercasedFirst, plural: String(Model.modelKey.dropLast()).uppercasedFirst + "s"),
-//                           path: Model.modelKey,
-//                           idParamKey: Model.idParamKey))
-//    }
+    var context: AdminContext {
+        .init(module: .init(key: Model.Module.moduleKey,
+                            name: Model.Module.moduleKey.uppercasedFirst,
+                            path: Model.Module.moduleKey),
+              model: .init(key: Model.modelKey,
+                           name: .init(singular: String(Model.modelKey.dropLast()).uppercasedFirst, plural: String(Model.modelKey.dropLast()).uppercasedFirst + "s"),
+                           path: Model.modelKey,
+                           idParamKey: Model.idParamKey))
+    }
     
     // MARK: - permission helpers
     
@@ -277,7 +233,7 @@ public extension AdminController {
         let rows = list.items.map {
             RowContext(id: $0.identifier, cells: listCells(for: $0))
         }
-        let table = TableContext(id: "",
+        let table = TableContext(id: context.module.key + "-" + context.model.key + "-table",
                                  columns: listColumns(),
                                  rows: rows,
                                  actions: [
@@ -285,7 +241,7 @@ public extension AdminController {
                                     deleteTableAction(),
                                  ])
 
-        return .init(title: "Variables",
+        return .init(title: context.model.name.plural,
                      isSearchable: listConfig.isSearchable,
                      table: table,
                      pagination: list.info,
@@ -293,8 +249,8 @@ public extension AdminController {
                         createLink()
                      ],
                      breadcrumbs: [
-                        moduleLink("Common"),
-                        listLink("Variables")
+                        moduleLink(context.module.name),
+                        listLink(context.model.name.plural)
                      ])
     }
     

@@ -22,8 +22,7 @@ public struct InputFieldTemplate: TemplateRepresentable {
 
         Input()
             .type(context.type)
-            .id(context.key)
-            .name(context.key)
+            .key(context.key)
             .placeholder(context.placeholder)
             .value(context.value ?? "")
             .class("field")
