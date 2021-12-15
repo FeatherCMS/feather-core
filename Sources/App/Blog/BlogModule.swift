@@ -16,9 +16,12 @@ public extension HookName {
 
 struct BlogModule: FeatherModule {
 
+    let router = BlogRouter()
+    
     func boot(_ app: Application) throws {
         app.migrations.add(BlogMigrations.v1())
         
+        app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
 
     }
     

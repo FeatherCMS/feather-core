@@ -8,5 +8,10 @@
 import FeatherCore
 
 struct BlogRouter: FeatherRouter {
-    
+ 
+    let categoryController = BlogCategoryAdminController()
+
+    func adminRoutesHook(args: HookArguments) {
+        categoryController.setupAdminRoutes(args.routes)
+    }
 }

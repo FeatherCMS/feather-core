@@ -33,6 +33,10 @@ public extension Request {
 struct CommonVariablesMiddleware: AsyncMiddleware {
 
     func respond(to req: Request, chainingTo next: AsyncResponder) async throws -> Response {
+        // TODO: this won't work, we need a better solution (same for menu items)
+        guard req.application.variables.isEmpty else {
+            return try await next.respond(to: req)
+        }
         let variables = try await CommonVariableModel.query(on: req.db).all()
         var tmp: [String: String] = [:]
         for variable in variables {
