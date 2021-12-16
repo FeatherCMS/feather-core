@@ -41,7 +41,7 @@ struct WebMetadataController: AdminController {
     
     func listCells(for model: Model) -> [CellContext] {
         [
-            .init(model.title, link: detailLink(model.title ?? "", id: model.uuid)),
+            .init(model.title, link: Self.detailLink(model.title ?? "", id: model.uuid)),
         ]
     }
     

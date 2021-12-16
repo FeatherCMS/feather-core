@@ -42,7 +42,7 @@ struct WebMenuItemController: AdminController {
     
     func listCells(for model: Model) -> [CellContext] {
         [
-            .init(model.label, link: detailLink(model.label, id: model.uuid)),
+            .init(model.label, link: Self.detailLink(model.label, id: model.uuid)),
         ]
     }
     

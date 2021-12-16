@@ -21,10 +21,10 @@ struct BlogAdminWidgetTemplate: TemplateRepresentable {
     var tag: Tag {
         H2("Blog")
         Ul {
-            if req.checkPermission("blog-post-list") {
+            if BlogCategoryAdminController.hasListPermission(req) {
                 Li {
-                    A("Posts")
-                        .href("blog/posts")
+                    A("Categories")
+                        .href(BlogCategoryAdminController.listPath)
                 }
             }
             if req.checkPermission("blog-category-list") {

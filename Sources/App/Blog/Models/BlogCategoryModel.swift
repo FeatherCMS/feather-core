@@ -11,6 +11,8 @@ import FeatherCore
 
 final class BlogCategoryModel: FeatherModel {
     typealias Module = BlogModule
+    
+    static var modelKey: String = "categories"
 
     struct FieldKeys {
         struct v1 {

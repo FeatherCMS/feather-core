@@ -12,10 +12,7 @@ import FeatherCore
 final class BlogAuthorLinkModel: FeatherModel {
     typealias Module = BlogModule
     
-    static let modelKey = "links"
-    static let name: FeatherModelName = "Author link"
-    static let schema = "\(Module.moduleKey)_author_\(modelKey)"
-    
+    static let modelKey = "author_links"
     
     struct FieldKeys {
         struct v1 {

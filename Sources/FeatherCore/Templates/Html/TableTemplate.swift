@@ -12,10 +12,12 @@ public struct TableTemplate: TemplateRepresentable {
     
     unowned var req: Request
     var context: TableContext
+    var rowId: String
 
-    public init(_ req: Request, _ context: TableContext) {
+    public init(_ req: Request, _ context: TableContext, rowId: String = ":rowId") {
         self.req = req
         self.context = context
+        self.rowId = rowId
     }
     
     func css() -> String {
@@ -101,7 +103,7 @@ public struct TableTemplate: TemplateRepresentable {
                             }
                             return Td {
                                 A(action.label)
-                                    .href(action.url.replacingOccurrences(of: ":rowId", with: row.id))
+                                    .href(action.url.replacingOccurrences(of: rowId, with: row.id))
                             }
                             .class("field")
                         }

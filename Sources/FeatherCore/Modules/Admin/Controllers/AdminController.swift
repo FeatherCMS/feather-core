@@ -10,10 +10,65 @@ import Vapor
 
 public protocol AdminController: FeatherController {
 
-    // MARK: - context
+    // MARK: - names
+
+    static var moduleName: String { get }
+    static var modelName: FeatherModelName { get }
     
-    //    var moduleName: String { get }
-    //    var modelName: FeatherModelName { get }
+    // MARK: - path components
+    
+    static var createPathComponent: PathComponent { get }
+    static var updatePathComponent: PathComponent { get }
+    static var deletePathComponent: PathComponent { get }
+    static var rowIdPathComponent: PathComponent { get }
+    
+    static var modulePathComponents: [PathComponent] { get }
+    static var modulePath: String { get }
+    static var listPathComponents: [PathComponent] { get }
+    static var listPath: String { get }
+    static var createPathComponents: [PathComponent] { get }
+    static var createPath: String { get }
+    static func detailPathComponents(for id: UUID) -> [PathComponent]
+    static func detailPath(for id: UUID) -> String
+    static func updatePathComponents(for id: UUID) -> [PathComponent]
+    static func updatePath(for id: UUID) -> String
+    static func deletePathComponents(for id: UUID) -> [PathComponent]
+    static func deletePath(for id: UUID) -> String
+    static var rowIdPathComponents: [PathComponent] { get }
+    static var rowIdPath: String { get }
+    static var rowUpdatePathComponents: [PathComponent] { get }
+    static var rowUpdatePath: String { get }
+    static var rowDeletePathComponents: [PathComponent] { get }
+    static var rowDeletePath: String { get }
+    
+    static func moduleLink(_ label: String) -> LinkContext
+    static func listLink(_ label: String) -> LinkContext
+    static func createLink(_ label: String) -> LinkContext
+    static func detailLink(_ label: String, id: UUID) -> LinkContext
+    static func updateTableAction(_ label: String) -> LinkContext
+    static func deleteTableAction(_ label: String) -> LinkContext
+    
+    // MARK: - permission
+    
+    static func listPermission() -> FeatherPermission
+    static func detailPermission() -> FeatherPermission
+    static func createPermission() -> FeatherPermission
+    static func updatePermission() -> FeatherPermission
+    static func deletePermission() -> FeatherPermission
+    
+    static func listPermission() -> String
+    static func detailPermission() -> String
+    static func createPermission() -> String
+    static func updatePermission() -> String
+    static func deletePermission() -> String
+    
+    static func hasListPermission(_ req: Request) -> Bool
+    static func hasDetailPermission(_ req: Request) -> Bool
+    static func hasCreatePermission(_ req: Request) -> Bool
+    static func hasUpdatePermission(_ req: Request) -> Bool
+    static func hasDeletePermission(_ req: Request) -> Bool
+    
+    // MARK: -
 
     var context: AdminContext { get }
     
@@ -26,51 +81,6 @@ public protocol AdminController: FeatherController {
 
     func deleteInfo(_ model: Model) -> String
     func deleteContext(_ req: Request, _ model: Model, _ form: DeleteForm) -> AdminDeletePageContext
-    
-    // MARK: - path components
-    
-    var createPathComponent: PathComponent { get }
-    var updatePathComponent: PathComponent { get }
-    var deletePathComponent: PathComponent { get }
-    var rowIdPathComponent: PathComponent { get }
-    
-    var modulePathComponents: [PathComponent] { get }
-    var listPathComponents: [PathComponent] { get }
-    var createPathComponents: [PathComponent] { get }
-    func detailPathComponents(for id: UUID) -> [PathComponent]
-    func updatePathComponents(for id: UUID) -> [PathComponent]
-    func deletePathComponents(for id: UUID) -> [PathComponent]
-    
-    var rowIdPathComponents: [PathComponent] { get }
-    var rowUpdatePathComponents: [PathComponent] { get }
-    var rowDeletePathComponents: [PathComponent] { get }
-    
-    func moduleLink(_ label: String) -> LinkContext
-    func listLink(_ label: String) -> LinkContext
-    func createLink(_ label: String) -> LinkContext
-    func detailLink(_ label: String, id: UUID) -> LinkContext
-    func updateTableAction(_ label: String) -> LinkContext
-    func deleteTableAction(_ label: String) -> LinkContext
-    
-    // MARK: - permission
-    
-    func listPermission() -> FeatherPermission
-    func detailPermission() -> FeatherPermission
-    func createPermission() -> FeatherPermission
-    func updatePermission() -> FeatherPermission
-    func deletePermission() -> FeatherPermission
-    
-    func listPermission() -> String
-    func detailPermission() -> String
-    func createPermission() -> String
-    func updatePermission() -> String
-    func deletePermission() -> String
-    
-    func hasListPermission(_ req: Request) -> Bool
-    func hasDetailPermission(_ req: Request) -> Bool
-    func hasCreatePermission(_ req: Request) -> Bool
-    func hasUpdatePermission(_ req: Request) -> Bool
-    func hasDeletePermission(_ req: Request) -> Bool
     
     // MARK: - templates
     
@@ -89,141 +99,178 @@ public protocol AdminController: FeatherController {
 
 public extension AdminController {
 
-    var createPathComponent: PathComponent { "create" }
-    var updatePathComponent: PathComponent { "update" }
-    var deletePathComponent: PathComponent { "delete" }
-    var rowIdPathComponent: PathComponent { ":rowId" }
+    static var createPathComponent: PathComponent { "create" }
+    static var updatePathComponent: PathComponent { "update" }
+    static var deletePathComponent: PathComponent { "delete" }
+    static var rowIdPathComponent: PathComponent { ":rowId" }
 
-    var modulePathComponents: [PathComponent] {
+    static var modulePathComponents: [PathComponent] {
         [
             Feather.config.paths.admin.pathComponent,
             Model.Module.pathComponent,
         ]
     }
+    
+    static var modulePath: String {
+        modulePathComponents.path
+    }
 
-    var listPathComponents: [PathComponent] {
+    static var listPathComponents: [PathComponent] {
         modulePathComponents + [Model.pathComponent]
     }
     
-    var createPathComponents: [PathComponent] {
+    static var listPath: String {
+        listPathComponents.path
+    }
+    
+    static var createPathComponents: [PathComponent] {
         listPathComponents + [createPathComponent]
     }
     
-    func detailPathComponents(for id: UUID) -> [PathComponent] {
+    static var createPath: String {
+        createPathComponents.path
+    }
+    
+    static func detailPathComponents(for id: UUID) -> [PathComponent] {
         listPathComponents + [.init(stringLiteral: id.uuidString)]
     }
     
-    func updatePathComponents(for id: UUID) -> [PathComponent] {
+    static func detailPath(for id: UUID) -> String {
+        detailPathComponents(for: id).path
+    }
+    
+    static func updatePathComponents(for id: UUID) -> [PathComponent] {
         detailPathComponents(for: id) + [updatePathComponent]
     }
     
-    func deletePathComponents(for id: UUID) -> [PathComponent] {
+    static func updatePath(for id: UUID) -> String {
+        updatePathComponents(for: id).path
+    }
+    
+    static func deletePathComponents(for id: UUID) -> [PathComponent] {
         detailPathComponents(for: id) + [deletePathComponent]
     }
     
-    var rowIdPathComponents: [PathComponent] {
+    static func deletePath(for id: UUID) -> String {
+        deletePathComponents(for: id).path
+    }
+    
+    static var rowIdPathComponents: [PathComponent] {
         listPathComponents + [rowIdPathComponent]
     }
     
-    var rowUpdatePathComponents: [PathComponent] {
+    static var rowIdPath: String {
+        rowIdPathComponents.path
+    }
+    
+    static var rowUpdatePathComponents: [PathComponent] {
         rowIdPathComponents + [updatePathComponent]
     }
     
-    var rowDeletePathComponents: [PathComponent] {
+    static var rowUpdatePath: String {
+        rowUpdatePathComponents.path
+    }
+    
+    static var rowDeletePathComponents: [PathComponent] {
         rowIdPathComponents + [deletePathComponent]
     }
-
-    func moduleLink(_ label: String) -> LinkContext {
-        .init(label: label, url: modulePathComponents.string)
-    }
     
-    func listLink(_ label: String = "List") -> LinkContext {
-        .init(label: label, url: listPathComponents.string, permission: listPermission())
-    }
-    
-    func createLink(_ label: String = "Create new") -> LinkContext {
-        .init(label: label, url: createPathComponents.string, permission: createPermission())
+    static var rowDeletePath: String {
+        rowDeletePathComponents.path
     }
 
-    func detailLink(_ label: String = "Details", id: UUID) -> LinkContext {
-        .init(label: label, url: detailPathComponents(for: id).string, permission: detailPermission())
+    static func moduleLink(_ label: String) -> LinkContext {
+        .init(label: label, url: modulePathComponents.path)
     }
     
-    func updateTableAction(_ label: String = "Update") -> LinkContext {
-        .init(label: label, url: rowUpdatePathComponents.string, permission: updatePermission())
+    static func listLink(_ label: String = "List") -> LinkContext {
+        .init(label: label, url: listPathComponents.path, permission: listPermission())
+    }
+    
+    static func createLink(_ label: String = "Create new") -> LinkContext {
+        .init(label: label, url: createPathComponents.path, permission: createPermission())
     }
 
-    func deleteTableAction(_ label: String = "Delete") -> LinkContext {
-        .init(label: label, url: rowDeletePathComponents.string, permission: deletePermission())
+    static func detailLink(_ label: String = "Details", id: UUID) -> LinkContext {
+        .init(label: label, url: detailPathComponents(for: id).path, permission: detailPermission())
+    }
+    
+    static func updateTableAction(_ label: String = "Update") -> LinkContext {
+        .init(label: label, url: rowUpdatePathComponents.path, permission: updatePermission())
+    }
+
+    static func deleteTableAction(_ label: String = "Delete") -> LinkContext {
+        .init(label: label, url: rowDeletePathComponents.path, permission: deletePermission())
     }
 }
 
 public extension AdminController {
 
-    func listPermission() -> FeatherPermission {
+    static func listPermission() -> FeatherPermission {
         Model.permission(.list)
     }
     
-    func detailPermission() -> FeatherPermission {
+    static func detailPermission() -> FeatherPermission {
         Model.permission(.detail)
     }
     
-    func createPermission() -> FeatherPermission {
+    static func createPermission() -> FeatherPermission {
         Model.permission(.create)
     }
     
-    func updatePermission() -> FeatherPermission {
+    static func updatePermission() -> FeatherPermission {
         Model.permission(.update)
     }
     
-    func deletePermission() -> FeatherPermission {
+    static func deletePermission() -> FeatherPermission {
         Model.permission(.delete)
     }
 
-    func listPermission() -> String {
+    static func listPermission() -> String {
         listPermission().rawValue
     }
     
-    func detailPermission() -> String {
+    static func detailPermission() -> String {
         detailPermission().rawValue
     }
     
-    func createPermission() -> String {
+    static func createPermission() -> String {
         createPermission().rawValue
     }
     
-    func updatePermission() -> String {
+    static func updatePermission() -> String {
         updatePermission().rawValue
     }
     
-    func deletePermission() -> String {
+    static func deletePermission() -> String {
         deletePermission().rawValue
     }
     
-    func hasListPermission(_ req: Request) -> Bool {
+    static func hasListPermission(_ req: Request) -> Bool {
         req.checkPermission(listPermission())
     }
     
-    func hasDetailPermission(_ req: Request) -> Bool {
+    static func hasDetailPermission(_ req: Request) -> Bool {
         req.checkPermission(detailPermission())
     }
     
-    func hasCreatePermission(_ req: Request) -> Bool {
+    static func hasCreatePermission(_ req: Request) -> Bool {
         req.checkPermission(createPermission())
     }
     
-    func hasUpdatePermission(_ req: Request) -> Bool {
+    static func hasUpdatePermission(_ req: Request) -> Bool {
         req.checkPermission(updatePermission())
     }
     
-    func hasDeletePermission(_ req: Request) -> Bool {
+    static func hasDeletePermission(_ req: Request) -> Bool {
         req.checkPermission(deletePermission())
     }
 }
 
 public extension AdminController {
     
-    //    var moduleName: String { Model.Module.moduleKey.uppercasedFirst }
+    static var moduleName: String { Model.Module.moduleKey.uppercasedFirst }
+    static var modelName: FeatherModelName { .init(stringLiteral: Model.modelKey) }
     
     var context: AdminContext {
         .init(module: .init(key: Model.Module.moduleKey,
@@ -236,7 +283,7 @@ public extension AdminController {
     }
     
     func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext {
-        .init(title: "Details", fields: detailFields(for: model))
+        .init(title: Self.modelName.singular.uppercasedFirst + " details", fields: detailFields(for: model))
     }
     
     func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext {
@@ -247,8 +294,8 @@ public extension AdminController {
                                  columns: listColumns(),
                                  rows: rows,
                                  actions: [
-                                    updateTableAction(),
-                                    deleteTableAction(),
+                                    Self.updateTableAction(),
+                                    Self.deleteTableAction(),
                                  ])
 
         return .init(title: context.model.name.plural,
@@ -256,16 +303,16 @@ public extension AdminController {
                      table: table,
                      pagination: list.info,
                      navigation: [
-                        createLink()
+                        Self.createLink()
                      ],
                      breadcrumbs: [
-                        moduleLink(context.module.name),
-                        listLink(context.model.name.plural)
+                        Self.moduleLink(context.module.name),
+                        Self.listLink(context.model.name.plural)
                      ])
     }
    
     func deleteContext(_ req: Request, _ model: Model, _ form: DeleteForm) -> AdminDeletePageContext {
-        .init(title: "", name: deleteInfo(model), type: "category", form: form.context(req))
+        .init(title: "", name: deleteInfo(model), type: Self.modelName.singular, form: form.context(req))
     }
 }
 
@@ -301,18 +348,18 @@ public extension AdminController {
         
         modelRoutes.get(use: listView)
         
-        modelRoutes.get(createPathComponent, use: createView)
-        modelRoutes.post(createPathComponent, use: create)
+        modelRoutes.get(Self.createPathComponent, use: createView)
+        modelRoutes.post(Self.createPathComponent, use: create)
         
         let existingModelRoutes = modelRoutes.grouped(Model.idParamKeyPathComponent)
         
         existingModelRoutes.get(use: detailView)
         
-        existingModelRoutes.get(updatePathComponent, use: updateView)
-        existingModelRoutes.post(updatePathComponent, use: update)
+        existingModelRoutes.get(Self.updatePathComponent, use: updateView)
+        existingModelRoutes.post(Self.updatePathComponent, use: update)
         
-        existingModelRoutes.get(deletePathComponent, use: deleteView)
-        existingModelRoutes.post(deletePathComponent, use: delete)
+        existingModelRoutes.get(Self.deletePathComponent, use: deleteView)
+        existingModelRoutes.post(Self.deletePathComponent, use: delete)
     }
     
     func setupAdminApiRoutes(_ routes: RoutesBuilder) {

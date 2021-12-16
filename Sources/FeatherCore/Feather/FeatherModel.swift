@@ -40,14 +40,7 @@ public extension FeatherModel {
     static var schema: String { Module.moduleKey + "_" + modelKey }
 
     static var modelKey: String {
-        let possibleName = String(describing: self).dropFirst(Module.moduleKey.count).dropLast(5).lowercased()
-        if possibleName.hasSuffix("y") {
-            return possibleName.dropLast() + "ies"
-        }
-        if possibleName.hasSuffix("s") {
-            return possibleName
-        }
-        return possibleName + "s"
+        String(describing: self).dropFirst(Module.moduleKey.count).dropLast(5).lowercased() + "s"
     }
     
     static var pathComponent: PathComponent {

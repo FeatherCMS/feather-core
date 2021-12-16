@@ -47,7 +47,7 @@ struct CommonVariableAdminController: AdminController {
     
     func listCells(for model: Model) -> [CellContext] {
         [
-            .init(model.key, link: detailLink(model.key, id: model.uuid)),
+            .init(model.key, link: Self.detailLink(model.key, id: model.uuid)),
             .init(model.value),
         ]
     }
