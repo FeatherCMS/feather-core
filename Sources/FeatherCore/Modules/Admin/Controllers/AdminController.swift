@@ -17,10 +17,14 @@ public protocol AdminController: FeatherController {
 
     var context: AdminContext { get }
     
-    func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext
     func listColumns() -> [ColumnContext]
     func listCells(for model: Model) -> [CellContext]
+    func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext
+    
+    func detailFields(for model: Model) -> [FieldContext]
     func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext
+
+    func deleteInfo(_ model: Model) -> String
     func deleteContext(_ req: Request, _ model: Model, _ form: DeleteForm) -> AdminDeletePageContext
     
     // MARK: - path components
@@ -28,6 +32,7 @@ public protocol AdminController: FeatherController {
     var createPathComponent: PathComponent { get }
     var updatePathComponent: PathComponent { get }
     var deletePathComponent: PathComponent { get }
+    var rowIdPathComponent: PathComponent { get }
     
     var modulePathComponents: [PathComponent] { get }
     var listPathComponents: [PathComponent] { get }
@@ -46,7 +51,6 @@ public protocol AdminController: FeatherController {
     func detailLink(_ label: String, id: UUID) -> LinkContext
     func updateTableAction(_ label: String) -> LinkContext
     func deleteTableAction(_ label: String) -> LinkContext
-
     
     // MARK: - permission
     
@@ -84,24 +88,11 @@ public protocol AdminController: FeatherController {
 }
 
 public extension AdminController {
-    //    var moduleName: String { Model.Module.moduleKey.uppercasedFirst }
-    
-    var context: AdminContext {
-        .init(module: .init(key: Model.Module.moduleKey,
-                            name: Model.Module.moduleKey.uppercasedFirst,
-                            path: Model.Module.moduleKey),
-              model: .init(key: Model.modelKey,
-                           name: .init(singular: String(Model.modelKey.dropLast()).uppercasedFirst, plural: String(Model.modelKey.dropLast()).uppercasedFirst + "s"),
-                           path: Model.modelKey,
-                           idParamKey: Model.idParamKey))
-    }
-}
-
-public extension AdminController {
 
     var createPathComponent: PathComponent { "create" }
     var updatePathComponent: PathComponent { "update" }
     var deletePathComponent: PathComponent { "delete" }
+    var rowIdPathComponent: PathComponent { ":rowId" }
 
     var modulePathComponents: [PathComponent] {
         [
@@ -131,7 +122,7 @@ public extension AdminController {
     }
     
     var rowIdPathComponents: [PathComponent] {
-        listPathComponents + [":rowId"]
+        listPathComponents + [rowIdPathComponent]
     }
     
     var rowUpdatePathComponents: [PathComponent] {
@@ -168,7 +159,6 @@ public extension AdminController {
 }
 
 public extension AdminController {
-    
 
     func listPermission() -> FeatherPermission {
         Model.permission(.list)
@@ -233,6 +223,22 @@ public extension AdminController {
 
 public extension AdminController {
     
+    //    var moduleName: String { Model.Module.moduleKey.uppercasedFirst }
+    
+    var context: AdminContext {
+        .init(module: .init(key: Model.Module.moduleKey,
+                            name: Model.Module.moduleKey.uppercasedFirst,
+                            path: Model.Module.moduleKey),
+              model: .init(key: Model.modelKey,
+                           name: .init(singular: String(Model.modelKey.dropLast()).uppercasedFirst, plural: String(Model.modelKey.dropLast()).uppercasedFirst + "s"),
+                           path: Model.modelKey,
+                           idParamKey: Model.idParamKey))
+    }
+    
+    func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext {
+        .init(title: "Details", fields: detailFields(for: model))
+    }
+    
     func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext {
         let rows = list.items.map {
             RowContext(id: $0.identifier, cells: listCells(for: $0))
@@ -256,6 +262,10 @@ public extension AdminController {
                         moduleLink(context.module.name),
                         listLink(context.model.name.plural)
                      ])
+    }
+   
+    func deleteContext(_ req: Request, _ model: Model, _ form: DeleteForm) -> AdminDeletePageContext {
+        .init(title: "", name: deleteInfo(model), type: "category", form: form.context(req))
     }
 }
 

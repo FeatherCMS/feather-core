@@ -9,7 +9,6 @@ import Vapor
 import Fluent
 
 struct UserPermissionAdminController: AdminController {
-
     typealias Model = UserPermissionModel
     
     typealias CreateModelEditor = UserPermissionEditor
@@ -22,13 +21,10 @@ struct UserPermissionAdminController: AdminController {
     typealias PatchModelApi = UserPermissionApi
     typealias DeleteModelApi = UserPermissionApi
 
-    // MARK: - list
-
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
             Model.FieldKeys.v1.name,
-        ],
-        defaultSort: .asc)
+        ])
     }
 
     func listSearch(_ term: String) -> [ModelValueFilter<Model>] {
@@ -48,19 +44,15 @@ struct UserPermissionAdminController: AdminController {
             .init(model.name, link: detailLink(model.name, id: model.uuid)),
         ]
     }
-    
-    // MARK: - detail
-    
-    func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext {
-        .init(title: "Account details", fields: [
+        
+    func detailFields(for model: Model) -> [FieldContext] {
+        [
             .init(label: "Id", value: model.identifier),
             .init(label: "Email", value: model.name),
-        ])
+        ]
     }
-    
-    // MARK: - delete
-    
-    func deleteContext(_ req: Request, _ model: Model, _ form: DeleteForm) -> AdminDeletePageContext {
-        .init(title: "", name: model.name, type: "permission", form: form.context(req))
+
+    func deleteInfo(_ model: Model) -> String {
+        model.name
     }
 }

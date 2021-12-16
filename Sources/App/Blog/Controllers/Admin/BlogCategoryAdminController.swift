@@ -30,7 +30,7 @@ struct BlogCategoryAdminController: AdminController {
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
             Model.FieldKeys.v1.title,
-        ], defaultSort: .asc)
+        ])
     }
     
     func listSearch(_ term: String) -> [ModelValueFilter<Model>] {
@@ -53,16 +53,16 @@ struct BlogCategoryAdminController: AdminController {
     
     // MARK: - detail
     
-    func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext {
-        .init(title: "Variable details", fields: [
+    func detailFields(for model: Model) -> [FieldContext] {
+        [
             .init(label: "Id", value: model.identifier),
             .init(label: "Title", value: model.title),
-        ])
+        ]
     }
-
+    
     // MARK: - delete
     
-    func deleteContext(_ req: Request, _ model: Model, _ form: DeleteForm) -> AdminDeletePageContext {
-        .init(title: "", name: model.title, type: "category", form: form.context(req))
+    func deleteInfo(_ model: Model) -> String {
+        model.title
     }
 }

@@ -9,7 +9,6 @@ import Vapor
 import Fluent
 
 struct UserRoleAdminController: AdminController {
-
     typealias Model = UserRoleModel
     
     typealias CreateModelEditor = UserRoleEditor
@@ -21,8 +20,6 @@ struct UserRoleAdminController: AdminController {
     typealias UpdateModelApi = UserRoleApi
     typealias PatchModelApi = UserRoleApi
     typealias DeleteModelApi = UserRoleApi
-
-    // MARK: - list
 
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
@@ -49,18 +46,15 @@ struct UserRoleAdminController: AdminController {
         ]
     }
     
-    // MARK: - detail
-    
-    func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext {
-        .init(title: "Account details", fields: [
+    func detailFields(for model: Model) -> [FieldContext] {
+        [
             .init(label: "Id", value: model.identifier),
             .init(label: "Email", value: model.name),
-        ])
+        ]
     }
     
-    // MARK: - delete
-    
-    func deleteContext(_ req: Request, _ model: Model, _ form: DeleteForm) -> AdminDeletePageContext {
-        .init(title: "", name: model.name, type: "role", form: form.context(req))
+    func deleteInfo(_ model: Model) -> String {
+        model.name
     }
+    
 }
