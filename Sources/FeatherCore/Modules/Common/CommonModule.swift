@@ -111,7 +111,7 @@ struct CommonModule: FeatherModule {
     
     func adminWidgetsHook(args: HookArguments) async -> [TemplateRepresentable] {
         [
-            CommonAdminWidgetTemplate()
+            CommonAdminWidgetTemplate(args.req)
         ]
     }
 }

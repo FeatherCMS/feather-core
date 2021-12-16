@@ -25,11 +25,6 @@ public protocol AdminController: FeatherController {
     func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext
     func deleteContext(_ req: Request, _ model: Model, _ form: DeleteForm) -> AdminDeletePageContext
     
-//    var listLink: LinkContext { get }
-//    func createLink() -> LinkContext
-//    func detailLink(for id: UUID) -> LinkContext
-//    func updateLink(for id: UUID) -> LinkContext
-//    func deleteLink(for id: UUID) -> LinkContext
     
     func listPermission() -> FeatherPermission
     func detailPermission() -> FeatherPermission
@@ -58,40 +53,74 @@ public extension AdminController {
 
 //    var moduleName: String { Model.Module.moduleKey.uppercasedFirst }
     
-    func modulePath() -> String {
-        "/admin/" + Model.Module.moduleKey
+    // MARK: - paths & links
+    
+    var createPathComponent: PathComponent { "create" }
+    var updatePathComponent: PathComponent { "update" }
+    var deletePathComponent: PathComponent { "delete" }
+
+    var modulePathComponents: [PathComponent] {
+        [
+            Feather.config.paths.admin.pathComponent,
+            Model.Module.pathComponent,
+        ]
     }
 
-    func listPath() -> String {
-        "/admin/" + Model.Module.moduleKey + "/" + Model.modelKey
+    var listPathComponents: [PathComponent] {
+        modulePathComponents + [Model.pathComponent]
+    }
+    
+    func detailPathComponents(for id: UUID) -> [PathComponent] {
+        listPathComponents + [.init(stringLiteral: id.uuidString)]
+    }
+    
+    func updatePathComponents(for id: UUID) -> [PathComponent] {
+        detailPathComponents(for: id) + [updatePathComponent]
+    }
+    
+    func deletePathComponents(for id: UUID) -> [PathComponent] {
+        detailPathComponents(for: id) + [deletePathComponent]
+    }
+    
+    var createPathComponents: [PathComponent] {
+        listPathComponents + [createPathComponent]
+    }
+    
+    private var rowIdPathComponents: [PathComponent] {
+        listPathComponents + [":rowId"]
+    }
+    
+    private var rowUpdatePathComponents: [PathComponent] {
+        rowIdPathComponents + [updatePathComponent]
+    }
+    
+    private var rowDeletePathComponents: [PathComponent] {
+        rowIdPathComponents + [deletePathComponent]
     }
 
-    func createPath() -> String {
-        listPath() + "/create/"
-    }
 
     func moduleLink(_ label: String) -> LinkContext {
-        .init(label: label, url: modulePath())
+        .init(label: label, url: modulePathComponents.string)
     }
     
     func listLink(_ label: String = "List") -> LinkContext {
-        .init(label: label, url: listPath(), permission: listPermission())
+        .init(label: label, url: listPathComponents.string, permission: listPermission())
     }
     
     func createLink(_ label: String = "Create new") -> LinkContext {
-        .init(label: label, url: createPath(), permission: createPermission())
+        .init(label: label, url: createPathComponents.string, permission: createPermission())
     }
 
     func detailLink(_ label: String = "Details", id: UUID) -> LinkContext {
-        .init(label: label, url: listPath() + "/" + id.uuidString + "/", permission: detailPermission())
+        .init(label: label, url: detailPathComponents(for: id).string, permission: detailPermission())
     }
     
     func updateTableAction(_ label: String = "Update") -> LinkContext {
-        .init(label: label, url: listPath() + "/:rowId/update/", permission: updatePermission())
+        .init(label: label, url: rowUpdatePathComponents.string, permission: updatePermission())
     }
-    
+
     func deleteTableAction(_ label: String = "Delete") -> LinkContext {
-        .init(label: label, url: listPath() + "/:rowId/delete/", permission: deletePermission())
+        .init(label: label, url: rowDeletePathComponents.string, permission: deletePermission())
     }
 }
 
@@ -168,61 +197,7 @@ public extension AdminController {
     func hasDeletePermission(_ req: Request) -> Bool {
         req.checkPermission(deletePermission())
     }
-
-    // MARK: - paths & links
     
-    var createPathComponent: PathComponent { "create" }
-    var updatePathComponent: PathComponent { "update" }
-    var deletePathComponent: PathComponent { "delete" }
-    
-//    private var listComponents: [PathComponent] {
-//        [
-//            Feather.config.paths.admin.pathComponent,
-//            Model.Module.modulePathComponent,
-//            Model.modelPathComponent
-//        ]
-//    }
-
-//    var listLink: LinkContext {
-//        return .init(label: context.model.name.plural,
-//                     url: listComponents.string.safePath(),
-//                     permission: Model.permission(.list).rawValue)
-//    }
-//
-//    func createLink() -> LinkContext {
-//        var components = listComponents
-//        components.append(createPathComponent)
-//        return .init(label: context.model.name.singular,
-//                     url: components.string.safePath(),
-//                     permission: Model.permission(.create).rawValue)
-//    }
-//
-//    func detailLink(for id: UUID) -> LinkContext {
-//        var components = listComponents
-//        components.append(.init(stringLiteral: id.uuidString))
-//        return .init(label: context.model.name.singular,
-//                     url: components.string.safePath(),
-//                     permission: Model.permission(.detail).rawValue)
-//    }
-//
-//    func updateLink(for id: UUID) -> LinkContext {
-//        var components = listComponents
-//        components.append(.init(stringLiteral: id.uuidString))
-//        components.append(updatePathComponent)
-//        return .init(label: context.model.name.singular,
-//                     url: components.string.safePath(),
-//                     permission: Model.permission(.update).rawValue)
-//    }
-//
-//    func deleteLink(for id: UUID) -> LinkContext {
-//        var components = listComponents
-//        components.append(.init(stringLiteral: id.uuidString))
-//        components.append(deletePathComponent)
-//        return .init(label: context.model.name.singular,
-//                     url: components.string.safePath(),
-//                     permission: Model.permission(.delete).rawValue)
-//    }
-
     // MARK: - templates
     
     func listTemplate(_ req: Request, _ list: ListContainer<Model>) -> TemplateRepresentable {

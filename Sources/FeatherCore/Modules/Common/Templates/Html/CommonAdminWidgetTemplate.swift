@@ -5,11 +5,17 @@
 //  Created by Tibor Bodecs on 2021. 12. 01..
 //
 
-import Foundation
+import Vapor
 import SwiftHtml
 
 struct CommonAdminWidgetTemplate: TemplateRepresentable {
     
+    unowned var req: Request
+    
+    init(_ req: Request) {
+        self.req = req
+    }
+
     @TagBuilder
     var tag: Tag {
         H2("Common")
