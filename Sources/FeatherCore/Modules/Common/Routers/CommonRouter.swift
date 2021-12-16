@@ -12,5 +12,12 @@ struct CommonRouter: FeatherRouter {
 
     func adminRoutesHook(args: HookArguments) {
         variableController.setupAdminRoutes(args.routes)
+        
+        args.routes.get("common") { req -> Response in
+            let template = AdminModulePageTemplate(req, .init(title: "Common", message: "module information", links: [
+                .init(label: "Variables", url: "/admin/common/variables/")
+            ]))
+            return req.html.render(template)
+        }
     }
 }

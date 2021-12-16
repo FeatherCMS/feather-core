@@ -46,7 +46,7 @@ public final class ImageField: FormField<ImageInput, ImageFieldTemplate> {
                 try? await req.fs.delete(key: tmpKey)
             }
             let key = "tmp/\(UUID().uuidString).tmp"
-            // TODO: proper error handler...
+            // TODO: proper error reporting...
             _ = try! await req.fs.upload(key: key, data: data)
             /// update the temporary image
             input.data.temporaryFile = .init(key: key, name: file.filename)
@@ -73,6 +73,7 @@ public final class ImageField: FormField<ImageInput, ImageFieldTemplate> {
                 let prefix = formatter.string(from: .init())
                 newKey = path + prefix + file.name
             }
+            // TODO: proper error reporting...
             _ = try! await req.fs.move(key: file.key, to: newKey)
             input.data.temporaryFile = nil
             if let key = input.data.originalKey {

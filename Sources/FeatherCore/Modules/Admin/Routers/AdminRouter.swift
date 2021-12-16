@@ -20,12 +20,5 @@ struct AdminRouter: FeatherRouter {
     func adminRoutesHook(args: HookArguments) {
         let controller = AdminDashboardController()
         args.routes.get(use: controller.renderDashboardTemplate)
-        
-        args.routes.get("common") { req -> Response in
-            let template = AdminModulePageTemplate(req, .init(title: "Common", message: "module information", links: [
-                .init(label: "Variables", url: "/admin/common/variables/")
-            ]))
-            return req.html.render(template)
-        }
     }
 }

@@ -1,9 +1,10 @@
+# FeatherCore
+
+
 Todos:
 
 - finish up controllers
-- template menus
 - metadata support
-- file upload
 - api
 
 

@@ -22,7 +22,14 @@ struct BlogModule: FeatherModule {
         app.migrations.add(BlogMigrations.v1())
         
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
+        
+        app.hooks.register(.adminWidgets, use: adminWidgetsHook)
 
     }
     
+    func adminWidgetsHook(args: HookArguments) async -> [TemplateRepresentable] {
+        [
+            BlogAdminWidgetTemplate(args.req),
+        ]
+    }
 }
