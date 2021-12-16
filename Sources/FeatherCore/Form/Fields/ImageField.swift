@@ -10,7 +10,12 @@ import Liquid
 
 public final class ImageField: FormField<ImageInput, ImageFieldTemplate> {
 
-    public var currentKey: String?
+    public var imageKey: String? {
+        didSet {
+            output.context.data.originalKey = imageKey
+        }
+    }
+
     public var path: String
 
     public init(_ key: String, path: String) {
@@ -53,13 +58,12 @@ public final class ImageField: FormField<ImageInput, ImageFieldTemplate> {
     }
     
     public override func write(req: Request) async {
-        /// if there is a delete flag we simply remove the original file
-        
+        imageKey = input.data.originalKey
         if input.data.shouldRemove {
             if let key = input.data.originalKey {
                 try? await req.fs.delete(key: key)
             }
-            currentKey = nil
+            imageKey = nil
         }
         else if let file = input.data.temporaryFile {
             var newKey = path + file.name
@@ -74,13 +78,8 @@ public final class ImageField: FormField<ImageInput, ImageFieldTemplate> {
             if let key = input.data.originalKey {
                 try? await req.fs.delete(key: key)
             }
-            currentKey = newKey
+            imageKey = newKey
         }
-        input.data.originalKey = currentKey
-
-//        if shouldRemoveImage || key != nil {
-//            imageKey = key
-//        }
         await super.write(req: req)
     }
     

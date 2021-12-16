@@ -13,7 +13,7 @@ public struct ImageFieldContext {
     public let key: String
     public var label: LabelContext
     public var placeholderIcon: String?
-    public var data: FormImageData?
+    public var data: FormImageData
     public var previewUrl: String?
     public var accept: String?
     public var error: String?
@@ -21,7 +21,7 @@ public struct ImageFieldContext {
     public init(key: String,
                 label: LabelContext? = nil,
                 placeholderIcon: String? = nil,
-                data: FormImageData? = nil,
+                data: FormImageData = .init(),
                 previewUrl: String? = nil,
                 accept: String? = nil,
                 error: String? = nil) {

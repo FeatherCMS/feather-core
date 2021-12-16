@@ -23,8 +23,8 @@ struct BlogCategoryEditor: FeatherModelEditor {
                     $1.output.context.previewUrl = $0.fs.resolve(key: key)
                 }
             }
-            .read { ($1 as! ImageField).currentKey = model.imageKey }
-            .write { model.imageKey = ($1 as! ImageField).currentKey }
+            .read { ($1 as! ImageField).imageKey = model.imageKey }
+            .write { model.imageKey = ($1 as! ImageField).imageKey }
         
         InputField("title")
             .validators {
