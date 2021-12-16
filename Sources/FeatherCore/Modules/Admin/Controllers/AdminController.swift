@@ -190,7 +190,7 @@ public extension AdminController {
 public extension AdminController {
     
     static var moduleName: String { Model.Module.moduleKey.uppercasedFirst }
-    static var modelName: FeatherModelName { .init(singular: String(Model.modelKey.dropLast()), plural: Model.modelKey) }
+    static var modelName: FeatherModelName { .init(stringLiteral: Model.modelKey) }
     
     func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext {
         let rows = list.items.map {
@@ -290,8 +290,8 @@ public extension AdminController {
 public extension AdminController {
 
     func setupAdminRoutes(_ routes: RoutesBuilder) {
-        let moduleRoutes = routes.grouped(.init(stringLiteral: Model.Module.moduleKey))
-        let modelRoutes = moduleRoutes.grouped(.init(stringLiteral: Model.modelKey))
+        let moduleRoutes = routes.grouped(Model.Module.pathComponent)
+        let modelRoutes = moduleRoutes.grouped(Model.pathComponent)
         
         modelRoutes.get(use: listView)
         
@@ -310,8 +310,8 @@ public extension AdminController {
     }
     
     func setupAdminApiRoutes(_ routes: RoutesBuilder) {
-        let moduleRoutes = routes.grouped(.init(stringLiteral: Model.Module.moduleKey))
-        let modelRoutes = moduleRoutes.grouped(.init(stringLiteral: Model.modelKey))
+        let moduleRoutes = routes.grouped(Model.Module.pathComponent)
+        let modelRoutes = moduleRoutes.grouped(Model.pathComponent)
         
         modelRoutes.get(use: listApi)
         modelRoutes.post(use: createApi)

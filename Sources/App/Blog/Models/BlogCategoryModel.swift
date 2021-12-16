@@ -12,7 +12,7 @@ import FeatherCore
 final class BlogCategoryModel: FeatherModel {
     typealias Module = BlogModule
     
-    static var modelKey: String = "categories"
+    static var pathComponent: PathComponent = "categories"
 
     struct FieldKeys {
         struct v1 {

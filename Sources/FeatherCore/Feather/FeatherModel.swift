@@ -43,11 +43,11 @@ public extension FeatherModel {
     static var schema: String { Module.moduleKey + "_" + modelKey }
 
     static var modelKey: String {
-        String(describing: self).dropFirst(Module.moduleKey.count).dropLast(5).lowercased() + "s"
+        String(describing: self).dropFirst(Module.moduleKey.count).dropLast(5).lowercased()
     }
     
     static var pathComponent: PathComponent {
-        .init(stringLiteral: modelKey)
+        .init(stringLiteral: modelKey + "s")
     }
 
     static var assetPath: String {
