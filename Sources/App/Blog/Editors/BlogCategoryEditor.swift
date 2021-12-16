@@ -17,13 +17,13 @@ struct BlogCategoryEditor: FeatherModelEditor {
     @FormComponentBuilder
     var formFields: [FormComponent] {
         
-        ImageField("image", path: "blog/category/")
-            .load {
+        ImageField("image", path: Model.assetPath)
+            .read {
                 if let key = model.imageKey {
                     $1.output.context.previewUrl = $0.fs.resolve(key: key)
                 }
+                ($1 as! ImageField).imageKey = model.imageKey
             }
-            .read { ($1 as! ImageField).imageKey = model.imageKey }
             .write { model.imageKey = ($1 as! ImageField).imageKey }
         
         InputField("title")

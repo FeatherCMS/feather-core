@@ -20,7 +20,7 @@ struct AdminEditorPageTemplate: TemplateRepresentable {
 
     @TagBuilder
     var tag: Tag {
-        AdminIndexTemplate(req, .init(title: context.title, breadcrumbs: [])) {
+        AdminIndexTemplate(req, .init(title: context.title, breadcrumbs: context.breadcrumbs)) {
             Div {
                 H1(context.title)
 

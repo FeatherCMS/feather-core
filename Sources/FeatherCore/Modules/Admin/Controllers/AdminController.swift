@@ -45,6 +45,8 @@ public protocol AdminController: FeatherController {
     static func listLink(_ label: String) -> LinkContext
     static func createLink(_ label: String) -> LinkContext
     static func detailLink(_ label: String, id: UUID) -> LinkContext
+    static func updateLink(_ label: String, id: UUID) -> LinkContext
+    static func deleteLink(_ label: String, id: UUID) -> LinkContext
     static func updateTableAction(_ label: String) -> LinkContext
     static func deleteTableAction(_ label: String) -> LinkContext
     
@@ -71,9 +73,7 @@ public protocol AdminController: FeatherController {
     static func hasDeletePermission(_ req: Request) -> Bool
     static func hasPatchPermission(_ req: Request) -> Bool
     
-    // MARK: -
-
-    var context: AdminContext { get }
+    // MARK: - contexts
     
     func listColumns() -> [ColumnContext]
     func listCells(for model: Model) -> [CellContext]
@@ -82,6 +82,9 @@ public protocol AdminController: FeatherController {
     func detailFields(for model: Model) -> [FieldContext]
     func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext
 
+    func createContext(_ req: Request, _ editor: CreateModelEditor, _ form: FeatherForm) -> AdminEditorPageContext
+    func updateContext(_ req: Request, _ editor: UpdateModelEditor, _ form: FeatherForm) -> AdminEditorPageContext
+    
     func deleteInfo(_ model: Model) -> String
     func deleteContext(_ req: Request, _ model: Model, _ form: DeleteForm) -> AdminDeletePageContext
     
@@ -183,27 +186,35 @@ public extension AdminController {
     }
 
     static func moduleLink(_ label: String) -> LinkContext {
-        .init(label: label, url: modulePathComponents.path)
+        .init(label: label, url: modulePath)
     }
     
     static func listLink(_ label: String = "List") -> LinkContext {
-        .init(label: label, url: listPathComponents.path, permission: listPermission())
+        .init(label: label, url: listPath, permission: listPermission())
     }
     
     static func createLink(_ label: String = "Create new") -> LinkContext {
-        .init(label: label, url: createPathComponents.path, permission: createPermission())
+        .init(label: label, url: createPath, permission: createPermission())
     }
 
     static func detailLink(_ label: String = "Details", id: UUID) -> LinkContext {
-        .init(label: label, url: detailPathComponents(for: id).path, permission: detailPermission())
+        .init(label: label, url: detailPath(for: id), permission: detailPermission())
+    }
+    
+    static func updateLink(_ label: String = "Update", id: UUID) -> LinkContext {
+        .init(label: label, url: updatePath(for: id), permission: detailPermission())
+    }
+    
+    static func deleteLink(_ label: String = "Delete", id: UUID) -> LinkContext {
+        .init(label: label, url: deletePath(for: id), permission: detailPermission())
     }
     
     static func updateTableAction(_ label: String = "Update") -> LinkContext {
-        .init(label: label, url: rowUpdatePathComponents.path, permission: updatePermission())
+        .init(label: label, url: rowUpdatePath, permission: updatePermission())
     }
 
     static func deleteTableAction(_ label: String = "Delete") -> LinkContext {
-        .init(label: label, url: rowDeletePathComponents.path, permission: deletePermission())
+        .init(label: label, url: rowDeletePath, permission: deletePermission())
     }
 }
 
@@ -287,25 +298,11 @@ public extension AdminController {
     static var moduleName: String { Model.Module.moduleKey.uppercasedFirst }
     static var modelName: FeatherModelName { .init(stringLiteral: Model.modelKey) }
     
-    var context: AdminContext {
-        .init(module: .init(key: Model.Module.moduleKey,
-                            name: Model.Module.moduleKey.uppercasedFirst,
-                            path: Model.Module.moduleKey),
-              model: .init(key: Model.modelKey,
-                           name: .init(singular: String(Model.modelKey.dropLast()).uppercasedFirst, plural: String(Model.modelKey.dropLast()).uppercasedFirst + "s"),
-                           path: Model.modelKey,
-                           idParamKey: Model.idParamKey))
-    }
-    
-    func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext {
-        .init(title: Self.modelName.singular.uppercasedFirst + " details", fields: detailFields(for: model))
-    }
-    
     func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext {
         let rows = list.items.map {
             RowContext(id: $0.identifier, cells: listCells(for: $0))
         }
-        let table = TableContext(id: context.module.key + "-" + context.model.key + "-table",
+        let table = TableContext(id: Model.Module.moduleKey + "-" + Model.modelKey + "-table",
                                  columns: listColumns(),
                                  rows: rows,
                                  actions: [
@@ -313,7 +310,7 @@ public extension AdminController {
                                     Self.deleteTableAction(),
                                  ])
 
-        return .init(title: context.model.name.plural,
+        return .init(title: Self.modelName.plural.uppercasedFirst,
                      isSearchable: listConfig.isSearchable,
                      table: table,
                      pagination: list.info,
@@ -321,13 +318,42 @@ public extension AdminController {
                         Self.createLink()
                      ],
                      breadcrumbs: [
-                        Self.moduleLink(context.module.name),
-                        Self.listLink(context.model.name.plural)
+                        Self.moduleLink(Self.moduleName.uppercasedFirst),
                      ])
     }
-   
+    
+    func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext {
+        .init(title: Self.modelName.singular.uppercasedFirst + " details",
+              fields: detailFields(for: model),
+              breadcrumbs: [
+                Self.moduleLink(Self.moduleName.uppercasedFirst),
+                Self.listLink(Self.modelName.plural.uppercasedFirst),
+              ])
+    }
+
+    func createContext(_ req: Request, _ editor: CreateModelEditor, _ form: FeatherForm) -> AdminEditorPageContext {
+        .init(title: "Create " + Self.modelName.singular,
+              form: form.context(req),
+              breadcrumbs: [
+                Self.moduleLink(Self.moduleName.uppercasedFirst),
+                Self.listLink(Self.modelName.plural.uppercasedFirst),
+              ])
+    }
+    
+    func updateContext(_ req: Request, _ editor: UpdateModelEditor, _ form: FeatherForm) -> AdminEditorPageContext {
+        .init(title: "Update " + Self.modelName.singular,
+              form: form.context(req),
+              breadcrumbs: [
+                Self.moduleLink(Self.moduleName.uppercasedFirst),
+                Self.listLink(Self.modelName.plural.uppercasedFirst),
+              ])
+    }
+    
     func deleteContext(_ req: Request, _ model: Model, _ form: DeleteForm) -> AdminDeletePageContext {
-        .init(title: "", name: deleteInfo(model), type: Self.modelName.singular, form: form.context(req))
+        .init(title: "",
+              name: deleteInfo(model),
+              type: Self.modelName.singular,
+              form: form.context(req))
     }
 }
 
@@ -342,11 +368,11 @@ public extension AdminController {
     }
     
     func createTemplate(_ req: Request, _ editor: CreateModelEditor, _ form: FeatherForm) -> TemplateRepresentable {
-        AdminEditorPageTemplate(req, .init(title: "Create", form: form.context(req)))
+        AdminEditorPageTemplate(req, createContext(req, editor, form))
     }
-    
+
     func updateTemplate(_ req: Request, _ editor: UpdateModelEditor, _ form: FeatherForm) -> TemplateRepresentable {
-        AdminEditorPageTemplate(req, .init(title: "Update", form: form.context(req)))
+        AdminEditorPageTemplate(req, updateContext(req, editor, form))
     }
     
     func deleteTemplate(_ req: Request, _ model: Model, _ form: DeleteForm) -> TemplateRepresentable {

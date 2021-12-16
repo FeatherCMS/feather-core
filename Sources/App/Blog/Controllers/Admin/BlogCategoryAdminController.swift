@@ -24,8 +24,7 @@ struct BlogCategoryAdminController: AdminController {
     typealias PatchModelApi = BlogCategoryApi
     typealias DeleteModelApi = BlogCategoryApi
     
-    // MARK: - list
-
+    static var modelName: FeatherModelName = .init(singular: "category", plural: "categories")
  
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
@@ -51,16 +50,12 @@ struct BlogCategoryAdminController: AdminController {
         ]
     }
     
-    // MARK: - detail
-    
     func detailFields(for model: Model) -> [FieldContext] {
         [
             .init(label: "Id", value: model.identifier),
             .init(label: "Title", value: model.title),
         ]
     }
-    
-    // MARK: - delete
     
     func deleteInfo(_ model: Model) -> String {
         model.title

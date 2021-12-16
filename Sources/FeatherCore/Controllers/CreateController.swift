@@ -59,7 +59,13 @@ public extension CreateController {
         await form.write(req: req)
         try await editor.model.create(on: req.db)
         await form.save(req: req)
-        return req.redirect(to: req.url.path)
+        var components = req.url.path.pathComponents.dropLast()
+        components += [
+            editor.model.identifier.pathComponent
+        ]
+        return req.redirect(to: components.path)
+        
+        
     }
     
     func createApi(_ req: Request) async throws -> Response {

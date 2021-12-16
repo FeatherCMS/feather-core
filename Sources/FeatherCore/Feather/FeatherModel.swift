@@ -19,6 +19,7 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
     ///
     static var modelKey: String { get }
     static var pathComponent: PathComponent { get }
+    static var assetPath: String { get }
     
     /// unique identifier string for the model, based on the UUID
     var identifier: String { get }
@@ -45,6 +46,10 @@ public extension FeatherModel {
     
     static var pathComponent: PathComponent {
         .init(stringLiteral: modelKey)
+    }
+
+    static var assetPath: String {
+        [Module.pathComponent, pathComponent].path
     }
 
     var uuid: UUID { id! }

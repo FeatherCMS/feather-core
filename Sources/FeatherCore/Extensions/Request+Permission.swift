@@ -43,7 +43,6 @@ public extension Request {
     func checkPermission(_ permission: FeatherPermission, args: HookArguments = [:]) -> Bool {
         var arguments = args
         arguments.permission = permission
-        print(permission)
         let hooks: [Bool] = invokeAll(.permission, args: arguments)
         return hooks.reduce(true) { $0 && $1  }
     }
