@@ -11,7 +11,7 @@ public protocol FormComponent {
     
     func load(req: Request) async
     func process(req: Request) async
-    /// NOTE: throws instead of bool
+    /// we're not using a throwing function because we'd like to set error on the form.error property
     func validate(req: Request) async -> Bool
     func write(req: Request) async
     func save(req: Request) async

@@ -53,3 +53,19 @@ extension UserPermissionModel {
         .init(namespace: namespace, context: context, action: .init(stringLiteral: action))
     }
 }
+
+extension UserPermissionModel {
+    
+    static func uniqueBy(_ namespace: String, _ context: String, _ action: String, _ req: Request) async throws -> Bool {
+        var query = UserPermissionModel.query(on: req.db)
+            .filter(\.$namespace == namespace)
+            .filter(\.$context == context)
+            .filter(\.$action == action)
+
+        if let modelId = getIdParameter(req: req) {
+            query = query.filter(\.$id != modelId)
+        }
+        let count = try await query.count()
+        return count == 0
+    }
+}

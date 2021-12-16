@@ -51,27 +51,27 @@ struct UserPermissionEditor: FeatherModelEditor {
     }
 
     func validate(req: Request) async -> Bool {
-        print("lol")
-        return await form.validate(req: req)
+        let isValid = await form.validate(req: req)
+        guard isValid else {
+            return false
+        }
+        struct Permission: Decodable {
+            let namespace: String
+            let context: String
+            let action: String
+        }
+        do {
+            let p = try! req.content.decode(Permission.self)
+            let isUnique = try await Model.uniqueBy(p.namespace, p.context, p.action, req)
+            guard isUnique else {
+                form.error = "This permission already exists"
+                return false
+            }
+            return true
+        }
+        catch {
+            form.error = error.localizedDescription
+            return false
+        }
     }
-//    func validate(req: Request) -> EventLoopFuture<Bool> {
-//        form.validate(req: req).flatMap { isValid in
-//            guard isValid else {
-//                return req.eventLoop.future(false)
-//            }
-//            struct Permission: Decodable {
-//                let namespace: String
-//                let context: String
-//                let action: String
-//            }
-//            let p = try! req.content.decode(Permission.self)
-//            return Model.uniqueBy(p.namespace, p.context, p.action, req).map { isUnique in
-//                guard isUnique else {
-//                    context.form.error = "This permission already exists"
-//                    return false
-//                }
-//                return true
-//            }
-//        }
-//    }
 }
