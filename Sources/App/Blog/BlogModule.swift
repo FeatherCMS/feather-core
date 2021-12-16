@@ -28,8 +28,9 @@ struct BlogModule: FeatherModule {
     }
     
     func adminWidgetsHook(args: HookArguments) async -> [TemplateRepresentable] {
-        [
-            BlogAdminWidgetTemplate(args.req),
-        ]
+//        if args.req.checkPermission(BlogModule.permission) {
+            return [BlogAdminWidgetTemplate(args.req)]
+//        }
+//        return []
     }
 }

@@ -12,15 +12,15 @@ extension UserAccount {
     public struct Create: Codable {
         public var email: String
         public var password: String
-        public var root: Bool
+        public var isRoot: Bool
 
         public init(email: String,
                     password: String,
-                    root: Bool = false)
+                    isRoot: Bool = false)
         {
             self.email = email
             self.password = password
-            self.root = root
+            self.isRoot = isRoot
         }
     }
 }

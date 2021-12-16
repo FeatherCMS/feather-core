@@ -38,8 +38,8 @@ struct UserModule: FeatherModule {
 
         app.hooks.register(.adminApiMiddlewares, use: adminApiMiddlewaresHook)
         
-        app.hooks.register(.permission, use: webMiddlewaresHook)
-        app.hooks.register(.access, use: webMiddlewaresHook)
+        app.hooks.register(.permission, use: permissionHook)
+        app.hooks.register(.access, use: accessHook)
         
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         app.hooks.register(.adminApiRoutes, use: router.adminApiRoutesHook)
@@ -66,7 +66,8 @@ struct UserModule: FeatherModule {
         
         let accounts: [UserAccount.Create] = await args.req.invokeAllFlat(.installUserAccounts)
         try! await accounts.map { UserAccountModel(email: $0.email,
-                                                   password: try! Bcrypt.hash($0.password)) }.create(on: args.req.db)
+                                                   password: try! Bcrypt.hash($0.password),
+                                                   isRoot: $0.isRoot) }.create(on: args.req.db)
 
     }
 
@@ -78,7 +79,7 @@ struct UserModule: FeatherModule {
     
     func installUserAccountsHook(args: HookArguments) async -> [UserAccount.Create] {
         [
-            .init(email: "root@feathercms.com", password: "FeatherCMS", root: true),
+            .init(email: "root@feathercms.com", password: "FeatherCMS", isRoot: true),
             .init(email: "user@feathercms.com", password: "FeatherCMS"),
         ]
     }
