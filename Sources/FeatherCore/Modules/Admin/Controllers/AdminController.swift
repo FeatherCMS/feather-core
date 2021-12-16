@@ -202,11 +202,11 @@ public extension AdminController {
     }
     
     static func updateLink(_ label: String = "Update", id: UUID) -> LinkContext {
-        .init(label: label, url: updatePath(for: id), permission: detailPermission())
+        .init(label: label, url: updatePath(for: id), permission: updatePermission())
     }
     
     static func deleteLink(_ label: String = "Delete", id: UUID) -> LinkContext {
-        .init(label: label, url: deletePath(for: id), permission: detailPermission())
+        .init(label: label, url: deletePath(for: id), permission: deletePermission(), style: "destructive")
     }
     
     static func updateTableAction(_ label: String = "Update") -> LinkContext {
@@ -302,7 +302,7 @@ public extension AdminController {
         let rows = list.items.map {
             RowContext(id: $0.identifier, cells: listCells(for: $0))
         }
-        let table = TableContext(id: Model.Module.moduleKey + "-" + Model.modelKey + "-table",
+        let table = TableContext(id: [Model.Module.moduleKey, Model.modelKey, "table"].joined(separator: "-"),
                                  columns: listColumns(),
                                  rows: rows,
                                  actions: [
@@ -326,8 +326,14 @@ public extension AdminController {
         .init(title: Self.modelName.singular.uppercasedFirst + " details",
               fields: detailFields(for: model),
               breadcrumbs: [
-                Self.moduleLink(Self.moduleName.uppercasedFirst),
-                Self.listLink(Self.modelName.plural.uppercasedFirst),
+                    Self.moduleLink(Self.moduleName.uppercasedFirst),
+                    Self.listLink(Self.modelName.plural.uppercasedFirst),
+              ],
+              links: [
+                    Self.updateLink(id: model.uuid)
+              ],
+              actions: [
+                    Self.deleteLink(id: model.uuid),
               ])
     }
 
@@ -335,8 +341,8 @@ public extension AdminController {
         .init(title: "Create " + Self.modelName.singular,
               form: form.context(req),
               breadcrumbs: [
-                Self.moduleLink(Self.moduleName.uppercasedFirst),
-                Self.listLink(Self.modelName.plural.uppercasedFirst),
+                    Self.moduleLink(Self.moduleName.uppercasedFirst),
+                    Self.listLink(Self.modelName.plural.uppercasedFirst),
               ])
     }
     
@@ -344,13 +350,19 @@ public extension AdminController {
         .init(title: "Update " + Self.modelName.singular,
               form: form.context(req),
               breadcrumbs: [
-                Self.moduleLink(Self.moduleName.uppercasedFirst),
-                Self.listLink(Self.modelName.plural.uppercasedFirst),
+                    Self.moduleLink(Self.moduleName.uppercasedFirst),
+                    Self.listLink(Self.modelName.plural.uppercasedFirst),
+              ],
+              links: [
+                    Self.detailLink(id: editor.model.uuid),
+              ],
+              actions: [
+                    Self.deleteLink(id: editor.model.uuid),
               ])
     }
     
     func deleteContext(_ req: Request, _ model: Model, _ form: DeleteForm) -> AdminDeletePageContext {
-        .init(title: "",
+        .init(title: "Delete " + Self.modelName.singular,
               name: deleteInfo(model),
               type: Self.modelName.singular,
               form: form.context(req))

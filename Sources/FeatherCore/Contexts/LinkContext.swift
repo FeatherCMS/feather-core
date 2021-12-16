@@ -15,18 +15,21 @@ public struct LinkContext {
     public let isBlank: Bool
     public let priority: Int
     public let permission: String?
+    public let style: String?
 
     public init(icon: String? = nil,
                 label: String,
                 url: String,
                 isBlank: Bool = false,
                 priority: Int = 0,
-                permission: String? = nil) {
+                permission: String? = nil,
+                style: String? = nil) {
         self.icon = icon
         self.label = label
         self.url = url
         self.isBlank = isBlank
         self.priority = priority
         self.permission = permission
+        self.style = style
     }
 }

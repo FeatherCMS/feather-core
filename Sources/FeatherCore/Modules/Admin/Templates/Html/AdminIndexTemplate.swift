@@ -65,13 +65,9 @@ public struct AdminIndexTemplate: TemplateRepresentable {
                         .for("secondary-menu-button")
 
                         Div {
-                            A("test")
-                                .href("asdf")
-                                .class("selected", req.url.path == "/")
-                            
                             A("Sign out")
                                 .href("/logout/")
-                                .class("selected", req.url.path == "/")
+//                                .class("selected", req.url.path == "/")
                         }
                         .class("menu-items")
                     }

@@ -22,8 +22,18 @@ struct AdminDetailPageTemplate: TemplateRepresentable {
     var tag: Tag {
         AdminIndexTemplate(req, .init(title: context.title, breadcrumbs: context.breadcrumbs)) {
             Div {
-                H1(context.title)
-
+                Div {
+                    H1(context.title)
+                    for item in context.links {
+                        if req.checkPermission(item.permission) {
+                            A(item.label)
+                                .href(item.url)
+                                .class(item.style ?? "", item.style != nil)
+                        }
+                    }
+                }
+                .class("lead")
+               
                 Dl {
                     for field in context.fields {
                         // TODO: use proper field type
@@ -38,10 +48,13 @@ struct AdminDetailPageTemplate: TemplateRepresentable {
                 }
 
                 Section {
-                    //TODO: check permission
-                    A("Delete")
-                        .href(req.url.path)
-                        .class("destructive")
+                    for item in context.actions {
+                        if req.checkPermission(item.permission) {
+                            A(item.label)
+                                .href(item.url)
+                                .class(item.style ?? "", item.style != nil)
+                        }
+                    }
                 }
             }
         }.tag
