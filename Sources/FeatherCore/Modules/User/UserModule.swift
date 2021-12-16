@@ -85,10 +85,10 @@ struct UserModule: FeatherModule {
     }
     
     func installUserPermissionsHook(args: HookArguments) async -> [UserPermission.Create] {
-        var permissions: [UserPermission.Create] = []
-        permissions += UserAccountModel.userPermissions()
-        permissions += UserPermissionModel.userPermissions()
-        permissions += UserRoleModel.userPermissions()
+        var permissions = Self.installPermissions()
+        permissions += UserAccountModel.installPermissions()
+        permissions += UserPermissionModel.installPermissions()
+        permissions += UserRoleModel.installPermissions()
         return permissions
     }
 

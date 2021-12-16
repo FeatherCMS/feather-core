@@ -39,8 +39,8 @@ struct CommonModule: FeatherModule {
     }
     
     func installUserPermissionsHook(args: HookArguments) async -> [UserPermission.Create] {
-        var permissions: [UserPermission.Create] = []
-        permissions += CommonVariableModel.userPermissions()
+        var permissions = Self.installPermissions()
+        permissions += CommonVariableModel.installPermissions()
         return permissions
     }
     

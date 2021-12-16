@@ -13,7 +13,9 @@ public protocol FeatherModule {
     static var moduleKey: String { get }
     static var pathComponent: PathComponent { get }
     static var permission: FeatherPermission { get }
-        
+    
+    static func installPermissions() -> [UserPermission.Create]
+
     func boot(_ app: Application) throws
     func config(_ app: Application) throws
 }
@@ -30,6 +32,16 @@ public extension FeatherModule {
 
     static var permission: FeatherPermission {
         .init(namespace: moduleKey, context: "module", action: .detail)
+    }
+    
+    static func installPermissions() -> [UserPermission.Create] {
+        let permission = permission
+        return [
+            .init(namespace: permission.namespace,
+                  context: permission.context,
+                  action: permission.action.description,
+                  name: permission.name)
+        ]
     }
     
     func boot(_ app: Application) throws {}

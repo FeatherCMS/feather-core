@@ -56,11 +56,11 @@ struct WebModule: FeatherModule {
     }
 
     func installUserPermissionsHook(args: HookArguments) async -> [UserPermission.Create] {
-        var permissions: [UserPermission.Create] = []
-        permissions += WebPageModel.userPermissions()
-        permissions += WebMenuModel.userPermissions()
-        permissions += WebMenuItemModel.userPermissions()
-        permissions += WebMetadataModel.userPermissions()
+        var permissions = Self.installPermissions()
+        permissions += WebPageModel.installPermissions()
+        permissions += WebMenuModel.installPermissions()
+        permissions += WebMenuItemModel.installPermissions()
+        permissions += WebMetadataModel.installPermissions()
         return permissions
     }
 
@@ -102,9 +102,7 @@ struct WebModule: FeatherModule {
     }
 
     func responseHook(args: HookArguments) async -> Response? {
-        
-        
-        
+
         guard args.req.url.path == "/" else {
             return nil
         }

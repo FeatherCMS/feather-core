@@ -33,7 +33,7 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
 
     static func permission(_ action: FeatherPermission.Action) -> FeatherPermission
     
-    static func userPermissions() -> [UserPermission.Create]
+    static func installPermissions() -> [UserPermission.Create]
     
     static func isUniqueBy(_ filter:  ModelValueFilter<Self>, req: Request) async -> Bool
 }
@@ -72,7 +72,7 @@ public extension FeatherModel {
         FeatherPermission(namespace: Module.moduleKey, context: modelKey, action: action)
     }
 
-    static func userPermissions() -> [UserPermission.Create] {
+    static func installPermissions() -> [UserPermission.Create] {
         FeatherPermission.Action.crud.map { permission($0) }.map {
             UserPermission.Create(namespace: $0.namespace,
                                   context: $0.context,
