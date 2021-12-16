@@ -296,7 +296,7 @@ public extension AdminController {
 public extension AdminController {
     
     static var moduleName: String { Model.Module.moduleKey.uppercasedFirst }
-    static var modelName: FeatherModelName { .init(stringLiteral: Model.modelKey) }
+    static var modelName: FeatherModelName { .init(singular: String(Model.modelKey.dropLast()), plural: Model.modelKey) }
     
     func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext {
         let rows = list.items.map {

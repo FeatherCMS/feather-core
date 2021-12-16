@@ -18,7 +18,6 @@ struct UserAccountEditor: FeatherModelEditor {
         InputField("email")
             .config {
                 $0.output.context.type = .email
-                $0.output.context.value = "root@feathercms.com"
             }
             .validators {
                 FormFieldValidator.required($1)
@@ -30,12 +29,10 @@ struct UserAccountEditor: FeatherModelEditor {
         InputField("password")
             .config {
                 $0.output.context.type = .password
-                $0.output.context.value = "FeatherCMS"
             }
             .validators {
                 FormFieldValidator.required($1)
             }
-            .read { $1.output.context.value = model.password }
             .write { model.password = $1.input }
     }
 }
