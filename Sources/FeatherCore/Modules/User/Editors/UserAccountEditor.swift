@@ -9,9 +9,11 @@ import Vapor
 
 struct UserAccountEditor: FeatherModelEditor {
     let model: UserAccountModel
+    let form: FeatherForm
 
-    init(model: UserAccountModel) {
+    init(model: UserAccountModel, form: FeatherForm) {
         self.model = model
+        self.form = form
     }
 
     var formFields: [FormComponent] {

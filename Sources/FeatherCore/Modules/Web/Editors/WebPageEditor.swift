@@ -9,9 +9,11 @@ import Vapor
 
 struct WebPageEditor: FeatherModelEditor {
     let model: WebPageModel
+    let form: FeatherForm
 
-    init(model: WebPageModel) {
+    init(model: WebPageModel, form: FeatherForm) {
         self.model = model
+        self.form = form
     }
 
     var formFields: [FormComponent] {

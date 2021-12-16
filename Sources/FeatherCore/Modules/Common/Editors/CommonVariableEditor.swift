@@ -9,9 +9,11 @@ import Foundation
 
 struct CommonVariableEditor: FeatherModelEditor {
     let model: CommonVariableModel
-
-    init(model: CommonVariableModel) {
+    let form: FeatherForm
+    
+    init(model: CommonVariableModel, form: FeatherForm) {
         self.model = model
+        self.form = form
     }
 
     @FormComponentBuilder

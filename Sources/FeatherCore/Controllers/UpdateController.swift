@@ -26,8 +26,8 @@ public extension UpdateController {
         await req.checkAccess(for: Model.permission(.update))
     }
     
-    private func render(_ req: Request, editor: UpdateModelEditor, form: FeatherForm) -> Response {
-        return req.html.render(updateTemplate(req, editor, form))
+    private func render(_ req: Request, editor: UpdateModelEditor) -> Response {
+        return req.html.render(updateTemplate(req, editor, editor.form))
     }
     
     func updateView(_ req: Request) async throws -> Response {
@@ -37,11 +37,11 @@ public extension UpdateController {
         }
 
         let model = try await findBy(identifier(req), on: req.db)
-        let editor = UpdateModelEditor(model: model as! UpdateModelEditor.Model)
-        let form = FeatherForm(fields: editor.formFields)
-        await form.load(req: req)
-        await form.read(req: req)
-        return render(req, editor: editor, form: form)
+        let editor = UpdateModelEditor(model: model as! UpdateModelEditor.Model, form: .init())
+        editor.form.fields = editor.formFields
+        await editor.load(req: req)
+        await editor.read(req: req)
+        return render(req, editor: editor)
     }
 
     func update(_ req: Request) async throws -> Response {
@@ -50,17 +50,17 @@ public extension UpdateController {
             throw Abort(.forbidden)
         }
         let model = try await findBy(identifier(req), on: req.db)
-        let editor = UpdateModelEditor(model: model as! UpdateModelEditor.Model)
-        let form = FeatherForm(fields: editor.formFields)
-        await form.load(req: req)
-        await form.process(req: req)
-        let isValid = await form.validate(req: req)
+        let editor = UpdateModelEditor(model: model as! UpdateModelEditor.Model, form: .init())
+        editor.form.fields = editor.formFields
+        await editor.load(req: req)
+        await editor.process(req: req)
+        let isValid = await editor.validate(req: req)
         guard isValid else {
-            return render(req, editor: editor, form: form)
+            return render(req, editor: editor)
         }
-        await form.write(req: req)
+        await editor.write(req: req)
         try await editor.model.update(on: req.db)
-        await form.save(req: req)
+        await editor.save(req: req)
         return req.redirect(to: req.url.path)
     }
 

@@ -9,9 +9,11 @@ import Vapor
 
 struct UserPermissionEditor: FeatherModelEditor {
     let model: UserPermissionModel
+    let form: FeatherForm
 
-    init(model: UserPermissionModel) {
+    init(model: UserPermissionModel, form: FeatherForm) {
         self.model = model
+        self.form = form
     }
 
     var formFields: [FormComponent] {
@@ -48,8 +50,12 @@ struct UserPermissionEditor: FeatherModelEditor {
             .write { model.notes = $1.input }
     }
 
+    func validate(req: Request) async -> Bool {
+        print("lol")
+        return await form.validate(req: req)
+    }
 //    func validate(req: Request) -> EventLoopFuture<Bool> {
-//        context.validate(req: req).flatMap { isValid in
+//        form.validate(req: req).flatMap { isValid in
 //            guard isValid else {
 //                return req.eventLoop.future(false)
 //            }

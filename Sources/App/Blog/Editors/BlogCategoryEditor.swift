@@ -9,9 +9,11 @@ import FeatherCore
 
 struct BlogCategoryEditor: FeatherModelEditor {
     let model: BlogCategoryModel
+    let form: FeatherForm
 
-    init(model: BlogCategoryModel) {
+    init(model: BlogCategoryModel, form: FeatherForm) {
         self.model = model
+        self.form = form
     }
 
     @FormComponentBuilder

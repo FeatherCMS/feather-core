@@ -9,13 +9,46 @@ import Vapor
 import Fluent
 import SwiftHtml
 
-public protocol FeatherModelEditor {
+public protocol FeatherModelEditor: FormComponent {
     associatedtype Model: FeatherModel
     
     var model: Model { get }
+    var form: FeatherForm { get }
     
-    init(model: Model)
+    init(model: Model, form: FeatherForm)
         
     @FormComponentBuilder
     var formFields: [FormComponent] { get }
 }
+
+public extension FeatherModelEditor {
+
+    func load(req: Request) async {
+        await form.load(req: req)
+    }
+    
+    func process(req: Request) async {
+        await form.process(req: req)
+    }
+    /// NOTE: throws instead of bool
+    func validate(req: Request) async -> Bool {
+        await form.validate(req: req)
+    }
+    
+    func write(req: Request) async {
+        await form.write(req: req)
+    }
+    
+    func save(req: Request) async {
+        await form.save(req: req)
+    }
+    
+    func read(req: Request) async {
+        await form.read(req: req)
+    }
+
+    func render(req: Request) -> TemplateRepresentable {
+        form.render(req: req)
+    }
+}
+

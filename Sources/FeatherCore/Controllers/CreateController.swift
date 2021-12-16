@@ -25,8 +25,8 @@ public extension CreateController {
         await req.checkAccess(for: Model.permission(.create))
     }
     
-    private func render(_ req: Request, editor: CreateModelEditor, form: FeatherForm) -> Response {
-        return req.html.render(createTemplate(req, editor, form))
+    private func render(_ req: Request, editor: CreateModelEditor) -> Response {
+        return req.html.render(createTemplate(req, editor, editor.form))
     }
 
     func createView(_ req: Request) async throws -> Response {
@@ -34,13 +34,13 @@ public extension CreateController {
         guard hasAccess else {
             throw Abort(.forbidden)
         }
-        let editor = CreateModelEditor(model: .init())
+        let editor = CreateModelEditor(model: .init(), form: .init())
+        editor.form.fields = editor.formFields
 //        var arguments = HookArguments()
 //        arguments["model"] = editor.model
 //        let fields: [FormComponent] = await req.invokeAllFlat("form-fields", args: arguments)
-        let form = FeatherForm(fields: editor.formFields)// + fields)
-        await form.load(req: req)
-        return render(req, editor: editor, form: form)
+        await editor.load(req: req)
+        return render(req, editor: editor)
     }
     
     func create(_ req: Request) async throws -> Response {
@@ -48,17 +48,17 @@ public extension CreateController {
         guard hasAccess else {
             throw Abort(.forbidden)
         }
-        let editor = CreateModelEditor(model: .init())
-        let form = FeatherForm(fields: editor.formFields)
-        await form.load(req: req)
-        await form.process(req: req)
-        let isValid = await form.validate(req: req)
+        let editor = CreateModelEditor(model: .init(), form: .init())
+        editor.form.fields = editor.formFields
+        await editor.load(req: req)
+        await editor.process(req: req)
+        let isValid = await editor.validate(req: req)
         guard isValid else {
-            return render(req, editor: editor, form: form)
+            return render(req, editor: editor)
         }
-        await form.write(req: req)
+        await editor.write(req: req)
         try await editor.model.create(on: req.db)
-        await form.save(req: req)
+        await editor.save(req: req)
         var components = req.url.path.pathComponents.dropLast()
         components += [
             editor.model.identifier.pathComponent

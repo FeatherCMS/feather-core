@@ -10,9 +10,11 @@ import Fluent
 
 struct UserRoleEditor: FeatherModelEditor {
     let model: UserRoleModel
+    let form: FeatherForm
 
-    init(model: UserRoleModel) {
+    init(model: UserRoleModel, form: FeatherForm) {
         self.model = model
+        self.form = form
     }
 
     var formFields: [FormComponent] {

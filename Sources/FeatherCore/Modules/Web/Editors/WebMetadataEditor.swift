@@ -9,9 +9,11 @@ import Vapor
 
 struct WebMetadataEditor: FeatherModelEditor {
     let model: WebMetadataModel
+    let form: FeatherForm
 
-    init(model: WebMetadataModel) {
+    init(model: WebMetadataModel, form: FeatherForm) {
         self.model = model
+        self.form = form
     }
 
     var formFields: [FormComponent] {

@@ -9,9 +9,11 @@ import Vapor
 
 struct WebMenuEditor: FeatherModelEditor {
     let model: WebMenuModel
+    let form: FeatherForm
 
-    init(model: WebMenuModel) {
+    init(model: WebMenuModel, form: FeatherForm) {
         self.model = model
+        self.form = form
     }
 
     var formFields: [FormComponent] {
