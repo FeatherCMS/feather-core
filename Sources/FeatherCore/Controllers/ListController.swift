@@ -78,12 +78,58 @@ public protocol ListController: ModelController {
     associatedtype ListModelApi: ListApi
     
     var listConfig: ListConfiguration { get }
+    
+    static func listPermission() -> FeatherPermission
+    static func listPermission() -> String
+    static func hasListPermission(_ req: Request) -> Bool
 
     func listSearch(_ term: String) -> [ModelValueFilter<Model>]
     func listTemplate(_ req: Request, _ list: ListContainer<Model>) -> TemplateRepresentable
     func listAccess(_ req: Request) async -> Bool
     func listView(_ req: Request) async throws -> Response
     func listApi(_ req: Request) async throws -> ListContainer<Model>
+}
+
+public extension ListController {
+
+    var listConfig: ListConfiguration { .init() }
+
+    func listSearch(_ term: String) -> [ModelValueFilter<Model>] {
+        []
+    }
+    
+    static func listPermission() -> FeatherPermission {
+        Model.permission(.list)
+    }
+    
+    static func listPermission() -> String {
+        listPermission().rawValue
+    }
+    
+    static func hasListPermission(_ req: Request) -> Bool {
+        req.checkPermission(listPermission())
+    }
+    
+    func listAccess(_ req: Request) async -> Bool {
+        await req.checkAccess(for: Self.listPermission())
+    }
+
+    func listApi(_ req: Request) async throws -> ListContainer<Model> {
+        let hasAccess = await listAccess(req)
+        guard hasAccess else {
+            throw Abort(.forbidden)
+        }
+        return try await list(req)
+    }
+
+    func listView(_ req: Request) async throws -> Response {
+        let hasAccess = await listAccess(req)
+        guard hasAccess else {
+            throw Abort(.forbidden)
+        }
+        let list = try await list(req)
+        return req.html.render(listTemplate(req, list))
+    }
 }
 
 private extension ListController {
@@ -124,35 +170,5 @@ private extension ListController {
             }
         }
         return try await qb.paginate(limit: listLimit, page: listPage)
-    }
-}
-
-public extension ListController {
-
-    var listConfig: ListConfiguration { .init() }
-
-    func listSearch(_ term: String) -> [ModelValueFilter<Model>] {
-        []
-    }
-    
-    func listAccess(_ req: Request) async -> Bool {
-        await req.checkAccess(for: Model.permission(.list))
-    }
-
-    func listApi(_ req: Request) async throws -> ListContainer<Model> {
-        let hasAccess = await listAccess(req)
-        guard hasAccess else {
-            throw Abort(.forbidden)
-        }
-        return try await list(req)
-    }
-
-    func listView(_ req: Request) async throws -> Response {
-        let hasAccess = await listAccess(req)
-        guard hasAccess else {
-            throw Abort(.forbidden)
-        }
-        let list = try await list(req)
-        return req.html.render(listTemplate(req, list))
     }
 }

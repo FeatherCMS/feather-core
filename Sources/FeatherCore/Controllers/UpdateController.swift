@@ -12,22 +12,38 @@ public protocol UpdateController: ModelController {
  
     associatedtype UpdateModelEditor: FeatherModelEditor
     associatedtype UpdateModelApi: UpdateApi & DetailApi
+
+    static func updatePermission() -> FeatherPermission
+    static func updatePermission() -> String
+    static func hasUpdatePermission(_ req: Request) -> Bool
     
     func updateAccess(_ req: Request) async -> Bool
     func update(_ req: Request) async throws -> Response
     func updateView(_ req: Request) async throws -> Response
-    func updateTemplate(_ req: Request, _ editor: UpdateModelEditor, _ form: FeatherForm) -> TemplateRepresentable
+    func updateTemplate(_ req: Request, _ editor: UpdateModelEditor) -> TemplateRepresentable
     func updateApi(_ req: Request) async throws -> UpdateModelApi.DetailObject
 }
 
 public extension UpdateController {
-
+    
+    static func updatePermission() -> FeatherPermission {
+        Model.permission(.update)
+    }
+    
+    static func updatePermission() -> String {
+        updatePermission().rawValue
+    }
+    
+    static func hasUpdatePermission(_ req: Request) -> Bool {
+        req.checkPermission(updatePermission())
+    }
+    
     func updateAccess(_ req: Request) async -> Bool {
-        await req.checkAccess(for: Model.permission(.update))
+        await req.checkAccess(for: Self.updatePermission())
     }
     
     private func render(_ req: Request, editor: UpdateModelEditor) -> Response {
-        return req.html.render(updateTemplate(req, editor, editor.form))
+        return req.html.render(updateTemplate(req, editor))
     }
     
     func updateView(_ req: Request) async throws -> Response {

@@ -11,22 +11,38 @@ import Fluent
 public protocol CreateController: ModelController {
     associatedtype CreateModelEditor: FeatherModelEditor
     associatedtype CreateModelApi: CreateApi & DetailApi
+    
+    static func createPermission() -> FeatherPermission
+    static func createPermission() -> String
+    static func hasCreatePermission(_ req: Request) -> Bool
 
     func createAccess(_ req: Request) async -> Bool
     func create(_ req: Request) async throws -> Response
     func createView(_ req: Request) async throws -> Response
-    func createTemplate(_ req: Request, _ editor: CreateModelEditor, _ form: FeatherForm) -> TemplateRepresentable
+    func createTemplate(_ req: Request, _ editor: CreateModelEditor) -> TemplateRepresentable
     func createApi(_ req: Request) async throws -> Response
 }
 
 public extension CreateController {
 
+    static func createPermission() -> FeatherPermission {
+        Model.permission(.create)
+    }
+    
+    static func createPermission() -> String {
+        createPermission().rawValue
+    }
+    
+    static func hasCreatePermission(_ req: Request) -> Bool {
+        req.checkPermission(createPermission())
+    }
+
     func createAccess(_ req: Request) async -> Bool {
-        await req.checkAccess(for: Model.permission(.create))
+        await req.checkAccess(for: Self.createPermission())
     }
     
     private func render(_ req: Request, editor: CreateModelEditor) -> Response {
-        return req.html.render(createTemplate(req, editor, editor.form))
+        return req.html.render(createTemplate(req, editor))
     }
 
     func createView(_ req: Request) async throws -> Response {
@@ -64,8 +80,6 @@ public extension CreateController {
             editor.model.identifier.pathComponent
         ]
         return req.redirect(to: components.path)
-        
-        
     }
     
     func createApi(_ req: Request) async throws -> Response {

@@ -50,29 +50,6 @@ public protocol AdminController: FeatherController {
     static func updateTableAction(_ label: String) -> LinkContext
     static func deleteTableAction(_ label: String) -> LinkContext
     
-    // MARK: - permission
-    
-    static func listPermission() -> FeatherPermission
-    static func detailPermission() -> FeatherPermission
-    static func createPermission() -> FeatherPermission
-    static func updatePermission() -> FeatherPermission
-    static func deletePermission() -> FeatherPermission
-    static func patchPermission() -> FeatherPermission
-    
-    static func listPermission() -> String
-    static func detailPermission() -> String
-    static func createPermission() -> String
-    static func updatePermission() -> String
-    static func deletePermission() -> String
-    static func patchPermission() -> String
-    
-    static func hasListPermission(_ req: Request) -> Bool
-    static func hasDetailPermission(_ req: Request) -> Bool
-    static func hasCreatePermission(_ req: Request) -> Bool
-    static func hasUpdatePermission(_ req: Request) -> Bool
-    static func hasDeletePermission(_ req: Request) -> Bool
-    static func hasPatchPermission(_ req: Request) -> Bool
-    
     // MARK: - contexts
     
     func listColumns() -> [ColumnContext]
@@ -82,19 +59,11 @@ public protocol AdminController: FeatherController {
     func detailFields(for model: Model) -> [FieldContext]
     func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext
 
-    func createContext(_ req: Request, _ editor: CreateModelEditor, _ form: FeatherForm) -> AdminEditorPageContext
-    func updateContext(_ req: Request, _ editor: UpdateModelEditor, _ form: FeatherForm) -> AdminEditorPageContext
+    func createContext(_ req: Request, _ editor: CreateModelEditor) -> AdminEditorPageContext
+    func updateContext(_ req: Request, _ editor: UpdateModelEditor) -> AdminEditorPageContext
     
     func deleteInfo(_ model: Model) -> String
     func deleteContext(_ req: Request, _ model: Model, _ form: DeleteForm) -> AdminDeletePageContext
-    
-    // MARK: - templates
-    
-    func listTemplate(_ req: Request, _ list: ListContainer<Model>) -> TemplateRepresentable
-    func detailTemplate(_ req: Request, _ model: Model) -> TemplateRepresentable
-    func createTemplate(_ req: Request, _ editor: CreateModelEditor, _ form: FeatherForm) -> TemplateRepresentable
-    func updateTemplate(_ req: Request, _ editor: UpdateModelEditor, _ form: FeatherForm) -> TemplateRepresentable
-    func deleteTemplate(_ req: Request, _ model: Model, _ form: DeleteForm) -> TemplateRepresentable
     
     // MARK: - routes
     
@@ -219,81 +188,6 @@ public extension AdminController {
 }
 
 public extension AdminController {
-
-    static func listPermission() -> FeatherPermission {
-        Model.permission(.list)
-    }
-    
-    static func detailPermission() -> FeatherPermission {
-        Model.permission(.detail)
-    }
-    
-    static func createPermission() -> FeatherPermission {
-        Model.permission(.create)
-    }
-    
-    static func updatePermission() -> FeatherPermission {
-        Model.permission(.update)
-    }
-    
-    static func deletePermission() -> FeatherPermission {
-        Model.permission(.delete)
-    }
-    
-    static func patchPermission() -> FeatherPermission {
-        Model.permission(.patch)
-    }
-
-    static func listPermission() -> String {
-        listPermission().rawValue
-    }
-    
-    static func detailPermission() -> String {
-        detailPermission().rawValue
-    }
-    
-    static func createPermission() -> String {
-        createPermission().rawValue
-    }
-    
-    static func updatePermission() -> String {
-        updatePermission().rawValue
-    }
-    
-    static func deletePermission() -> String {
-        deletePermission().rawValue
-    }
-    
-    static func patchPermission() -> String {
-        patchPermission().rawValue
-    }
-    
-    static func hasListPermission(_ req: Request) -> Bool {
-        req.checkPermission(listPermission())
-    }
-    
-    static func hasDetailPermission(_ req: Request) -> Bool {
-        req.checkPermission(detailPermission())
-    }
-    
-    static func hasCreatePermission(_ req: Request) -> Bool {
-        req.checkPermission(createPermission())
-    }
-    
-    static func hasUpdatePermission(_ req: Request) -> Bool {
-        req.checkPermission(updatePermission())
-    }
-    
-    static func hasDeletePermission(_ req: Request) -> Bool {
-        req.checkPermission(deletePermission())
-    }
-    
-    static func hasPatchPermission(_ req: Request) -> Bool {
-        req.checkPermission(patchPermission())
-    }
-}
-
-public extension AdminController {
     
     static var moduleName: String { Model.Module.moduleKey.uppercasedFirst }
     static var modelName: FeatherModelName { .init(singular: String(Model.modelKey.dropLast()), plural: Model.modelKey) }
@@ -337,18 +231,18 @@ public extension AdminController {
               ])
     }
 
-    func createContext(_ req: Request, _ editor: CreateModelEditor, _ form: FeatherForm) -> AdminEditorPageContext {
+    func createContext(_ req: Request, _ editor: CreateModelEditor) -> AdminEditorPageContext {
         .init(title: "Create " + Self.modelName.singular,
-              form: form.context(req),
+              form: editor.form.context(req),
               breadcrumbs: [
                     Self.moduleLink(Self.moduleName.uppercasedFirst),
                     Self.listLink(Self.modelName.plural.uppercasedFirst),
               ])
     }
     
-    func updateContext(_ req: Request, _ editor: UpdateModelEditor, _ form: FeatherForm) -> AdminEditorPageContext {
+    func updateContext(_ req: Request, _ editor: UpdateModelEditor) -> AdminEditorPageContext {
         .init(title: "Update " + Self.modelName.singular,
-              form: form.context(req),
+              form: editor.form.context(req),
               breadcrumbs: [
                     Self.moduleLink(Self.moduleName.uppercasedFirst),
                     Self.listLink(Self.modelName.plural.uppercasedFirst),
@@ -379,12 +273,12 @@ public extension AdminController {
         AdminDetailPageTemplate(req, detailContext(req, model))
     }
     
-    func createTemplate(_ req: Request, _ editor: CreateModelEditor, _ form: FeatherForm) -> TemplateRepresentable {
-        AdminEditorPageTemplate(req, createContext(req, editor, form))
+    func createTemplate(_ req: Request, _ editor: CreateModelEditor) -> TemplateRepresentable {
+        AdminEditorPageTemplate(req, createContext(req, editor))
     }
 
-    func updateTemplate(_ req: Request, _ editor: UpdateModelEditor, _ form: FeatherForm) -> TemplateRepresentable {
-        AdminEditorPageTemplate(req, updateContext(req, editor, form))
+    func updateTemplate(_ req: Request, _ editor: UpdateModelEditor) -> TemplateRepresentable {
+        AdminEditorPageTemplate(req, updateContext(req, editor))
     }
     
     func deleteTemplate(_ req: Request, _ model: Model, _ form: DeleteForm) -> TemplateRepresentable {

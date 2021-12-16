@@ -30,6 +30,10 @@ public final class DeleteForm: FeatherForm {
 public protocol DeleteController: ModelController {
     associatedtype DeleteModelApi: DeleteApi & DetailApi
     
+    static func deletePermission() -> FeatherPermission
+    static func deletePermission() -> String
+    static func hasDeletePermission(_ req: Request) -> Bool
+    
     func deleteAccess(_ req: Request) async -> Bool
     func delete(_ req: Request) async throws -> Response
     func deleteView(_ req: Request) async throws -> Response
@@ -39,8 +43,20 @@ public protocol DeleteController: ModelController {
 
 public extension DeleteController {
     
+    static func deletePermission() -> FeatherPermission {
+        Model.permission(.delete)
+    }
+    
+    static func deletePermission() -> String {
+        deletePermission().rawValue
+    }
+    
+    static func hasDeletePermission(_ req: Request) -> Bool {
+        req.checkPermission(deletePermission())
+    }
+    
     func deleteAccess(_ req: Request) async -> Bool {
-        await req.checkAccess(for: Model.permission(.delete))
+        await req.checkAccess(for: Self.deletePermission())
     }
 
     func deleteView(_ req: Request) async throws -> Response {
