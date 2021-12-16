@@ -55,18 +55,21 @@ public protocol AdminController: FeatherController {
     static func createPermission() -> FeatherPermission
     static func updatePermission() -> FeatherPermission
     static func deletePermission() -> FeatherPermission
+    static func patchPermission() -> FeatherPermission
     
     static func listPermission() -> String
     static func detailPermission() -> String
     static func createPermission() -> String
     static func updatePermission() -> String
     static func deletePermission() -> String
+    static func patchPermission() -> String
     
     static func hasListPermission(_ req: Request) -> Bool
     static func hasDetailPermission(_ req: Request) -> Bool
     static func hasCreatePermission(_ req: Request) -> Bool
     static func hasUpdatePermission(_ req: Request) -> Bool
     static func hasDeletePermission(_ req: Request) -> Bool
+    static func hasPatchPermission(_ req: Request) -> Bool
     
     // MARK: -
 
@@ -225,6 +228,10 @@ public extension AdminController {
     static func deletePermission() -> FeatherPermission {
         Model.permission(.delete)
     }
+    
+    static func patchPermission() -> FeatherPermission {
+        Model.permission(.patch)
+    }
 
     static func listPermission() -> String {
         listPermission().rawValue
@@ -246,6 +253,10 @@ public extension AdminController {
         deletePermission().rawValue
     }
     
+    static func patchPermission() -> String {
+        patchPermission().rawValue
+    }
+    
     static func hasListPermission(_ req: Request) -> Bool {
         req.checkPermission(listPermission())
     }
@@ -264,6 +275,10 @@ public extension AdminController {
     
     static func hasDeletePermission(_ req: Request) -> Bool {
         req.checkPermission(deletePermission())
+    }
+    
+    static func hasPatchPermission(_ req: Request) -> Bool {
+        req.checkPermission(patchPermission())
     }
 }
 
