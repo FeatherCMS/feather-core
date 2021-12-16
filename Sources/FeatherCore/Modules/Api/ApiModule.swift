@@ -20,12 +20,13 @@ struct ApiModule: FeatherModule {
 
     func boot(_ app: Application) throws {
         let router = ApiRouter()
-        try router.boot(app)
 
         app.hooks.register(.routes, use: router.routesHook)
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         app.hooks.register(.adminApiMiddlewares, use: adminApiMiddlewaresHook)
         app.hooks.register(.publicApiMiddlewares, use: publicApiMiddlewaresHook)
+        
+        try router.boot(app)
     }
     
     func publicApiMiddlewaresHook(args: HookArguments) -> [Middleware] {
