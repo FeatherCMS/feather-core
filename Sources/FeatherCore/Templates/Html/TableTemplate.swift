@@ -83,7 +83,7 @@ public struct TableTemplate: TemplateRepresentable {
                                     if let link = cell.link {
                                         if req.checkPermission(link.permission) {
                                             A(link.label)
-                                                .href(req.url.path + row.id + link.url)
+                                                .href(link.url.replacingOccurrences(of: rowId, with: row.id))
                                         }
                                         else {
                                             Text(link.label)

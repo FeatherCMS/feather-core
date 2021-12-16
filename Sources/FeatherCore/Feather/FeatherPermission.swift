@@ -45,6 +45,12 @@ public struct FeatherPermission: Equatable, Codable, RawRepresentable {
         }
     }
     
+    enum CodingKeys: CodingKey {
+        case namespace
+        case context
+        case action
+    }
+    
     public let namespace: String
     public let context: String
     public let action: Action
@@ -53,12 +59,6 @@ public struct FeatherPermission: Equatable, Codable, RawRepresentable {
         self.namespace = namespace
         self.context = context
         self.action = action
-    }
-    
-    enum CodingKeys: CodingKey {
-        case namespace
-        case context
-        case action
     }
     
     public init(from decoder: Decoder) throws {
