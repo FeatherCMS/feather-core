@@ -18,9 +18,9 @@ public extension HookName {
 
 struct ApiModule: FeatherModule {
 
-    func boot(_ app: Application) throws {
-        let router = ApiRouter()
+    let router = ApiRouter()
 
+    func boot(_ app: Application) throws {
         app.hooks.register(.routes, use: router.routesHook)
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         app.hooks.register(.adminApiMiddlewares, use: adminApiMiddlewaresHook)
