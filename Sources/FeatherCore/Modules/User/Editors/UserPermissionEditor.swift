@@ -55,14 +55,9 @@ struct UserPermissionEditor: FeatherModelEditor {
         guard isValid else {
             return false
         }
-        struct Permission: Decodable {
-            let namespace: String
-            let context: String
-            let action: String
-        }
         do {
-            let p = try! req.content.decode(Permission.self)
-            let isUnique = try await Model.uniqueBy(p.namespace, p.context, p.action, req)
+            let permission = try! req.content.decode(FeatherPermission.self)
+            let isUnique = try await Model.isUnique(permission, req)
             guard isUnique else {
                 form.error = "This permission already exists"
                 return false

@@ -8,7 +8,7 @@
 import Foundation
 
 public struct FeatherPermission: Equatable, Codable, RawRepresentable {
-
+    
     public enum Action: Equatable, Codable, ExpressibleByStringLiteral, CustomStringConvertible {
         case list
         case detail
@@ -53,6 +53,20 @@ public struct FeatherPermission: Equatable, Codable, RawRepresentable {
         self.namespace = namespace
         self.context = context
         self.action = action
+    }
+    
+    enum CodingKeys: CodingKey {
+        case namespace
+        case context
+        case action
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.namespace = try values.decode(String.self, forKey: .namespace)
+        self.context = try values.decode(String.self, forKey: .context)
+        let rawAction = try values.decode(String.self, forKey: .action)
+        self.action = .init(stringLiteral: rawAction)
     }
 
     public init?(rawValue: String) {

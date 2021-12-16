@@ -56,11 +56,11 @@ extension UserPermissionModel {
 
 extension UserPermissionModel {
     
-    static func uniqueBy(_ namespace: String, _ context: String, _ action: String, _ req: Request) async throws -> Bool {
+    static func isUnique(_ permission: FeatherPermission, _ req: Request) async throws -> Bool {
         var query = UserPermissionModel.query(on: req.db)
-            .filter(\.$namespace == namespace)
-            .filter(\.$context == context)
-            .filter(\.$action == action)
+            .filter(\.$namespace == permission.namespace)
+            .filter(\.$context == permission.context)
+            .filter(\.$action == permission.action.description)
 
         if let modelId = getIdParameter(req: req) {
             query = query.filter(\.$id != modelId)
