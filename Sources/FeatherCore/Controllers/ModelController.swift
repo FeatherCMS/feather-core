@@ -32,3 +32,13 @@ public extension ModelController {
         return model
     }
 }
+
+public extension ModelController where Model: MetadataRepresentable {
+
+    func findBy(_ id: UUID, on db: Database) async throws -> Model {
+        guard let model = try await Model.query(on: db).joinMetadata().filter(\._$id == id).first() else {
+            throw Abort(.notFound)
+        }
+        return model
+    }
+}

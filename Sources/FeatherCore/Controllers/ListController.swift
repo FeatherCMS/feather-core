@@ -83,6 +83,8 @@ public protocol ListController: ModelController {
     static func listPermission() -> String
     static func hasListPermission(_ req: Request) -> Bool
 
+    func listQuery(_ req: Request, _ qb: QueryBuilder<Model>) -> QueryBuilder<Model>
+        
     func listSearch(_ term: String) -> [ModelValueFilter<Model>]
     func listTemplate(_ req: Request, _ list: ListContainer<Model>) -> TemplateRepresentable
     func listAccess(_ req: Request) async -> Bool
@@ -130,6 +132,10 @@ public extension ListController {
         let list = try await list(req)
         return req.html.render(listTemplate(req, list))
     }
+    
+    func listQuery(_ req: Request, _ qb: QueryBuilder<Model>) -> QueryBuilder<Model> {
+        qb
+    }
 }
 
 private extension ListController {
@@ -138,12 +144,7 @@ private extension ListController {
         let config = listConfig
         let listLimit: Int = max(req.query[config.limitKey] ?? config.defaultLimit, 1)
         let listPage: Int = max(req.query[config.pageKey] ?? config.defaultPage, 1)
-        
-        var qb = Model.query(on: req.db)
-        
-//        if let beforeQuery = beforeQuery {
-//            qb = beforeQuery(req, qb)
-//        }
+        var qb = listQuery(req, Model.query(on: req.db))
 
         let allowedOrders = config.allowedOrders
         var listOrder = allowedOrders.first
@@ -170,5 +171,12 @@ private extension ListController {
             }
         }
         return try await qb.paginate(limit: listLimit, page: listPage)
+    }
+}
+
+public extension ListController where Model: MetadataRepresentable {
+    
+    func listQuery(_ req: Request, _ qb: QueryBuilder<Model>) -> QueryBuilder<Model> {
+        qb.joinMetadata()
     }
 }

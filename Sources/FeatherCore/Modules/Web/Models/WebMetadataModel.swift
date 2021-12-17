@@ -86,3 +86,4 @@ final class WebMetadataModel: FeatherModel {
         self.filters = filters
     }
 }
+

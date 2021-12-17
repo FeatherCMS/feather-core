@@ -41,12 +41,15 @@ struct BlogCategoryAdminController: AdminController {
     func listColumns() -> [ColumnContext] {
         [
             .init(Model.FieldKeys.v1.title.description, isDefault: true),
+            .init(Model.FieldKeys.v1.title.description),
+
         ]
     }
     
     func listCells(for model: Model) -> [CellContext] {
         [
             .init(model.title, link: Self.detailLink(model.title, id: model.uuid)),
+            .init(model.joinedMetadata!.title, link: Self.detailLink(model.title, id: model.uuid)),
         ]
     }
     

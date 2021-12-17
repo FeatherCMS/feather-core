@@ -263,55 +263,6 @@ public extension AdminController {
     }
 }
 
-public extension AdminController where Model: MetadataRepresentable {
-    
-    func updateContext(_ req: Request, _ editor: UpdateModelEditor) async -> AdminEditorPageContext {
-        
-        let metadata = try! await Model.findMetadata(reference: editor.model.uuid, on: req.db)!
-
-        return .init(title: "Update " + Self.modelName.singular,
-              form: editor.form.context(req),
-              breadcrumbs: [
-                    Self.moduleLink(Self.moduleName.uppercasedFirst),
-                    Self.listLink(Self.modelName.plural.uppercasedFirst),
-              ],
-              links: [
-                    Self.detailLink(id: editor.model.uuid),
-                    .init(label: "Preview", url: metadata.slug!.safePath()),
-                    WebMetadataController.updateLink("Metadata", id: metadata.id!),
-              ],
-              actions: [
-                    Self.deleteLink(id: editor.model.uuid),
-              ])
-    }
-}
-
-extension AdminController where Model: WebMetadataModel {
-    
-    func updateContext(_ req: Request, _ editor: UpdateModelEditor) async -> AdminEditorPageContext {
-        let metadata = editor.model as! WebMetadataModel
-        let path = [
-            Feather.config.paths.admin,
-            metadata.module,
-            metadata.model,
-            metadata.reference.uuidString,
-            Self.updatePathComponent.description
-        ].map { PathComponent(stringLiteral: $0) }.path
-        
-        return .init(title: "Update " + Self.modelName.singular,
-              form: editor.form.context(req),
-              breadcrumbs: [
-                    Self.moduleLink(Self.moduleName.uppercasedFirst),
-                    Self.listLink(Self.modelName.plural.uppercasedFirst),
-              ],
-              links: [
-                    Self.detailLink(id: editor.model.uuid),
-                    .init(label: "Preview", url: metadata.slug.safePath()),
-                    .init(label: "Reference", url: path),
-              ])
-    }
-}
-
 
 public extension AdminController {
     

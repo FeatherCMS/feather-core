@@ -28,6 +28,7 @@ struct AdminEditorPageTemplate: TemplateRepresentable {
                         if req.checkPermission(item.permission) {
                             A(item.label)
                                 .href(item.url)
+                                .target(.blank, item.isBlank)
                                 .class(item.style ?? "", item.style != nil)
                         }
                     }
