@@ -46,13 +46,13 @@ struct BlogModule: FeatherModule {
         let posts = try! await category.$posts.query(on: args.req.db)
 //            .joinPublicMetadata()
             .all()
-    
-        let message = posts.map(\.title).joined(separator: "-")
 
+//        args.req.fs.resolve(key: category.imageKey)
+//
+//
 
-        let template = WebWelcomeTemplate(args.req, context: .init(index: .init(title: "title"),
-                                                                   title: "posts by category",
-                                                                   message: message))
+        
+        let template = BlogCategoryPageTemplate.init(args.req, context: .init(category: BlogCategoryApi().mapDetail(model: category), posts: []))
         return args.req.html.render(template)
 
     }
