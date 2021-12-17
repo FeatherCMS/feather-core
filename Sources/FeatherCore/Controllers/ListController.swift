@@ -177,6 +177,6 @@ private extension ListController {
 public extension ListController where Model: MetadataRepresentable {
     
     func listQuery(_ req: Request, _ qb: QueryBuilder<Model>) -> QueryBuilder<Model> {
-        qb.joinMetadata()
+        qb.joinAllMetadata()
     }
 }

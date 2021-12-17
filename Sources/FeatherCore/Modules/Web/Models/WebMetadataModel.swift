@@ -7,6 +7,7 @@
 
 import Vapor
 import Fluent
+import FeatherCoreApi
 
 final class WebMetadataModel: FeatherModel {
     typealias Module = WebModule
@@ -35,7 +36,7 @@ final class WebMetadataModel: FeatherModel {
     @Field(key: FieldKeys.v1.model) var model: String
     @Field(key: FieldKeys.v1.reference) var reference: UUID
     @Field(key: FieldKeys.v1.slug) var slug: String
-    @Field(key: FieldKeys.v1.status) var status: FeatherMetadata.Status
+    @Field(key: FieldKeys.v1.status) var status: WebMetadata.Status
     @Field(key: FieldKeys.v1.title) var title: String?
     @Field(key: FieldKeys.v1.excerpt) var excerpt: String?
     @Field(key: FieldKeys.v1.imageKey) var imageKey: String?
@@ -58,7 +59,7 @@ final class WebMetadataModel: FeatherModel {
          model: String,
          reference: UUID,
          slug: String,
-         status: FeatherMetadata.Status = .draft,
+         status: WebMetadata.Status = .draft,
          title: String? = nil,
          excerpt: String? = nil,
          imageKey: String? = nil,
@@ -87,3 +88,24 @@ final class WebMetadataModel: FeatherModel {
     }
 }
 
+extension FeatherModel where Self: MetadataRepresentable {
+    
+    static func constructMetadataModel(for id: UUID, slug: String) -> WebMetadataModel {
+        .init(module: Module.pathComponent.description,
+              model: pathComponent.description,
+              reference: id,
+              slug: slug,
+              filters: Feather.config.filters)
+    }
+
+    static func queryMetadataBy(id: UUID, on db: Database) async throws -> QueryBuilder<WebMetadataModel> {
+        WebMetadataModel.query(on: db)
+            .filter(\.$module == Module.pathComponent.description)
+            .filter(\.$model == pathComponent.description)
+            .filter(\.$reference == id)
+    }
+
+    static func findMetadataBy(id: UUID, on db: Database) async throws -> WebMetadataModel? {
+        try await queryMetadataBy(id: id, on: db).first()
+    }
+}

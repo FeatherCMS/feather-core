@@ -22,7 +22,6 @@ extension WebMetadata {
         public var status: WebMetadata.Status
         public var feedItem: Bool
         public var canonicalUrl: String?
-
         public var filters: [String]
         public var css: String?
         public var js: String?

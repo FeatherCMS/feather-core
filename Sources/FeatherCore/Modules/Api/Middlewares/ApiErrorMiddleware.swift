@@ -9,6 +9,7 @@ import Vapor
 
 public struct ApiErrorMiddleware: Middleware {
 
+    #warning("async/await")
     public func respond(to req: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
         return next.respond(to: req).flatMapErrorThrowing { error in
             let status: HTTPResponseStatus

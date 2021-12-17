@@ -6,6 +6,7 @@
 //
 
 import Vapor
+import FeatherCoreApi
 
 public extension HookArguments {
     
@@ -45,9 +46,9 @@ public extension HookArguments {
         }
     }
     
-    var metadata: FeatherMetadata {
+    var metadata: WebMetadata.Detail {
         get {
-            self["metadata"] as! FeatherMetadata
+            self["metadata"] as! WebMetadata.Detail
         }
         set {
             self["metadata"] = newValue

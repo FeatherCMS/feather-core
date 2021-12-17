@@ -53,14 +53,57 @@ struct WebMetadataApi: FeatherApi {
     }
     
     func mapCreate(_ req: Request, model: Model, input: WebMetadata.Create) async {
-        
+        mapCreate(model: model, input: input)
     }
     
     func mapUpdate(_ req: Request, model: Model, input: WebMetadata.Update) async {
-        
+        mapUpdate(model: model, input: input)
     }
     
     func mapPatch(_ req: Request, model: Model, input: WebMetadata.Patch) async {
-        
+        mapPatch(model: model, input: input)
+    }
+    
+    // MARK: - internal helpers
+    
+    func mapCreate(model: Model, input: WebMetadata.Create) {
+        model.slug = input.slug
+        model.title = input.title
+        model.excerpt = input.excerpt
+        model.imageKey = input.imageKey
+        model.date = input.date
+        model.status = .init(rawValue: input.status.rawValue)!
+        model.feedItem = input.feedItem
+        model.canonicalUrl = input.canonicalUrl
+        model.css = input.css
+        model.js = input.js
+    }
+
+    func mapUpdate(model: Model, input: WebMetadata.Update) {
+        model.slug = input.slug
+        model.title = input.title
+        model.excerpt = input.excerpt
+        model.imageKey = input.imageKey
+        model.date = input.date
+        model.status = .init(rawValue: input.status.rawValue)!
+        model.feedItem = input.feedItem
+        model.canonicalUrl = input.canonicalUrl
+        model.css = input.css
+        model.js = input.js
+    }
+    
+    func mapPatch(model: Model, input: WebMetadata.Patch) {
+        model.slug = input.slug ?? model.slug
+        model.title = input.title ?? model.title
+        model.excerpt = input.excerpt ?? model.excerpt
+        model.imageKey = input.imageKey ?? model.imageKey
+        model.date = input.date ?? model.date
+        if let status = input.status?.rawValue {
+            model.status = .init(rawValue: status) ?? model.status
+        }
+        model.feedItem = input.feedItem ?? model.feedItem
+        model.canonicalUrl = input.canonicalUrl ?? model.canonicalUrl
+        model.css = input.css ?? model.css
+        model.js = input.js ?? model.js
     }
 }

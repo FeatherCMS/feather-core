@@ -8,44 +8,30 @@
 import Vapor
 import Fluent
 
-/// monitors model changes and calls the MetadataChangeDelegate if the metadata needs to be updated
-public struct MetadataModelMiddleware<T: MetadataRepresentable>: ModelMiddleware {
+public struct MetadataModelMiddleware<T: MetadataRepresentable>: AsyncModelMiddleware {
 
     public init() {}
+    
+    public func create(model: T, on db: Database, next: AnyAsyncModelResponder) async throws {
+        try await next.create(model, on: db)
+        let input = model.metadataCreate
+        let metadata = T.constructMetadataModel(for: model.uuid, slug: input.slug)
+        WebMetadataApi().mapCreate(model: metadata, input: input)
+        return try await metadata.create(on: db)
+    }
+    
+    public func update(model: T, on db: Database, next: AnyAsyncModelResponder) async throws {
+        try await next.update(model, on: db)
+//        maybe we could support proper patch updates?
+//        guard let metadata = try await T.findMetadataBy(id: model.uuid, on: db) else {
+//            throw Abort(.notFound)
+//        }
+//        WebMetadataApi().mapPatch(model: metadata, input: model.metadataPatch)
+//        return try await metadata.update(on: db)
+    }
 
-    /// on create action we call the willUpdate method using the delegate
-    public func create(model: T, on db: Database, next: AnyModelResponder) -> EventLoopFuture<Void> {
-        next.create(model, on: db).flatMap {
-            var metadata = model.metadata
-            metadata.id = UUID()
-            metadata.module = T.Module.pathComponent.description
-            metadata.model = T.pathComponent.description
-            metadata.reference = model.id
-            metadata.filters = Feather.config.filters
-            let model = WebMetadataModel()
-            model.use(metadata)
-            return model.create(on: db)
-        }
-    }
-    
-    /// on update action we call the willUpdate method using the delegate
-    public func update(model: T, on db: Database, next: AnyModelResponder) -> EventLoopFuture<Void> {
-        next.update(model, on: db)
-    }
-    
-    /// on delete action, we remove the associated metadata
-    public func delete(model: T, force: Bool, on db: Database, next: AnyModelResponder) -> EventLoopFuture<Void> {
-        next.delete(model, force: force, on: db).flatMap {
-            var metadata = model.metadata
-            metadata.module = T.Module.pathComponent.description
-            metadata.model = T.pathComponent.description
-            metadata.reference = model.id
-            
-            return WebMetadataModel.query(on: db)
-                .filter(\.$module == metadata.module!)
-                .filter(\.$model == metadata.model!)
-                .filter(\.$reference == metadata.reference!)
-                .delete()
-        }
+    public func delete(model: T, force: Bool, on db: Database, next: AnyAsyncModelResponder) async throws {
+        try await next.delete(model, force: force, on: db)
+        return try await T.queryMetadataBy(id: model.uuid, on: db).delete()
     }
 }

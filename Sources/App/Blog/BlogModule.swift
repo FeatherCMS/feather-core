@@ -37,8 +37,8 @@ struct BlogModule: FeatherModule {
 //        return []
     }
     
-    func responseHook(args: HookArguments) async -> Response? {
-        let category = try! await BlogCategoryModel.queryJoinVisibleMetadata(path: args.req.url.path, on: args.req.db)
+    func responseHook(args: HookArguments) async -> Response? {        
+        let category = try! await BlogCategoryModel.queryJoinVisibleMetadataFilterBy(path: args.req.url.path, on: args.req.db)
             .first()
         guard let category = category else {
             return nil

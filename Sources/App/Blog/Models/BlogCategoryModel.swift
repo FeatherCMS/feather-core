@@ -51,7 +51,14 @@ final class BlogCategoryModel: FeatherModel {
 }
 
 extension BlogCategoryModel: MetadataRepresentable {
-    var metadata: FeatherMetadata {
-        .init(slug: Self.modelKey + "/" + title.slugify(), title: title, imageKey: imageKey)
+
+    // NOTE: maybe we could reuse the same image key
+    //  we should copy the file to the metadata folder with a new key
+    var metadataCreate: WebMetadata.Create {
+        .init(slug: Self.pathComponent.description + "/" + title.slugify(), title: title)
     }
+
+//    var metadataPatch: WebMetadata.Patch {
+//        .init(title: title, imageKey: imageKey)
+//    }
 }
