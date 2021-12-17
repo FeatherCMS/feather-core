@@ -15,7 +15,13 @@ open class FeatherForm: FormComponent {
     open var action: FormAction
     open var error: String?
     open var submit: String?
-    open var fields: [FormComponent]
+    open var fields: [FormComponent] {
+        didSet {
+            if !fields.filter({ $0 is ImageField }).isEmpty {
+                action.enctype = .multipart
+            }
+        }
+    }
 
     public init(id: String = UUID().uuidString,
                 token: String = UUID().uuidString,
@@ -32,11 +38,6 @@ open class FeatherForm: FormComponent {
 
         if self.fields.isEmpty {
             self.fields = createFields()
-        }
-
-        // NOTE: this is ugly, but it works for now...
-        if !self.fields.filter({ $0 is ImageField }).isEmpty {
-            self.action.enctype = .multipart
         }
     }
     

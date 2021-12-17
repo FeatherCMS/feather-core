@@ -46,10 +46,9 @@ struct WebMetadataEditor: FeatherModelEditor {
             .read { $1.output.context.value = model.excerpt }
             .write { model.excerpt = $1.input }
         
-        SelectField("statusId")
+        SelectField("status")
             .config {
                 $0.output.context.label.required = true
-                $0.output.context.label.title = "Status"
                 $0.output.context.options = WebMetadata.Status.allCases.map { OptionContext(key: $0.rawValue, label: $0.rawValue.uppercasedFirst) }
                 $0.output.context.value = WebMetadata.Status.draft.rawValue
             }
