@@ -28,13 +28,13 @@ public extension QueryBuilder where Model: MetadataRepresentable {
     /// joins the metadata object on the ViperModel query, if a path is present it'll use it as a filter to return only one instance that matches the slug
     func joinMetadata() -> QueryBuilder<Model> {
         join(WebMetadataModel.self, on: \WebMetadataModel.$reference == \Model._$id)
-                    .filter(WebMetadataModel.self, \.$module == Model.Module.moduleKey)
-            .filter(WebMetadataModel.self, \.$model == Model.modelKey)
+            .filter(WebMetadataModel.self, \.$module == Model.Module.pathComponent.description)
+            .filter(WebMetadataModel.self, \.$model == Model.pathComponent.description)
     }
 
     /// find an object with an associated the metadata object for a given path
     func filterMetadata(path: String) -> QueryBuilder<Model> {
-        filter(WebMetadataModel.self, \.$slug == path)//.trimmingSlashes())
+        filter(WebMetadataModel.self, \.$slug == path.trimmingSlashes())
     }
 
     /// find an object with a given status

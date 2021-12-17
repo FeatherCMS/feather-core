@@ -31,8 +31,8 @@ public extension FeatherModel where Self: MetadataRepresentable {
 
     static func findMetadata(reference: UUID, on db: Database) async throws -> FeatherMetadata? {
         try await WebMetadataModel.query(on: db)
-            .filter(\.$module == Module.moduleKey)
-            .filter(\.$model == modelKey)
+            .filter(\.$module == Module.pathComponent.description)
+            .filter(\.$model == pathComponent.description)
             .filter(\.$reference == reference)
             .first()
             .map { $0.metadata }
@@ -71,8 +71,8 @@ public extension FeatherModel where Self: MetadataRepresentable {
     func updateMetadata(on db: Database, _ block: @escaping () -> FeatherMetadata) -> EventLoopFuture<Void> {
         var metadata = block()
         metadata.reference = id!
-        metadata.model = Self.modelKey
-        metadata.module = Module.moduleKey
+        metadata.model = Self.pathComponent.description
+        metadata.module = Module.pathComponent.description
         
         return WebMetadataModel.query(on: db)
                     .filter(\.$module == metadata.module!)

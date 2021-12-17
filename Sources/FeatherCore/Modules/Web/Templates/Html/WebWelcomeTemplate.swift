@@ -8,24 +8,30 @@
 import Vapor
 import SwiftHtml
 
-struct WebWelcomeTemplate: TemplateRepresentable {
+public struct WebWelcomeTemplate: TemplateRepresentable {
     
-    struct Context {
-        var index: WebIndexTemplate.Context
+    public struct Context {
+        public var index: WebIndexTemplate.Context
         
-        var title: String
-        var message: String
+        public var title: String
+        public var message: String
+        
+        public init(index: WebIndexTemplate.Context, title: String, message: String) {
+            self.index = index
+            self.title = title
+            self.message = message
+        }
     }
 
     unowned var req: Request
     var context: Context
     
-    init(_ req: Request, context: Context) {
+    public init(_ req: Request, context: Context) {
         self.req = req
         self.context = context
     }
     
-    var tag: Tag {
+    public var tag: Tag {
         WebIndexTemplate(req, context: context.index) {
             H1(context.title)
             P(context.message)

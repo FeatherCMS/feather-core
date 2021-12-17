@@ -21,9 +21,12 @@ struct BlogModule: FeatherModule {
     func boot(_ app: Application) throws {
         app.migrations.add(BlogMigrations.v1())
         
+        app.databases.middleware.use(MetadataModelMiddleware<BlogCategoryModel>())
+        
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         
         app.hooks.register(.adminWidgets, use: adminWidgetsHook)
+        app.hooks.register(.response, use: responseHook)
 
     }
     
@@ -32,5 +35,25 @@ struct BlogModule: FeatherModule {
             return [BlogAdminWidgetTemplate(args.req)]
 //        }
 //        return []
+    }
+    
+    func responseHook(args: HookArguments) async -> Response? {
+        let category = try! await BlogCategoryModel.queryJoinVisibleMetadata(path: args.req.url.path, on: args.req.db)
+            .first()
+        guard let category = category else {
+            return nil
+        }
+        let posts = try! await category.$posts.query(on: args.req.db)
+//            .joinPublicMetadata()
+            .all()
+    
+        let message = posts.map(\.title).joined(separator: "-")
+
+
+        let template = WebWelcomeTemplate(args.req, context: .init(index: .init(title: "title"),
+                                                                   title: "posts by category",
+                                                                   message: message))
+        return args.req.html.render(template)
+
     }
 }

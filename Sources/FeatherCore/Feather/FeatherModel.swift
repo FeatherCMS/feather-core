@@ -24,8 +24,6 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
     /// unique identifier string for the model, based on the UUID
     var identifier: String { get }
     var uuid: UUID { get }
-    
-    
 
     static var idParamKey: String { get }
     static var idParamKeyPathComponent: PathComponent { get }
@@ -40,7 +38,7 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
 
 public extension FeatherModel {
     
-    static var schema: String { Module.moduleKey + "_" + modelKey }
+    static var schema: String { Module.moduleKey + "_" + pathComponent.description }
 
     static var modelKey: String {
         String(describing: self).dropFirst(Module.moduleKey.count).dropLast(5).lowercased()

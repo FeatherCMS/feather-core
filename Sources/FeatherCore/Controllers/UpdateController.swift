@@ -20,7 +20,7 @@ public protocol UpdateController: ModelController {
     func updateAccess(_ req: Request) async -> Bool
     func update(_ req: Request) async throws -> Response
     func updateView(_ req: Request) async throws -> Response
-    func updateTemplate(_ req: Request, _ editor: UpdateModelEditor) -> TemplateRepresentable
+    func updateTemplate(_ req: Request, _ editor: UpdateModelEditor) async -> TemplateRepresentable
     func updateApi(_ req: Request) async throws -> UpdateModelApi.DetailObject
 }
 
@@ -42,8 +42,8 @@ public extension UpdateController {
         await req.checkAccess(for: Self.updatePermission())
     }
     
-    private func render(_ req: Request, editor: UpdateModelEditor) -> Response {
-        return req.html.render(updateTemplate(req, editor))
+    private func render(_ req: Request, editor: UpdateModelEditor) async -> Response {
+        return req.html.render(await updateTemplate(req, editor))
     }
     
     func updateView(_ req: Request) async throws -> Response {
@@ -57,7 +57,7 @@ public extension UpdateController {
         editor.form.fields = editor.formFields
         await editor.load(req: req)
         await editor.read(req: req)
-        return render(req, editor: editor)
+        return await render(req, editor: editor)
     }
 
     func update(_ req: Request) async throws -> Response {
@@ -72,7 +72,7 @@ public extension UpdateController {
         await editor.process(req: req)
         let isValid = await editor.validate(req: req)
         guard isValid else {
-            return render(req, editor: editor)
+            return await render(req, editor: editor)
         }
         await editor.write(req: req)
         try await editor.model.update(on: req.db)

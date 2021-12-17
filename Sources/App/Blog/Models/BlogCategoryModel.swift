@@ -50,3 +50,8 @@ final class BlogCategoryModel: FeatherModel {
     }
 }
 
+extension BlogCategoryModel: MetadataRepresentable {
+    var metadata: FeatherMetadata {
+        .init(slug: Self.modelKey + "/" + title.slugify(), title: title, imageKey: imageKey)
+    }
+}

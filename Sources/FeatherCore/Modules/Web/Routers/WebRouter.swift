@@ -10,6 +10,7 @@ import Vapor
 struct WebRouter: FeatherRouter {
     
 //    let pagesController = WebPageAdminController()
+    let metadatasController = WebMetadataController()
     
     func boot(_ app: Application) throws {
         let frontendController = WebFrontendController()
@@ -33,6 +34,8 @@ struct WebRouter: FeatherRouter {
 //        accountController.setupAdminRoutes(args.routes)
 //        roleController.setupAdminRoutes(args.routes)
 //        permissionController.setupAdminRoutes(args.routes)
+        // TODO: only register list & update routes!
+        metadatasController.setupAdminRoutes(args.routes)
     }
 
     func adminApiRoutesHook(args: HookArguments) {

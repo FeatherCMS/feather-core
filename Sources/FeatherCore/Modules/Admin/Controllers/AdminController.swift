@@ -60,7 +60,7 @@ public protocol AdminController: FeatherController {
     func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext
 
     func createContext(_ req: Request, _ editor: CreateModelEditor) -> AdminEditorPageContext
-    func updateContext(_ req: Request, _ editor: UpdateModelEditor) -> AdminEditorPageContext
+    func updateContext(_ req: Request, _ editor: UpdateModelEditor) async -> AdminEditorPageContext
     
     func deleteInfo(_ model: Model) -> String
     func deleteContext(_ req: Request, _ model: Model, _ form: DeleteForm) -> AdminDeletePageContext
@@ -162,7 +162,7 @@ public extension AdminController {
         .init(label: label, url: listPath, permission: listPermission())
     }
     
-    static func createLink(_ label: String = "Create new") -> LinkContext {
+    static func createLink(_ label: String = "Create") -> LinkContext {
         .init(label: label, url: createPath, permission: createPermission())
     }
 
@@ -240,8 +240,8 @@ public extension AdminController {
               ])
     }
     
-    func updateContext(_ req: Request, _ editor: UpdateModelEditor) -> AdminEditorPageContext {
-        .init(title: "Update " + Self.modelName.singular,
+    func updateContext(_ req: Request, _ editor: UpdateModelEditor) async -> AdminEditorPageContext {
+       .init(title: "Update " + Self.modelName.singular,
               form: editor.form.context(req),
               breadcrumbs: [
                     Self.moduleLink(Self.moduleName.uppercasedFirst),
@@ -263,6 +263,56 @@ public extension AdminController {
     }
 }
 
+public extension AdminController where Model: MetadataRepresentable {
+    
+    func updateContext(_ req: Request, _ editor: UpdateModelEditor) async -> AdminEditorPageContext {
+        
+        let metadata = try! await Model.findMetadata(reference: editor.model.uuid, on: req.db)!
+
+        return .init(title: "Update " + Self.modelName.singular,
+              form: editor.form.context(req),
+              breadcrumbs: [
+                    Self.moduleLink(Self.moduleName.uppercasedFirst),
+                    Self.listLink(Self.modelName.plural.uppercasedFirst),
+              ],
+              links: [
+                    Self.detailLink(id: editor.model.uuid),
+                    .init(label: "Preview", url: metadata.slug!.safePath()),
+                    WebMetadataController.updateLink("Metadata", id: metadata.id!),
+              ],
+              actions: [
+                    Self.deleteLink(id: editor.model.uuid),
+              ])
+    }
+}
+
+extension AdminController where Model: WebMetadataModel {
+    
+    func updateContext(_ req: Request, _ editor: UpdateModelEditor) async -> AdminEditorPageContext {
+        let metadata = editor.model as! WebMetadataModel
+        let path = [
+            Feather.config.paths.admin,
+            metadata.module,
+            metadata.model,
+            metadata.reference.uuidString,
+            Self.updatePathComponent.description
+        ].map { PathComponent(stringLiteral: $0) }.path
+        
+        return .init(title: "Update " + Self.modelName.singular,
+              form: editor.form.context(req),
+              breadcrumbs: [
+                    Self.moduleLink(Self.moduleName.uppercasedFirst),
+                    Self.listLink(Self.modelName.plural.uppercasedFirst),
+              ],
+              links: [
+                    Self.detailLink(id: editor.model.uuid),
+                    .init(label: "Preview", url: metadata.slug.safePath()),
+                    .init(label: "Reference", url: path),
+              ])
+    }
+}
+
+
 public extension AdminController {
     
     func listTemplate(_ req: Request, _ list: ListContainer<Model>) -> TemplateRepresentable {
@@ -277,8 +327,8 @@ public extension AdminController {
         AdminEditorPageTemplate(req, createContext(req, editor))
     }
 
-    func updateTemplate(_ req: Request, _ editor: UpdateModelEditor) -> TemplateRepresentable {
-        AdminEditorPageTemplate(req, updateContext(req, editor))
+    func updateTemplate(_ req: Request, _ editor: UpdateModelEditor) async -> TemplateRepresentable {
+        await AdminEditorPageTemplate(req, updateContext(req, editor))
     }
     
     func deleteTemplate(_ req: Request, _ model: Model, _ form: DeleteForm) -> TemplateRepresentable {

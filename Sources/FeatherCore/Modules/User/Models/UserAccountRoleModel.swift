@@ -11,7 +11,8 @@ import Fluent
 final class UserAccountRoleModel: FeatherModel {
     typealias Module = UserModule
     
-    static let modelKey: String = "user_roles"
+    static let modelKey: String = "user_role"
+    static var pathComponent: PathComponent = "user_roles"
     
     struct FieldKeys {
         struct v1 {

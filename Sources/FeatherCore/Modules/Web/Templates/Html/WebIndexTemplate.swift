@@ -8,18 +8,30 @@
 import Vapor
 import SwiftHtml
 
-struct WebIndexTemplate: TemplateRepresentable {
+public struct WebIndexTemplate: TemplateRepresentable {
     
-    struct Context {
-        struct Metadata {
+    public struct Context {
+
+        public struct Metadata {
             var title: String
             var description: String
             var url: String
             var image: String
+            
+            public init(title: String, description: String, url: String, image: String) {
+                self.title = title
+                self.description = description
+                self.url = url
+                self.image = image
+            }
         }
         
-        struct User {
+        public struct User {
             let email: String
+            
+            public init(email: String) {
+                self.email = email
+            }
         }
 
         var title: String
@@ -32,19 +44,41 @@ struct WebIndexTemplate: TemplateRepresentable {
         var metadata: Metadata? = nil
         var canonicalUrl: String? = nil
         var user: User? = nil
+        
+        public init(title: String,
+                    css: [String] = ["/css/global.css", "/style.css"],
+                    js: [String] = [],
+                    lang: String = "en",
+                    charset: String = "utf-8",
+                    viewport: String = "width=device-width, initial-scale=1",
+                    noindex: Bool = false,
+                    metadata: WebIndexTemplate.Context.Metadata? = nil,
+                    canonicalUrl: String? = nil,
+                    user: WebIndexTemplate.Context.User? = nil) {
+            self.title = title
+            self.css = css
+            self.js = js
+            self.lang = lang
+            self.charset = charset
+            self.viewport = viewport
+            self.noindex = noindex
+            self.metadata = metadata
+            self.canonicalUrl = canonicalUrl
+            self.user = user
+        }
     }
 
     unowned var req: Request
     var context: Context
     var body: Tag
 
-    init(_ req: Request, context: Context, @TagBuilder _ builder: () -> Tag) {
+    public init(_ req: Request, context: Context, @TagBuilder _ builder: () -> Tag) {
         self.req = req
         self.context = context
         self.body = builder()
     }
 
-    var tag: Tag {
+    public var tag: Tag {
         Html {
             Head {
                 Title(context.title)
