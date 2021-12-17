@@ -23,6 +23,7 @@ public struct ToggleFieldTemplate: TemplateRepresentable {
         Input()
             .type(.checkbox)
             .key(context.key)
+            .value(String(true))
             .checked(context.value)
 
         if let error = context.error {

@@ -16,7 +16,7 @@ public struct FieldContext {
 
     public let label: String
     public let value: String?
-    public let type: Type
+    public let type: `Type`
     
     public init(label: String, value: String?, type: `Type` = .text) {
         self.label = label

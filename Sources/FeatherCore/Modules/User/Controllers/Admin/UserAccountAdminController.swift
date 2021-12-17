@@ -55,6 +55,7 @@ struct UserAccountAdminController: AdminController {
             .init(label: "Id", value: model.identifier),
             .init(label: "Email", value: model.email),
             .init(label: "Has root access?", value: model.isRoot ? "Yes" : "No"),
+            .init(label: "Roles", value: model.roles.map(\.name).joined(separator: "\n")),
         ]
     }
     
