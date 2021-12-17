@@ -51,6 +51,6 @@ public extension DetailController {
         }
         let model = try await findBy(identifier(req), on: req.db) as! DetailModelApi.Model
         let api = DetailModelApi()
-        return api.mapDetail(model: model)
+        return await api.mapDetail(req, model: model)
     }
 }

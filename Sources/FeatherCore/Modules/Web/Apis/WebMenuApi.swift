@@ -16,11 +16,11 @@ extension WebMenu.Patch: Content {}
 struct WebMenuApi: FeatherApi {
     typealias Model = WebMenuModel
 
-    func mapList(model: Model) -> WebMenu.List {
+    func mapList(_ req: Request, model: Model) async -> WebMenu.List {
         .init(id: model.uuid, key: model.key, name: model.name, notes: model.notes)
     }
     
-    func mapDetail(model: Model) -> WebMenu.Detail {
+    func mapDetail(_ req: Request, model: Model) async -> WebMenu.Detail {
         .init(id: model.uuid, key: model.key, name: model.name, notes: model.notes, items: [])
     }
     

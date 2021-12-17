@@ -48,6 +48,6 @@ public extension PatchController {
         let input = try req.content.decode(PatchModelApi.PatchObject.self)
         await api.mapPatch(req, model: model, input: input)
         try await model.update(on: req.db)
-        return api.mapDetail(model: model)
+        return await api.mapDetail(req, model: model)
     }
 }

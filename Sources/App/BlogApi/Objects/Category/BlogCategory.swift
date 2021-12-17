@@ -8,3 +8,7 @@
 import Foundation
 
 public enum BlogCategory {}
+
+extension BlogCategory {
+    public static let defaultPriority = 100
+}

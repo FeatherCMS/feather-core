@@ -16,11 +16,11 @@ extension UserPermission.Patch: Content {}
 struct UserPermissionApi: FeatherApi {
     typealias Model = UserPermissionModel
     
-    func mapList(model: Model) -> UserPermission.List {
+    func mapList(_ req: Request, model: Model) async -> UserPermission.List {
         .init(id: model.uuid, name: model.name)
     }
     
-    func mapDetail(model: Model) -> UserPermission.Detail {
+    func mapDetail(_ req: Request, model: Model) async -> UserPermission.Detail {
         .init(id: model.uuid,
               namespace: model.namespace,
               context: model.context,

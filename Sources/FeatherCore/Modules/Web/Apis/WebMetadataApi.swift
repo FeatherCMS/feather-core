@@ -15,7 +15,29 @@ extension WebMetadata.Patch: Content {}
 
 struct WebMetadataApi: FeatherApi {
     typealias Model = WebMetadataModel
-
+    
+    func mapList(_ req: Request, model: Model) async -> WebMetadata.List {
+        mapList(model: model)
+    }
+    
+    func mapDetail(_ req: Request, model: Model) async -> WebMetadata.Detail {
+        mapDetail(model: model)
+    }
+    
+    func mapCreate(_ req: Request, model: Model, input: WebMetadata.Create) async {
+        mapCreate(model: model, input: input)
+    }
+    
+    func mapUpdate(_ req: Request, model: Model, input: WebMetadata.Update) async {
+        mapUpdate(model: model, input: input)
+    }
+    
+    func mapPatch(_ req: Request, model: Model, input: WebMetadata.Patch) async {
+        mapPatch(model: model, input: input)
+    }
+    
+    // MARK: - internal helpers
+    
     func mapList(model: Model) -> WebMetadata.List {
         .init(id: model.uuid,
               module: model.module,
@@ -51,20 +73,6 @@ struct WebMetadataApi: FeatherApi {
               css: model.css,
               js: model.js)
     }
-    
-    func mapCreate(_ req: Request, model: Model, input: WebMetadata.Create) async {
-        mapCreate(model: model, input: input)
-    }
-    
-    func mapUpdate(_ req: Request, model: Model, input: WebMetadata.Update) async {
-        mapUpdate(model: model, input: input)
-    }
-    
-    func mapPatch(_ req: Request, model: Model, input: WebMetadata.Patch) async {
-        mapPatch(model: model, input: input)
-    }
-    
-    // MARK: - internal helpers
     
     func mapCreate(model: Model, input: WebMetadata.Create) {
         model.slug = input.slug

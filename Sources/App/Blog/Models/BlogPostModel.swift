@@ -44,3 +44,10 @@ final class BlogPostModel: FeatherModel {
         self.content = content
     }
 }
+
+extension BlogPostModel: MetadataRepresentable {
+
+    var metadataCreate: WebMetadata.Create {
+        .init(slug: Self.pathComponent.description + "/" + title.slugify(), title: title)
+    }
+}

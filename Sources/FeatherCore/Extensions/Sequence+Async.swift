@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Sequence {
+public extension Sequence {
     
     func asyncForEach(_ transform: (Element) async throws -> Void) async rethrows {
         for element in self {

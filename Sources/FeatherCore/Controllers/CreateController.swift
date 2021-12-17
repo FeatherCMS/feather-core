@@ -93,7 +93,8 @@ public extension CreateController {
         let model = Model() as! CreateModelApi.Model
         await api.mapCreate(req, model: model, input: input)
         try await model.create(on: req.db)
-        return try await api.mapDetail(model: model).encodeResponse(status: .created, for: req)
+        return try await api.mapDetail(req, model: model)
+            .encodeResponse(status: .created, for: req)
     }
 }
 

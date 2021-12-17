@@ -91,7 +91,7 @@ public extension UpdateController {
         let input = try req.content.decode(UpdateModelApi.UpdateObject.self)
         await api.mapUpdate(req, model: model, input: input)
         try await model.update(on: req.db)
-        return api.mapDetail(model: model)
+        return await api.mapDetail(req, model: model)
     }
         
 }

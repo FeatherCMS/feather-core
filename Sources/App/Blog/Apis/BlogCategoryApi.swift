@@ -17,21 +17,26 @@ extension BlogCategory.Patch: Content {}
 struct BlogCategoryApi: FeatherApi {
     typealias Model = BlogCategoryModel
 
-    func mapList(model: Model) -> BlogCategory.List {
+    func mapList(_ req: Request, model: Model) async -> BlogCategory.List {
         .init(id: model.uuid,
               title: model.title,
               imageKey: model.imageKey,
               color: model.color,
-              priority: model.priority)
+              priority: model.priority,
+              metadata: model.metadataDetails)
     }
     
-    func mapDetail(model: Model) -> BlogCategory.Detail {
-        .init(id: model.uuid,
+    func mapDetail(_ req: Request, model: Model) async -> BlogCategory.Detail {
+        let posts = try! await model.$posts.query(on: req.db).joinPublicMetadata().all()
+        let postList = await posts.asyncMap { await BlogPostApi().mapList(req, model: $0) }
+        return .init(id: model.uuid,
               title: model.title,
               imageKey: model.imageKey,
               excerpt: model.excerpt,
               color: model.color,
-              priority: model.priority)
+              priority: model.priority,
+              posts: postList,
+              metadata: model.metadataDetails)
     }
     
     func mapCreate(_ req: Request, model: Model, input: BlogCategory.Create) async {
@@ -57,4 +62,15 @@ struct BlogCategoryApi: FeatherApi {
         model.color = input.color ?? model.color
         model.priority = input.priority ?? model.priority
     }
+    
+    // MARK: - api
+    
+    func findDetailBy(path: String, _ req: Request) async throws -> BlogCategory.Detail? {
+        let category = try await BlogCategoryModel.queryJoinVisibleMetadataFilterBy(path: path, on: req.db).first()
+        guard let category = category else {
+            return nil
+        }
+        return await mapDetail(req, model: category)
+    }
+    
 }

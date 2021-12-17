@@ -16,11 +16,11 @@ extension WebPage.Patch: Content {}
 struct WebPageApi: FeatherApi {
     typealias Model = WebPageModel
 
-    func mapList(model: Model) -> WebPage.List {
+    func mapList(_ req: Request, model: Model) async -> WebPage.List {
         .init(id: model.uuid, title: model.title)
     }
     
-    func mapDetail(model: Model) -> WebPage.Detail {
+    func mapDetail(_ req: Request, model: Model) async -> WebPage.Detail {
         .init(id: model.uuid, title: model.title, content: model.content)
     }
     

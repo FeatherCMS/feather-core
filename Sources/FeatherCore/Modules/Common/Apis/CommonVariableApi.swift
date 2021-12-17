@@ -16,11 +16,11 @@ extension CommonVariable.Patch: Content {}
 struct CommonVariableApi: FeatherApi {
     typealias Model = CommonVariableModel
 
-    func mapList(model: Model) -> CommonVariable.List {
+    func mapList(_ req: Request, model: Model) async -> CommonVariable.List {
         .init(id: model.uuid, key: model.key, value: model.value)
     }
     
-    func mapDetail(model: Model) -> CommonVariable.Detail {
+    func mapDetail(_ req: Request, model: Model) async -> CommonVariable.Detail {
         .init(id: model.uuid, key: model.key, name: model.name, value: model.value, notes: model.notes)
     }
     

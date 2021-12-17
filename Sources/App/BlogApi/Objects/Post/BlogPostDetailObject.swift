@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FeatherCoreApi
 
 extension BlogPost {
 
@@ -17,14 +18,16 @@ extension BlogPost {
         public var content: String?
         public var categories: [BlogCategory.List]
         public var authors: [BlogAuthor.List]
+        public var metadata: WebMetadata.Detail
         
         public init(id: UUID,
                     title: String,
                     imageKey: String?,
                     excerpt: String?,
                     content: String?,
-                    categories: [BlogCategory.List] = [],
-                    authors: [BlogAuthor.List] = []) {
+                    categories: [BlogCategory.List],
+                    authors: [BlogAuthor.List],
+                    metadata: WebMetadata.Detail) {
             self.id = id
             self.title = title
             self.imageKey = imageKey
@@ -32,6 +35,7 @@ extension BlogPost {
             self.content = content
             self.categories = categories
             self.authors = authors
+            self.metadata = metadata
         }
 
     }

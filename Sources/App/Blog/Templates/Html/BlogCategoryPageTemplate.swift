@@ -6,6 +6,7 @@
 //
 
 import Vapor
+import Liquid
 import FeatherCore
 import SwiftHtml
 
@@ -25,24 +26,28 @@ struct BlogCategoryPageTemplate: TemplateRepresentable {
         WebIndexTemplate.init(req, context: .init(title: context.category.title)) {
             Div {
                 Header {
+                    if let imageKey = context.category.imageKey {
+                        Img(src: req.fs.resolve(key: imageKey), alt: context.category.title)
+                    }
                     H1(context.category.title)
                     P(context.category.excerpt ?? "")
                 }
                 .class("lead")
-                
+
                 Section {
-                    for post in context.posts {
-                        A("")
-                            .href(post)
-    //                    <a href="/#(category.metadata.slug)" class="card">
-    //                        <div class="content">
-    //                            #if(category.imageKey != nil):
-    //                            <img style="width: 4rem;" src="#(category.imageKey.resolve())">
-    //                            #endif
-    //                            <h2#if(category.color != nil): style="color: #(category.color);"#endif>#(category.title)</h2>
-    //                            <p>#(category.excerpt)</p>
-    //                        </div>
-    //                    </a>
+                    for post in context.category.posts {
+                        A {
+                            Div {
+                                if let imageKey = post.imageKey {
+                                    Img(src: req.fs.resolve(key: imageKey), alt: post.title)
+                                }
+                                H2(post.title)
+                                P(post.excerpt ?? "")
+                            }
+                            .class("content")
+                        }
+                        .href(post.metadata.slug)
+                        .class("card")
                     }
                 }
             }

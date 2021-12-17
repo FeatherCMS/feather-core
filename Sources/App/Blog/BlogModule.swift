@@ -37,23 +37,15 @@ struct BlogModule: FeatherModule {
 //        return []
     }
     
-    func responseHook(args: HookArguments) async -> Response? {        
-        let category = try! await BlogCategoryModel.queryJoinVisibleMetadataFilterBy(path: args.req.url.path, on: args.req.db)
-            .first()
+    func responseHook(args: HookArguments) async -> Response? {
+        let category = try! await BlogCategoryApi().findDetailBy(path: args.req.url.path, args.req)
         guard let category = category else {
             return nil
         }
-        let posts = try! await category.$posts.query(on: args.req.db)
-//            .joinPublicMetadata()
-            .all()
 
 //        args.req.fs.resolve(key: category.imageKey)
-//
-//
 
-        
-        let template = BlogCategoryPageTemplate.init(args.req, context: .init(category: BlogCategoryApi().mapDetail(model: category), posts: []))
+        let template = BlogCategoryPageTemplate.init(args.req, context: .init(category: category))
         return args.req.html.render(template)
-
     }
 }

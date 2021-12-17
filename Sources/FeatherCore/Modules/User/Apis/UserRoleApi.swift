@@ -16,11 +16,11 @@ extension UserRole.Patch: Content {}
 struct UserRoleApi: FeatherApi {
     typealias Model = UserRoleModel
     
-    func mapList(model: Model) -> UserRole.List {
+    func mapList(_ req: Request, model: Model) async -> UserRole.List {
         .init(id: model.uuid, name: model.name)
     }
     
-    func mapDetail(model: Model) -> UserRole.Detail {
+    func mapDetail(_ req: Request, model: Model) async -> UserRole.Detail {
         .init(id: model.uuid, key: model.key, name: model.name, notes: model.notes)
     }
     

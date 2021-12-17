@@ -10,7 +10,7 @@ import Vapor
 public protocol ListApi: ModelApi {
     associatedtype ListObject: Content
     
-    func mapList(model: Model) -> ListObject
+    func mapList(_ req: Request, model: Model) async -> ListObject
 }
 
 

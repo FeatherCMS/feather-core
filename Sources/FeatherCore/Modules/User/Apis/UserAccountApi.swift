@@ -16,11 +16,11 @@ extension UserAccount.Patch: Content {}
 struct UserAccountApi: FeatherApi {
     typealias Model = UserAccountModel
     
-    func mapList(model: Model) -> UserAccount.List {
+    func mapList(_ req: Request, model: Model) async -> UserAccount.List {
         .init(id: model.uuid, email: model.email)
     }
     
-    func mapDetail(model: Model) -> UserAccount.Detail {
+    func mapDetail(_ req: Request, model: Model) async -> UserAccount.Detail {
         .init(id: model.uuid, email: model.email, isRoot: model.isRoot)
     }
     

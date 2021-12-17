@@ -9,5 +9,4 @@ import Foundation
 
 struct BlogCategoryPageTemplateContext {
     let category: BlogCategory.Detail
-    let posts: [String]
 }
