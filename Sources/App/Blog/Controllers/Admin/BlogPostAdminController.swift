@@ -2,29 +2,27 @@
 //  File.swift
 //  
 //
-//  Created by Tibor Bodecs on 2021. 12. 14..
+//  Created by Tibor Bodecs on 2021. 12. 17..
 //
 
 import Vapor
 import Fluent
 import FeatherCore
 
-struct BlogCategoryAdminController: AdminController {
+struct BlogPostAdminController: AdminController {
     
-    typealias Model = BlogCategoryModel
+    typealias Model = BlogPostModel
     
-    typealias CreateModelEditor = BlogCategoryEditor
-    typealias UpdateModelEditor = BlogCategoryEditor
+    typealias CreateModelEditor = BlogPostEditor
+    typealias UpdateModelEditor = BlogPostEditor
     
-    typealias ListModelApi = BlogCategoryApi
-    typealias DetailModelApi = BlogCategoryApi
-    typealias CreateModelApi = BlogCategoryApi
-    typealias UpdateModelApi = BlogCategoryApi
-    typealias PatchModelApi = BlogCategoryApi
-    typealias DeleteModelApi = BlogCategoryApi
-    
-    static var modelName: FeatherModelName = .init(singular: "category", plural: "categories")
- 
+    typealias ListModelApi = BlogPostApi
+    typealias DetailModelApi = BlogPostApi
+    typealias CreateModelApi = BlogPostApi
+    typealias UpdateModelApi = BlogPostApi
+    typealias PatchModelApi = BlogPostApi
+    typealias DeleteModelApi = BlogPostApi
+     
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
             Model.FieldKeys.v1.title,
@@ -40,7 +38,6 @@ struct BlogCategoryAdminController: AdminController {
     func listColumns() -> [ColumnContext] {
         [
             .init(Model.FieldKeys.v1.title.description, isDefault: true),
-            .init(Model.FieldKeys.v1.title.description),
 
         ]
     }
@@ -48,7 +45,6 @@ struct BlogCategoryAdminController: AdminController {
     func listCells(for model: Model) -> [CellContext] {
         [
             .init(model.title, link: Self.detailLink(model.title, id: model.uuid)),
-            .init(model.metadataDetails.title, link: Self.detailLink(model.title, id: model.uuid)),
         ]
     }
     

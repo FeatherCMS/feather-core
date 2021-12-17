@@ -19,7 +19,6 @@ struct BlogCategoryPageTemplate: TemplateRepresentable {
         self.req = req
         self.context = context
     }
-
     
     @TagBuilder
     var tag: Tag {

@@ -21,7 +21,9 @@ struct BlogModule: FeatherModule {
     func boot(_ app: Application) throws {
         app.migrations.add(BlogMigrations.v1())
         
+        app.databases.middleware.use(MetadataModelMiddleware<BlogPostModel>())
         app.databases.middleware.use(MetadataModelMiddleware<BlogCategoryModel>())
+        app.databases.middleware.use(MetadataModelMiddleware<BlogAuthorModel>())
         
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         
@@ -42,10 +44,7 @@ struct BlogModule: FeatherModule {
         guard let category = category else {
             return nil
         }
-
-//        args.req.fs.resolve(key: category.imageKey)
-
-        let template = BlogCategoryPageTemplate.init(args.req, context: .init(category: category))
+        let template = BlogCategoryPageTemplate(args.req, context: .init(category: category))
         return args.req.html.render(template)
     }
 }

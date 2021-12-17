@@ -21,22 +21,22 @@ struct BlogAdminWidgetTemplate: TemplateRepresentable {
     var tag: Tag {
         H2("Blog")
         Ul {
+            if BlogPostAdminController.hasListPermission(req) {
+                Li {
+                    A("Posts")
+                        .href(BlogPostAdminController.listPath)
+                }
+            }
             if BlogCategoryAdminController.hasListPermission(req) {
                 Li {
                     A("Categories")
                         .href(BlogCategoryAdminController.listPath)
                 }
             }
-            if req.checkPermission("blog-category-list") {
-                Li {
-                    A("Categories")
-                        .href("blog/categories")
-                }
-            }
-            if req.checkPermission("blog-author-list") {
+            if BlogAuthorAdminController.hasListPermission(req) {
                 Li {
                     A("Authors")
-                        .href("blog/authors")
+                        .href(BlogAuthorAdminController.listPath)
                 }
             }
         }

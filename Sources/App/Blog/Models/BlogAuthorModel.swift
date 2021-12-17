@@ -40,3 +40,10 @@ final class BlogAuthorModel: FeatherModel {
         self.bio = bio
     }
 }
+
+extension BlogAuthorModel: MetadataRepresentable {
+
+    var metadataCreate: WebMetadata.Create {
+        .init(slug: Self.pathComponent.description + "/" + name.slugify(), title: name)
+    }
+}
