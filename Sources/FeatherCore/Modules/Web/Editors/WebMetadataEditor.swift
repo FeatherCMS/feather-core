@@ -7,6 +7,7 @@
 
 import Vapor
 import Fluent
+import FeatherCoreApi
 
 struct WebMetadataEditor: FeatherModelEditor {
     let model: WebMetadataModel
@@ -44,6 +45,21 @@ struct WebMetadataEditor: FeatherModelEditor {
         TextareaField("excerpt")
             .read { $1.output.context.value = model.excerpt }
             .write { model.excerpt = $1.input }
+        
+        SelectField("statusId")
+            .config {
+                $0.output.context.label.required = true
+                $0.output.context.label.title = "Status"
+                $0.output.context.options = WebMetadata.Status.allCases.map { OptionContext(key: $0.rawValue, label: $0.rawValue.uppercasedFirst) }
+                $0.output.context.value = WebMetadata.Status.draft.rawValue
+            }
+            .validators {
+                FormFieldValidator($1, "Invalid status") { field, _ in
+                    WebMetadata.Status(rawValue: field.input) != nil
+                }
+            }
+            .read { $1.output.context.value = model.status.rawValue }
+            .write { model.status = WebMetadata.Status(rawValue: $1.input)! }
         
         InputField("canonicalUrl")
             .read { $1.output.context.value = model.canonicalUrl }

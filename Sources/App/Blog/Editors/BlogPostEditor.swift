@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 17..
 //
 
+import Foundation
 import FeatherCore
 
 struct BlogPostEditor: FeatherModelEditor {
@@ -42,6 +43,19 @@ struct BlogPostEditor: FeatherModelEditor {
         TextareaField("content")
             .read { $1.output.context.value = model.content }
             .write { model.content = $1.input }
+        
+        CheckboxField("categories")
+            .load { req, field in
+                let categories = try! await BlogCategoryModel.query(on: req.db).all()
+                field.output.context.options = categories.map { OptionContext(key: $0.identifier, label: $0.title) }
+            }
+            .read { req, field in
+                field.output.context.values = model.categories.compactMap { $0.identifier }
+            }
+            .save { req, field in
+                let values = field.input.compactMap { UUID(uuidString: $0) }
+                return try! await model.$categories.reAttach(ids: values, on: req.db)
+            }
     }
 }
 

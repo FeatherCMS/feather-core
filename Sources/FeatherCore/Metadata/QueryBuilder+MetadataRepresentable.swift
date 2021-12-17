@@ -11,7 +11,7 @@ import FeatherCoreApi
 
 public extension QueryBuilder where Model: MetadataRepresentable {
 
-    func joinAllMetadata() -> QueryBuilder<Model> {
+    func joinMetadata() -> QueryBuilder<Model> {
         join(WebMetadataModel.self, on: \WebMetadataModel.$reference == \Model._$id)
             .filter(WebMetadataModel.self, \.$module == Model.Module.pathComponent.description)
             .filter(WebMetadataModel.self, \.$model == Model.pathComponent.description)
@@ -19,13 +19,13 @@ public extension QueryBuilder where Model: MetadataRepresentable {
     }
 
     func joinVisibleMetadata() -> QueryBuilder<Model> {
-        joinAllMetadata()
+        joinMetadata()
             .filterMetadataByVisibleStatus()
             .sortMetadataByDate()
     }
 
     func joinPublicMetadata() -> QueryBuilder<Model> {
-        joinAllMetadata()
+        joinMetadata()
             .filterMetadataBy(status: .published)
             .filterMetadataBy(date: Date())
             .sortMetadataByDate()

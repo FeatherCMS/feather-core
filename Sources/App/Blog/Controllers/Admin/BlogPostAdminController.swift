@@ -23,6 +23,14 @@ struct BlogPostAdminController: AdminController {
     typealias PatchModelApi = BlogPostApi
     typealias DeleteModelApi = BlogPostApi
      
+    
+    func findBy(_ id: UUID, on db: Database) async throws -> BlogPostModel {
+        guard let post = try await Model.findWithCategoriesAndAuthorsBy(id: id, on: db) else {
+            throw Abort(.notFound)
+        }
+        return post
+    }
+
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
             Model.FieldKeys.v1.title,

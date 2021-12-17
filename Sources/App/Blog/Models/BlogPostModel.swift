@@ -45,6 +45,18 @@ final class BlogPostModel: FeatherModel {
     }
 }
 
+extension BlogPostModel {
+
+    static func findWithCategoriesAndAuthorsBy(id: UUID, on db: Database) async throws -> BlogPostModel? {
+        try await BlogPostModel.query(on: db)
+            .joinMetadata()
+            .filter(\.$id == id)
+            .with(\.$categories)
+            .with(\.$authors)
+            .first()
+    }
+
+}
 extension BlogPostModel: MetadataRepresentable {
 
     var metadataCreate: WebMetadata.Create {

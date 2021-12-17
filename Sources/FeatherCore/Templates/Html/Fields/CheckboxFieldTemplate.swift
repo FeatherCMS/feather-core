@@ -10,7 +10,7 @@ import SwiftHtml
 
 public struct CheckboxFieldTemplate: TemplateRepresentable {
 
-    var context: CheckboxFieldContext
+    public var context: CheckboxFieldContext
     
     public init(_ context: CheckboxFieldContext) {
         self.context = context

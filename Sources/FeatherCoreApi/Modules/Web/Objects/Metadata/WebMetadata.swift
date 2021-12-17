@@ -12,7 +12,7 @@ public enum WebMetadata {}
 
 extension WebMetadata {
 
-    public enum Status: String, Codable {
+    public enum Status: String, Codable, CaseIterable {
         case draft
         case published
         case archived
