@@ -21,6 +21,11 @@ struct UserAccountAdminController: AdminController {
     typealias PatchModelApi = UserAccountApi
     typealias DeleteModelApi = UserAccountApi
 
+    
+    func findBy(_ id: UUID, on db: Database) async throws -> Model {
+        try await Model.findWithRolesBy(id: id, on: db)
+    }
+    
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
             Model.FieldKeys.v1.email,

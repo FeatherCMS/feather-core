@@ -21,6 +21,10 @@ struct UserRoleAdminController: AdminController {
     typealias PatchModelApi = UserRoleApi
     typealias DeleteModelApi = UserRoleApi
 
+    func findBy(_ id: UUID, on db: Database) async throws -> Model {
+        try await Model.findWithPermissionsBy(id: id, on: db)
+    }
+    
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
             Model.FieldKeys.v1.name,
@@ -49,7 +53,10 @@ struct UserRoleAdminController: AdminController {
     func detailFields(for model: Model) -> [FieldContext] {
         [
             .init(label: "Id", value: model.identifier),
-            .init(label: "Email", value: model.name),
+            .init(label: "Key", value: model.key),
+            .init(label: "Name", value: model.name),
+            .init(label: "Notes", value: model.notes),
+            .init(label: "Permissions", value: model.permissions.map(\.name).joined(separator: "\n")),
         ]
     }
     

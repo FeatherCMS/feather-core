@@ -13,7 +13,7 @@ public struct AdminModulePageContext {
     public let message: String
     public let links: [LinkContext]
     
-    public init(title: String, message: String, links: [LinkContext]) {
+    public init(title: String, message: String, links: [LinkContext] = []) {
         self.title = title
         self.message = message
         self.links = links

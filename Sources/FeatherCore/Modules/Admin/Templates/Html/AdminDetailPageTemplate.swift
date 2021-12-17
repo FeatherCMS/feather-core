@@ -43,7 +43,7 @@ struct AdminDetailPageTemplate: TemplateRepresentable {
                             Dt(field.label)
                             switch field.type {
                             case .text:
-                                value.isEmpty ? Dd("&nbsp;") : Dd(value)
+                                value.isEmpty ? Dd("&nbsp;") : Dd(value.replacingOccurrences(of: "\n", with: "<br>"))
                             case .image:
                                 Dd {
                                     Img(src: req.fs.resolve(key: value), alt: field.label)

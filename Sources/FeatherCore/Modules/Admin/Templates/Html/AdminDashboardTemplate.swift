@@ -19,7 +19,7 @@ public struct AdminDashboardTemplate: TemplateRepresentable {
     }
 
     public var tag: Tag {
-        AdminIndexTemplate(req, .init(title: context.title, breadcrumbs: [])) {
+        AdminIndexTemplate(req, .init(title: context.title)) {
             Div {
                 H1("Dashboard")
                 P("Overview of the content management system.")

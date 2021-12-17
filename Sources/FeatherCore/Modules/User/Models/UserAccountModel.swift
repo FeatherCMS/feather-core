@@ -51,8 +51,11 @@ extension UserAccountModel: Authenticatable {
 
 extension UserAccountModel {
 
-    static func findWithRolesBy(id: UUID, on db: Database) async throws -> UserAccountModel? {
-        try await query(on: db).filter(\.$id == id).with(\.$roles).first()
+    static func findWithRolesBy(id: UUID, on db: Database) async throws -> UserAccountModel {
+        guard let model = try await query(on: db).filter(\.$id == id).with(\.$roles).first() else {
+            throw Abort(.notFound)
+        }
+        return model
     }
     
     static func findWithPermissionsBy(id: UUID, on db: Database) async throws -> UserAccountModel? {

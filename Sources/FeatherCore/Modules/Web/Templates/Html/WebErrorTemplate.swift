@@ -31,12 +31,14 @@ struct WebErrorTemplate: TemplateRepresentable {
     
     var tag: Tag {
         WebIndexTemplate(req, context: context.index) {
-            Span("⚠️")
-                .class("icon")
-            H1(context.title)
-            P(context.message)
-            A("Home →")
-                .href("/")
+            Div {
+                Span("⚠️")
+                    .class("icon")
+                H1(context.title)
+                P(context.message)
+                A("Home →")
+                    .href("/")
+            }
         }.tag
     }
 }

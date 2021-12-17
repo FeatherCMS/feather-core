@@ -24,11 +24,8 @@ struct BlogPostAdminController: AdminController {
     typealias DeleteModelApi = BlogPostApi
      
     
-    func findBy(_ id: UUID, on db: Database) async throws -> BlogPostModel {
-        guard let post = try await Model.findWithCategoriesAndAuthorsBy(id: id, on: db) else {
-            throw Abort(.notFound)
-        }
-        return post
+    func findBy(_ id: UUID, on db: Database) async throws -> Model {
+        try await Model.findWithCategoriesAndAuthorsBy(id: id, on: db)
     }
 
     var listConfig: ListConfiguration {
@@ -61,8 +58,8 @@ struct BlogPostAdminController: AdminController {
             .init(label: "Image", value: model.imageKey, type: .image),
             .init(label: "Id", value: model.identifier),
             .init(label: "Title", value: model.title),
-            .init(label: "Categories", value: model.categories.map(\.title).joined(separator: ", ")),
-            .init(label: "Authors", value: model.authors.map(\.name).joined(separator: ", ")),
+            .init(label: "Categories", value: model.categories.map(\.title).joined(separator: "\n")),
+            .init(label: "Authors", value: model.authors.map(\.name).joined(separator: "\n")),
         ]
     }
     

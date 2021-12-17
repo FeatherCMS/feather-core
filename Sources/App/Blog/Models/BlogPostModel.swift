@@ -47,13 +47,18 @@ final class BlogPostModel: FeatherModel {
 
 extension BlogPostModel {
 
-    static func findWithCategoriesAndAuthorsBy(id: UUID, on db: Database) async throws -> BlogPostModel? {
-        try await BlogPostModel.query(on: db)
-            .joinMetadata()
-            .filter(\.$id == id)
-            .with(\.$categories)
-            .with(\.$authors)
-            .first()
+    static func findWithCategoriesAndAuthorsBy(id: UUID, on db: Database) async throws -> BlogPostModel {
+        guard
+            let model = try await BlogPostModel.query(on: db)
+                .joinMetadata()
+                .filter(\.$id == id)
+                .with(\.$categories)
+                .with(\.$authors)
+                .first()
+        else {
+            throw Abort(.notFound)
+        }
+        return model
     }
 
 }

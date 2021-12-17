@@ -19,13 +19,15 @@ public struct AdminErrorTemplate: TemplateRepresentable {
     }
     
     public var tag: Tag {
-        AdminIndexTemplate(req, .init(title: context.title, breadcrumbs: [])) {
-            Span("⚠️")
-                .class("icon")
-            H1(context.title)
-            P(context.message)
-            A("Home →")
-                .href("/")
+        AdminIndexTemplate(req, .init(title: context.title)) {
+            Div {
+                Span("⚠️")
+                    .class("icon")
+                H1(context.title)
+                P(context.message)
+                A("Home →")
+                    .href("/")
+            }
         }.tag
     }
 }

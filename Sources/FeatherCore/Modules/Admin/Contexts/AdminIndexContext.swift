@@ -8,12 +8,28 @@
 import Foundation
 
 public struct AdminIndexContext {
-    var title: String
-    var css: [String] = ["/css/global.css", "/style.css"]
-    var js: [String] = []
-    var lang: String = "en"
-    var charset: String = "utf-8"
-    var viewport: String = "width=device-width, initial-scale=1"
 
-    var breadcrumbs: [LinkContext]
+    public var title: String
+    public var css: [String]
+    public var js: [String]
+    public var lang: String
+    public var charset: String
+    public var viewport: String
+    public var breadcrumbs: [LinkContext]
+    
+    public init(title: String,
+                css: [String] = ["/css/global.css", "/style.css"],
+                js: [String] = [],
+                lang: String = "en",
+                charset: String = "utf-8",
+                viewport: String = "width=device-width, initial-scale=1",
+                breadcrumbs: [LinkContext] = []) {
+        self.title = title
+        self.css = css
+        self.js = js
+        self.lang = lang
+        self.charset = charset
+        self.viewport = viewport
+        self.breadcrumbs = breadcrumbs
+    }
 }
