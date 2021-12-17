@@ -47,6 +47,7 @@ struct AdminEditorPageTemplate: TemplateRepresentable {
                     }
                 }
             }
+            .class("container")
         }.tag
     }
 }

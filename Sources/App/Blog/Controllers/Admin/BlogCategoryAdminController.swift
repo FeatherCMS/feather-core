@@ -56,6 +56,9 @@ struct BlogCategoryAdminController: AdminController {
         [
             .init(label: "Id", value: model.identifier),
             .init(label: "Title", value: model.title),
+            .init(label: "Excerpt", value: model.excerpt),
+            .init(label: "Color", value: model.color),
+            .init(label: "Priority", value: String(model.priority)),
         ]
     }
     

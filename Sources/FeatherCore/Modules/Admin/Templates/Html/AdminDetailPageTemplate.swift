@@ -29,7 +29,7 @@ struct AdminDetailPageTemplate: TemplateRepresentable {
                             A(item.label)
                                 .href(item.url)
                                 .target(.blank, item.isBlank)
-                                .class(item.style ?? "", item.style != nil)
+                                .class(item.style)
                         }
                     }
                 }
@@ -38,12 +38,17 @@ struct AdminDetailPageTemplate: TemplateRepresentable {
                 Dl {
                     for field in context.fields {
                         // TODO: use proper field type
-                        Dt(field.label)
-                        if field.value.isEmpty {
-                            Dd("&nbsp;")
-                        }
-                        else {
-                            Dd(field.value)
+                        
+                        if let value = field.value {
+                            Dt(field.label)
+                            switch field.type {
+                            case .text:
+                                value.isEmpty ? Dd("&nbsp;") : Dd(value)
+                            case .image:
+                                Dd {
+                                    Img(src: req.fs.resolve(key: value), alt: field.label)
+                                }
+                            }
                         }
                     }
                 }
@@ -53,11 +58,12 @@ struct AdminDetailPageTemplate: TemplateRepresentable {
                         if req.checkPermission(item.permission) {
                             A(item.label)
                                 .href(item.url)
-                                .class(item.style ?? "", item.style != nil)
+                                .class(item.style)
                         }
                     }
                 }
             }
+            .class("container")
         }.tag
     }
 }

@@ -56,6 +56,19 @@ struct BlogPostEditor: FeatherModelEditor {
                 let values = field.input.compactMap { UUID(uuidString: $0) }
                 return try! await model.$categories.reAttach(ids: values, on: req.db)
             }
+
+        CheckboxField("authors")
+            .load { req, field in
+                let authors = try! await BlogAuthorModel.query(on: req.db).all()
+                field.output.context.options = authors.map { OptionContext(key: $0.identifier, label: $0.name) }
+            }
+            .read { req, field in
+                field.output.context.values = model.authors.compactMap { $0.identifier }
+            }
+            .save { req, field in
+                let values = field.input.compactMap { UUID(uuidString: $0) }
+                return try! await model.$authors.reAttach(ids: values, on: req.db)
+            }
     }
 }
 
