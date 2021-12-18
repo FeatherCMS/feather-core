@@ -84,7 +84,10 @@ public protocol ListController: ModelController {
     static func hasListPermission(_ req: Request) -> Bool
 
     func listQuery(_ req: Request, _ qb: QueryBuilder<Model>) -> QueryBuilder<Model>
-        
+    func listSort(_ req: Request,
+                  _ qb: QueryBuilder<Model>,
+                  _ order: FieldKey,
+                  _ direction: DatabaseQuery.Sort.Direction) -> QueryBuilder<Model>
     func listSearch(_ term: String) -> [ModelValueFilter<Model>]
     func listTemplate(_ req: Request, _ list: ListContainer<Model>) -> TemplateRepresentable
     func listAccess(_ req: Request) async -> Bool
@@ -136,6 +139,13 @@ public extension ListController {
     func listQuery(_ req: Request, _ qb: QueryBuilder<Model>) -> QueryBuilder<Model> {
         qb
     }
+    
+    func listSort(_ req: Request,
+                  _ qb: QueryBuilder<Model>,
+                  _ order: FieldKey,
+                  _ direction: DatabaseQuery.Sort.Direction) -> QueryBuilder<Model> {
+        qb.sort(order, direction)
+    }
 }
 
 private extension ListController {
@@ -147,19 +157,18 @@ private extension ListController {
         var qb = listQuery(req, Model.query(on: req.db))
 
         let allowedOrders = config.allowedOrders
-        var listOrder = allowedOrders.first
+        var fieldOrder = allowedOrders.first
         if !allowedOrders.isEmpty, let rawOrder: String = req.query[config.orderKey], allowedOrders.contains(.string(rawOrder)) {
-            listOrder = .string(rawOrder)
+            fieldOrder = .string(rawOrder)
         }
 
-        var listSort: FieldSort = config.defaultSort
+        var fieldSort: FieldSort = config.defaultSort
         if let rawSort: String = req.query[config.sortKey], let sortValue = FieldSort(rawValue: rawSort) {
-            listSort = sortValue
+            fieldSort = sortValue
         }
-        
-        if let order = listOrder {
-            // NOTE: listSort(qb, order, direction)
-            qb = qb.sort(order, listSort.direction)
+
+        if let order = fieldOrder {
+            qb = listSort(req, qb, order, fieldSort.direction)
         }
 
         // search by terms
@@ -176,7 +185,19 @@ private extension ListController {
 
 public extension ListController where Model: MetadataRepresentable {
     
+    func listSort(_ req: Request,
+                  _ qb: QueryBuilder<Model>,
+                  _ order: FieldKey,
+                  _ direction: DatabaseQuery.Sort.Direction) -> QueryBuilder<Model> {
+        if order == "date" {
+            return qb.sortMetadataByDate(direction)
+        }
+        return qb.sort(order, direction)
+    }
+    
     func listQuery(_ req: Request, _ qb: QueryBuilder<Model>) -> QueryBuilder<Model> {
         qb.joinMetadata()
     }
+    
+    
 }

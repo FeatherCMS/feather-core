@@ -80,17 +80,35 @@ public struct TableTemplate: TemplateRepresentable {
                         for cell in row.cells {
                             Td {
                                 if let value = cell.value {
-                                    if let link = cell.link {
-                                        if req.checkPermission(link.permission) {
-                                            A(link.label)
-                                                .href(link.url.replacingOccurrences(of: rowId, with: row.id))
+                                    switch cell.type {
+                                    case .text:
+                                        if let link = cell.link {
+                                            if req.checkPermission(link.permission) {
+                                                A(link.label)
+                                                    .href(link.url.replacingOccurrences(of: rowId, with: row.id))
+                                            }
+                                            else {
+                                                Text(link.label)
+                                            }
                                         }
                                         else {
-                                            Text(link.label)
+                                            Text(value)
                                         }
-                                    }
-                                    else {
-                                        Text(value)
+                                    case .image:
+                                        if let link = cell.link {
+                                            if req.checkPermission(link.permission) {
+                                                A {
+                                                    Img(src: req.fs.resolve(key: value), alt: link.label)
+                                                }
+                                                .href(link.url.replacingOccurrences(of: rowId, with: row.id))
+                                            }
+                                            else {
+                                                Img(src: req.fs.resolve(key: value), alt: link.label)
+                                            }
+                                        }
+                                        else {
+                                            Img(src: req.fs.resolve(key: value), alt: row.id)
+                                        }
                                     }
                                 }
                             }

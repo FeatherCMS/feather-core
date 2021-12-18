@@ -15,20 +15,17 @@ public extension QueryBuilder where Model: MetadataRepresentable {
         join(WebMetadataModel.self, on: \WebMetadataModel.$reference == \Model._$id)
             .filter(WebMetadataModel.self, \.$module == Model.Module.pathComponent.description)
             .filter(WebMetadataModel.self, \.$model == Model.pathComponent.description)
-            .sortMetadataByDate()
     }
 
     func joinVisibleMetadata() -> QueryBuilder<Model> {
         joinMetadata()
             .filterMetadataByVisibleStatus()
-            .sortMetadataByDate()
     }
 
     func joinPublicMetadata() -> QueryBuilder<Model> {
         joinMetadata()
             .filterMetadataBy(status: .published)
             .filterMetadataBy(date: Date())
-            .sortMetadataByDate()
     }
 
     func filterMetadataBy(path: String) -> QueryBuilder<Model> {

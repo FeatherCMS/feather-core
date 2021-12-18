@@ -30,8 +30,9 @@ struct BlogPostAdminController: AdminController {
 
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
+            "date",
             Model.FieldKeys.v1.title,
-        ])
+        ], defaultSort: .desc)
     }
     
     func listSearch(_ term: String) -> [ModelValueFilter<Model>] {
@@ -42,14 +43,17 @@ struct BlogPostAdminController: AdminController {
     
     func listColumns() -> [ColumnContext] {
         [
-            .init(Model.FieldKeys.v1.title.description, isDefault: true),
-
+            .init("image", sortable: false),
+            .init(Model.FieldKeys.v1.title.description),
+            .init("date", isDefault: true),
         ]
     }
     
     func listCells(for model: Model) -> [CellContext] {
         [
+            .init(model.imageKey, link: Self.detailLink(model.title, id: model.uuid), type: .image),
             .init(model.title, link: Self.detailLink(model.title, id: model.uuid)),
+            .init(model.metadataDetails.date.description),
         ]
     }
     
