@@ -38,6 +38,15 @@ struct WebRouter: FeatherRouter {
         pageController.setupAdminRoutes(args.routes)
         menuController.setupAdminRoutes(args.routes)
         menuItemController.setupAdminRoutes(args.routes)
+        
+        args.routes.get("web") { req -> Response in
+            let template = AdminModulePageTemplate(req, .init(title: "Web", message: "module information", links: [
+                .init(label: "Menus", url: "/admin/web/menus/"),
+                .init(label: "Pages", url: "/admin/web/pages/"),
+                .init(label: "Metadatas", url: "/admin/web/metadatas/"),
+            ]))
+            return req.html.render(template)
+        }
     }
 
     func adminApiRoutesHook(args: HookArguments) {
