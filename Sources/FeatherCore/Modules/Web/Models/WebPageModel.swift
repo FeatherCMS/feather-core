@@ -36,7 +36,7 @@ final class WebPageModel: FeatherModel {
 
 extension WebPageModel: MetadataRepresentable {
 
-    var metadataCreate: WebMetadata.Create {
+    var webMetadata: WebMetadata {
         .init(slug: title.slugify(), title: title)
     }
 }

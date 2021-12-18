@@ -43,7 +43,7 @@ final class BlogAuthorModel: FeatherModel {
 
 extension BlogAuthorModel: MetadataRepresentable {
 
-    var metadataCreate: WebMetadata.Create {
+    var webMetadata: WebMetadata {
         .init(slug: Self.pathComponent.description + "/" + name.slugify(), title: name)
     }
 }

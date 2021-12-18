@@ -14,9 +14,7 @@ public struct MetadataModelMiddleware<T: MetadataRepresentable>: AsyncModelMiddl
     
     public func create(model: T, on db: Database, next: AnyAsyncModelResponder) async throws {
         try await next.create(model, on: db)
-        let input = model.metadataCreate
-        let metadata = T.constructMetadataModel(for: model.uuid, slug: input.slug)
-        WebMetadataApi().mapCreate(model: metadata, input: input)
+        let metadata = T.constructMetadataModel(for: model.uuid, using: model.webMetadata)
         return try await metadata.create(on: db)
     }
     

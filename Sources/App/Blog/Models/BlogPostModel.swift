@@ -65,7 +65,7 @@ extension BlogPostModel {
 
 extension BlogPostModel: MetadataRepresentable {
 
-    var metadataCreate: WebMetadata.Create {
+    var webMetadata: WebMetadata {
         .init(slug: Self.pathComponent.description + "/" + title.slugify(), title: title)
     }
 }

@@ -11,8 +11,7 @@ import FeatherCoreApi
 
 public protocol MetadataRepresentable: FeatherModel {
 
-    var metadataCreate: WebMetadata.Create { get }
-//    var metadataPatch: WebMetadata.Patch { get }
+    var webMetadata: WebMetadata { get }
 }
 
 public extension MetadataRepresentable {

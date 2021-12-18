@@ -90,11 +90,14 @@ final class WebMetadataModel: FeatherModel {
 
 extension FeatherModel where Self: MetadataRepresentable {
     
-    static func constructMetadataModel(for id: UUID, slug: String) -> WebMetadataModel {
+    static func constructMetadataModel(for id: UUID, using input: WebMetadata) -> WebMetadataModel {
         .init(module: Module.pathComponent.description,
               model: pathComponent.description,
               reference: id,
-              slug: slug,
+              slug: input.slug,
+              title: input.title,
+              excerpt: input.excerpt,
+              date: input.date,
               filters: Feather.config.filters)
     }
 
