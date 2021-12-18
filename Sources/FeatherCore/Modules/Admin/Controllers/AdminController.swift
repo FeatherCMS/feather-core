@@ -163,11 +163,11 @@ public extension AdminController {
         rowDeletePathComponents.path
     }
 
-    static func moduleLink(_ label: String) -> LinkContext {
+    static func moduleLink(_ label: String = Model.Module.moduleKey.uppercasedFirst) -> LinkContext {
         .init(label: label, url: modulePath)
     }
     
-    static func listLink(_ label: String = "List") -> LinkContext {
+    static func listLink(_ label: String = Self.modelName.plural.uppercasedFirst) -> LinkContext {
         .init(label: label, url: listPath, permission: listPermission())
     }
     
@@ -231,7 +231,7 @@ public extension AdminController {
     
     func listBreadcrumbs(_ req: Request) -> [LinkContext] {
         [
-           Self.moduleLink(Self.moduleName.uppercasedFirst),
+           Self.moduleLink(),
         ]
     }
 
@@ -247,14 +247,14 @@ public extension AdminController {
     
     func detailBreadcrumbs(_ req: Request, _ model: Model) -> [LinkContext] {
         [
-            Self.moduleLink(Self.moduleName.uppercasedFirst),
-            Self.listLink(Self.modelName.plural.uppercasedFirst),
+            Self.moduleLink(),
+            Self.listLink(),
         ]
     }
 
     func detailLinks(_ req: Request, _ model: Model) -> [LinkContext] {
         [
-              Self.updateLink(id: model.uuid)
+            Self.updateLink(id: model.uuid)
         ]
     }
 
@@ -266,8 +266,8 @@ public extension AdminController {
     
     func createBreadcrumbs(_ req: Request) -> [LinkContext] {
         [
-              Self.moduleLink(Self.moduleName.uppercasedFirst),
-              Self.listLink(Self.modelName.plural.uppercasedFirst),
+            Self.moduleLink(),
+            Self.listLink(),
         ]
     }
     
@@ -283,8 +283,8 @@ public extension AdminController {
     
     func updateBreadcrumbs(_ req: Request, _ model: Model) -> [LinkContext] {
         [
-              Self.moduleLink(Self.moduleName.uppercasedFirst),
-              Self.listLink(Self.modelName.plural.uppercasedFirst),
+            Self.moduleLink(),
+            Self.listLink(),
         ]
     }
     

@@ -103,32 +103,12 @@ struct WebMenuItemAdminController: AdminController {
         model.label
     }
     
-    func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext {
-        let rows = list.items.map {
-            RowContext(id: $0.identifier, cells: listCells(for: $0))
-        }
-        let table = TableContext(id: [Model.Module.moduleKey, Model.modelKey.singular, "table"].joined(separator: "-"),
-                                 columns: listColumns(),
-                                 rows: rows,
-                                 actions: [
-                                    Self.updateTableAction(),
-                                    Self.deleteTableAction(),
-                                 ],
-                                 options: .init(allowedOrders: listConfig.allowedOrders.map(\.description),
-                                                defaultSort: listConfig.defaultSort))
 
-        return .init(title: Self.modelName.plural.uppercasedFirst,
-                     isSearchable: listConfig.isSearchable,
-                     table: table,
-                     pagination: list.info,
-                     navigation: [
-                        Self.createLink()
-                     ],
-                     breadcrumbs: [
-                        Self.moduleLink(Self.moduleName.uppercasedFirst),
-                     ])
+    func listBreadcrumbs(_ req: Request) -> [LinkContext] {
+        [
+            WebMenuAdminController.moduleLink(),
+        ]
     }
-    
    
     
     

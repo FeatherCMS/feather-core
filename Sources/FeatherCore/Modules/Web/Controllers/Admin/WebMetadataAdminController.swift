@@ -76,74 +76,34 @@ struct WebMetadataController: AdminController {
     }
     
     // MARK: - metadata context
-        
-    // TODO: solve this code duplication somehow...
-    func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext {
-        let rows = list.items.map {
-            RowContext(id: $0.identifier, cells: listCells(for: $0))
-        }
-        let table = TableContext(id: [Model.Module.moduleKey, Model.modelKey.singular, "table"].joined(separator: "-"),
-                                 columns: listColumns(),
-                                 rows: rows,
-                                 actions: [
-                                    Self.updateTableAction(),
-                                 ],
-                                 options: .init(allowedOrders: listConfig.allowedOrders.map(\.description),
-                                                defaultSort: listConfig.defaultSort))
-
-        return .init(title: Self.modelName.plural.uppercasedFirst,
-                     isSearchable: listConfig.isSearchable,
-                     table: table,
-                     pagination: list.info,
-                     breadcrumbs: [
-                        Self.moduleLink(Self.moduleName.uppercasedFirst),
-                     ])
+    
+    func listNavigation(_ req: Request) -> [LinkContext] {
+        []
     }
     
-    func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext {
-        let path = [
+    private func referencePath(_ model: Model) -> String {
+        [
             Feather.config.paths.admin,
             model.module,
             model.model,
             model.reference.string,
             Self.updatePathComponent.description
         ].map { PathComponent(stringLiteral: $0) }.path
-        
-        return .init(title: Self.modelName.singular.uppercasedFirst + " details",
-              fields: detailFields(for: model),
-              breadcrumbs: [
-                    Self.moduleLink(Self.moduleName.uppercasedFirst),
-                    Self.listLink(Self.modelName.plural.uppercasedFirst),
-              ],
-              links: [
-                    Self.updateLink(id: model.uuid),
-                    .init(label: "Preview", url: model.slug.safePath(), isBlank: true),
-                    .init(label: "Reference", url: path),
-              ],
-              actions: [
-                    Self.deleteLink(id: model.uuid),
-              ])
+    }
+
+    func detailLinks(_ req: Request, _ model: Model) -> [LinkContext] {
+        [
+            Self.updateLink(id: model.uuid),
+            .init(label: "Preview", url: model.slug.safePath(), isBlank: true),
+            .init(label: "Reference", url: referencePath(model)),
+        ]
     }
     
-    func updateContext(_ req: Request, _ editor: UpdateModelEditor) async -> AdminEditorPageContext {
-        let path = [
-            Feather.config.paths.admin,
-            editor.model.module,
-            editor.model.model,
-            editor.model.reference.string,
-            Self.updatePathComponent.description
-        ].map { PathComponent(stringLiteral: $0) }.path
-        
-        return .init(title: "Update " + Self.modelName.singular,
-              form: editor.form.context(req),
-              breadcrumbs: [
-                    Self.moduleLink(Self.moduleName.uppercasedFirst),
-                    Self.listLink(Self.modelName.plural.uppercasedFirst),
-              ],
-              links: [
-                    Self.detailLink(id: editor.model.uuid),
-                    .init(label: "Preview", url: editor.model.slug.safePath()),
-                    .init(label: "Reference", url: path),
-              ])
+    func updateLinks(_ req: Request, _ model: WebMetadataModel) -> [LinkContext] {
+        [
+            Self.detailLink(id: model.uuid),
+            .init(label: "Preview", url: model.slug.safePath()),
+            .init(label: "Reference", url: referencePath(model)),
+        ]
     }
 }

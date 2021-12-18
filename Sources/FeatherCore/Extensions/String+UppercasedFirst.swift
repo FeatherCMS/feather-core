@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 11. 27..
 //
 
-extension String {
+public extension String {
 
     /**
      Converts the first letter of the string to an upper case letter

@@ -104,7 +104,10 @@ struct WebModule: FeatherModule {
     }
 
     func responseHook(args: HookArguments) async -> Response? {
-        let page = try! await WebPageModel.queryJoinPublicMetadataFilterBy(path: args.req.url.path, on: args.req.db).first()
+        let page = try! await WebPageModel
+            .queryJoinVisibleMetadata(on: args.req.db)
+            .filterMetadataBy(path: args.req.url.path).first()
+
         guard let page = page else {
             return nil
         }

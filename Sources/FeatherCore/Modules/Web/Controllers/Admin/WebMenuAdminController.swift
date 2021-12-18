@@ -54,6 +54,13 @@ struct WebMenuAdminController: AdminController {
         ]
     }
     
+    func detailLinks(_ req: Request, _ model: Model) -> [LinkContext] {
+        [
+            Self.updateLink(id: model.uuid),
+            .init(label: "Items", url: "items/"),
+        ]
+    }
+    
     func deleteInfo(_ model: Model) -> String {
         model.key
     }
