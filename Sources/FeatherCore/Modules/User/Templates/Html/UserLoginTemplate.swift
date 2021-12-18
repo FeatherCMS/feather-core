@@ -11,7 +11,7 @@ import SwiftHtml
 struct UserLoginTemplate: TemplateRepresentable {
     
     struct Context {
-        var index: WebIndexTemplate.Context
+        var index: WebIndexContext
         
         var title: String
         var message: String

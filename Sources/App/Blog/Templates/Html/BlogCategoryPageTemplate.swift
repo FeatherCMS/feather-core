@@ -13,9 +13,9 @@ import SwiftHtml
 struct BlogCategoryPageTemplate: TemplateRepresentable {
     
     unowned var req: Request
-    var context: BlogCategoryPageTemplateContext
+    var context: BlogCategoryPageContext
     
-    init(_ req: Request, context: BlogCategoryPageTemplateContext) {
+    init(_ req: Request, context: BlogCategoryPageContext) {
         self.req = req
         self.context = context
     }

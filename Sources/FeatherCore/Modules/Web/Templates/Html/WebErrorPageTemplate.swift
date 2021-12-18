@@ -8,28 +8,17 @@
 import Vapor
 import SwiftHtml
 
-struct WebErrorTemplate: TemplateRepresentable {
-    
-    struct Context {
-        var index: WebIndexTemplate.Context
-        
-        var title: String
-        var message: String
-    }
+public struct WebErrorPageTemplate: TemplateRepresentable {
 
-    // MARK: - context
-    
     unowned var req: Request
-    var context: Context
+    public var context: WebErrorPageContext
     
-    init(_ req: Request, context: Context) {
+    public init(_ req: Request, context: WebErrorPageContext) {
         self.req = req
         self.context = context
     }
 
-    // MARK: - view
-    
-    var tag: Tag {
+    public var tag: Tag {
         WebIndexTemplate(req, context: context.index) {
             Div {
                 Span("⚠️")

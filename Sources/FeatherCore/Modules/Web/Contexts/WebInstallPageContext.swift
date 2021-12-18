@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct WebInstallStepContext {
+public struct WebInstallPageContext {
 
     public let icon: String
     public let title: String

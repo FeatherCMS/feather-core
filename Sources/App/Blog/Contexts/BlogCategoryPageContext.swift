@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct BlogCategoryPageTemplateContext {
+struct BlogCategoryPageContext {
     let category: BlogCategory.Detail
 }

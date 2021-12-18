@@ -20,7 +20,7 @@ struct WebErrorMiddleware: AsyncMiddleware {
                 title = String(err.status.code)
                 message = err.reason
             }
-            let template = WebErrorTemplate(req, context: .init(index: .init(title: title + " - " + message),
+            let template = WebErrorPageTemplate(req, context: .init(index: .init(title: title + " - " + message),
                                                                 title: title,
                                                                 message: message))
             return req.html.render(template)

@@ -9,70 +9,12 @@ import Vapor
 import SwiftHtml
 
 public struct WebIndexTemplate: TemplateRepresentable {
-    
-    public struct Context {
-
-        public struct Metadata {
-            var title: String
-            var description: String
-            var url: String
-            var image: String
-            
-            public init(title: String, description: String, url: String, image: String) {
-                self.title = title
-                self.description = description
-                self.url = url
-                self.image = image
-            }
-        }
-        
-        public struct User {
-            let email: String
-            
-            public init(email: String) {
-                self.email = email
-            }
-        }
-
-        var title: String
-        var css: [String] = ["/css/global.css", "/style.css"]
-        var js: [String] = []
-        var lang: String = "en"
-        var charset: String = "utf-8"
-        var viewport: String = "width=device-width, initial-scale=1"
-        var noindex: Bool = false
-        var metadata: Metadata? = nil
-        var canonicalUrl: String? = nil
-        var user: User? = nil
-        
-        public init(title: String,
-                    css: [String] = ["/css/global.css", "/style.css"],
-                    js: [String] = [],
-                    lang: String = "en",
-                    charset: String = "utf-8",
-                    viewport: String = "width=device-width, initial-scale=1",
-                    noindex: Bool = false,
-                    metadata: WebIndexTemplate.Context.Metadata? = nil,
-                    canonicalUrl: String? = nil,
-                    user: WebIndexTemplate.Context.User? = nil) {
-            self.title = title
-            self.css = css
-            self.js = js
-            self.lang = lang
-            self.charset = charset
-            self.viewport = viewport
-            self.noindex = noindex
-            self.metadata = metadata
-            self.canonicalUrl = canonicalUrl
-            self.user = user
-        }
-    }
 
     unowned var req: Request
-    var context: Context
+    public var context: WebIndexContext
     var body: Tag
 
-    public init(_ req: Request, context: Context, @TagBuilder _ builder: () -> Tag) {
+    public init(_ req: Request, context: WebIndexContext, @TagBuilder _ builder: () -> Tag) {
         self.req = req
         self.context = context
         self.body = builder()

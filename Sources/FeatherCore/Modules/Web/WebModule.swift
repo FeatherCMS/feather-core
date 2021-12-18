@@ -108,7 +108,7 @@ struct WebModule: FeatherModule {
         guard let page = page else {
             return nil
         }
-        let template = WebWelcomeTemplate(args.req, context: .init(index: .init(title: page.title),
+        let template = WebWelcomePageTemplate(args.req, context: .init(index: .init(title: page.title),
                                                                    title: page.title,
                                                                    message: page.content))
         return args.req.html.render(template)
@@ -137,7 +137,7 @@ struct WebModule: FeatherModule {
                 return args.req.redirect(to: installPath(for: nextStep))
             }
             
-            let template = WebInstallStepTemplate(args.req, .init(icon: "🪶",
+            let template = WebInstallPageTemplate(args.req, .init(icon: "🪶",
                                                                   title: "Install site",
                                                                   message: "First we have to setup the necessary components.",
                                                                   link: .init(label: "Start installation →",
@@ -151,7 +151,7 @@ struct WebModule: FeatherModule {
                 return args.req.redirect(to: installPath(for: nextStep))
             }
             
-            let template = WebInstallStepTemplate(args.req, .init(icon: "💪",
+            let template = WebInstallPageTemplate(args.req, .init(icon: "💪",
                                                                   title: "Custom step site",
                                                                   message: "First we have to setup the necessary components.",
                                                                   link: .init(label: "Start installation →",
@@ -164,7 +164,7 @@ struct WebModule: FeatherModule {
                 Feather.config.install.isCompleted = true
                 return args.req.redirect(to: "/")
             }
-            let template = WebInstallStepTemplate(args.req, .init(icon: "🪶",
+            let template = WebInstallPageTemplate(args.req, .init(icon: "🪶",
                                                                   title: "Setup completed",
                                                                   message: "Your site is now ready to use.",
                                                                   link: .init(label: "Let's get started →",
