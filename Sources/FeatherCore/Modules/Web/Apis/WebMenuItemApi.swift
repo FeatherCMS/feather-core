@@ -60,4 +60,8 @@ struct WebMenuItemApi: FeatherApi {
         model.permission = input.permission ?? model.permission
         model.$menu.id = input.menuId ?? model.$menu.id
     }
+    
+    func validators(optional: Bool) -> [AsyncValidator] {
+        []
+    }
 }

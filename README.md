@@ -2,12 +2,9 @@
 
 Todos:
 
-- module & model path -> replace pathComponent.description calls
-- eliminate FeatherPermission object, use UserPermission.Detail
 - finish up controllers
 - metadata support
 - api
-
 
 
 

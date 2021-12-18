@@ -50,6 +50,9 @@ struct BlogAuthorApi: FeatherApi {
         model.bio = input.bio ?? model.bio
     }
     
+    func validators(optional: Bool) -> [AsyncValidator] {
+        []
+    }
     
 //    func validators(optional: Bool) -> [AsyncValidator] {
 //        [

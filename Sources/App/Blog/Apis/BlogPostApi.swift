@@ -59,6 +59,10 @@ struct BlogPostApi: FeatherApi {
         model.content = input.content ?? model.content
     }
     
+    func validators(optional: Bool) -> [AsyncValidator] {
+        []
+    }
+    
 //    func validators(optional: Bool) -> [AsyncValidator] {
 //        [
 //            KeyedContentValidator<String>.required("title", optional: optional),

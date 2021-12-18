@@ -41,4 +41,8 @@ struct WebMenuApi: FeatherApi {
         model.name = input.name ?? model.name
         model.notes = input.notes ?? model.notes
     }
+    
+    func validators(optional: Bool) -> [AsyncValidator] {
+        []
+    }
 }

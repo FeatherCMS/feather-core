@@ -36,6 +36,10 @@ struct WebMetadataApi: FeatherApi {
         mapPatch(model: model, input: input)
     }
     
+    func validators(optional: Bool) -> [AsyncValidator] {
+        []
+    }
+    
     // MARK: - internal helpers
     
     func mapList(model: Model) -> WebMetadata.List {

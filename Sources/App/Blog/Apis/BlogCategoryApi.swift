@@ -63,6 +63,10 @@ struct BlogCategoryApi: FeatherApi {
         model.priority = input.priority ?? model.priority
     }
     
+    func validators(optional: Bool) -> [AsyncValidator] {
+        []
+    }
+    
     // MARK: - api
     
     func findDetailBy(path: String, _ req: Request) async throws -> BlogCategory.Detail? {

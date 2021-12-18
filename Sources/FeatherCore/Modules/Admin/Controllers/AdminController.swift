@@ -287,7 +287,6 @@ public extension AdminController {
     }
 }
 
-
 public extension AdminController {
 
     func setupAdminRoutes(_ routes: RoutesBuilder) {

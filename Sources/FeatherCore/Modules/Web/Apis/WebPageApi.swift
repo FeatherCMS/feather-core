@@ -38,4 +38,8 @@ struct WebPageApi: FeatherApi {
         model.title = input.title ?? model.title
         model.content = input.content ?? model.content
     }
+    
+    func validators(optional: Bool) -> [AsyncValidator] {
+        []
+    }
 }

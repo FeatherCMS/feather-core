@@ -37,8 +37,6 @@ struct AdminDetailPageTemplate: TemplateRepresentable {
                
                 Dl {
                     for field in context.fields {
-                        // TODO: use proper field type
-                        
                         if let value = field.value {
                             Dt(field.label)
                             switch field.type {

@@ -41,4 +41,8 @@ struct UserAccountApi: FeatherApi {
         model.password = input.password ?? model.password
         model.isRoot = input.isRoot ?? model.isRoot
     }
+    
+    func validators(optional: Bool) -> [AsyncValidator] {
+        []
+    }
 }

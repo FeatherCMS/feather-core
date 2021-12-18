@@ -44,4 +44,8 @@ struct CommonVariableApi: FeatherApi {
         model.value = input.value ?? model.value
         model.notes = input.notes ?? model.notes
     }
+    
+    func validators(optional: Bool) -> [AsyncValidator] {
+        []
+    }
 }
