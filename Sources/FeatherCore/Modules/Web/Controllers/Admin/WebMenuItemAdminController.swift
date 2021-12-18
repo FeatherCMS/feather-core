@@ -28,8 +28,7 @@ struct WebMenuItemAdminController: AdminController {
             Feather.config.paths.admin.pathComponent,
             Model.Module.pathComponent,
             WebMenuModel.pathComponent,
-            WebMenuModel.idPathComponent,
-            Model.pathComponent,
+            WebMenuModel.idPathComponent
         ]
     }
     
@@ -41,11 +40,28 @@ struct WebMenuItemAdminController: AdminController {
             .grouped(Model.pathComponent)
     }
     
+    func listNavigation(_ req: Request) -> [LinkContext] {
+        guard let menuId = WebMenuModel.getIdParameter(req: req) else {
+            return []
+        }
+        let path = WebMenuAdminController.detailPath(for: menuId) + "/items/create"
+        return [
+            LinkContext(label: "Create", url: path)
+        ]
+    }
+
     func listQuery(_ req: Request, _ qb: QueryBuilder<Model>) -> QueryBuilder<Model> {
         guard let menuId = WebMenuModel.getIdParameter(req: req) else {
             return qb
         }
         return qb.filter(\.$menu.$id == menuId)
+    }
+    
+    func beforeCreate(_ req: Request, model: Model) async throws {
+        guard let menuId = WebMenuModel.getIdParameter(req: req) else {
+            throw Abort(.badRequest)
+        }
+        model.$menu.id = menuId
     }
     
     var listConfig: ListConfiguration {
@@ -75,13 +91,45 @@ struct WebMenuItemAdminController: AdminController {
     func detailFields(for model: Model) -> [FieldContext] {
         [
             .init("id", model.identifier),
+            .init("icon", model.icon),
             .init("label", model.label),
+            .init("url", model.url),
+            .init("target", "Open in " + (model.isBlank ? "new" : "same") + " window / tab"),
+            .init("permission", model.permission),
         ]
     }
     
     func deleteInfo(_ model: Model) -> String {
         model.label
     }
+    
+    func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext {
+        let rows = list.items.map {
+            RowContext(id: $0.identifier, cells: listCells(for: $0))
+        }
+        let table = TableContext(id: [Model.Module.moduleKey, Model.modelKey.singular, "table"].joined(separator: "-"),
+                                 columns: listColumns(),
+                                 rows: rows,
+                                 actions: [
+                                    Self.updateTableAction(),
+                                    Self.deleteTableAction(),
+                                 ],
+                                 options: .init(allowedOrders: listConfig.allowedOrders.map(\.description),
+                                                defaultSort: listConfig.defaultSort))
+
+        return .init(title: Self.modelName.plural.uppercasedFirst,
+                     isSearchable: listConfig.isSearchable,
+                     table: table,
+                     pagination: list.info,
+                     navigation: [
+                        Self.createLink()
+                     ],
+                     breadcrumbs: [
+                        Self.moduleLink(Self.moduleName.uppercasedFirst),
+                     ])
+    }
+    
+   
     
     
 }

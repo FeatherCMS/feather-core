@@ -55,13 +55,21 @@ public protocol AdminController: FeatherController {
     func listColumns() -> [ColumnContext]
     func listCells(for model: Model) -> [CellContext]
     func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext
-    
+    func listNavigation(_ req: Request) -> [LinkContext]
+    func listBreadcrumbs(_ req: Request) -> [LinkContext]
+
     func detailFields(for model: Model) -> [FieldContext]
     func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext
+    func detailBreadcrumbs(_ req: Request, _ model: Model) -> [LinkContext]
+    func detailLinks(_ req: Request, _ model: Model) -> [LinkContext]
 
     func createContext(_ req: Request, _ editor: CreateModelEditor) -> AdminEditorPageContext
-    func updateContext(_ req: Request, _ editor: UpdateModelEditor) async -> AdminEditorPageContext
+    func createBreadcrumbs(_ req: Request) -> [LinkContext]
     
+    func updateContext(_ req: Request, _ editor: UpdateModelEditor) async -> AdminEditorPageContext
+    func updateBreadcrumbs(_ req: Request, _ model: Model) -> [LinkContext]
+    func updateLinks(_ req: Request, _ model: Model) -> [LinkContext]
+
     func deleteInfo(_ model: Model) -> String
     func deleteContext(_ req: Request, _ model: Model, _ form: DeleteForm) -> AdminDeletePageContext
     
@@ -211,51 +219,79 @@ public extension AdminController {
                      isSearchable: listConfig.isSearchable,
                      table: table,
                      pagination: list.info,
-                     navigation: [
-                        Self.createLink()
-                     ],
-                     breadcrumbs: [
-                        Self.moduleLink(Self.moduleName.uppercasedFirst),
-                     ])
+                     navigation: listNavigation(req),
+                     breadcrumbs: listBreadcrumbs(req))
     }
     
+    func listNavigation(_ req: Request) -> [LinkContext] {
+        [
+           Self.createLink()
+        ]
+    }
+    
+    func listBreadcrumbs(_ req: Request) -> [LinkContext] {
+        [
+           Self.moduleLink(Self.moduleName.uppercasedFirst),
+        ]
+    }
+
     func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext {
         .init(title: Self.modelName.singular.uppercasedFirst + " details",
               fields: detailFields(for: model),
-              breadcrumbs: [
-                    Self.moduleLink(Self.moduleName.uppercasedFirst),
-                    Self.listLink(Self.modelName.plural.uppercasedFirst),
-              ],
-              links: [
-                    Self.updateLink(id: model.uuid)
-              ],
+              breadcrumbs: detailBreadcrumbs(req, model),
+              links: detailLinks(req, model),
               actions: [
                     Self.deleteLink(id: model.uuid),
               ])
+    }
+    
+    func detailBreadcrumbs(_ req: Request, _ model: Model) -> [LinkContext] {
+        [
+            Self.moduleLink(Self.moduleName.uppercasedFirst),
+            Self.listLink(Self.modelName.plural.uppercasedFirst),
+        ]
+    }
+
+    func detailLinks(_ req: Request, _ model: Model) -> [LinkContext] {
+        [
+              Self.updateLink(id: model.uuid)
+        ]
     }
 
     func createContext(_ req: Request, _ editor: CreateModelEditor) -> AdminEditorPageContext {
         .init(title: "Create " + Self.modelName.singular,
               form: editor.form.context(req),
-              breadcrumbs: [
-                    Self.moduleLink(Self.moduleName.uppercasedFirst),
-                    Self.listLink(Self.modelName.plural.uppercasedFirst),
-              ])
+              breadcrumbs: createBreadcrumbs(req))
+    }
+    
+    func createBreadcrumbs(_ req: Request) -> [LinkContext] {
+        [
+              Self.moduleLink(Self.moduleName.uppercasedFirst),
+              Self.listLink(Self.modelName.plural.uppercasedFirst),
+        ]
     }
     
     func updateContext(_ req: Request, _ editor: UpdateModelEditor) async -> AdminEditorPageContext {
        .init(title: "Update " + Self.modelName.singular,
-              form: editor.form.context(req),
-              breadcrumbs: [
-                    Self.moduleLink(Self.moduleName.uppercasedFirst),
-                    Self.listLink(Self.modelName.plural.uppercasedFirst),
-              ],
-              links: [
-                    Self.detailLink(id: editor.model.uuid),
-              ],
-              actions: [
-                    Self.deleteLink(id: editor.model.uuid),
-              ])
+             form: editor.form.context(req),
+             breadcrumbs: updateBreadcrumbs(req, editor.model as! Model),
+             links: updateLinks(req, editor.model as! Model),
+             actions: [
+                Self.deleteLink(id: editor.model.uuid),
+             ])
+    }
+    
+    func updateBreadcrumbs(_ req: Request, _ model: Model) -> [LinkContext] {
+        [
+              Self.moduleLink(Self.moduleName.uppercasedFirst),
+              Self.listLink(Self.modelName.plural.uppercasedFirst),
+        ]
+    }
+    
+    func updateLinks(_ req: Request, _ model: Model) -> [LinkContext] {
+        [
+           Self.detailLink(id: model.uuid),
+        ]
     }
     
     func deleteContext(_ req: Request, _ model: Model, _ form: DeleteForm) -> AdminDeletePageContext {

@@ -83,41 +83,20 @@ public extension MetadataRepresentable {
 
 public extension AdminController where Model: MetadataRepresentable {
     
-    // TODO: solve this code duplication somehow...
-    func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext {
-        .init(title: Self.modelName.singular.uppercasedFirst + " details",
-              fields: detailFields(for: model),
-              breadcrumbs: [
-                    Self.moduleLink(Self.moduleName.uppercasedFirst),
-                    Self.listLink(Self.modelName.plural.uppercasedFirst),
-              ],
-              links: [
-                    Self.updateLink(id: model.uuid),
-                    .init(label: "Preview", url: model.metadataDetails.slug.safePath(), isBlank: true),
-                    WebMetadataController.updateLink("Metadata", id: model.metadataDetails.id),
-              ],
-              actions: [
-                    Self.deleteLink(id: model.uuid),
-              ])
+    func detailLinks(_ req: Request, _ model: Model) -> [LinkContext] {
+        [
+            Self.updateLink(id: model.uuid),
+            .init(label: "Preview", url: model.metadataDetails.slug.safePath(), isBlank: true),
+            WebMetadataController.updateLink("Metadata", id: model.metadataDetails.id),
+        ]
     }
-    
-    func updateContext(_ req: Request, _ editor: UpdateModelEditor) async -> AdminEditorPageContext {
-        // TODO: error management...
-        let metadata = try! await Model.findMetadataDetails(for: editor.model.uuid, on: req.db)!
-        return .init(title: "Update " + Self.modelName.singular,
-              form: editor.form.context(req),
-              breadcrumbs: [
-                    Self.moduleLink(Self.moduleName.uppercasedFirst),
-                    Self.listLink(Self.modelName.plural.uppercasedFirst),
-              ],
-              links: [
-                    Self.detailLink(id: editor.model.uuid),
-                    .init(label: "Preview", url: metadata.slug.safePath(), isBlank: true),
-                    WebMetadataController.updateLink("Metadata", id: metadata.id),
-              ],
-              actions: [
-                    Self.deleteLink(id: editor.model.uuid),
-              ])
+
+    func updateLinks(_ req: Request, _ model: Model) -> [LinkContext] {
+        [
+              Self.detailLink(id: model.uuid),
+              .init(label: "Preview", url: model.metadataDetails.slug.safePath(), isBlank: true),
+              WebMetadataController.updateLink("Metadata", id: model.metadataDetails.id),
+        ]
     }
 }
 

@@ -17,6 +17,7 @@ public protocol CreateController: ModelController {
     static func hasCreatePermission(_ req: Request) -> Bool
 
     func createAccess(_ req: Request) async -> Bool
+    func beforeCreate(_ req: Request, model: Model) async throws
     func create(_ req: Request) async throws -> Response
     func createView(_ req: Request) async throws -> Response
     func createTemplate(_ req: Request, _ editor: CreateModelEditor) -> TemplateRepresentable
@@ -24,6 +25,8 @@ public protocol CreateController: ModelController {
 }
 
 public extension CreateController {
+
+    func beforeCreate(_ req: Request, model: Model) async throws {}
 
     static func createPermission() -> UserPermission {
         Model.permission(.create)
@@ -73,6 +76,7 @@ public extension CreateController {
             return render(req, editor: editor)
         }
         await editor.write(req: req)
+        try await beforeCreate(req, model: editor.model as! Model)
         try await editor.model.create(on: req.db)
         await editor.save(req: req)
         var components = req.url.path.pathComponents.dropLast()
