@@ -82,7 +82,7 @@ struct WebMetadataController: AdminController {
         let rows = list.items.map {
             RowContext(id: $0.identifier, cells: listCells(for: $0))
         }
-        let table = TableContext(id: [Model.Module.moduleKey, Model.modelKey, "table"].joined(separator: "-"),
+        let table = TableContext(id: [Model.Module.moduleKey, Model.modelKey.singular, "table"].joined(separator: "-"),
                                  columns: listColumns(),
                                  rows: rows,
                                  actions: [

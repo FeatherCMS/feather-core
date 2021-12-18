@@ -7,6 +7,7 @@
 
 import Vapor
 import Fluent
+import AppKit
 
 public protocol FeatherModel: Model where Self.IDValue == UUID {
 
@@ -17,57 +18,76 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
     /// it defaults to the plural name of the model itself without the module prefix
     /// for example UserAccountsModel -> accounts
     ///
-    static var modelKey: String { get }
+    static var modelKey: FeatherModelName { get }
     static var pathComponent: PathComponent { get }
+    static var idPathKey: String { get }
+    static var idPathComponent: PathComponent { get }
     static var assetPath: String { get }
+
+    /*
+     
+    modelKey
+        post | posts
+        menu_item | menu_items (asset path)
+     
+    Path compopnent
+        posts
+        items
+     
+    ID Paht key
+        postId
+    ID Path Component
+        :postId
+        :itemId
+    */
     
     /// unique identifier string for the model, based on the UUID
     var identifier: String { get }
     var uuid: UUID { get }
-
-    static var idParamKey: String { get }
-    static var idParamKeyPathComponent: PathComponent { get }
+    
     static func getIdParameter(req: Request) -> UUID?
-
     static func permission(_ action: UserPermission.Action) -> UserPermission
-    
     static func installPermissions() -> [UserPermission.Create]
-    
     static func isUniqueBy(_ filter:  ModelValueFilter<Self>, req: Request) async -> Bool
 }
 
 public extension FeatherModel {
     
-    static var schema: String { Module.moduleKey + "_" + pathComponent.description }
+    static var schema: String { Module.moduleKey + "_" + modelKey.plural }
 
-    static var modelKey: String {
-        String(describing: self).dropFirst(Module.moduleKey.count).dropLast(5).lowercased()
+    static var modelKey: FeatherModelName {
+        .init(stringLiteral: String(describing: self).dropFirst(Module.moduleKey.count).dropLast(5).lowercased())
     }
     
     static var pathComponent: PathComponent {
-        .init(stringLiteral: modelKey + "s")
+        .init(stringLiteral: modelKey.plural )
     }
 
+    static var idPathKey: String {
+        modelKey.singular + "Id"
+    }
+    
+    static var idPathComponent: PathComponent {
+        .init(stringLiteral: ":" + idPathKey)
+    }
+    
     static var assetPath: String {
-        [Module.pathComponent, pathComponent].path
+        [Module.moduleKey, modelKey.plural].joined(separator: "/")
     }
 
     var uuid: UUID { id! }
     var identifier: String { uuid.string }
-    
-    static var idParamKey: String { modelKey + "Id" }
 
-    static var idParamKeyPathComponent: PathComponent { .init(stringLiteral: ":" + idParamKey) }
 
     static func getIdParameter(req: Request) -> UUID? {
-        guard let id = req.parameters.get(idParamKey), let uuid = UUID(uuidString: id) else {
+        guard let id = req.parameters.get(idPathKey), let uuid = UUID(uuidString: id) else {
             return nil
         }
         return uuid
     }
 
     static func permission(_ action: UserPermission.Action) -> UserPermission {
-        UserPermission(namespace: Module.moduleKey, context: modelKey, action: action)
+        UserPermission(namespace: Module.moduleKey, context: modelKey.singular, action: action)
     }
 
     static func installPermissions() -> [UserPermission.Create] {

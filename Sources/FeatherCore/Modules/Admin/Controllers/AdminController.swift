@@ -67,6 +67,7 @@ public protocol AdminController: FeatherController {
     
     // MARK: - routes
     
+    func getBaseRoutes(_ routes: RoutesBuilder) -> RoutesBuilder
     func setupAdminRoutes(_ routes: RoutesBuilder)
     func setupAdminApiRoutes(_ routes: RoutesBuilder)
     func setupPublicApiRoutes(_ routes: RoutesBuilder)
@@ -190,13 +191,13 @@ public extension AdminController {
 public extension AdminController {
     
     static var moduleName: String { Model.Module.moduleKey.uppercasedFirst }
-    static var modelName: FeatherModelName { .init(stringLiteral: Model.modelKey) }
+    static var modelName: FeatherModelName { Model.modelKey }
     
     func listContext(_ req: Request, _ list: ListContainer<Model>) -> AdminListPageContext {
         let rows = list.items.map {
             RowContext(id: $0.identifier, cells: listCells(for: $0))
         }
-        let table = TableContext(id: [Model.Module.moduleKey, Model.modelKey, "table"].joined(separator: "-"),
+        let table = TableContext(id: [Model.Module.moduleKey, Model.modelKey.singular, "table"].joined(separator: "-"),
                                  columns: listColumns(),
                                  rows: rows,
                                  actions: [
@@ -290,17 +291,21 @@ public extension AdminController {
 }
 
 public extension AdminController {
+    
+    func getBaseRoutes(_ routes: RoutesBuilder) -> RoutesBuilder {
+        routes.grouped(Model.Module.pathComponent)
+            .grouped(Model.pathComponent)
+    }
 
     func setupAdminRoutes(_ routes: RoutesBuilder) {
-        let moduleRoutes = routes.grouped(Model.Module.pathComponent)
-        let modelRoutes = moduleRoutes.grouped(Model.pathComponent)
+        let baseRoutes = getBaseRoutes(routes)
         
-        modelRoutes.get(use: listView)
+        baseRoutes.get(use: listView)
         
-        modelRoutes.get(Self.createPathComponent, use: createView)
-        modelRoutes.post(Self.createPathComponent, use: create)
+        baseRoutes.get(Self.createPathComponent, use: createView)
+        baseRoutes.post(Self.createPathComponent, use: create)
         
-        let existingModelRoutes = modelRoutes.grouped(Model.idParamKeyPathComponent)
+        let existingModelRoutes = baseRoutes.grouped(Model.idPathComponent)
         
         existingModelRoutes.get(use: detailView)
         
@@ -312,13 +317,12 @@ public extension AdminController {
     }
     
     func setupAdminApiRoutes(_ routes: RoutesBuilder) {
-        let moduleRoutes = routes.grouped(Model.Module.pathComponent)
-        let modelRoutes = moduleRoutes.grouped(Model.pathComponent)
+        let baseRoutes = getBaseRoutes(routes)
         
-        modelRoutes.get(use: listApi)
-        modelRoutes.post(use: createApi)
+        baseRoutes.get(use: listApi)
+        baseRoutes.post(use: createApi)
         
-        let existingModelRoutes = modelRoutes.grouped(Model.idParamKeyPathComponent)
+        let existingModelRoutes = baseRoutes.grouped(Model.idPathComponent)
         existingModelRoutes.get(use: detailApi)
         existingModelRoutes.post(use: updateApi)
         existingModelRoutes.patch(use: patchApi)

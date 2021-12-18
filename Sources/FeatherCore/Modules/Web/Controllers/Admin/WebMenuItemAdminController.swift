@@ -21,6 +21,33 @@ struct WebMenuItemAdminController: AdminController {
     typealias PatchModelApi = WebMenuItemApi
     typealias DeleteModelApi = WebMenuItemApi
     
+    static var modelName: FeatherModelName = .init(singular: "menu item")
+    
+    static var modulePathComponents: [PathComponent] {
+        [
+            Feather.config.paths.admin.pathComponent,
+            Model.Module.pathComponent,
+            WebMenuModel.pathComponent,
+            WebMenuModel.idPathComponent,
+            Model.pathComponent,
+        ]
+    }
+    
+    func getBaseRoutes(_ routes: RoutesBuilder) -> RoutesBuilder {
+        routes
+            .grouped(WebModule.pathComponent)
+            .grouped(WebMenuModel.pathComponent)
+            .grouped(WebMenuModel.idPathComponent)
+            .grouped(Model.pathComponent)
+    }
+    
+    func listQuery(_ req: Request, _ qb: QueryBuilder<Model>) -> QueryBuilder<Model> {
+        guard let menuId = WebMenuModel.getIdParameter(req: req) else {
+            return qb
+        }
+        return qb.filter(\.$menu.$id == menuId)
+    }
+    
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
             "label",
@@ -55,4 +82,6 @@ struct WebMenuItemAdminController: AdminController {
     func deleteInfo(_ model: Model) -> String {
         model.label
     }
+    
+    
 }

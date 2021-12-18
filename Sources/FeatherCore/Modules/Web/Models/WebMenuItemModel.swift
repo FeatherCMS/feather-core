@@ -11,8 +11,8 @@ import Fluent
 final class WebMenuItemModel: FeatherModel {
     typealias Module = WebModule
 
-    static let modelKey = "menu_item"
-    static var pathComponent: PathComponent = "menu_items"
+    static var modelKey: FeatherModelName = .init(singular: "menu_item")
+    static var pathComponent: PathComponent = "items"
     
     struct FieldKeys {
         struct v1 {

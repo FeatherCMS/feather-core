@@ -12,8 +12,8 @@ import FeatherCore
 final class BlogPostCategoryModel: FeatherModel {
     typealias Module = BlogModule
     
-    static let modelKey: String = "post_category"
-    static var pathComponent: PathComponent = "post_categories"
+    static let modelKey: FeatherModelName = .init(singular: "post_category", plural: "post_categories")
+    static var pathComponent: PathComponent = "categories"
     
     struct FieldKeys {
         struct v1 {
