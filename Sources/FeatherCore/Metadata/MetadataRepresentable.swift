@@ -83,6 +83,7 @@ public extension MetadataRepresentable {
 
 public extension AdminController where Model: MetadataRepresentable {
     
+    // TODO: solve this code duplication somehow...
     func detailContext(_ req: Request, _ model: Model) -> AdminDetailPageContext {
         .init(title: Self.modelName.singular.uppercasedFirst + " details",
               fields: detailFields(for: model),
