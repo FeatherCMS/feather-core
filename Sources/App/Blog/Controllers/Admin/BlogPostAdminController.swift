@@ -59,11 +59,11 @@ struct BlogPostAdminController: AdminController {
     
     func detailFields(for model: Model) -> [FieldContext] {
         [
-            .init(label: "Image", value: model.imageKey, type: .image),
-            .init(label: "Id", value: model.identifier),
-            .init(label: "Title", value: model.title),
-            .init(label: "Categories", value: model.categories.map(\.title).joined(separator: "\n")),
-            .init(label: "Authors", value: model.authors.map(\.name).joined(separator: "\n")),
+            .init("image", model.imageKey, type: .image),
+            .init("id", model.identifier),
+            .init("title", model.title),
+            .init("categories", model.categories.map(\.title).joined(separator: "\n")),
+            .init("authors", model.authors.map(\.name).joined(separator: "\n")),
         ]
     }
     

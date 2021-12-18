@@ -47,8 +47,8 @@ struct WebMenuItemAdminController: AdminController {
     
     func detailFields(for model: Model) -> [FieldContext] {
         [
-            .init(label: "Id", value: model.identifier),
-            .init(label: "Label", value: model.label),
+            .init("id", model.identifier),
+            .init("label", model.label),
         ]
     }
     

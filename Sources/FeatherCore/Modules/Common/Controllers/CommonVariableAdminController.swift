@@ -54,11 +54,11 @@ struct CommonVariableAdminController: AdminController {
     
     func detailFields(for model: Model) -> [FieldContext] {
         [
-            .init(label: "Id", value: model.identifier),
-            .init(label: "Key", value: model.key),
-            .init(label: "Name", value: model.name),
-            .init(label: "Value", value: model.value),
-            .init(label: "Notes", value: model.notes),
+            .init("id", model.identifier),
+            .init("key", model.key),
+            .init("name", model.name),
+            .init("value", model.value),
+            .init("notes", model.notes),
         ]
     }
     

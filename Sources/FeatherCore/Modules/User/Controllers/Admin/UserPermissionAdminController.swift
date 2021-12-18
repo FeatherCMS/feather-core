@@ -47,8 +47,8 @@ struct UserPermissionAdminController: AdminController {
         
     func detailFields(for model: Model) -> [FieldContext] {
         [
-            .init(label: "Id", value: model.identifier),
-            .init(label: "Email", value: model.name),
+            .init("id", model.identifier),
+            .init("email", model.name),
         ]
     }
 

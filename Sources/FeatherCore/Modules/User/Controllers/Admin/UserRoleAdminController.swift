@@ -52,11 +52,11 @@ struct UserRoleAdminController: AdminController {
     
     func detailFields(for model: Model) -> [FieldContext] {
         [
-            .init(label: "Id", value: model.identifier),
-            .init(label: "Key", value: model.key),
-            .init(label: "Name", value: model.name),
-            .init(label: "Notes", value: model.notes),
-            .init(label: "Permissions", value: model.permissions.map(\.name).joined(separator: "\n")),
+            .init("id", model.identifier),
+            .init("key", model.key),
+            .init("name", model.name),
+            .init("notes", model.notes),
+            .init("permissions", model.permissions.map(\.name).joined(separator: "\n")),
         ]
     }
     

@@ -52,9 +52,9 @@ struct WebPageAdminController: AdminController {
     
     func detailFields(for model: Model) -> [FieldContext] {
         [
-            .init(label: "Id", value: model.identifier),
-            .init(label: "Title", value: model.title),
-            .init(label: "Content", value: model.content),
+            .init("id", model.identifier),
+            .init("title", model.title),
+            .init("content", model.content),
         ]
     }
     

@@ -52,11 +52,11 @@ struct BlogCategoryAdminController: AdminController {
     
     func detailFields(for model: Model) -> [FieldContext] {
         [
-            .init(label: "Id", value: model.identifier),
-            .init(label: "Title", value: model.title),
-            .init(label: "Excerpt", value: model.excerpt),
-            .init(label: "Color", value: model.color),
-            .init(label: "Priority", value: String(model.priority)),
+            .init("id", model.identifier),
+            .init("title", model.title),
+            .init("excerpt", model.excerpt),
+            .init("color", model.color),
+            .init("priority", String(model.priority)),
         ]
     }
     

@@ -52,10 +52,10 @@ struct UserAccountAdminController: AdminController {
     
     func detailFields(for model: Model) -> [FieldContext] {
         [
-            .init(label: "Id", value: model.identifier),
-            .init(label: "Email", value: model.email),
-            .init(label: "Has root access?", value: model.isRoot ? "Yes" : "No"),
-            .init(label: "Roles", value: model.roles.map(\.name).joined(separator: "\n")),
+            .init("id", model.identifier),
+            .init("email", model.email),
+            .init("root", model.isRoot ? "Yes" : "No", label: "Has root access?"),
+            .init("roles", model.roles.map(\.name).joined(separator: "\n")),
         ]
     }
     

@@ -50,8 +50,8 @@ struct BlogAuthorAdminController: AdminController {
     
     func detailFields(for model: Model) -> [FieldContext] {
         [
-            .init(label: "Id", value: model.identifier),
-            .init(label: "Name", value: model.name),
+            .init("id", model.identifier),
+            .init("name", model.name),
         ]
     }
     

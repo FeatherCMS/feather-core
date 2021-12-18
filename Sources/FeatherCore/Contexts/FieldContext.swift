@@ -14,12 +14,17 @@ public struct FieldContext {
         case image
     }
 
+    public let key: String
     public let label: String
     public let value: String?
     public let type: `Type`
     
-    public init(label: String, value: String?, type: `Type` = .text) {
-        self.label = label
+    public init(_ key: String,
+                _ value: String?,
+                label: String? = nil,
+                type: `Type` = .text) {
+        self.key = key
+        self.label = label ?? key.uppercasedFirst
         self.value = value
         self.type = type
     }

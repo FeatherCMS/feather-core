@@ -53,8 +53,8 @@ struct WebMetadataController: AdminController {
     
     func detailFields(for model: Model) -> [FieldContext] {
         [
-            .init(label: "Id", value: model.identifier),
-            .init(label: "Title", value: model.title),
+            .init("id", model.identifier),
+            .init("title", model.title),
         ]
     }
     
@@ -73,7 +73,9 @@ struct WebMetadataController: AdminController {
                                  rows: rows,
                                  actions: [
                                     Self.updateTableAction(),
-                                 ])
+                                 ],
+                                 options: .init(allowedOrders: listConfig.allowedOrders.map(\.description),
+                                                defaultSort: listConfig.defaultSort))
 
         return .init(title: Self.modelName.plural.uppercasedFirst,
                      isSearchable: listConfig.isSearchable,
