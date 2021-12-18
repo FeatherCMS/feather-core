@@ -9,6 +9,7 @@ let package = Package(
     products: [
         .library(name: "App", targets: ["App"]),
         .library(name: "FeatherCoreApi", targets: ["FeatherCoreApi"]),
+        .library(name: "FeatherCoreSdk", targets: ["FeatherCoreSdk"]),
         .library(name: "FeatherCore", targets: ["FeatherCore"]),
     ],
     dependencies: [
@@ -26,6 +27,9 @@ let package = Package(
             .target(name: "FeatherCore")
         ]),
         .target(name: "FeatherCoreApi", dependencies: []),
+        .target(name: "FeatherCoreSdk", dependencies: [
+            .target(name: "FeatherCoreApi"),
+        ]),
         .target(name: "FeatherCore", dependencies: [
             .target(name: "FeatherCoreApi"),
             .product(name: "Vapor", package: "vapor"),
@@ -41,6 +45,9 @@ let package = Package(
         .testTarget(name: "AppTests", dependencies: [
             .target(name: "App"),
             .product(name: "XCTVapor", package: "vapor"),
+        ]),
+        .testTarget(name: "FeatherCoreSdkTests", dependencies: [
+            .target(name: "FeatherCoreSdk"),
         ])
     ]
 )
