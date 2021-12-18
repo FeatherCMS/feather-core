@@ -30,6 +30,9 @@ struct BlogPostEditor: FeatherModelEditor {
             .write { model.imageKey = ($1 as! ImageField).imageKey }
         
         InputField("title")
+            .config {
+                $0.output.context.label.required = true
+            }
             .validators {
                 FormFieldValidator.required($1)
             }

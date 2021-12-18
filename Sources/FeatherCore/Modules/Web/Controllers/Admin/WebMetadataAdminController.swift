@@ -23,27 +23,29 @@ struct WebMetadataController: AdminController {
     
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
-//            Model.FieldKeys.v1.key,
+            "title",
+            "module",
+            "model",
         ])
     }
     
     func listSearch(_ term: String) -> [ModelValueFilter<Model>] {
         [
-//            \.$key ~~ term,
+            \.$title ~~ term,
         ]
     }
     
     func listColumns() -> [ColumnContext] {
         [
-            .init(Model.FieldKeys.v1.title.description, isDefault: true),
-            .init(Model.FieldKeys.v1.module.description),
-            .init(Model.FieldKeys.v1.model.description),
+            .init("title"),
+            .init("module"),
+            .init("model"),
         ]
     }
     
     func listCells(for model: Model) -> [CellContext] {
         [
-            .init(model.title, link: Self.detailLink(model.title ?? "", id: model.uuid)),
+            .init(model.title, link: Self.detailLink(model.title ?? "Details", id: model.uuid)),
             .init(model.module),
             .init(model.model),
         ]
@@ -52,6 +54,7 @@ struct WebMetadataController: AdminController {
     func detailFields(for model: Model) -> [FieldContext] {
         [
             .init(label: "Id", value: model.identifier),
+            .init(label: "Title", value: model.title),
         ]
     }
     

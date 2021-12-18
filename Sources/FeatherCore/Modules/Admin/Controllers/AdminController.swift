@@ -202,7 +202,9 @@ public extension AdminController {
                                  actions: [
                                     Self.updateTableAction(),
                                     Self.deleteTableAction(),
-                                 ])
+                                 ],
+                                 options: .init(allowedOrders: listConfig.allowedOrders.map(\.description),
+                                                defaultSort: listConfig.defaultSort))
 
         return .init(title: Self.modelName.plural.uppercasedFirst,
                      isSearchable: listConfig.isSearchable,

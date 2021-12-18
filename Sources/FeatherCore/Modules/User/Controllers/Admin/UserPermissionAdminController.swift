@@ -35,7 +35,7 @@ struct UserPermissionAdminController: AdminController {
 
     func listColumns() -> [ColumnContext] {
         [
-            .init(Model.FieldKeys.v1.name.description, isDefault: true),
+            .init(Model.FieldKeys.v1.name.description),
         ]
     }
     

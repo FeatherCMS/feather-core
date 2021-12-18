@@ -52,11 +52,11 @@ public struct TableTemplate: TemplateRepresentable {
                 Tr {
                     for column in context.columns {
                         Th {
-                            if column.sortable {
+                            if context.options.allowedOrders.contains(column.key) {
                                 SortingTemplate(req, .init(key: column.key,
                                                            label: column.label,
-                                                           isDefault: column.isDefault,
-                                                           sort: .asc)).tag
+                                                           isDefault: context.options.allowedOrders.first == column.key,
+                                                           sort: context.options.defaultSort)).tag
                             }
                             else {
                                 Text(column.label)

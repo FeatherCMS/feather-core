@@ -62,6 +62,7 @@ extension BlogPostModel {
     }
 
 }
+
 extension BlogPostModel: MetadataRepresentable {
 
     var metadataCreate: WebMetadata.Create {

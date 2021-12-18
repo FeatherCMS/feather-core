@@ -27,7 +27,7 @@ struct UserRoleAdminController: AdminController {
     
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
-            Model.FieldKeys.v1.name,
+            "name"
         ],
         defaultSort: .asc)
     }
@@ -40,7 +40,7 @@ struct UserRoleAdminController: AdminController {
     
     func listColumns() -> [ColumnContext] {
         [
-            .init(Model.FieldKeys.v1.name.description, isDefault: true),
+            .init("name"),
         ]
     }
     

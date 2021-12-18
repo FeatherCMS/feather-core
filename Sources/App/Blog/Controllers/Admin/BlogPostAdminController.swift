@@ -31,7 +31,7 @@ struct BlogPostAdminController: AdminController {
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
             "date",
-            Model.FieldKeys.v1.title,
+            "title"
         ], defaultSort: .desc)
     }
     
@@ -43,9 +43,9 @@ struct BlogPostAdminController: AdminController {
     
     func listColumns() -> [ColumnContext] {
         [
-            .init("image", sortable: false),
-            .init(Model.FieldKeys.v1.title.description),
-            .init("date", isDefault: true),
+            .init("image"),
+            .init("title"),
+            .init("date"),
         ]
     }
     

@@ -9,8 +9,10 @@ import Vapor
 
 struct WebRouter: FeatherRouter {
     
-//    let pagesController = WebPageAdminController()
-    let metadatasController = WebMetadataController()
+    let pageController = WebPageAdminController()
+    let metadataController = WebMetadataController()
+    let menuController = WebMenuAdminController()
+    let menuItemController = WebMenuItemAdminController()
     
     func boot(_ app: Application) throws {
         let frontendController = WebFrontendController()
@@ -31,17 +33,18 @@ struct WebRouter: FeatherRouter {
     }
     
     func adminRoutesHook(args: HookArguments) {
-//        accountController.setupAdminRoutes(args.routes)
-//        roleController.setupAdminRoutes(args.routes)
-//        permissionController.setupAdminRoutes(args.routes)
         // TODO: only register list & update routes!
-        metadatasController.setupAdminRoutes(args.routes)
+        metadataController.setupAdminRoutes(args.routes)
+        pageController.setupAdminRoutes(args.routes)
+        menuController.setupAdminRoutes(args.routes)
+        menuItemController.setupAdminRoutes(args.routes)
     }
 
     func adminApiRoutesHook(args: HookArguments) {
-//        accountController.setupAdminApiRoutes(args.routes)
-//        roleController.setupAdminApiRoutes(args.routes)
-//        permissionController.setupAdminApiRoutes(args.routes)
+        metadataController.setupAdminApiRoutes(args.routes)
+        pageController.setupAdminApiRoutes(args.routes)
+        menuController.setupAdminApiRoutes(args.routes)
+        menuItemController.setupAdminApiRoutes(args.routes)
     }
 
     // MARK: - helpers

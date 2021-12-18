@@ -27,7 +27,7 @@ struct BlogCategoryAdminController: AdminController {
  
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
-            Model.FieldKeys.v1.title,
+            "title"
         ])
     }
     
@@ -39,9 +39,7 @@ struct BlogCategoryAdminController: AdminController {
     
     func listColumns() -> [ColumnContext] {
         [
-            .init(Model.FieldKeys.v1.title.description, isDefault: true),
-            .init(Model.FieldKeys.v1.title.description),
-
+            .init("title"),
         ]
     }
     

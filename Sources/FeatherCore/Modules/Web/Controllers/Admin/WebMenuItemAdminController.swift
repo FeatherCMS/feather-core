@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-struct WebMenuItemController: AdminController {
+struct WebMenuItemAdminController: AdminController {
     typealias Model = WebMenuItemModel
     
     typealias CreateModelEditor = WebMenuItemEditor
@@ -23,20 +23,19 @@ struct WebMenuItemController: AdminController {
     
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
-//            Model.FieldKeys.v1.key,
+            "label",
         ])
     }
     
     func listSearch(_ term: String) -> [ModelValueFilter<Model>] {
         [
-//            \.$key ~~ term,
-
+            \.$label ~~ term,
         ]
     }
     
     func listColumns() -> [ColumnContext] {
         [
-            .init(Model.FieldKeys.v1.label.description, isDefault: true),
+            .init("label"),
         ]
     }
     
@@ -49,6 +48,7 @@ struct WebMenuItemController: AdminController {
     func detailFields(for model: Model) -> [FieldContext] {
         [
             .init(label: "Id", value: model.identifier),
+            .init(label: "Label", value: model.label),
         ]
     }
     

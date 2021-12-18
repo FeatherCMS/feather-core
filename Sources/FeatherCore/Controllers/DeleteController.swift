@@ -22,6 +22,7 @@ public final class DeleteForm: FeatherForm {
 
     @FormComponentBuilder
     public override func createFields() -> [FormComponent] {
+        // TODO: this must be wrong, we should set the value instead of the key...
         HiddenField(redirect ?? "")
     }
 }

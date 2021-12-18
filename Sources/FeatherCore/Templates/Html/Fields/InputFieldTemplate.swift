@@ -24,7 +24,7 @@ public struct InputFieldTemplate: TemplateRepresentable {
             .type(context.type)
             .key(context.key)
             .placeholder(context.placeholder)
-            .value(context.value ?? "")
+            .value(context.value)
             .class("field")
         if let error = context.error {
             Span(error)

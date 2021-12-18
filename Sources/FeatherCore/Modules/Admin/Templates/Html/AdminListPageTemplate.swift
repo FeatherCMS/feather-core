@@ -41,7 +41,7 @@ public struct AdminListPageTemplate: TemplateRepresentable {
                         .type(.text)
                         .key("search")
                         .placeholder("Search...")
-                        .value(req.getQuery("search") ?? "")
+                        .value(req.getQuery("search"))
 
                     if let sort = req.getQuery("sort") {
                         Input()

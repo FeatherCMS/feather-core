@@ -33,3 +33,10 @@ final class WebPageModel: FeatherModel {
         self.content = content
     }
 }
+
+extension WebPageModel: MetadataRepresentable {
+
+    var metadataCreate: WebMetadata.Create {
+        .init(slug: title.slugify(), title: title)
+    }
+}

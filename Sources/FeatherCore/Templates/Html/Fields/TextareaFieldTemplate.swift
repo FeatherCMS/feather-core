@@ -20,7 +20,7 @@ public struct TextareaFieldTemplate: TemplateRepresentable {
     public var tag: Tag {
         LabelTemplate(context.label).tag
         
-        Textarea(context.value ?? "")
+        Textarea(context.value)
             .name(context.key)
             .class(context.size.rawValue)
         

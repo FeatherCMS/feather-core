@@ -13,11 +13,17 @@ public struct TableContext {
     public let columns: [ColumnContext]
     public let rows: [RowContext]
     public let actions: [LinkContext]
+    public let options: TableOptionContext
 
-    public init(id: String, columns: [ColumnContext], rows: [RowContext], actions: [LinkContext]) {
+    public init(id: String,
+                columns: [ColumnContext],
+                rows: [RowContext],
+                actions: [LinkContext] = [],
+                options: TableOptionContext = .init()) {
         self.id = id
         self.columns = columns
         self.rows = rows
         self.actions = actions
+        self.options = options
     }
 }

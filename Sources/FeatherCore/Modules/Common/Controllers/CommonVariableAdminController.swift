@@ -23,9 +23,9 @@ struct CommonVariableAdminController: AdminController {
     
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
-            Model.FieldKeys.v1.key,
-            Model.FieldKeys.v1.name,
-            Model.FieldKeys.v1.value,
+            "key",
+            "name",
+            "value",
         ])
     }
     
@@ -40,8 +40,8 @@ struct CommonVariableAdminController: AdminController {
     
     func listColumns() -> [ColumnContext] {
         [
-            .init(Model.FieldKeys.v1.key.description, isDefault: true),
-            .init(Model.FieldKeys.v1.value.description),
+            .init("key"),
+            .init("value"),
         ]
     }
     
@@ -57,8 +57,8 @@ struct CommonVariableAdminController: AdminController {
             .init(label: "Id", value: model.identifier),
             .init(label: "Key", value: model.key),
             .init(label: "Name", value: model.name),
-            .init(label: "Value", value: model.value ?? ""),
-            .init(label: "Notes", value: model.notes ?? ""),
+            .init(label: "Value", value: model.value),
+            .init(label: "Notes", value: model.notes),
         ]
     }
     

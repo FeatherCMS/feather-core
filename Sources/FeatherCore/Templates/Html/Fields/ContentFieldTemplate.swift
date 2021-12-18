@@ -20,9 +20,9 @@ public struct ContentFieldTemplate: TemplateRepresentable {
     public var tag: Tag {
         LabelTemplate(context.label).tag
         
-        Textarea(context.value ?? "")
+        Textarea(context.value)
             .name(context.key)
-            .class("large")
+            .class("xl")
         
         if let error = context.error {
             Span(error)

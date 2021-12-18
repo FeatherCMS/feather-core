@@ -28,6 +28,8 @@ struct WebModule: FeatherModule {
     func boot(_ app: Application) throws {
         app.migrations.add(WebMigrations.v1())
 
+        app.databases.middleware.use(MetadataModelMiddleware<WebPageModel>())
+        
         app.hooks.register(.routes, use: router.routesHook)
         app.hooks.register(.response, use: responseHook)
         app.hooks.register(.webMiddlewares, use: webMiddlewaresHook)

@@ -23,4 +23,3 @@ public final class InputField: FormField<String, InputFieldTemplate> {
         return super.render(req: req)
     }
 }
-

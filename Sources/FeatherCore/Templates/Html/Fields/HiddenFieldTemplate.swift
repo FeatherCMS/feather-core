@@ -20,6 +20,6 @@ public struct HiddenFieldTemplate: TemplateRepresentable {
         Input()
             .type(.hidden)
             .name(context.key)
-            .value(context.value ?? "")
+            .value(context.value)
     }
 }

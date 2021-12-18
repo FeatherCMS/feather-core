@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-struct WebPageController: AdminController {
+struct WebPageAdminController: AdminController {
     typealias Model = WebPageModel
     
     typealias CreateModelEditor = WebPageEditor
@@ -25,31 +25,36 @@ struct WebPageController: AdminController {
     
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
-//            Model.FieldKeys.v1.key,
-       ])
+            "date",
+            "title",
+        ], defaultSort: .desc)
     }
     
     func listSearch(_ term: String) -> [ModelValueFilter<Model>] {
         [
-//            \.$key ~~ term,
+            \.$title ~~ term,
         ]
     }
     
     func listColumns() -> [ColumnContext] {
         [
-            .init(Model.FieldKeys.v1.title.description, isDefault: true),
+            .init("title"),
+            .init("date"),
         ]
     }
     
     func listCells(for model: Model) -> [CellContext] {
         [
             .init(model.title, link: Self.detailLink(model.title, id: model.uuid)),
+            .init(model.metadataDetails.date.description),
         ]
     }
     
     func detailFields(for model: Model) -> [FieldContext] {
         [
             .init(label: "Id", value: model.identifier),
+            .init(label: "Title", value: model.title),
+            .init(label: "Content", value: model.content),
         ]
     }
     
