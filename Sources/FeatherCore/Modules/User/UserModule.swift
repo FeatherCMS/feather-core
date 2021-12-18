@@ -71,20 +71,20 @@ struct UserModule: FeatherModule {
 
     }
 
-    func installUserRolesHook(args: HookArguments) async -> [UserRole.Create] {
+    func installUserRolesHook(args: HookArguments) async throws -> [UserRole.Create] {
         [
             .init(key: "editors", name: "Editors", notes: "Editor user role"),
         ]
     }
     
-    func installUserAccountsHook(args: HookArguments) async -> [UserAccount.Create] {
+    func installUserAccountsHook(args: HookArguments) async throws -> [UserAccount.Create] {
         [
             .init(email: "root@feathercms.com", password: "FeatherCMS", isRoot: true),
             .init(email: "user@feathercms.com", password: "FeatherCMS"),
         ]
     }
     
-    func installUserPermissionsHook(args: HookArguments) async -> [UserPermission.Create] {
+    func installUserPermissionsHook(args: HookArguments) async throws -> [UserPermission.Create] {
         var permissions = Self.installPermissions()
         permissions += UserAccountModel.installPermissions()
         permissions += UserPermissionModel.installPermissions()
@@ -92,7 +92,7 @@ struct UserModule: FeatherModule {
         return permissions
     }
 
-//    func formFieldsHook(args: HookArguments) async -> [FormComponent] {
+//    func formFieldsHook(args: HookArguments) async throws -> [FormComponent] {
 //        return [
 //            InputField("lorem")
 //                .validators {
@@ -137,11 +137,11 @@ struct UserModule: FeatherModule {
         return user.hasPermission(args.permission)
     }
 
-    func accessHook(args: HookArguments) async -> Bool {
+    func accessHook(args: HookArguments) async throws -> Bool {
         permissionHook(args: args)
     }
     
-    func adminWidgetsHook(args: HookArguments) async -> [TemplateRepresentable] {
+    func adminWidgetsHook(args: HookArguments) async throws -> [TemplateRepresentable] {
         [
             UserDetailsAdminWidgetTemplate(args.req),
             UserAdminWidgetTemplate(args.req),

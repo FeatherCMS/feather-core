@@ -38,13 +38,13 @@ struct CommonModule: FeatherModule {
         try await objects.create(on: args.req.db)
     }
     
-    func installUserPermissionsHook(args: HookArguments) async -> [UserPermission.Create] {
+    func installUserPermissionsHook(args: HookArguments) async throws -> [UserPermission.Create] {
         var permissions = Self.installPermissions()
         permissions += CommonVariableModel.installPermissions()
         return permissions
     }
     
-    func installCommonVariablesHook(args: HookArguments) async -> [CommonVariable.Create] {
+    func installCommonVariablesHook(args: HookArguments) async throws -> [CommonVariable.Create] {
         [
             // MARK: - not found
             
@@ -109,7 +109,7 @@ struct CommonModule: FeatherModule {
         ]
     }
     
-    func adminWidgetsHook(args: HookArguments) async -> [TemplateRepresentable] {
+    func adminWidgetsHook(args: HookArguments) async throws -> [TemplateRepresentable] {
         [
             CommonAdminWidgetTemplate(args.req)
         ]

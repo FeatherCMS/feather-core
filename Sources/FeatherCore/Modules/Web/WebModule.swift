@@ -57,7 +57,7 @@ struct WebModule: FeatherModule {
         try await pages.map { WebPageModel(title: $0.title, content: $0.content) }.create(on: args.req.db)
     }
 
-    func installUserPermissionsHook(args: HookArguments) async -> [UserPermission.Create] {
+    func installUserPermissionsHook(args: HookArguments) async throws -> [UserPermission.Create] {
         var permissions = Self.installPermissions()
         permissions += WebPageModel.installPermissions()
         permissions += WebMenuModel.installPermissions()
@@ -66,13 +66,13 @@ struct WebModule: FeatherModule {
         return permissions
     }
 
-    func installWebPagesHook(args: HookArguments) async -> [WebPage.Create] {
+    func installWebPagesHook(args: HookArguments) async throws -> [WebPage.Create] {
         [
             .init(title: "Lorem", content: "ipsum")
         ]
     }
     
-    func installCommonVariablesHook(args: HookArguments) async -> [CommonVariable.Create] {
+    func installCommonVariablesHook(args: HookArguments) async throws -> [CommonVariable.Create] {
         [
             // MARK: - not found
             
@@ -117,7 +117,7 @@ struct WebModule: FeatherModule {
         return args.req.html.render(template)
     }
 
-    func installStepHook(args: HookArguments) async -> [FeatherInstallStep] {
+    func installStepHook(args: HookArguments) async throws -> [FeatherInstallStep] {
         [
             .init(key: "custom", priority: 2),
         ]
@@ -185,13 +185,13 @@ struct WebModule: FeatherModule {
         ]
     }
 
-    func webMenusHook(args: HookArguments) async -> [LinkContext] {
+    func webMenusHook(args: HookArguments) async throws -> [LinkContext] {
         [
             .init(label: "Home", url: "/", priority: 100)
         ]
     }
     
-    func adminWidgetsHook(args: HookArguments) async -> [TemplateRepresentable] {
+    func adminWidgetsHook(args: HookArguments) async throws -> [TemplateRepresentable] {
         [
             WebAdminWidgetTemplate(args.req),
         ]

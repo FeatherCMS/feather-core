@@ -37,13 +37,13 @@ struct AdminModule: FeatherModule {
         ]
     }
 
-    func webMenusHook(args: HookArguments) async -> [LinkContext] {
+    func webMenusHook(args: HookArguments) async throws -> [LinkContext] {
         [
             .init(label: "Admin", url: "/admin/")
         ]
     }
     
-//    func adminWidgetsHook(args: HookArguments) async -> [TemplateRepresentable] {
+//    func adminWidgetsHook(args: HookArguments) async throws -> [TemplateRepresentable] {
 //        [
 //            Div {
 //                H2("Statistics")
