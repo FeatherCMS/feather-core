@@ -104,14 +104,13 @@ struct WebModule: FeatherModule {
     }
 
     func responseHook(args: HookArguments) async -> Response? {
-
-        guard args.req.url.path == "/" else {
+        let page = try! await WebPageModel.queryJoinPublicMetadataFilterBy(path: args.req.url.path, on: args.req.db).first()
+        guard let page = page else {
             return nil
         }
-
-        let template = WebWelcomeTemplate(args.req, context: .init(index: .init(title: "title"),
-                                                              title: "Hello, World!",
-                                                              message: "Lorem ipsum dolor sit amet"))
+        let template = WebWelcomeTemplate(args.req, context: .init(index: .init(title: page.title),
+                                                                   title: page.title,
+                                                                   message: page.content))
         return args.req.html.render(template)
     }
 

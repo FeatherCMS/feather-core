@@ -18,6 +18,8 @@ struct WebMetadataEditor: FeatherModelEditor {
         self.form = form
     }
 
+    var formatter: DateFormatter = Application.dateFormatter()
+    
     var formFields: [FormComponent] {
         InputField("slug")
             .validators {
@@ -60,9 +62,33 @@ struct WebMetadataEditor: FeatherModelEditor {
             .read { $1.output.context.value = model.status.rawValue }
             .write { model.status = WebMetadata.Status(rawValue: $1.input)! }
         
+        InputField("date")
+            .validators {
+                FormFieldValidator($1, "Invalid date") { field, _ in
+                    formatter.date(from: field.input) != nil
+                }
+            }
+            .read { $1.output.context.value = formatter.string(from: model.date) }
+            .write { model.date = formatter.date(from: $1.input) ?? Date() }
+        
         InputField("canonicalUrl")
             .read { $1.output.context.value = model.canonicalUrl }
             .write { model.canonicalUrl = $1.input }
+        
+        ToggleField("isFeedItem")
+            .config {
+                $0.output.context.label.title = "Is feed item?"
+            }
+            .read { $1.output.context.value = model.feedItem }
+            .write { model.feedItem = $1.input }
+        
+        CheckboxField("filters")
+            .load { req, field in
+                let contentFilters: [FeatherFilter] = req.invokeAllFlat("filters")
+                field.output.context.options = contentFilters.map { OptionContext(key: $0.key, label: $0.label) }
+            }
+            .read { $1.output.context.values = model.filters }
+            .write { model.filters = $1.input }
         
         
         TextareaField("css")
