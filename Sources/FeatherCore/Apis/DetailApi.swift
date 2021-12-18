@@ -10,5 +10,5 @@ import Vapor
 public protocol DetailApi: ModelApi {
     associatedtype DetailObject: Content
     
-    func mapDetail(_ req: Request, model: Model) async -> DetailObject
+    func mapDetail(_ req: Request, model: Model) async throws -> DetailObject
 }

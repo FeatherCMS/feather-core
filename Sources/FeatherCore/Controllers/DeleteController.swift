@@ -64,7 +64,7 @@ public extension DeleteController {
         let model = try await findBy(identifier(req), on: req.db)
         let form = DeleteForm()
         /// generate nonce token
-        await form.load(req: req)
+        try await form.load(req: req)
         return req.html.render(deleteTemplate(req, model, form))
     }
     
@@ -75,7 +75,7 @@ public extension DeleteController {
         }
         let form = DeleteForm()
         /// validate nonce token
-        let isValid = await form.validate(req: req)
+        let isValid = try await form.validate(req: req)
         guard isValid else {
             throw Abort(.badRequest)
         }

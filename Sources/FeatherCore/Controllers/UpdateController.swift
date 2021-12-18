@@ -55,8 +55,8 @@ public extension UpdateController {
         let model = try await findBy(identifier(req), on: req.db)
         let editor = UpdateModelEditor(model: model as! UpdateModelEditor.Model, form: .init())
         editor.form.fields = editor.formFields
-        await editor.load(req: req)
-        await editor.read(req: req)
+        try await editor.load(req: req)
+        try await editor.read(req: req)
         return await render(req, editor: editor)
     }
 
@@ -68,15 +68,15 @@ public extension UpdateController {
         let model = try await findBy(identifier(req), on: req.db)
         let editor = UpdateModelEditor(model: model as! UpdateModelEditor.Model, form: .init())
         editor.form.fields = editor.formFields
-        await editor.load(req: req)
-        await editor.process(req: req)
-        let isValid = await editor.validate(req: req)
+        try await editor.load(req: req)
+        try await editor.process(req: req)
+        let isValid = try await editor.validate(req: req)
         guard isValid else {
             return await render(req, editor: editor)
         }
-        await editor.write(req: req)
+        try await editor.write(req: req)
         try await editor.model.update(on: req.db)
-        await editor.save(req: req)
+        try await editor.save(req: req)
         return req.redirect(to: req.url.path)
     }
 
@@ -89,9 +89,9 @@ public extension UpdateController {
         try await RequestValidator(api.updateValidators()).validate(req)
         let model = try await findBy(identifier(req), on: req.db) as! UpdateModelApi.Model
         let input = try req.content.decode(UpdateModelApi.UpdateObject.self)
-        await api.mapUpdate(req, model: model, input: input)
+        try await api.mapUpdate(req, model: model, input: input)
         try await model.update(on: req.db)
-        return await api.mapDetail(req, model: model)
+        return try await api.mapDetail(req, model: model)
     }
         
 }

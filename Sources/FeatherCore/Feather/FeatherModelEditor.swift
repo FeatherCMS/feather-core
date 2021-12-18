@@ -23,28 +23,28 @@ public protocol FeatherModelEditor: FormComponent {
 
 public extension FeatherModelEditor {
 
-    func load(req: Request) async {
-        await form.load(req: req)
+    func load(req: Request) async throws {
+        try await form.load(req: req)
     }
     
-    func process(req: Request) async {
-        await form.process(req: req)
+    func process(req: Request) async throws {
+        try await form.process(req: req)
     }
     /// NOTE: throws instead of bool
-    func validate(req: Request) async -> Bool {
-        await form.validate(req: req)
+    func validate(req: Request) async throws -> Bool {
+        try await form.validate(req: req)
     }
     
-    func write(req: Request) async {
-        await form.write(req: req)
+    func write(req: Request) async throws {
+        try await form.write(req: req)
     }
     
-    func save(req: Request) async {
-        await form.save(req: req)
+    func save(req: Request) async throws {
+        try await form.save(req: req)
     }
     
-    func read(req: Request) async {
-        await form.read(req: req)
+    func read(req: Request) async throws {
+        try await form.read(req: req)
     }
 
     func render(req: Request) -> TemplateRepresentable {

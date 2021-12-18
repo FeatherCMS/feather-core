@@ -50,13 +50,13 @@ struct UserPermissionEditor: FeatherModelEditor {
             .write { model.notes = $1.input }
     }
 
-    func validate(req: Request) async -> Bool {
-        let isValid = await form.validate(req: req)
+    func validate(req: Request) async throws -> Bool {
+        let isValid = try await form.validate(req: req)
         guard isValid else {
             return false
         }
         do {
-            let permission = try! req.content.decode(UserPermission.self)
+            let permission = try req.content.decode(UserPermission.self)
             let isUnique = try await Model.isUnique(permission, req)
             guard isUnique else {
                 form.error = "This permission already exists"

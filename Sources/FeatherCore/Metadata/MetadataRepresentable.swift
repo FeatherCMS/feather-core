@@ -63,7 +63,7 @@ public extension MetadataRepresentable {
         guard let metadata = try await Self.findMetadataBy(id: id, on: req.db) else {
             throw Abort(.notFound)
         }
-        await WebMetadataApi().mapPatch(req, model: metadata, input: block())
+        try await WebMetadataApi().mapPatch(req, model: metadata, input: block())
         try await metadata.update(on: req.db)
     }
 

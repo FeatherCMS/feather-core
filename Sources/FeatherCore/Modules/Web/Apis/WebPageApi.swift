@@ -16,25 +16,25 @@ extension WebPage.Patch: Content {}
 struct WebPageApi: FeatherApi {
     typealias Model = WebPageModel
 
-    func mapList(_ req: Request, model: Model) async -> WebPage.List {
+    func mapList(_ req: Request, model: Model) async throws -> WebPage.List {
         .init(id: model.uuid, title: model.title)
     }
     
-    func mapDetail(_ req: Request, model: Model) async -> WebPage.Detail {
+    func mapDetail(_ req: Request, model: Model) async throws -> WebPage.Detail {
         .init(id: model.uuid, title: model.title, content: model.content)
     }
     
-    func mapCreate(_ req: Request, model: Model, input: WebPage.Create) async {
+    func mapCreate(_ req: Request, model: Model, input: WebPage.Create) async throws {
         model.title = input.title
         model.content = input.content
     }
     
-    func mapUpdate(_ req: Request, model: Model, input: WebPage.Update) async {
+    func mapUpdate(_ req: Request, model: Model, input: WebPage.Update) async throws {
         model.title = input.title
         model.content = input.content
     }
     
-    func mapPatch(_ req: Request, model: Model, input: WebPage.Patch) async {
+    func mapPatch(_ req: Request, model: Model, input: WebPage.Patch) async throws {
         model.title = input.title ?? model.title
         model.content = input.content ?? model.content
     }

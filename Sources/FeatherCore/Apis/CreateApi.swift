@@ -12,7 +12,7 @@ public protocol CreateApi: ModelApi {
     associatedtype CreateObject: Codable
     
     func createValidators() -> [AsyncValidator]
-    func mapCreate(_ req: Request, model: Model, input: CreateObject) async
+    func mapCreate(_ req: Request, model: Model, input: CreateObject) async throws
 }
 
 public extension CreateApi {

@@ -16,27 +16,27 @@ extension UserRole.Patch: Content {}
 struct UserRoleApi: FeatherApi {
     typealias Model = UserRoleModel
     
-    func mapList(_ req: Request, model: Model) async -> UserRole.List {
+    func mapList(_ req: Request, model: Model) async throws -> UserRole.List {
         .init(id: model.uuid, name: model.name)
     }
     
-    func mapDetail(_ req: Request, model: Model) async -> UserRole.Detail {
+    func mapDetail(_ req: Request, model: Model) async throws -> UserRole.Detail {
         .init(id: model.uuid, key: model.key, name: model.name, notes: model.notes)
     }
     
-    func mapCreate(_ req: Request, model: Model, input: UserRole.Create) async {
+    func mapCreate(_ req: Request, model: Model, input: UserRole.Create) async throws {
         model.key = input.key
         model.name = input.name
         model.notes = input.notes
     }
     
-    func mapUpdate(_ req: Request, model: Model, input: UserRole.Update) async {
+    func mapUpdate(_ req: Request, model: Model, input: UserRole.Update) async throws {
         model.key = input.key
         model.name = input.name
         model.notes = input.notes
     }
     
-    func mapPatch(_ req: Request, model: Model, input: UserRole.Patch) async {
+    func mapPatch(_ req: Request, model: Model, input: UserRole.Patch) async throws {
         model.key = input.key ?? model.key
         model.name = input.name ?? model.name
         model.notes = input.notes ?? model.notes

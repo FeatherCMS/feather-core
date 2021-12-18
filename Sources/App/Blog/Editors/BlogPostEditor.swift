@@ -49,7 +49,7 @@ struct BlogPostEditor: FeatherModelEditor {
         
         CheckboxField("categories")
             .load { req, field in
-                let categories = try! await BlogCategoryModel.query(on: req.db).all()
+                let categories = try await BlogCategoryModel.query(on: req.db).all()
                 field.output.context.options = categories.map { OptionContext(key: $0.identifier, label: $0.title) }
             }
             .read { req, field in
@@ -57,12 +57,12 @@ struct BlogPostEditor: FeatherModelEditor {
             }
             .save { req, field in
                 let values = field.input.compactMap { UUID(uuidString: $0) }
-                return try! await model.$categories.reAttach(ids: values, on: req.db)
+                return try await model.$categories.reAttach(ids: values, on: req.db)
             }
 
         CheckboxField("authors")
             .load { req, field in
-                let authors = try! await BlogAuthorModel.query(on: req.db).all()
+                let authors = try await BlogAuthorModel.query(on: req.db).all()
                 field.output.context.options = authors.map { OptionContext(key: $0.identifier, label: $0.name) }
             }
             .read { req, field in
@@ -70,7 +70,7 @@ struct BlogPostEditor: FeatherModelEditor {
             }
             .save { req, field in
                 let values = field.input.compactMap { UUID(uuidString: $0) }
-                return try! await model.$authors.reAttach(ids: values, on: req.db)
+                return try await model.$authors.reAttach(ids: values, on: req.db)
             }
     }
 }

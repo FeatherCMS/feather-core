@@ -29,7 +29,7 @@ struct UserAuthController {
     func loginView(_ req: Request) async throws -> Response {
         guard req.auth.has(UserAccount.self) else {
             let form = UserLoginForm()
-            await form.load(req: req)
+            try await form.load(req: req)
             return render(req, form: form)
         }
         return req.redirect(to: getCustomRedirect(req), type: .normal)
@@ -43,9 +43,9 @@ struct UserAuthController {
         }
 
         let form = UserLoginForm()
-        await form.load(req: req)
-        await form.process(req: req)
-        _ = await form.validate(req: req)
+        try await form.load(req: req)
+        try await form.process(req: req)
+        _ = try await form.validate(req: req)
         form.error = "Invalid email or password"
         return render(req, form: form)
     }

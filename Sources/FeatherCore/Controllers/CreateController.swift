@@ -58,7 +58,7 @@ public extension CreateController {
 //        var arguments = HookArguments()
 //        arguments["model"] = editor.model
 //        let fields: [FormComponent] = await req.invokeAllFlat("form-fields", args: arguments)
-        await editor.load(req: req)
+        try await editor.load(req: req)
         return render(req, editor: editor)
     }
     
@@ -69,16 +69,16 @@ public extension CreateController {
         }
         let editor = CreateModelEditor(model: .init(), form: .init())
         editor.form.fields = editor.formFields
-        await editor.load(req: req)
-        await editor.process(req: req)
-        let isValid = await editor.validate(req: req)
+        try await editor.load(req: req)
+        try await editor.process(req: req)
+        let isValid = try await editor.validate(req: req)
         guard isValid else {
             return render(req, editor: editor)
         }
-        await editor.write(req: req)
+        try await editor.write(req: req)
         try await beforeCreate(req, model: editor.model as! Model)
         try await editor.model.create(on: req.db)
-        await editor.save(req: req)
+        try await editor.save(req: req)
         var components = req.url.path.pathComponents.dropLast()
         components += [
             editor.model.identifier.pathComponent
@@ -95,7 +95,7 @@ public extension CreateController {
         try await RequestValidator(api.createValidators()).validate(req)
         let input = try req.content.decode(CreateModelApi.CreateObject.self)
         let model = Model() as! CreateModelApi.Model
-        await api.mapCreate(req, model: model, input: input)
+        try await api.mapCreate(req, model: model, input: input)
         try await model.create(on: req.db)
         return try await api.mapDetail(req, model: model)
             .encodeResponse(status: .created, for: req)

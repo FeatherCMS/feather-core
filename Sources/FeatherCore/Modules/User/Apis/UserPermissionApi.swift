@@ -16,11 +16,11 @@ extension UserPermission.Patch: Content {}
 struct UserPermissionApi: FeatherApi {
     typealias Model = UserPermissionModel
     
-    func mapList(_ req: Request, model: Model) async -> UserPermission.List {
+    func mapList(_ req: Request, model: Model) async throws -> UserPermission.List {
         .init(id: model.uuid, name: model.name)
     }
     
-    func mapDetail(_ req: Request, model: Model) async -> UserPermission.Detail {
+    func mapDetail(_ req: Request, model: Model) async throws -> UserPermission.Detail {
         .init(id: model.uuid,
               namespace: model.namespace,
               context: model.context,
@@ -29,7 +29,7 @@ struct UserPermissionApi: FeatherApi {
               notes: model.notes)
     }
     
-    func mapCreate(_ req: Request, model: Model, input: UserPermission.Create) async {
+    func mapCreate(_ req: Request, model: Model, input: UserPermission.Create) async throws {
         model.namespace = input.namespace
         model.context = input.context
         model.action = input.action
@@ -37,7 +37,7 @@ struct UserPermissionApi: FeatherApi {
         model.notes = input.notes
     }
     
-    func mapUpdate(_ req: Request, model: Model, input: UserPermission.Update) async {
+    func mapUpdate(_ req: Request, model: Model, input: UserPermission.Update) async throws {
         model.namespace = input.namespace
         model.context = input.context
         model.action = input.action
@@ -45,7 +45,7 @@ struct UserPermissionApi: FeatherApi {
         model.notes = input.notes
     }
     
-    func mapPatch(_ req: Request, model: Model, input: UserPermission.Patch) async {
+    func mapPatch(_ req: Request, model: Model, input: UserPermission.Patch) async throws {
         model.namespace = input.namespace ?? model.namespace
         model.context = input.context ?? model.context
         model.action = input.action ?? model.action

@@ -22,27 +22,27 @@ extension UserAccount: SessionAuthenticatable {
 struct UserAccountApi: FeatherApi {
     typealias Model = UserAccountModel
     
-    func mapList(_ req: Request, model: Model) async -> UserAccount.List {
+    func mapList(_ req: Request, model: Model) async throws -> UserAccount.List {
         .init(id: model.uuid, email: model.email)
     }
     
-    func mapDetail(_ req: Request, model: Model) async -> UserAccount.Detail {
+    func mapDetail(_ req: Request, model: Model) async throws -> UserAccount.Detail {
         .init(id: model.uuid, email: model.email, isRoot: model.isRoot)
     }
     
-    func mapCreate(_ req: Request, model: Model, input: UserAccount.Create) async {
+    func mapCreate(_ req: Request, model: Model, input: UserAccount.Create) async throws {
         model.email = input.email
         model.password = input.password
         model.isRoot = input.isRoot
     }
     
-    func mapUpdate(_ req: Request, model: Model, input: UserAccount.Update) async {
+    func mapUpdate(_ req: Request, model: Model, input: UserAccount.Update) async throws {
         model.email = input.email
         model.password = input.password
         model.isRoot = input.isRoot
     }
     
-    func mapPatch(_ req: Request, model: Model, input: UserAccount.Patch) async {
+    func mapPatch(_ req: Request, model: Model, input: UserAccount.Patch) async throws {
         model.email = input.email ?? model.email
         model.password = input.password ?? model.password
         model.isRoot = input.isRoot ?? model.isRoot

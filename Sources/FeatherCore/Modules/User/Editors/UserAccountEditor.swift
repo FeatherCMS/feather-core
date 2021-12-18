@@ -36,7 +36,7 @@ struct UserAccountEditor: FeatherModelEditor {
             }
             .write { req, field in
                 if !field.input.isEmpty {
-                    model.password = try! Bcrypt.hash(field.input)
+                    model.password = try Bcrypt.hash(field.input)
                 }
             }
 
@@ -49,7 +49,7 @@ struct UserAccountEditor: FeatherModelEditor {
         
         CheckboxField("roles")
             .load { req, field in
-                let items = try! await UserRoleModel.query(on: req.db).all()
+                let items = try await UserRoleModel.query(on: req.db).all()
                 field.output.context.options = items.map { OptionContext(key: $0.identifier, label: $0.name) }
             }
             .read { req, field in
@@ -57,7 +57,7 @@ struct UserAccountEditor: FeatherModelEditor {
             }
             .save { req, field in
                 let values = field.input.compactMap { UUID(uuidString: $0) }
-                return try! await model.$roles.reAttach(ids: values, on: req.db)
+                return try await model.$roles.reAttach(ids: values, on: req.db)
             }
     }
 }

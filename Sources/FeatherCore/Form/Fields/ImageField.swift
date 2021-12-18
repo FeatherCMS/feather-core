@@ -23,7 +23,7 @@ public final class ImageField: FormField<ImageInput, ImageFieldTemplate> {
         super.init(key: key, input: .init(key: key), output: .init(.init(key: key)))
     }
 
-    public override func process(req: Request) async {
+    public override func process(req: Request) async throws {
         /// process input
         input.file = try? req.content.get(File.self, at: key)
         input.data.originalKey = try? req.content.get(String.self, at: key + "OriginalKey")
@@ -46,18 +46,18 @@ public final class ImageField: FormField<ImageInput, ImageFieldTemplate> {
                 try? await req.fs.delete(key: tmpKey)
             }
             let key = "tmp/\(UUID().string).tmp"
-            // TODO: proper error reporting...
-            _ = try! await req.fs.upload(key: key, data: data)
+
+            _ = try await req.fs.upload(key: key, data: data)
             /// update the temporary image
             input.data.temporaryFile = .init(key: key, name: file.filename)
         }
         /// update output values
         output.context.data = input.data
         /// process other actions, but do not call super here...
-        await processBlock?(req, self)
+        try await processBlock?(req, self)
     }
     
-    public override func write(req: Request) async {
+    public override func write(req: Request) async throws {
         imageKey = input.data.originalKey
         if input.data.shouldRemove {
             if let key = input.data.originalKey {
@@ -73,15 +73,15 @@ public final class ImageField: FormField<ImageInput, ImageFieldTemplate> {
                 let prefix = formatter.string(from: .init())
                 newKey = path + prefix + file.name
             }
-            // TODO: proper error reporting...
-            _ = try! await req.fs.move(key: file.key, to: newKey)
+
+            _ = try await req.fs.move(key: file.key, to: newKey)
             input.data.temporaryFile = nil
             if let key = input.data.originalKey {
                 try? await req.fs.delete(key: key)
             }
             imageKey = newKey
         }
-        await super.write(req: req)
+        try await super.write(req: req)
     }
     
 

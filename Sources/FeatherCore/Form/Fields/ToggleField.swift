@@ -13,8 +13,8 @@ final class ToggleField: FormField<Bool, ToggleFieldTemplate> {
         self.init(key: key, input: false, output: .init(.init(key: key)))
     }
     
-    override func process(req: Request) async {
-        await super.process(req: req)
+    override func process(req: Request) async throws {
+        try await super.process(req: req)
         output.context.value = input
     }
     

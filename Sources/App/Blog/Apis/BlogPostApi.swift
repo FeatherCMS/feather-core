@@ -17,7 +17,7 @@ extension BlogPost.Patch: Content {}
 struct BlogPostApi: FeatherApi {
     typealias Model = BlogPostModel
 
-    func mapList(_ req: Request, model: Model) async -> BlogPost.List {
+    func mapList(_ req: Request, model: Model) async throws -> BlogPost.List {
         .init(id: model.uuid,
               title: model.title,
               imageKey: model.imageKey,
@@ -25,7 +25,7 @@ struct BlogPostApi: FeatherApi {
               metadata: model.metadataDetails)
     }
     
-    func mapDetail(_ req: Request, model: Model) async -> BlogPost.Detail {
+    func mapDetail(_ req: Request, model: Model) async throws -> BlogPost.Detail {
 //        let categoryApi = BlogCategoryApi()
 //        let authorApi = BlogAuthorApi()
         return .init(id: model.id!,
@@ -38,21 +38,21 @@ struct BlogPostApi: FeatherApi {
                      metadata: model.metadataDetails) //(model.$authors.value ?? []).map { authorApi.mapList(model: $0) })
     }
     
-    func mapCreate(_ req: Request, model: Model, input: BlogPost.Create) async {
+    func mapCreate(_ req: Request, model: Model, input: BlogPost.Create) async throws {
         model.title = input.title
         model.imageKey = input.imageKey
         model.excerpt = input.excerpt
         model.content = input.content
     }
     
-    func mapUpdate(_ req: Request, model: Model, input: BlogPost.Update) async {
+    func mapUpdate(_ req: Request, model: Model, input: BlogPost.Update) async throws {
         model.title = input.title
         model.imageKey = input.imageKey
         model.excerpt = input.excerpt
         model.content = input.content
     }
     
-    func mapPatch(_ req: Request, model: Model, input: BlogPost.Patch) async {
+    func mapPatch(_ req: Request, model: Model, input: BlogPost.Patch) async throws {
         model.title = input.title ?? model.title
         model.imageKey = input.imageKey ?? model.imageKey
         model.excerpt = input.excerpt ?? model.excerpt

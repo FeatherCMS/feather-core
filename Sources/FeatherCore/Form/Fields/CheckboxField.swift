@@ -13,8 +13,8 @@ public final class CheckboxField: FormField<[String], CheckboxFieldTemplate> {
         self.init(key: key, input: [], output: .init(.init(key: key)))
     }
 
-    public override func process(req: Request) async {
-        await super.process(req: req)
+    public override func process(req: Request) async throws {
+        try await super.process(req: req)
         output.context.values = input
     }
 

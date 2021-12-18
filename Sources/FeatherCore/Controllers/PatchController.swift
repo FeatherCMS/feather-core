@@ -46,8 +46,8 @@ public extension PatchController {
         try await RequestValidator(api.patchValidators()).validate(req)
         let model = try await findBy(identifier(req), on: req.db) as! PatchModelApi.Model
         let input = try req.content.decode(PatchModelApi.PatchObject.self)
-        await api.mapPatch(req, model: model, input: input)
+        try await api.mapPatch(req, model: model, input: input)
         try await model.update(on: req.db)
-        return await api.mapDetail(req, model: model)
+        return try await api.mapDetail(req, model: model)
     }
 }

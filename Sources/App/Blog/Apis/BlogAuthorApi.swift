@@ -17,13 +17,13 @@ extension BlogAuthor.Patch: Content {}
 struct BlogAuthorApi: FeatherApi {
     typealias Model = BlogAuthorModel
 
-    func mapList(_ req: Request, model: Model) async -> BlogAuthor.List {
+    func mapList(_ req: Request, model: Model) async throws -> BlogAuthor.List {
         .init(id: model.uuid,
               name: model.name,
               imageKey: model.imageKey)
     }
     
-    func mapDetail(_ req: Request, model: Model) async -> BlogAuthor.Detail {
+    func mapDetail(_ req: Request, model: Model) async throws -> BlogAuthor.Detail {
 //        let linkApi = BlogAuthorLinkApi()
         return .init(id: model.uuid,
               name: model.name,
@@ -32,19 +32,19 @@ struct BlogAuthorApi: FeatherApi {
               links: [])//(model.$links.value ?? []).map { linkApi.mapList(model: $0) })
     }
     
-    func mapCreate(_ req: Request, model: Model, input: BlogAuthor.Create) async {
+    func mapCreate(_ req: Request, model: Model, input: BlogAuthor.Create) async throws {
         model.name = input.name
         model.imageKey = input.imageKey
         model.bio = input.bio
     }
     
-    func mapUpdate(_ req: Request, model: Model, input: BlogAuthor.Update) async {
+    func mapUpdate(_ req: Request, model: Model, input: BlogAuthor.Update) async throws {
         model.name = input.name
         model.imageKey = input.imageKey
         model.bio = input.bio
     }
     
-    func mapPatch(_ req: Request, model: Model, input: BlogAuthor.Patch) async {
+    func mapPatch(_ req: Request, model: Model, input: BlogAuthor.Patch) async throws {
         model.name = input.name ?? model.name
         model.imageKey = input.imageKey ?? model.imageKey
         model.bio = input.bio ?? model.bio

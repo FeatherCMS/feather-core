@@ -11,7 +11,7 @@ public protocol UpdateApi: ModelApi {
     associatedtype UpdateObject: Codable
     
     func updateValidators() -> [AsyncValidator]
-    func mapUpdate(_ req: Request, model: Model, input: UpdateObject) async
+    func mapUpdate(_ req: Request, model: Model, input: UpdateObject) async throws
 }
 
 public extension UpdateApi {

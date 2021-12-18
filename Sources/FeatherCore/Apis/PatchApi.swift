@@ -12,7 +12,7 @@ public protocol PatchApi: ModelApi {
     associatedtype PatchObject: Content
     
     func patchValidators() -> [AsyncValidator]
-    func mapPatch(_ req: Request, model: Model, input: PatchObject) async
+    func mapPatch(_ req: Request, model: Model, input: PatchObject) async throws
 }
 
 public extension PatchApi {

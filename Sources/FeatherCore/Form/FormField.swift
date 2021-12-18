@@ -10,7 +10,7 @@ import Vapor
 open class FormField<Input: Decodable, Output: TemplateRepresentable>: FormComponent {
     
     public typealias FormFieldBlock = (Request, FormField<Input, Output>) -> Void
-    public typealias AsyncFormFieldBlock = (Request, FormField<Input, Output>) async -> Void
+    public typealias AsyncFormFieldBlock = (Request, FormField<Input, Output>) async throws -> Void
     public typealias FormFieldValidatorsBlock = ((Request, FormField<Input, Output>) -> [AsyncValidator])
     
     public var key: String
@@ -99,34 +99,34 @@ open class FormField<Input: Decodable, Output: TemplateRepresentable>: FormCompo
     
     // MARK: -
 
-    public func load(req: Request) async {
-        await loadBlock?(req, self)
+    public func load(req: Request) async throws {
+        try await loadBlock?(req, self)
     }
     
-    public func process(req: Request) async {
+    public func process(req: Request) async throws {
         if let value = try? req.content.get(Input.self, at: key) {
             input = value
         }
-        await processBlock?(req, self)
+        try await processBlock?(req, self)
     }
     
-    public func validate(req: Request) async -> Bool {
+    public func validate(req: Request) async throws -> Bool {
         guard let validators = validatorsBlock else {
             return true
         }
         return await RequestValidator(validators(req, self)).isValid(req)
     }
     
-    open func write(req: Request) async {
-        await writeBlock?(req, self)
+    open func write(req: Request) async throws {
+        try await writeBlock?(req, self)
     }
 
-    public func save(req: Request) async {
-        await saveBlock?(req, self)
+    public func save(req: Request) async throws {
+        try await saveBlock?(req, self)
     }
     
-    open func read(req: Request) async {
-        await readBlock?(req, self)
+    open func read(req: Request) async throws {
+        try await readBlock?(req, self)
     }
     
     open func render(req: Request) -> TemplateRepresentable {

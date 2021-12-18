@@ -16,23 +16,23 @@ extension WebMetadata.Patch: Content {}
 struct WebMetadataApi: FeatherApi {
     typealias Model = WebMetadataModel
     
-    func mapList(_ req: Request, model: Model) async -> WebMetadata.List {
+    func mapList(_ req: Request, model: Model) async throws -> WebMetadata.List {
         mapList(model: model)
     }
     
-    func mapDetail(_ req: Request, model: Model) async -> WebMetadata.Detail {
+    func mapDetail(_ req: Request, model: Model) async throws -> WebMetadata.Detail {
         mapDetail(model: model)
     }
     
-    func mapCreate(_ req: Request, model: Model, input: WebMetadata.Create) async {
+    func mapCreate(_ req: Request, model: Model, input: WebMetadata.Create) async throws {
         mapCreate(model: model, input: input)
     }
     
-    func mapUpdate(_ req: Request, model: Model, input: WebMetadata.Update) async {
+    func mapUpdate(_ req: Request, model: Model, input: WebMetadata.Update) async throws {
         mapUpdate(model: model, input: input)
     }
     
-    func mapPatch(_ req: Request, model: Model, input: WebMetadata.Patch) async {
+    func mapPatch(_ req: Request, model: Model, input: WebMetadata.Patch) async throws {
         mapPatch(model: model, input: input)
     }
     

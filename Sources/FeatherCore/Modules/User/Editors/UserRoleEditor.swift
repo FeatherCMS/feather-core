@@ -47,7 +47,7 @@ struct UserRoleEditor: FeatherModelEditor {
         
         CheckboxBundleField("permissions")
             .load { req, field in
-                let permissions = try! await UserPermissionModel.query(on: req.db).all()
+                let permissions = try await UserPermissionModel.query(on: req.db).all()
                 field.output.context.options = getOptionBundles(permissions)
             }
             .read { req, field in
@@ -55,7 +55,7 @@ struct UserRoleEditor: FeatherModelEditor {
             }
             .save { req, field in
                 let values = field.input.compactMap { UUID(uuidString: $0) }
-                return try! await model.$permissions.reAttach(ids: values, on: req.db)
+                return try await model.$permissions.reAttach(ids: values, on: req.db)
             }
     }
     
