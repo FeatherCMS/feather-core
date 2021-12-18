@@ -7,7 +7,7 @@
 
 import Vapor
 
-public protocol ContentFilter {
+public protocol FeatherFilter {
     
     /// unique identifier key
     var key: String { get }
@@ -21,7 +21,7 @@ public protocol ContentFilter {
     func filter(_ input: String, _ req: Request) async -> String
 }
 
-public extension ContentFilter {
+public extension FeatherFilter {
     /// use key as default label
     var label: String { key }
     
