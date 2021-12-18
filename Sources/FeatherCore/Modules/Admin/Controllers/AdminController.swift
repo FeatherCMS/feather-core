@@ -107,7 +107,7 @@ public extension AdminController {
     }
     
     static func detailPathComponents(for id: UUID) -> [PathComponent] {
-        listPathComponents + [.init(stringLiteral: id.uuidString)]
+        listPathComponents + [.init(stringLiteral: id.string)]
     }
     
     static func detailPath(for id: UUID) -> String {

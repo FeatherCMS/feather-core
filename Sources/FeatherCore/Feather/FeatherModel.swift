@@ -53,7 +53,7 @@ public extension FeatherModel {
     }
 
     var uuid: UUID { id! }
-    var identifier: String { uuid.uuidString }
+    var identifier: String { uuid.string }
     
     static var idParamKey: String { modelKey + "Id" }
 

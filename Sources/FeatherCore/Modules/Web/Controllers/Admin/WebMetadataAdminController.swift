@@ -105,7 +105,7 @@ struct WebMetadataController: AdminController {
             Feather.config.paths.admin,
             model.module,
             model.model,
-            model.reference.uuidString,
+            model.reference.string,
             Self.updatePathComponent.description
         ].map { PathComponent(stringLiteral: $0) }.path
         
@@ -130,7 +130,7 @@ struct WebMetadataController: AdminController {
             Feather.config.paths.admin,
             editor.model.module,
             editor.model.model,
-            editor.model.reference.uuidString,
+            editor.model.reference.string,
             Self.updatePathComponent.description
         ].map { PathComponent(stringLiteral: $0) }.path
         

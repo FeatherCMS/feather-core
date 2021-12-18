@@ -23,8 +23,8 @@ open class FeatherForm: FormComponent {
         }
     }
 
-    public init(id: String = UUID().uuidString,
-                token: String = UUID().uuidString,
+    public init(id: String = UUID().string,
+                token: String = UUID().string,
                 action: FormAction = .init(),
                 error: String? = nil,
                 submit: String? = nil,

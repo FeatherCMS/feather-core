@@ -45,7 +45,7 @@ public final class ImageField: FormField<ImageInput, ImageFieldTemplate> {
             if let tmpKey = input.data.temporaryFile?.key {
                 try? await req.fs.delete(key: tmpKey)
             }
-            let key = "tmp/\(UUID().uuidString).tmp"
+            let key = "tmp/\(UUID().string).tmp"
             // TODO: proper error reporting...
             _ = try! await req.fs.upload(key: key, data: data)
             /// update the temporary image
