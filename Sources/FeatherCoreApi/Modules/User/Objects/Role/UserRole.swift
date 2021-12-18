@@ -7,4 +7,13 @@
 
 import Foundation
 
-public enum UserRole {}
+public struct UserRole {
+    
+    public var key: String
+    public var permissions: [UserPermission]
+
+    public init(key: String, permissions: [UserPermission]) {
+        self.key = key
+        self.permissions = permissions
+    }
+}

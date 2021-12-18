@@ -16,8 +16,8 @@ struct UserDetailsAdminWidgetTemplate: TemplateRepresentable {
         self.req = req
     }
    
-    var user: FeatherUser? {
-        req.auth.get(FeatherUser.self)
+    var user: UserAccount? {
+        req.auth.get(UserAccount.self)
     }
 
     @TagBuilder

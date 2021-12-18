@@ -12,7 +12,7 @@ public protocol CreateController: ModelController {
     associatedtype CreateModelEditor: FeatherModelEditor
     associatedtype CreateModelApi: CreateApi & DetailApi
     
-    static func createPermission() -> FeatherPermission
+    static func createPermission() -> UserPermission
     static func createPermission() -> String
     static func hasCreatePermission(_ req: Request) -> Bool
 
@@ -25,12 +25,12 @@ public protocol CreateController: ModelController {
 
 public extension CreateController {
 
-    static func createPermission() -> FeatherPermission {
+    static func createPermission() -> UserPermission {
         Model.permission(.create)
     }
     
     static func createPermission() -> String {
-        createPermission().rawValue
+        createPermission().key
     }
     
     static func hasCreatePermission(_ req: Request) -> Bool {

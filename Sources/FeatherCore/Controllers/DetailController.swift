@@ -11,7 +11,7 @@ import Foundation
 public protocol DetailController: ModelController {
     associatedtype DetailModelApi: DetailApi
 
-    static func detailPermission() -> FeatherPermission
+    static func detailPermission() -> UserPermission
     static func detailPermission() -> String
     static func hasDetailPermission(_ req: Request) -> Bool
 
@@ -23,12 +23,12 @@ public protocol DetailController: ModelController {
 
 public extension DetailController {
     
-    static func detailPermission() -> FeatherPermission {
+    static func detailPermission() -> UserPermission {
         Model.permission(.detail)
     }
 
     static func detailPermission() -> String {
-        detailPermission().rawValue
+        detailPermission().key
     }
 
     static func hasDetailPermission(_ req: Request) -> Bool {

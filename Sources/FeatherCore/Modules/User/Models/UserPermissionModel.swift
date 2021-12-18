@@ -49,18 +49,18 @@ final class UserPermissionModel: FeatherModel {
 
 extension UserPermissionModel {
     
-    var featherPermission: FeatherPermission {
-        .init(namespace: namespace, context: context, action: .init(stringLiteral: action))
+    var userPermission: UserPermission {
+        .init(namespace: namespace, context: context, action: .init(action))
     }
 }
 
 extension UserPermissionModel {
     
-    static func isUnique(_ permission: FeatherPermission, _ req: Request) async throws -> Bool {
+    static func isUnique(_ permission: UserPermission, _ req: Request) async throws -> Bool {
         var query = UserPermissionModel.query(on: req.db)
             .filter(\.$namespace == permission.namespace)
             .filter(\.$context == permission.context)
-            .filter(\.$action == permission.action.description)
+            .filter(\.$action == permission.action.key)
 
         if let modelId = getIdParameter(req: req) {
             query = query.filter(\.$id != modelId)

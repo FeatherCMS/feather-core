@@ -79,7 +79,7 @@ public protocol ListController: ModelController {
     
     var listConfig: ListConfiguration { get }
     
-    static func listPermission() -> FeatherPermission
+    static func listPermission() -> UserPermission
     static func listPermission() -> String
     static func hasListPermission(_ req: Request) -> Bool
 
@@ -103,12 +103,12 @@ public extension ListController {
         []
     }
     
-    static func listPermission() -> FeatherPermission {
+    static func listPermission() -> UserPermission {
         Model.permission(.list)
     }
     
     static func listPermission() -> String {
-        listPermission().rawValue
+        listPermission().key
     }
     
     static func hasListPermission(_ req: Request) -> Bool {

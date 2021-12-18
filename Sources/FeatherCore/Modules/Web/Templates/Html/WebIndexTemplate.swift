@@ -158,7 +158,7 @@ public struct WebIndexTemplate: TemplateRepresentable {
                 Footer {
                     Section {
                         Nav {
-                            if let user = req.auth.get(FeatherUser.self) {
+                            if let user = req.auth.get(UserAccount.self) {
                                 P(user.email)
                                 A("Sign out")
                                     .href("/logout/")

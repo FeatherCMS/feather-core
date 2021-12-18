@@ -12,7 +12,7 @@ public protocol FeatherModule {
     /// a unique key to identify the module
     static var moduleKey: String { get }
     static var pathComponent: PathComponent { get }
-    static var permission: FeatherPermission { get }
+    static var permission: UserPermission { get }
     
     static func installPermissions() -> [UserPermission.Create]
 
@@ -30,7 +30,7 @@ public extension FeatherModule {
         .init(stringLiteral: moduleKey)
     }
 
-    static var permission: FeatherPermission {
+    static var permission: UserPermission {
         .init(namespace: moduleKey, context: "module", action: .detail)
     }
     
@@ -39,7 +39,7 @@ public extension FeatherModule {
         return [
             .init(namespace: permission.namespace,
                   context: permission.context,
-                  action: permission.action.description,
+                  action: permission.action.key,
                   name: permission.name)
         ]
     }

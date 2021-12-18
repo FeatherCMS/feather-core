@@ -9,12 +9,12 @@ import Vapor
 import Fluent
 
 struct UserAccountSessionAuthenticator: AsyncSessionAuthenticator {
-    typealias User = FeatherUser
+    typealias User = UserAccount
 
     func authenticate(sessionID: UUID, for req: Request) async throws {
-        guard let user = try await UserAccountModel.findWithPermissionsBy(id: sessionID, on: req.db) else {
+        guard let model = try await UserAccountModel.findWithPermissionsBy(id: sessionID, on: req.db) else {
             return
         }
-        req.auth.login(user.featherUser)
+        req.auth.login(model.userAccount)
     }
 }

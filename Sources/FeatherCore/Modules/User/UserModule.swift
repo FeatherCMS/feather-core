@@ -112,14 +112,14 @@ struct UserModule: FeatherModule {
     func adminMiddlewaresHook(args: HookArguments) -> [Middleware] {
         [
             UserAccountSessionAuthenticator(),
-            FeatherUser.redirectMiddleware(path: Feather.config.paths.adminLogin),
+            UserAccount.redirectMiddleware(path: Feather.config.paths.adminLogin),
         ]
     }
     
     func adminApiMiddlewaresHook(args: HookArguments) -> [Middleware] {
         var middlewares = [
             UserTokenModel.authenticator(),
-            FeatherUser.guardMiddleware(),
+            UserAccount.guardMiddleware(),
         ]
 //        if !Feather.disableApiSessionAuthMiddleware {
             middlewares.append(UserAccountSessionAuthenticator())
@@ -128,13 +128,13 @@ struct UserModule: FeatherModule {
     }
     
     func permissionHook(args: HookArguments) -> Bool {
-        guard let user = args.req.auth.get(FeatherUser.self) else {
+        guard let user = args.req.auth.get(UserAccount.self) else {
             return false
         }
         if user.isRoot {
             return true
         }
-        return user.permissions.contains(args.permission)
+        return user.hasPermission(args.permission)
     }
 
     func accessHook(args: HookArguments) async -> Bool {

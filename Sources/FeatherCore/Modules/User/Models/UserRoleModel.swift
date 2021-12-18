@@ -38,6 +38,13 @@ final class UserRoleModel: FeatherModel {
 
 extension UserRoleModel {
     
+    var userRole: UserRole {
+        .init(key: key, permissions: permissions.map(\.userPermission))
+    }
+}
+
+extension UserRoleModel {
+    
     static func findWithPermissionsBy(id: UUID, on db: Database) async throws -> UserRoleModel {
         guard let model = try await UserRoleModel.query(on: db).filter(\.$id == id).with(\.$permissions).first() else {
             throw Abort(.notFound)

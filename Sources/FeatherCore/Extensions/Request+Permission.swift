@@ -21,14 +21,11 @@ public extension Request {
     ///   - args: Additional hook function arguments that you might want to provide
     /// - Returns: True if `the` name is `nil` or the user has the given permission, otherwise `false`
     ///
-    func checkPermission(_ name: String?, args: HookArguments = [:]) -> Bool {
-        guard let name = name else {
+    func checkPermission(_ key: String?, args: HookArguments = [:]) -> Bool {
+        guard let key = key else {
             return true
         }
-        guard let permission = FeatherPermission(rawValue: name) else {
-            return false
-        }
-        return checkPermission(permission, args: args)
+        return checkPermission(UserPermission(key), args: args)
     }
 
     /// Check user permission
@@ -40,7 +37,7 @@ public extension Request {
     ///   - args: Additional hook function arguments that you might want to provide
     /// - Returns: True if the user has the given permission, otherwise `false`
     ///
-    func checkPermission(_ permission: FeatherPermission, args: HookArguments = [:]) -> Bool {
+    func checkPermission(_ permission: UserPermission, args: HookArguments = [:]) -> Bool {
         var arguments = args
         arguments.permission = permission
         let hooks: [Bool] = invokeAll(.permission, args: arguments)

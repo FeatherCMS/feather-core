@@ -11,7 +11,7 @@ import Fluent
 public protocol PatchController: ModelController {
     associatedtype PatchModelApi: PatchApi & DetailApi
 
-    static func patchPermission() -> FeatherPermission
+    static func patchPermission() -> UserPermission
     static func patchPermission() -> String
     static func hasPatchPermission(_ req: Request) -> Bool
     
@@ -21,12 +21,12 @@ public protocol PatchController: ModelController {
 
 public extension PatchController {
     
-    static func patchPermission() -> FeatherPermission {
+    static func patchPermission() -> UserPermission {
         Model.permission(.patch)
     }
     
     static func patchPermission() -> String {
-        patchPermission().rawValue
+        patchPermission().key
     }
     
     static func hasPatchPermission(_ req: Request) -> Bool {

@@ -29,7 +29,7 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
     static var idParamKeyPathComponent: PathComponent { get }
     static func getIdParameter(req: Request) -> UUID?
 
-    static func permission(_ action: FeatherPermission.Action) -> FeatherPermission
+    static func permission(_ action: UserPermission.Action) -> UserPermission
     
     static func installPermissions() -> [UserPermission.Create]
     
@@ -66,15 +66,15 @@ public extension FeatherModel {
         return uuid
     }
 
-    static func permission(_ action: FeatherPermission.Action) -> FeatherPermission {
-        FeatherPermission(namespace: Module.moduleKey, context: modelKey, action: action)
+    static func permission(_ action: UserPermission.Action) -> UserPermission {
+        UserPermission(namespace: Module.moduleKey, context: modelKey, action: action)
     }
 
     static func installPermissions() -> [UserPermission.Create] {
-        FeatherPermission.Action.crud.map { permission($0) }.map {
+        UserPermission.Action.crud.map { permission($0) }.map {
             UserPermission.Create(namespace: $0.namespace,
                                   context: $0.context,
-                                  action: $0.action.description,
+                                  action: $0.action.key,
                                   name: $0.name)
         }
     }

@@ -13,7 +13,7 @@ public protocol UpdateController: ModelController {
     associatedtype UpdateModelEditor: FeatherModelEditor
     associatedtype UpdateModelApi: UpdateApi & DetailApi
 
-    static func updatePermission() -> FeatherPermission
+    static func updatePermission() -> UserPermission
     static func updatePermission() -> String
     static func hasUpdatePermission(_ req: Request) -> Bool
     
@@ -26,12 +26,12 @@ public protocol UpdateController: ModelController {
 
 public extension UpdateController {
     
-    static func updatePermission() -> FeatherPermission {
+    static func updatePermission() -> UserPermission {
         Model.permission(.update)
     }
     
     static func updatePermission() -> String {
-        updatePermission().rawValue
+        updatePermission().key
     }
     
     static func hasUpdatePermission(_ req: Request) -> Bool {

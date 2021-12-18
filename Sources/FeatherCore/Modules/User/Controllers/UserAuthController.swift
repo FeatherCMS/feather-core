@@ -27,7 +27,7 @@ struct UserAuthController {
     // MARK: - api
 
     func loginView(_ req: Request) async throws -> Response {
-        guard req.auth.has(FeatherUser.self) else {
+        guard req.auth.has(UserAccount.self) else {
             let form = UserLoginForm()
             await form.load(req: req)
             return render(req, form: form)
@@ -37,7 +37,7 @@ struct UserAuthController {
 
     func login(_ req: Request) async throws -> Response {
         /// user is logged in, credentials were correct
-        if let user = req.auth.get(FeatherUser.self) {
+        if let user = req.auth.get(UserAccount.self) {
             req.session.authenticate(user)
             return req.redirect(to: getCustomRedirect(req))
         }
@@ -51,8 +51,8 @@ struct UserAuthController {
     }
 
     func logout(_ req: Request) throws -> Response {
-        req.auth.logout(FeatherUser.self)
-        req.session.unauthenticate(FeatherUser.self)
+        req.auth.logout(UserAccount.self)
+        req.session.unauthenticate(UserAccount.self)
         return req.redirect(to: getCustomRedirect(req))
     }
 }

@@ -16,12 +16,10 @@ extension UserAccount {
 
         public init(id: UUID,
                     email: String,
-                    isRoot: Bool)
-        {
+                    isRoot: Bool) {
             self.id = id
             self.email = email
             self.isRoot = isRoot
         }
     }
-
 }

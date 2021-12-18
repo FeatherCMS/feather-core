@@ -16,11 +16,11 @@ struct UserAccountCredentialsAuthenticator: AsyncCredentialsAuthenticator {
     }
     
     func authenticate(credentials: Input, for req: Request) async throws {
-        guard let user = try await UserAccountModel.findWithPermissionsBy(email: credentials.email, on: req.db) else {
+        guard let model = try await UserAccountModel.findWithPermissionsBy(email: credentials.email, on: req.db) else {
             return
         }
-        if let isValid = try? Bcrypt.verify(credentials.password, created: user.password), isValid {
-            req.auth.login(user.featherUser)
+        if let isValid = try? Bcrypt.verify(credentials.password, created: model.password), isValid {
+            req.auth.login(model.userAccount)
         }
     }
 }

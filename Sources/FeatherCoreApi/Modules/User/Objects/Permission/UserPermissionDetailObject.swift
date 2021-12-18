@@ -29,6 +29,6 @@ extension UserPermission {
             self.action = action
             self.name = name
             self.notes = notes
-        }
+        }    
     }
 }

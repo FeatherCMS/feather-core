@@ -43,9 +43,8 @@ final class UserAccountModel: FeatherModel {
 
 extension UserAccountModel: Authenticatable {
     
-    var featherUser: FeatherUser {
-        let permissions = roles.reduce([]) { $0 + $1.permissions.map(\.featherPermission) }
-        return .init(id: id!, email: email, isRoot: isRoot, permissions: permissions)
+    var userAccount: UserAccount {
+        return .init(id: uuid, email: email, isRoot: isRoot, roles: roles.map(\.userRole))
     }
 }
 

@@ -13,6 +13,12 @@ extension UserAccount.Create: Content {}
 extension UserAccount.Update: Content {}
 extension UserAccount.Patch: Content {}
 
+extension UserAccount: SessionAuthenticatable {
+    public typealias SessionID = UUID
+
+    public var sessionID: SessionID { id }
+}
+
 struct UserAccountApi: FeatherApi {
     typealias Model = UserAccountModel
     
@@ -46,3 +52,4 @@ struct UserAccountApi: FeatherApi {
         []
     }
 }
+

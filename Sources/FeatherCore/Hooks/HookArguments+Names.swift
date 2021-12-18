@@ -37,9 +37,9 @@ public extension HookArguments {
         }
     }
     
-    var permission: FeatherPermission {
+    var permission: UserPermission {
         get {
-            self["permission"] as! FeatherPermission
+            self["permission"] as! UserPermission
         }
         set {
             self["permission"] = newValue
