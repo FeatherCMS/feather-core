@@ -9,8 +9,8 @@ import Foundation
 
 public struct OptionGroupContext {
     
-    public let name: String
-    public let options: [OptionContext]
+    public var name: String
+    public var options: [OptionContext]
     
     public init(name: String, options: [OptionContext] = []) {
         self.name = name

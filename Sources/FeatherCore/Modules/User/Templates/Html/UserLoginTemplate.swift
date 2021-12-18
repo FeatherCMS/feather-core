@@ -36,12 +36,15 @@ struct UserLoginTemplate: TemplateRepresentable {
     var tag: Tag {
         WebIndexTemplate(req, context: context.index) {
             Div {
-                H1("Sign in")
-                P("Please enter your user credentials to sign in.")
-            }
-            .class("lead")
+                Div {
+                    H1("Sign in")
+                    P("Please enter your user credentials to sign in.")
+                }
+                .class("lead")
 
-            form.tag
+                form.tag
+            }
+            .class("container")
         }.tag
     }
 }

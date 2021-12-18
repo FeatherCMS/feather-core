@@ -40,7 +40,7 @@ public extension FeatherModule {
             .init(namespace: permission.namespace,
                   context: permission.context,
                   action: permission.action.key,
-                  name: permission.name)
+                  name: permission.key)
         ]
     }
     

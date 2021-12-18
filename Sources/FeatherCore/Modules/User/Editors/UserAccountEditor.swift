@@ -21,6 +21,7 @@ struct UserAccountEditor: FeatherModelEditor {
         InputField("email")
             .config {
                 $0.output.context.type = .email
+                $0.output.context.label.required = true
             }
             .validators {
                 FormFieldValidator.required($1)

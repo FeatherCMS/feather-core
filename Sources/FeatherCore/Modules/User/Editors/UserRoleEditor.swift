@@ -44,5 +44,49 @@ struct UserRoleEditor: FeatherModelEditor {
         TextareaField("notes")
             .read { $1.output.context.value = model.notes }
             .write { model.notes = $1.input }
+        
+        CheckboxBundleField("permissions")
+            .load { req, field in
+                let permissions = try! await UserPermissionModel.query(on: req.db).all()
+                field.output.context.options = getOptionBundles(permissions)
+            }
+            .read { req, field in
+                field.output.context.values = model.permissions.compactMap { $0.identifier }
+            }
+            .save { req, field in
+                let values = field.input.compactMap { UUID(uuidString: $0) }
+                return try! await model.$permissions.reAttach(ids: values, on: req.db)
+            }
+    }
+    
+    private func getOptionBundles(_ permissions: [UserPermissionModel]) -> [OptionBundleContext] {
+        var data: [OptionBundleContext] = []
+        for permission in permissions {
+            let ffo = OptionContext(key: permission.identifier, label: permission.action.capitalized)
+            let module = permission.namespace.capitalized
+
+            /// if there is no module with the permission, we create it...
+            var moduleIndex: Array<OptionGroupContext>.Index!
+            if let i = data.firstIndex(where: { $0.name == module }) {
+                moduleIndex = i
+            }
+            else {
+                data.append(OptionBundleContext(name: module))
+                moduleIndex = data.endIndex.advanced(by: -1)
+            }
+
+            let ctx = permission.context.replacingOccurrences(of: ".", with: " ").capitalized
+            /// find an existing ctx group or create a new one...
+            var groupIndex: Array<OptionGroupContext>.Index!
+            if let g = data[moduleIndex].groups.firstIndex(where: { $0.name == ctx }) {
+                groupIndex = g
+            }
+            else {
+                data[moduleIndex].groups.append(.init(name: ctx))
+                groupIndex = data[moduleIndex].groups.endIndex.advanced(by: -1)
+            }
+            data[moduleIndex].groups[groupIndex].options.append(ffo)
+        }
+        return data
     }
 }

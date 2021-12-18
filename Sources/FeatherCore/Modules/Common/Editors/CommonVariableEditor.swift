@@ -19,6 +19,9 @@ struct CommonVariableEditor: FeatherModelEditor {
     @FormComponentBuilder
     var formFields: [FormComponent] {
         InputField("key")
+            .config {
+                $0.output.context.label.required = true
+            }
             .validators {
                 FormFieldValidator.required($1)
             }
@@ -26,6 +29,9 @@ struct CommonVariableEditor: FeatherModelEditor {
             .write { model.key = $1.input }
         
         InputField("name")
+            .config {
+                $0.output.context.label.required = true
+            }
             .validators {
                 FormFieldValidator.required($1)
             }

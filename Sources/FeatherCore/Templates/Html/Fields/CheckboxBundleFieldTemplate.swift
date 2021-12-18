@@ -30,22 +30,23 @@ public struct CheckboxBundleFieldTemplate: TemplateRepresentable {
             for bundle in context.options {
                 Fieldset {
                     Legend(bundle.name)
-                }
-                Div {
-                    for group in bundle.groups {
-                        Section {
-                            Label(group.name)
-                                .class("block")
-                            for option in group.options {
-                                Input()
-                                    .type(.checkbox)
-                                    .name(context.key + "[]")
-                                    .value(option.key)
-                                    .id(option.key)
-                                    .checked(context.values.contains(option.key))
-                                Label(option.label)
-                                    .for(option.key)
-                                Br()
+                    
+                    Div {
+                        for group in bundle.groups {
+                            Section {
+                                Label(group.name)
+                                    .class("block")
+                                for option in group.options {
+                                    Input()
+                                        .type(.checkbox)
+                                        .name(context.key + "[]")
+                                        .value(option.key)
+                                        .id(option.key)
+                                        .checked(context.values.contains(option.key))
+                                    Label(option.label)
+                                        .for(option.key)
+                                    Br()
+                                }
                             }
                         }
                     }

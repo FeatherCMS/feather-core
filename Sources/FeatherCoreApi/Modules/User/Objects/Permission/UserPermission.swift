@@ -70,8 +70,10 @@ public struct UserPermission: Codable {
         self.action = action
     }
     
+    private let separator = "."
+    
     public init(_ key: String) {
-        let parts = key.components(separatedBy: "_")
+        let parts = key.components(separatedBy: separator)
         guard parts.count == 3 else {
             fatalError("Invalid permission key")
         }
@@ -88,14 +90,10 @@ public struct UserPermission: Codable {
         self.action = .init(actionKey)
     }
 
-    private var components: [String] { [namespace, context, action.key] }
+    public var components: [String] { [namespace, context, action.key] }
     
-    public var key: String { components.joined(separator: "_") }
+    public var key: String { components.joined(separator: separator) }
 
-    public var accessKey: String { key + "_access" }
-
-    public var name: String {
-        namespace + context + action.key
-    }
+    public var accessKey: String { key + separator + "access" }
 }
 

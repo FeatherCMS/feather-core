@@ -9,8 +9,8 @@ import Foundation
 
 public struct OptionContext {
 
-    public let key: String
-    public let label: String
+    public var key: String
+    public var label: String
 
     public init(key: String, label: String) {
         self.key = key

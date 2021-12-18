@@ -75,7 +75,7 @@ public extension FeatherModel {
             UserPermission.Create(namespace: $0.namespace,
                                   context: $0.context,
                                   action: $0.action.key,
-                                  name: $0.name)
+                                  name: $0.key)
         }
     }
     

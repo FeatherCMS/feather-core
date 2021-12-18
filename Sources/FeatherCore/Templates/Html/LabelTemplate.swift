@@ -18,17 +18,18 @@ public struct LabelTemplate: TemplateRepresentable {
 
     @TagBuilder
     public var tag: Tag {
-        Label(context.title ?? context.key.uppercasedFirst)
-            .for(context.key)
+        Label {
+            Text(context.title ?? context.key.uppercasedFirst)
 
-        if let more = context.more {
-            Span(more)
-                .class("more")
-        }
-        if context.required {
-            Span("*")
-                .class("required")
-        }
+            if let more = context.more {
+                Span(more)
+                    .class("more")
+            }
+            if context.required {
+                Span("*")
+                    .class("required")
+            }
+        }.for(context.key)
     }
 }
 

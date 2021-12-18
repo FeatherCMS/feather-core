@@ -313,7 +313,7 @@ input[type=radio], input[type=checkbox] {
     margin-bottom: var(--space-2xs);
 }
 label {
-    display: inline-block;
+    display: block;
     margin-left: var(--space-2xs);
     margin-bottom: var(--space-2xs);
 }

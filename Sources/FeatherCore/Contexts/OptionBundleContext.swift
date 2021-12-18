@@ -9,8 +9,8 @@ import Foundation
 
 public struct OptionBundleContext {
 
-    public let name: String
-    public let groups: [OptionGroupContext]
+    public var name: String
+    public var groups: [OptionGroupContext]
     
     public init(name: String, groups: [OptionGroupContext] = []) {
         self.name = name
