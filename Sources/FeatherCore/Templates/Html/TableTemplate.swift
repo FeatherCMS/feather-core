@@ -12,12 +12,10 @@ public struct TableTemplate: TemplateRepresentable {
     
     unowned var req: Request
     var context: TableContext
-    var rowId: String
 
-    public init(_ req: Request, _ context: TableContext, rowId: String = ":rowId") {
+    public init(_ req: Request, _ context: TableContext) {
         self.req = req
         self.context = context
-        self.rowId = rowId
     }
     
     func css() -> String {
@@ -85,7 +83,7 @@ public struct TableTemplate: TemplateRepresentable {
                                         if let link = cell.link {
                                             if req.checkPermission(link.permission) {
                                                 A(link.label)
-                                                    .href(link.url.replacingOccurrences(of: rowId, with: row.id))
+                                                    .href(link.url)
                                             }
                                             else {
                                                 Text(link.label)
@@ -100,7 +98,7 @@ public struct TableTemplate: TemplateRepresentable {
                                                 A {
                                                     Img(src: req.fs.resolve(key: value), alt: link.label)
                                                 }
-                                                .href(link.url.replacingOccurrences(of: rowId, with: row.id))
+                                                .href(link.url)
                                             }
                                             else {
                                                 Img(src: req.fs.resolve(key: value), alt: link.label)
@@ -120,8 +118,14 @@ public struct TableTemplate: TemplateRepresentable {
                                 return nil
                             }
                             return Td {
-                                A(action.label)
-                                    .href(action.url.replacingOccurrences(of: rowId, with: row.id))
+                                if action.absolute {
+                                    A(action.label)
+                                        .href(action.url)
+                                }
+                                else {
+                                    A(action.label)
+                                        .href((req.url.path + "/" + row.id + "/" + action.url + "/").safePath())
+                                }
                             }
                             .class("field")
                         }

@@ -34,12 +34,6 @@ public protocol AdminController: FeatherController {
     static func updatePath(for id: UUID) -> String
     static func deletePathComponents(for id: UUID) -> [PathComponent]
     static func deletePath(for id: UUID) -> String
-    static var rowIdPathComponents: [PathComponent] { get }
-    static var rowIdPath: String { get }
-    static var rowUpdatePathComponents: [PathComponent] { get }
-    static var rowUpdatePath: String { get }
-    static var rowDeletePathComponents: [PathComponent] { get }
-    static var rowDeletePath: String { get }
     
     static func moduleLink(_ label: String) -> LinkContext
     static func listLink(_ label: String) -> LinkContext
@@ -138,30 +132,6 @@ public extension AdminController {
     static func deletePath(for id: UUID) -> String {
         deletePathComponents(for: id).path
     }
-    
-    static var rowIdPathComponents: [PathComponent] {
-        listPathComponents + [rowIdPathComponent]
-    }
-    
-    static var rowIdPath: String {
-        rowIdPathComponents.path
-    }
-    
-    static var rowUpdatePathComponents: [PathComponent] {
-        rowIdPathComponents + [updatePathComponent]
-    }
-    
-    static var rowUpdatePath: String {
-        rowUpdatePathComponents.path
-    }
-    
-    static var rowDeletePathComponents: [PathComponent] {
-        rowIdPathComponents + [deletePathComponent]
-    }
-    
-    static var rowDeletePath: String {
-        rowDeletePathComponents.path
-    }
 
     static func moduleLink(_ label: String = Model.Module.moduleKey.uppercasedFirst) -> LinkContext {
         .init(label: label, url: modulePath)
@@ -188,11 +158,11 @@ public extension AdminController {
     }
     
     static func updateTableAction(_ label: String = "Update") -> LinkContext {
-        .init(label: label, url: rowUpdatePath, permission: updatePermission())
+        .init(label: label, url: updatePathComponent.description, absolute: false, permission: updatePermission())
     }
 
     static func deleteTableAction(_ label: String = "Delete") -> LinkContext {
-        .init(label: label, url: rowDeletePath, permission: deletePermission())
+        .init(label: label, url: deletePathComponent.description, absolute: false, permission: deletePermission())
     }
 }
 
