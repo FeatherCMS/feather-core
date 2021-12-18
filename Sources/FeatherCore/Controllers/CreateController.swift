@@ -16,7 +16,7 @@ public protocol CreateController: ModelController {
     static func createPermission() -> String
     static func hasCreatePermission(_ req: Request) -> Bool
 
-    func createAccess(_ req: Request) async -> Bool
+    func createAccess(_ req: Request) async throws -> Bool
     func beforeCreate(_ req: Request, model: Model) async throws
     func create(_ req: Request) async throws -> Response
     func createView(_ req: Request) async throws -> Response
@@ -40,8 +40,8 @@ public extension CreateController {
         req.checkPermission(createPermission())
     }
 
-    func createAccess(_ req: Request) async -> Bool {
-        await req.checkAccess(for: Self.createPermission())
+    func createAccess(_ req: Request) async throws -> Bool {
+        try await req.checkAccess(for: Self.createPermission())
     }
     
     private func render(_ req: Request, editor: CreateModelEditor) -> Response {
@@ -49,7 +49,7 @@ public extension CreateController {
     }
 
     func createView(_ req: Request) async throws -> Response {
-        let hasAccess = await createAccess(req)
+        let hasAccess = try await createAccess(req)
         guard hasAccess else {
             throw Abort(.forbidden)
         }
@@ -63,7 +63,7 @@ public extension CreateController {
     }
     
     func create(_ req: Request) async throws -> Response {
-        let hasAccess = await createAccess(req)
+        let hasAccess = try await createAccess(req)
         guard hasAccess else {
             throw Abort(.forbidden)
         }
@@ -87,7 +87,7 @@ public extension CreateController {
     }
     
     func createApi(_ req: Request) async throws -> Response {
-        let hasAccess = await createAccess(req)
+        let hasAccess = try await createAccess(req)
         guard hasAccess else {
             throw Abort(.forbidden)
         }

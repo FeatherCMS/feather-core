@@ -17,7 +17,7 @@ public protocol UpdateController: ModelController {
     static func updatePermission() -> String
     static func hasUpdatePermission(_ req: Request) -> Bool
     
-    func updateAccess(_ req: Request) async -> Bool
+    func updateAccess(_ req: Request) async throws -> Bool
     func update(_ req: Request) async throws -> Response
     func updateView(_ req: Request) async throws -> Response
     func updateTemplate(_ req: Request, _ editor: UpdateModelEditor) async -> TemplateRepresentable
@@ -38,8 +38,8 @@ public extension UpdateController {
         req.checkPermission(updatePermission())
     }
     
-    func updateAccess(_ req: Request) async -> Bool {
-        await req.checkAccess(for: Self.updatePermission())
+    func updateAccess(_ req: Request) async throws-> Bool {
+        try await req.checkAccess(for: Self.updatePermission())
     }
     
     private func render(_ req: Request, editor: UpdateModelEditor) async -> Response {
@@ -47,7 +47,7 @@ public extension UpdateController {
     }
     
     func updateView(_ req: Request) async throws -> Response {
-        let hasAccess = await updateAccess(req)
+        let hasAccess = try await updateAccess(req)
         guard hasAccess else {
             throw Abort(.forbidden)
         }
@@ -61,7 +61,7 @@ public extension UpdateController {
     }
 
     func update(_ req: Request) async throws -> Response {
-        let hasAccess = await updateAccess(req)
+        let hasAccess = try await updateAccess(req)
         guard hasAccess else {
             throw Abort(.forbidden)
         }
@@ -81,7 +81,7 @@ public extension UpdateController {
     }
 
     func updateApi(_ req: Request) async throws -> UpdateModelApi.DetailObject {
-        let hasAccess = await updateAccess(req)
+        let hasAccess = try await updateAccess(req)
         guard hasAccess else {
             throw Abort(.forbidden)
         }

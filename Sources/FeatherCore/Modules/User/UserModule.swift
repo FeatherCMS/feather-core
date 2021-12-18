@@ -53,20 +53,20 @@ struct UserModule: FeatherModule {
         try router.boot(app)
     }
     
-    func installHook(args: HookArguments) async {
-        let roles: [UserRole.Create] = await args.req.invokeAllFlat(.installUserRoles)
-        try! await roles.map { UserRoleModel(key: $0.key, name: $0.name, notes: $0.notes) }.create(on: args.req.db)
+    func installHook(args: HookArguments) async throws {
+        let roles: [UserRole.Create] = try await args.req.invokeAllFlat(.installUserRoles)
+        try await roles.map { UserRoleModel(key: $0.key, name: $0.name, notes: $0.notes) }.create(on: args.req.db)
 
-        let permissions: [UserPermission.Create] = await args.req.invokeAllFlat(.installUserPermissions)
-        try! await permissions.map { UserPermissionModel(namespace: $0.namespace,
+        let permissions: [UserPermission.Create] = try await args.req.invokeAllFlat(.installUserPermissions)
+        try await permissions.map { UserPermissionModel(namespace: $0.namespace,
                                                          context: $0.context,
                                                          action: $0.action,
                                                          name: $0.name,
                                                          notes: $0.notes) }.create(on: args.req.db)
         
-        let accounts: [UserAccount.Create] = await args.req.invokeAllFlat(.installUserAccounts)
-        try! await accounts.map { UserAccountModel(email: $0.email,
-                                                   password: try! Bcrypt.hash($0.password),
+        let accounts: [UserAccount.Create] = try await args.req.invokeAllFlat(.installUserAccounts)
+        try await accounts.map { UserAccountModel(email: $0.email,
+                                                   password: try Bcrypt.hash($0.password),
                                                    isRoot: $0.isRoot) }.create(on: args.req.db)
 
     }

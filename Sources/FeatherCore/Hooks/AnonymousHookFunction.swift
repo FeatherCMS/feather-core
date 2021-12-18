@@ -31,7 +31,7 @@ public struct AnonymousAsyncHookFunction: AsyncHookFunction {
     }
 
     /// since they are hook functions they can be invoked with a given argument
-    public func invoke(_ args: HookArguments) async -> Any {
-        await functionBlock(args)
+    public func invoke(_ args: HookArguments) async throws -> Any {
+        try await functionBlock(args)
     }
 }

@@ -61,7 +61,7 @@ struct WebRouter: FeatherRouter {
     private func catchAll(_ req: Request) async throws -> Response {
         guard Feather.config.install.isCompleted else {
             let currentStep = Feather.config.install.currentStep
-            let steps: [FeatherInstallStep] = await req.invokeAllFlat(.installStep) + [.start, .finish]
+            let steps: [FeatherInstallStep] = try await req.invokeAllFlat(.installStep) + [.start, .finish]
             let orderedSteps = steps.sorted { $0.priority > $1.priority }.map(\.key)
             
             var hookArguments = HookArguments()
@@ -74,13 +74,13 @@ struct WebRouter: FeatherRouter {
                     hookArguments.nextInstallStep = orderedSteps[nextIndex]
                 }
             }
-            let res: Response? = await req.invokeAllFirst(.installResponse, args: hookArguments)
+            let res: Response? = try await req.invokeAllFirst(.installResponse, args: hookArguments)
             guard let res = res else {
                 throw Abort(.internalServerError)
             }
             return res
         }
-        let res: Response? = await req.invokeAllFirst(.response)
+        let res: Response? = try await req.invokeAllFirst(.response)
         guard let response = res else {
             throw Abort(.notFound)
         }

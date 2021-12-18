@@ -32,10 +32,10 @@ struct CommonModule: FeatherModule {
         try router.boot(app)
     }
     
-    func installHook(args: HookArguments) async {
-        let pages: [CommonVariable.Create] = await args.req.invokeAllFlat(.installCommonVariables)
+    func installHook(args: HookArguments) async throws {
+        let pages: [CommonVariable.Create] = try await args.req.invokeAllFlat(.installCommonVariables)
         let objects = pages.map { CommonVariableModel(key: $0.key, name: $0.name, value: $0.value, notes: $0.notes) }
-        try! await objects.create(on: args.req.db)
+        try await objects.create(on: args.req.db)
     }
     
     func installUserPermissionsHook(args: HookArguments) async -> [UserPermission.Create] {

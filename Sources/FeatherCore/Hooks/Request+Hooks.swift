@@ -19,13 +19,13 @@ public extension Request {
         return application.invokeAll(name, args: ctxArgs)
     }
     
-    func invoke<ReturnType>(_ name: String, args: HookArguments = [:]) async -> ReturnType? {
+    func invoke<ReturnType>(_ name: String, args: HookArguments = [:]) async throws -> ReturnType? {
         let ctxArgs = args.merging(["req": self]) { (_, new) in new }
-        return await application.invoke(name, args: ctxArgs)
+        return try await application.invoke(name, args: ctxArgs)
     }
 
-    func invokeAll<ReturnType>(_ name: String, args: HookArguments = [:]) async -> [ReturnType] {
+    func invokeAll<ReturnType>(_ name: String, args: HookArguments = [:]) async throws -> [ReturnType] {
         let ctxArgs = args.merging(["req": self]) { (_, new) in new }
-        return await application.invokeAll(name, args: ctxArgs)
+        return try await application.invokeAll(name, args: ctxArgs)
     }
 }

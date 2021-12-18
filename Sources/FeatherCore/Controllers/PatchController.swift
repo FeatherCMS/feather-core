@@ -15,7 +15,7 @@ public protocol PatchController: ModelController {
     static func patchPermission() -> String
     static func hasPatchPermission(_ req: Request) -> Bool
     
-    func patchAccess(_ req: Request) async -> Bool
+    func patchAccess(_ req: Request) async throws -> Bool
     func patchApi(_ req: Request) async throws -> PatchModelApi.DetailObject
 }
 
@@ -33,12 +33,12 @@ public extension PatchController {
         req.checkPermission(patchPermission())
     }
     
-    func patchAccess(_ req: Request) async -> Bool {
-        await req.checkAccess(for: Self.patchPermission())
+    func patchAccess(_ req: Request) async throws -> Bool {
+        try await req.checkAccess(for: Self.patchPermission())
     }
 
     func patchApi(_ req: Request) async throws -> PatchModelApi.DetailObject {
-        let hasAccess = await patchAccess(req)
+        let hasAccess = try await patchAccess(req)
         guard hasAccess else {
             throw Abort(.forbidden)
         }

@@ -35,7 +35,7 @@ public protocol DeleteController: ModelController {
     static func deletePermission() -> String
     static func hasDeletePermission(_ req: Request) -> Bool
     
-    func deleteAccess(_ req: Request) async -> Bool
+    func deleteAccess(_ req: Request) async throws -> Bool
     func delete(_ req: Request) async throws -> Response
     func deleteView(_ req: Request) async throws -> Response
     func deleteTemplate(_ req: Request, _ model: Model, _ form: DeleteForm) -> TemplateRepresentable
@@ -56,8 +56,8 @@ public extension DeleteController {
         req.checkPermission(deletePermission())
     }
     
-    func deleteAccess(_ req: Request) async -> Bool {
-        await req.checkAccess(for: Self.deletePermission())
+    func deleteAccess(_ req: Request) async throws -> Bool {
+        try await req.checkAccess(for: Self.deletePermission())
     }
 
     func deleteView(_ req: Request) async throws -> Response {
@@ -69,7 +69,7 @@ public extension DeleteController {
     }
     
     func delete(_ req: Request) async throws -> Response {
-        let hasAccess = await deleteAccess(req)
+        let hasAccess = try await deleteAccess(req)
         guard hasAccess else {
             throw Abort(.forbidden)
         }
@@ -90,7 +90,7 @@ public extension DeleteController {
     }
     
     func deleteApi(_ req: Request) async throws -> HTTPStatus {
-        let hasAccess = await deleteAccess(req)
+        let hasAccess = try await deleteAccess(req)
         guard hasAccess else {
             throw Abort(.forbidden)
         }

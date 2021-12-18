@@ -52,9 +52,9 @@ struct WebModule: FeatherModule {
 
     // MARK: - hooks
     
-    func installHook(args: HookArguments) async {
-        let pages: [WebPage.Create] = await args.req.invokeAllFlat(.installWebPages)
-        try! await pages.map { WebPageModel(title: $0.title, content: $0.content) }.create(on: args.req.db)
+    func installHook(args: HookArguments) async throws {
+        let pages: [WebPage.Create] = try await args.req.invokeAllFlat(.installWebPages)
+        try await pages.map { WebPageModel(title: $0.title, content: $0.content) }.create(on: args.req.db)
     }
 
     func installUserPermissionsHook(args: HookArguments) async -> [UserPermission.Create] {
@@ -103,8 +103,8 @@ struct WebModule: FeatherModule {
         ]
     }
 
-    func responseHook(args: HookArguments) async -> Response? {
-        let page = try! await WebPageModel
+    func responseHook(args: HookArguments) async throws -> Response? {
+        let page = try await WebPageModel
             .queryJoinVisibleMetadata(on: args.req.db)
             .filterMetadataBy(path: args.req.url.path).first()
 
@@ -123,7 +123,7 @@ struct WebModule: FeatherModule {
         ]
     }
 
-    func installResponseHook(args: HookArguments) async -> Response? {
+    func installResponseHook(args: HookArguments) async throws -> Response? {
         
         func installPath(for step: String, next: Bool = false) -> String {
             "/" + Feather.config.paths.install + "/" + step + "/" + ( next ? "?next=true" : "")
@@ -135,7 +135,7 @@ struct WebModule: FeatherModule {
         
         if currentStep == FeatherInstallStep.start.key {
             if performStep {
-                let _: [Void] = await args.req.invokeAll(.install)
+                let _: [Void] = try await args.req.invokeAll(.install)
                 Feather.config.install.currentStep = nextStep
                 return args.req.redirect(to: installPath(for: nextStep))
             }

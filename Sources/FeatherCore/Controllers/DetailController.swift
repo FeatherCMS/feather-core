@@ -15,7 +15,7 @@ public protocol DetailController: ModelController {
     static func detailPermission() -> String
     static func hasDetailPermission(_ req: Request) -> Bool
 
-    func detailAccess(_ req: Request) async -> Bool
+    func detailAccess(_ req: Request) async throws -> Bool
     func detailView(_ req: Request) async throws -> Response
     func detailApi(_ req: Request) async throws -> DetailModelApi.DetailObject
     func detailTemplate(_ req: Request, _ model: Model) -> TemplateRepresentable
@@ -35,8 +35,8 @@ public extension DetailController {
         req.checkPermission(detailPermission())
     }
     
-    func detailAccess(_ req: Request) async -> Bool {
-        await req.checkAccess(for: Self.detailPermission())
+    func detailAccess(_ req: Request) async throws -> Bool {
+        try await req.checkAccess(for: Self.detailPermission())
     }
 
     func detailView(_ req: Request) async throws -> Response {
@@ -45,7 +45,7 @@ public extension DetailController {
     }
 
     func detailApi(_ req: Request) async throws -> DetailModelApi.DetailObject {
-        let hasAccess = await detailAccess(req)
+        let hasAccess = try await detailAccess(req)
         guard hasAccess else {
             throw Abort(.forbidden)
         }

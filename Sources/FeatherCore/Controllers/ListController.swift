@@ -90,7 +90,7 @@ public protocol ListController: ModelController {
                   _ direction: DatabaseQuery.Sort.Direction) -> QueryBuilder<Model>
     func listSearch(_ term: String) -> [ModelValueFilter<Model>]
     func listTemplate(_ req: Request, _ list: ListContainer<Model>) -> TemplateRepresentable
-    func listAccess(_ req: Request) async -> Bool
+    func listAccess(_ req: Request) async throws -> Bool
     func listView(_ req: Request) async throws -> Response
     func listApi(_ req: Request) async throws -> ListContainer<Model>
 }
@@ -115,12 +115,12 @@ public extension ListController {
         req.checkPermission(listPermission())
     }
     
-    func listAccess(_ req: Request) async -> Bool {
-        await req.checkAccess(for: Self.listPermission())
+    func listAccess(_ req: Request) async throws -> Bool {
+        try await req.checkAccess(for: Self.listPermission())
     }
 
     func listApi(_ req: Request) async throws -> ListContainer<Model> {
-        let hasAccess = await listAccess(req)
+        let hasAccess = try await listAccess(req)
         guard hasAccess else {
             throw Abort(.forbidden)
         }
@@ -128,7 +128,7 @@ public extension ListController {
     }
 
     func listView(_ req: Request) async throws -> Response {
-        let hasAccess = await listAccess(req)
+        let hasAccess = try await listAccess(req)
         guard hasAccess else {
             throw Abort(.forbidden)
         }

@@ -38,19 +38,19 @@ public final class HookStorage {
     
     public func register<ReturnType>(_ name: String, use block: @escaping AsyncHookFunctionSignature<ReturnType>) {
         let function = AnonymousAsyncHookFunction { args -> Any in
-            await block(args)
+            try await block(args)
         }
         let pointer = HookFunctionPointer<AsyncHookFunction>(name: name, function: function, returnType: ReturnType.self)
         asyncPointers.append(pointer)
     }
     
-    public func invoke<ReturnType>(_ name: String, args: HookArguments = [:]) async -> ReturnType? {
-        await asyncPointers.first { $0.name == name && $0.returnType == ReturnType.self }?.pointer.invoke(args) as? ReturnType
+    public func invoke<ReturnType>(_ name: String, args: HookArguments = [:]) async throws -> ReturnType? {
+        try await asyncPointers.first { $0.name == name && $0.returnType == ReturnType.self }?.pointer.invoke(args) as? ReturnType
     }
 
-    public func invokeAll<ReturnType>(_ name: String, args: HookArguments = [:]) async -> [ReturnType] {
+    public func invokeAll<ReturnType>(_ name: String, args: HookArguments = [:]) async throws -> [ReturnType] {
         let fn = asyncPointers.filter { $0.name == name && $0.returnType == ReturnType.self }
-        return await fn.asyncCompactMap { await $0.pointer.invoke(args) as? ReturnType }
+        return try await fn.asyncCompactMap { try await $0.pointer.invoke(args) as? ReturnType }
     }
 }
 

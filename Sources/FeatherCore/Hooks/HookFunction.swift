@@ -14,13 +14,13 @@ public protocol HookFunction {
 }
 
 public protocol AsyncHookFunction {
-    func invoke(_: HookArguments) async -> Any
+    func invoke(_: HookArguments) async throws -> Any
 }
 
 /// a hook function signature with a generic return type
 public typealias HookFunctionSignature<T> = (HookArguments) -> T
 
-public typealias AsyncHookFunctionSignature<T> = (HookArguments) async -> T
+public typealias AsyncHookFunctionSignature<T> = (HookArguments) async throws -> T
 
 
 

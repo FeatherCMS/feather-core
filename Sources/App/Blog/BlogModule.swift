@@ -39,8 +39,8 @@ struct BlogModule: FeatherModule {
 //        return []
     }
     
-    func responseHook(args: HookArguments) async -> Response? {
-        let category = try! await BlogCategoryApi().findDetailBy(path: args.req.url.path, args.req)
+    func responseHook(args: HookArguments) async throws -> Response? {
+        let category = try await BlogCategoryApi().findDetailBy(path: args.req.url.path, args.req)
         guard let category = category else {
             return nil
         }
