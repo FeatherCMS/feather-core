@@ -9,7 +9,7 @@ db.sqlite
 .env
 .env.development
 .env.testing
-/Public
+/Public/assets
 /Resources
 ./feather
 /Tests/tmp
