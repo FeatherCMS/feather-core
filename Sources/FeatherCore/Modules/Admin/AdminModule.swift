@@ -27,7 +27,7 @@ struct AdminModule: FeatherModule {
         app.hooks.register(.adminMiddlewares, use: adminMiddlewaresHook)
 //        app.hooks.register(.adminWidgets, use: adminWidgetsHook)
         
-        app.hooks.register("web-menus", use: webMenusHook)
+        app.hooks.registerAsync("web-menus", use: webMenusHook)
         
     }
     

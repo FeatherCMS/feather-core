@@ -31,19 +31,19 @@ struct WebModule: FeatherModule {
         app.databases.middleware.use(MetadataModelMiddleware<WebPageModel>())
         
         app.hooks.register(.routes, use: router.routesHook)
-        app.hooks.register(.response, use: responseHook)
+        app.hooks.registerAsync(.response, use: responseHook)
         app.hooks.register(.webMiddlewares, use: webMiddlewaresHook)
-        app.hooks.register("web-menus", use: webMenusHook)
-        app.hooks.register(.installStep, use: installStepHook)
-        app.hooks.register(.installResponse, use: installResponseHook)
+        app.hooks.registerAsync("web-menus", use: webMenusHook)
+        app.hooks.registerAsync(.installStep, use: installStepHook)
+        app.hooks.registerAsync(.installResponse, use: installResponseHook)
         
-        app.hooks.register(.install, use: installHook)
+        app.hooks.registerAsync(.install, use: installHook)
         
-        app.hooks.register(.installWebPages, use: installWebPagesHook)
-        app.hooks.register(.installCommonVariables, use: installCommonVariablesHook)
-        app.hooks.register(.installUserPermissions, use: installUserPermissionsHook)
+        app.hooks.registerAsync(.installWebPages, use: installWebPagesHook)
+        app.hooks.registerAsync(.installCommonVariables, use: installCommonVariablesHook)
+        app.hooks.registerAsync(.installUserPermissions, use: installUserPermissionsHook)
         
-        app.hooks.register(.adminWidgets, use: adminWidgetsHook)
+        app.hooks.registerAsync(.adminWidgets, use: adminWidgetsHook)
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         app.hooks.register(.adminApiRoutes, use: router.adminApiRoutesHook)
         
@@ -53,7 +53,7 @@ struct WebModule: FeatherModule {
     // MARK: - hooks
     
     func installHook(args: HookArguments) async throws {
-        let pages: [WebPage.Create] = try await args.req.invokeAllFlat(.installWebPages)
+        let pages: [WebPage.Create] = try await args.req.invokeAllFlatAsync(.installWebPages)
         try await pages.map { WebPageModel(title: $0.title, content: $0.content) }.create(on: args.req.db)
     }
 
@@ -135,7 +135,7 @@ struct WebModule: FeatherModule {
         
         if currentStep == FeatherInstallStep.start.key {
             if performStep {
-                let _: [Void] = try await args.req.invokeAll(.install)
+                let _: [Void] = try await args.req.invokeAllAsync(.install)
                 Feather.config.install.currentStep = nextStep
                 return args.req.redirect(to: installPath(for: nextStep))
             }

@@ -64,11 +64,11 @@ open class FeatherForm: FormComponent {
 
     open func load(req: Request) async throws {
         token = req.generateNonce(for: id)
-        try await fields.asyncForEach { try await $0.load(req: req) }
+        try await fields.forEachAsync { try await $0.load(req: req) }
     }
 
     open func process(req: Request) async throws {
-        try await fields.asyncForEach { field in
+        try await fields.forEachAsync { field in
             try await field.process(req: req)
         }
     }
@@ -81,20 +81,20 @@ open class FeatherForm: FormComponent {
             self.error = "Invalid form token"
             return false
         }
-        let result = try await fields.asyncMap { try await $0.validate(req: req) }
+        let result = try await fields.mapAsync { try await $0.validate(req: req) }
         return result.filter { $0 == false }.isEmpty
     }
 
     open func save(req: Request) async throws {
-        try await fields.asyncForEach { try await $0.save(req: req) }
+        try await fields.forEachAsync { try await $0.save(req: req) }
     }
     
     open func read(req: Request) async throws {
-        try await fields.asyncForEach { try await $0.read(req: req) }
+        try await fields.forEachAsync { try await $0.read(req: req) }
     }
 
     open func write(req: Request) async throws {
-        try await fields.asyncForEach { try await $0.write(req: req) }
+        try await fields.forEachAsync { try await $0.write(req: req) }
     }
     
     open func render(req: Request) -> TemplateRepresentable {

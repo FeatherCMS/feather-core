@@ -17,10 +17,10 @@ public protocol MetadataRepresentable: FeatherModel {
 public extension MetadataRepresentable {
 
     func filter(_ content: String, _ req: Request) async throws -> String {
-        let allFilters: [FeatherFilter] = try await req.invokeAllFlat("filters")
+        let allFilters: [FeatherFilter] = try await req.invokeAllFlatAsync("filters")
         let filters = allFilters.filter { metadataDetails.filters.contains($0.key) }.sorted { $0.priority > $1.priority }
         var result = content
-        await filters.asyncForEach { filter in
+        await filters.forEachAsync { filter in
             result = await filter.filter(result, req)
         }
         return result

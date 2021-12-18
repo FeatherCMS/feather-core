@@ -19,7 +19,7 @@ public extension Request {
 struct WebMenuMiddleware: AsyncMiddleware {
 
     func respond(to req: Request, chainingTo next: AsyncResponder) async throws -> Response {
-        let menus: [LinkContext] = try await req.invokeAllFlat("web-menus")
+        let menus: [LinkContext] = try await req.invokeAllFlatAsync("web-menus")
         let items = menus.sorted { $0.priority > $1.priority }
 
         req.globals.set("main", value: items, scope: scope)

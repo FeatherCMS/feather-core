@@ -9,13 +9,13 @@ import Foundation
 
 public extension Sequence {
     
-    func asyncForEach(_ transform: (Element) async throws -> Void) async rethrows {
+    func forEachAsync(_ transform: (Element) async throws -> Void) async rethrows {
         for element in self {
             try await transform(element)
         }
     }
 
-    func asyncMap<T>(_ transform: (Element) async throws -> T) async rethrows -> [T] {
+    func mapAsync<T>(_ transform: (Element) async throws -> T) async rethrows -> [T] {
         var values = [T]()
         for element in self {
             try await values.append(transform(element))
@@ -23,7 +23,7 @@ public extension Sequence {
         return values
     }
     
-    func asyncCompactMap<T>(_ transform: (Element) async throws -> T?) async rethrows -> [T] {
+    func compactMapAsync<T>(_ transform: (Element) async throws -> T?) async rethrows -> [T] {
         var values = [T]()
         for element in self {
             guard let value = try await transform(element) else {

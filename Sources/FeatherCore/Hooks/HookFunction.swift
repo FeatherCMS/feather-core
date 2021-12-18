@@ -14,7 +14,7 @@ public protocol HookFunction {
 }
 
 public protocol AsyncHookFunction {
-    func invoke(_: HookArguments) async throws -> Any
+    func invokeAsync(_: HookArguments) async throws -> Any
 }
 
 /// a hook function signature with a generic return type

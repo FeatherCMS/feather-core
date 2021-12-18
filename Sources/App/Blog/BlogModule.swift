@@ -27,8 +27,8 @@ struct BlogModule: FeatherModule {
         
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         
-        app.hooks.register(.adminWidgets, use: adminWidgetsHook)
-        app.hooks.register(.response, use: responseHook)
+        app.hooks.registerAsync(.adminWidgets, use: adminWidgetsHook)
+        app.hooks.registerAsync(.response, use: responseHook)
 
     }
     

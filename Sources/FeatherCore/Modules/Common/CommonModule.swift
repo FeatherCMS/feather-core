@@ -20,20 +20,20 @@ struct CommonModule: FeatherModule {
         app.migrations.add(CommonMigrations.v1())
         
         app.hooks.register(.webMiddlewares, use: webMiddlewaresHook)
-        app.hooks.register(.install, use: installHook)
+        app.hooks.registerAsync(.install, use: installHook)
         
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         app.hooks.register(.adminMiddlewares, use: adminMiddlewaresHook)
-        app.hooks.register(.adminWidgets, use: adminWidgetsHook)
+        app.hooks.registerAsync(.adminWidgets, use: adminWidgetsHook)
         
-        app.hooks.register(.installCommonVariables, use: installCommonVariablesHook)
-        app.hooks.register(.installUserPermissions, use: installUserPermissionsHook)
+        app.hooks.registerAsync(.installCommonVariables, use: installCommonVariablesHook)
+        app.hooks.registerAsync(.installUserPermissions, use: installUserPermissionsHook)
         
         try router.boot(app)
     }
     
     func installHook(args: HookArguments) async throws {
-        let pages: [CommonVariable.Create] = try await args.req.invokeAllFlat(.installCommonVariables)
+        let pages: [CommonVariable.Create] = try await args.req.invokeAllFlatAsync(.installCommonVariables)
         let objects = pages.map { CommonVariableModel(key: $0.key, name: $0.name, value: $0.value, notes: $0.notes) }
         try await objects.create(on: args.req.db)
     }

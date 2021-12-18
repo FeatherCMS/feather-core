@@ -31,22 +31,22 @@ struct UserModule: FeatherModule {
         app.middleware.use(app.sessions.middleware)
 
         app.hooks.register(.webMiddlewares, use: webMiddlewaresHook)
-        app.hooks.register(.install, use: installHook)
+        app.hooks.registerAsync(.install, use: installHook)
         
         app.hooks.register(.adminMiddlewares, use: adminMiddlewaresHook)
-        app.hooks.register(.adminWidgets, use: adminWidgetsHook)
+        app.hooks.registerAsync(.adminWidgets, use: adminWidgetsHook)
 
         app.hooks.register(.adminApiMiddlewares, use: adminApiMiddlewaresHook)
         
         app.hooks.register(.permission, use: permissionHook)
-        app.hooks.register(.access, use: accessHook)
+        app.hooks.registerAsync(.access, use: accessHook)
         
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         app.hooks.register(.adminApiRoutes, use: router.adminApiRoutesHook)
         
-        app.hooks.register(.installUserRoles, use: installUserRolesHook)
-        app.hooks.register(.installUserPermissions, use: installUserPermissionsHook)
-        app.hooks.register(.installUserAccounts, use: installUserAccountsHook)
+        app.hooks.registerAsync(.installUserRoles, use: installUserRolesHook)
+        app.hooks.registerAsync(.installUserPermissions, use: installUserPermissionsHook)
+        app.hooks.registerAsync(.installUserAccounts, use: installUserAccountsHook)
         
 //        app.hooks.register("form-fields", use: formFieldsHook)
         
@@ -54,17 +54,17 @@ struct UserModule: FeatherModule {
     }
     
     func installHook(args: HookArguments) async throws {
-        let roles: [UserRole.Create] = try await args.req.invokeAllFlat(.installUserRoles)
+        let roles: [UserRole.Create] = try await args.req.invokeAllFlatAsync(.installUserRoles)
         try await roles.map { UserRoleModel(key: $0.key, name: $0.name, notes: $0.notes) }.create(on: args.req.db)
 
-        let permissions: [UserPermission.Create] = try await args.req.invokeAllFlat(.installUserPermissions)
+        let permissions: [UserPermission.Create] = try await args.req.invokeAllFlatAsync(.installUserPermissions)
         try await permissions.map { UserPermissionModel(namespace: $0.namespace,
                                                          context: $0.context,
                                                          action: $0.action,
                                                          name: $0.name,
                                                          notes: $0.notes) }.create(on: args.req.db)
         
-        let accounts: [UserAccount.Create] = try await args.req.invokeAllFlat(.installUserAccounts)
+        let accounts: [UserAccount.Create] = try await args.req.invokeAllFlatAsync(.installUserAccounts)
         try await accounts.map { UserAccountModel(email: $0.email,
                                                    password: try Bcrypt.hash($0.password),
                                                    isRoot: $0.isRoot) }.create(on: args.req.db)

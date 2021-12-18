@@ -32,8 +32,8 @@ public extension HookStorage {
         register(hook.description, use: block)
     }
     
-    func register<ReturnType>(_ hook: HookName, use block: @escaping AsyncHookFunctionSignature<ReturnType>) {
-        register(hook.description, use: block)
+    func registerAsync<ReturnType>(_ hook: HookName, use block: @escaping AsyncHookFunctionSignature<ReturnType>) {
+        registerAsync(hook.description, use: block)
     }
 }
 
@@ -57,21 +57,21 @@ public extension Request {
         return result.flatMap { $0 }
     }
     
-    func invoke<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async throws -> ReturnType? {
-        try await invoke(hook.description, args: args)
+    func invokeAsync<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async throws -> ReturnType? {
+        try await invokeAsync(hook.description, args: args)
     }
 
-    func invokeAll<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async throws -> [ReturnType] {
-        try await invokeAll(hook.description, args: args)
+    func invokeAllAsync<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async throws -> [ReturnType] {
+        try await invokeAllAsync(hook.description, args: args)
     }
 
-    func invokeAllFlat<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async throws -> [ReturnType] {
-        let result: [[ReturnType]] = try await invokeAll(hook.description, args: args)
+    func invokeAllFlatAsync<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async throws -> [ReturnType] {
+        let result: [[ReturnType]] = try await invokeAllAsync(hook.description, args: args)
         return result.flatMap { $0 }
     }
     
-    func invokeAllFirst<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async throws -> ReturnType? {
-        let result: [ReturnType?] = try await invokeAll(hook.description, args: args)
+    func invokeAllFirstAsync<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async throws -> ReturnType? {
+        let result: [ReturnType?] = try await invokeAllAsync(hook.description, args: args)
         return result.compactMap({ $0 }).first
     }
 }
@@ -96,21 +96,21 @@ public extension Application {
         return result.flatMap { $0 }
     }
     
-    func invoke<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async throws -> ReturnType? {
-        try await invoke(hook.description, args: args)
+    func invokeAsync<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async throws -> ReturnType? {
+        try await invokeAsync(hook.description, args: args)
     }
 
-    func invokeAll<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async throws -> [ReturnType] {
-        try await invokeAll(hook.description, args: args)
+    func invokeAllAsync<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async throws -> [ReturnType] {
+        try await invokeAllAsync(hook.description, args: args)
     }
     
-    func invokeAllFlat<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async throws -> [ReturnType] {
-        let result: [[ReturnType]] = try await invokeAll(hook.description, args: args)
+    func invokeAllFlatAsync<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async throws -> [ReturnType] {
+        let result: [[ReturnType]] = try await invokeAllAsync(hook.description, args: args)
         return result.flatMap { $0 }
     }
     
-    func invokeAllFirst<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async throws -> ReturnType? {
-        let result: [ReturnType?] = try await invokeAll(hook.description, args: args)
+    func invokeAllFirstAsync<ReturnType>(_ hook: HookName, args: HookArguments = [:]) async throws -> ReturnType? {
+        let result: [ReturnType?] = try await invokeAllAsync(hook.description, args: args)
         return result.compactMap({ $0 }).first
     }
 }

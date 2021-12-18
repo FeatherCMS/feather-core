@@ -28,7 +28,7 @@ struct BlogCategoryApi: FeatherApi {
     
     func mapDetail(_ req: Request, model: Model) async throws -> BlogCategory.Detail {
         let posts = try await model.$posts.query(on: req.db).joinPublicMetadata().all()
-        let postList = try await posts.asyncMap { try await BlogPostApi().mapList(req, model: $0) }
+        let postList = try await posts.mapAsync { try await BlogPostApi().mapList(req, model: $0) }
         return .init(id: model.uuid,
               title: model.title,
               imageKey: model.imageKey,

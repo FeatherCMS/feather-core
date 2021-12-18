@@ -37,13 +37,13 @@ public extension Application {
         return hooks.invokeAll(name, args: ctxArgs)
     }
 
-    func invoke<ReturnType>(_ name: String, args: HookArguments = [:]) async throws -> ReturnType? {
+    func invokeAsync<ReturnType>(_ name: String, args: HookArguments = [:]) async throws -> ReturnType? {
         let ctxArgs = args.merging(["app": self]) { (_, new) in new }
-        return try await hooks.invoke(name, args: ctxArgs)
+        return try await hooks.invokeAsync(name, args: ctxArgs)
     }
 
-    func invokeAll<ReturnType>(_ name: String, args: HookArguments = [:]) async throws -> [ReturnType] {
+    func invokeAllAsync<ReturnType>(_ name: String, args: HookArguments = [:]) async throws -> [ReturnType] {
         let ctxArgs = args.merging(["app": self]) { (_, new) in new }
-        return try await hooks.invokeAll(name, args: ctxArgs)
+        return try await hooks.invokeAllAsync(name, args: ctxArgs)
     }
 }
