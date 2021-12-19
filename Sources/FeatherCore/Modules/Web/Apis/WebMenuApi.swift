@@ -22,7 +22,9 @@ struct WebMenuApi: FeatherApi {
     }
     
     func mapDetail(_ req: Request, model: Model) async throws -> WebMenu.Detail {
-        .init(id: model.uuid, key: model.key, name: model.name, notes: model.notes, items: [])
+        let api = WebMenuItemApi()
+        let items = try await model.items.mapAsync { try await api.mapList(req, model: $0) }
+        return .init(id: model.uuid, key: model.key, name: model.name, notes: model.notes, items: items)
     }
     
     func mapCreate(_ req: Request, model: Model, input: WebMenu.Create) async throws {
