@@ -62,6 +62,10 @@ struct WebMenuItemApi: FeatherApi {
     }
     
     func validators(optional: Bool) -> [AsyncValidator] {
-        []
+        [
+            KeyedContentValidator<String>.required("label", optional: optional),
+            KeyedContentValidator<String>.required("url", optional: optional),
+            KeyedContentValidator<UUID>.required("menuId", optional: optional),
+        ]
     }
 }

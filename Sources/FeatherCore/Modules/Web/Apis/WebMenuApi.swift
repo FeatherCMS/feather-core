@@ -48,7 +48,7 @@ struct WebMenuApi: FeatherApi {
             KeyedContentValidator<String>.required("name", optional: optional),
             KeyedContentValidator<String>.required("key", optional: optional),
             KeyedContentValidator<String>("key", "Key must be unique", optional: optional) { value, req in
-                await Model.isUniqueBy(\.$key == value, req: req)
+                try await Model.isUniqueBy(\.$key == value, req: req)
             }
         ]
     }

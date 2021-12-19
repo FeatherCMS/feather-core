@@ -25,7 +25,7 @@ struct WebMenuEditor: FeatherModelEditor {
             .validators {
                 FormFieldValidator.required($1)
                 FormFieldValidator($1, "Key must be unique") { field, req in
-                    await Model.isUniqueBy(\.$key == field.input, req: req)
+                    try await Model.isUniqueBy(\.$key == field.input, req: req)
                 }
             }
             .read { $1.output.context.value = model.key }

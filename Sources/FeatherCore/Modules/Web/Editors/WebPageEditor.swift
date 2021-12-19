@@ -28,7 +28,7 @@ struct WebPageEditor: FeatherModelEditor {
                     guard Model.getIdParameter(req: req) == nil else {
                         return true
                     }
-                    return await Model.isUniqueBy(\.$title == field.input, req: req)
+                    return try await Model.isUniqueBy(\.$title == field.input, req: req)
                 }
             }
             .read { $1.output.context.value = model.title }

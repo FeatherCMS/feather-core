@@ -6,6 +6,7 @@
 //
 
 import Vapor
+import Fluent
 
 extension WebPage.List: Content {}
 extension WebPage.Detail: Content {}
@@ -40,6 +41,14 @@ struct WebPageApi: FeatherApi {
     }
     
     func validators(optional: Bool) -> [AsyncValidator] {
-        []
+        [
+            KeyedContentValidator<String>.required("title", optional: optional),
+            KeyedContentValidator<String>("title", "Title must be unique", optional: optional) { value, req in
+                guard Model.getIdParameter(req: req) == nil else {
+                    return true
+                }
+                return try await Model.isUniqueBy(\.$title == value, req: req)
+            }
+        ]
     }
 }
