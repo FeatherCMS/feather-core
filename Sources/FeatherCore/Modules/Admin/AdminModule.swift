@@ -27,19 +27,11 @@ struct AdminModule: FeatherModule {
         app.hooks.register(.adminMiddlewares, use: adminMiddlewaresHook)
 //        app.hooks.register(.adminWidgets, use: adminWidgetsHook)
         
-        app.hooks.registerAsync("web-menus", use: webMenusHook)
-        
     }
     
     func adminMiddlewaresHook(args: HookArguments) -> [Middleware] {
         [
             AdminErrorMiddleware(),
-        ]
-    }
-
-    func webMenusHook(args: HookArguments) async throws -> [LinkContext] {
-        [
-            .init(label: "Admin", path: "/admin/")
         ]
     }
     
