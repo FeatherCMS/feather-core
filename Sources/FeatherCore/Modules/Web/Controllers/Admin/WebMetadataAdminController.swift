@@ -80,16 +80,6 @@ struct WebMetadataAdminController: AdminController {
     func listNavigation(_ req: Request) -> [LinkContext] {
         []
     }
-    
-    private func referencePath(_ model: Model) -> String {
-        [
-            Feather.config.paths.admin,
-            model.module,
-            model.model,
-            model.reference.string,
-            Self.updatePathComponent.description
-        ].map { PathComponent(stringLiteral: $0) }.path
-    }
 
     func detailLinks(_ req: Request, _ model: Model) -> [LinkContext] {
         [
