@@ -117,14 +117,12 @@ struct UserModule: FeatherModule {
     }
     
     func adminApiMiddlewaresHook(args: HookArguments) -> [Middleware] {
-        var middlewares = [
+        [
+            // TODO: disable session authenticator later on.
+            UserAccountSessionAuthenticator(),
             UserTokenModel.authenticator(),
             UserAccount.guardMiddleware(),
         ]
-//        if !Feather.disableApiSessionAuthMiddleware {
-            middlewares.append(UserAccountSessionAuthenticator())
-//        }
-        return middlewares
     }
     
     func permissionHook(args: HookArguments) -> Bool {
