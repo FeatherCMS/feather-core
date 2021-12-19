@@ -91,7 +91,7 @@ extension Feather {
                 _variables = newValue
             }
             catch {
-                // do nothing...
+                Feather.logger.error("Error writing \(_configUrl): \(error.localizedDescription)")
             }
         }
     }
