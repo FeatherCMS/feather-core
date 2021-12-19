@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-struct WebMetadataController: AdminController {
+struct WebMetadataAdminController: AdminController {
     typealias Model = WebMetadataModel
     
     typealias CreateModelEditor = WebMetadataEditor
@@ -91,20 +91,36 @@ struct WebMetadataController: AdminController {
         ].map { PathComponent(stringLiteral: $0) }.path
     }
 
-    #warning("fixme")
     func detailLinks(_ req: Request, _ model: Model) -> [LinkContext] {
         [
-//            Self.updateLink(id: model.uuid),
-//            .init(label: "Preview", path: model.slug.safePath(), isBlank: true),
-//            .init(label: "Reference", path: referencePath(model)),
+            LinkContext(label: "Update",
+                        path: Self.updatePathComponent.description,
+                        permission: Self.updatePermission()),
+            // NOTE: store permission for the metadata reference?
+            LinkContext(label: "Reference",
+                        path: "/admin/" + model.module + "/" + model.model + "/" + model.reference.string + "/update/",
+                        absolute: true,
+                        permission: nil),
+            LinkContext(label: "Preview",
+                        path: model.slug.safePath(),
+                        absolute: true,
+                        isBlank: true),
         ]
     }
-    
-    func updateLinks(_ req: Request, _ model: WebMetadataModel) -> [LinkContext] {
+
+    func updateLinks(_ req: Request, _ model: Model) -> [LinkContext] {
         [
-//            Self.detailLink(id: model.uuid),
-//            .init(label: "Preview", path: model.slug.safePath()),
-//            .init(label: "Reference", path: referencePath(model)),
+            LinkContext(label: "Details",
+                        dropLast: 1,
+                        permission: Self.detailPermission()),
+            LinkContext(label: "Reference",
+                        path: "/admin/" + model.module + "/" + model.model + "/" + model.reference.string + "/update/",
+                        absolute: true,
+                        permission: nil),
+            LinkContext(label: "Preview",
+                        path: model.slug.safePath(),
+                        absolute: true,
+                        isBlank: true),
         ]
     }
 }

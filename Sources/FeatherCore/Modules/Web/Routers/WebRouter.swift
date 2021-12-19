@@ -10,7 +10,7 @@ import Vapor
 struct WebRouter: FeatherRouter {
     
     let pageController = WebPageAdminController()
-    let metadataController = WebMetadataController()
+    let metadataController = WebMetadataAdminController()
     let menuController = WebMenuAdminController()
     let menuItemController = WebMenuItemAdminController()
     

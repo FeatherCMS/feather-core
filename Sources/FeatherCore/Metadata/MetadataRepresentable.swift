@@ -85,17 +85,33 @@ public extension AdminController where Model: MetadataRepresentable {
     
     func detailLinks(_ req: Request, _ model: Model) -> [LinkContext] {
         [
-//            Self.updateLink(id: model.uuid),
-//            .init(label: "Preview", path: model.metadataDetails.slug.safePath(), isBlank: true),
-//            WebMetadataController.updateLink("Metadata", id: model.metadataDetails.id),
+            LinkContext(label: "Update",
+                        path: Self.updatePathComponent.description,
+                        permission: Self.updatePermission()),
+            LinkContext(label: "Preview",
+                        path: model.metadataDetails.slug.safePath(),
+                        absolute: true,
+                        isBlank: true),
+            LinkContext(label: "Metadata",
+                        path: "/admin/web/metadatas/" + model.metadataDetails.id.string + "/update/",
+                        absolute: true,
+                        permission: WebMetadataAdminController.updatePermission()),
         ]
     }
 
     func updateLinks(_ req: Request, _ model: Model) -> [LinkContext] {
         [
-//              Self.detailLink(id: model.uuid),
-//              .init(label: "Preview", path: model.metadataDetails.slug.safePath(), isBlank: true),
-//              WebMetadataController.updateLink("Metadata", id: model.metadataDetails.id),
+            LinkContext(label: "Details",
+                        dropLast: 1,
+                        permission: Self.detailPermission()),
+            LinkContext(label: "Preview",
+                        path: model.metadataDetails.slug.safePath(),
+                        absolute: true,
+                        isBlank: true),
+            LinkContext(label: "Metadata",
+                        path: "/admin/web/metadatas/" + model.metadataDetails.id.string + "/update/",
+                        absolute: true,
+                        permission: WebMetadataAdminController.updatePermission()),
         ]
     }
 }
