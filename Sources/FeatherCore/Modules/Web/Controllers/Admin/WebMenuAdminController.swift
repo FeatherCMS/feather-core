@@ -41,7 +41,7 @@ struct WebMenuAdminController: AdminController {
     
     func listCells(for model: Model) -> [CellContext] {
         [
-            .init(model.name, link: Self.detailLink(model.name, id: model.uuid)),
+            .init(model.name, link: LinkContext(label: model.name, permission: Self.detailPermission())),
         ]
     }
     
@@ -56,8 +56,12 @@ struct WebMenuAdminController: AdminController {
     
     func detailLinks(_ req: Request, _ model: Model) -> [LinkContext] {
         [
-            Self.updateLink(id: model.uuid),
-            .init(label: "Items", url: "items/"),
+            LinkContext(label: "Update",
+                        path: Self.updatePathComponent.description,
+                        permission: Self.updatePermission()),
+            LinkContext(label: WebMenuItemAdminController.modelName.plural.uppercasedFirst,
+                        path: WebMenuItemModel.pathComponent.description,
+                        permission: WebMenuItemAdminController.listPermission()),
         ]
     }
     

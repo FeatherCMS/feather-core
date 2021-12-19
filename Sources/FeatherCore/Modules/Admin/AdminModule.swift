@@ -39,7 +39,7 @@ struct AdminModule: FeatherModule {
 
     func webMenusHook(args: HookArguments) async throws -> [LinkContext] {
         [
-            .init(label: "Admin", url: "/admin/")
+            .init(label: "Admin", path: "/admin/")
         ]
     }
     

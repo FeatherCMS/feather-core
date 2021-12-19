@@ -41,9 +41,9 @@ struct WebRouter: FeatherRouter {
         
         args.routes.get("web") { req -> Response in
             let template = AdminModulePageTemplate(req, .init(title: "Web", message: "module information", links: [
-                .init(label: "Menus", url: "/admin/web/menus/"),
-                .init(label: "Pages", url: "/admin/web/pages/"),
-                .init(label: "Metadatas", url: "/admin/web/metadatas/"),
+                .init(label: "Menus", path: "/admin/web/menus/"),
+                .init(label: "Pages", path: "/admin/web/pages/"),
+                .init(label: "Metadatas", path: "/admin/web/metadatas/"),
             ]))
             return req.html.render(template)
         }

@@ -45,7 +45,7 @@ struct WebPageAdminController: AdminController {
     
     func listCells(for model: Model) -> [CellContext] {
         [
-            .init(model.title, link: Self.detailLink(model.title, id: model.uuid)),
+            .init(model.title, link: LinkContext(label: model.title, permission: Self.detailPermission())),
             .init(model.metadataDetails.date.description),
         ]
     }

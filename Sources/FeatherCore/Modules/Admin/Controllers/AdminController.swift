@@ -20,30 +20,7 @@ public protocol AdminController: FeatherController {
     static var createPathComponent: PathComponent { get }
     static var updatePathComponent: PathComponent { get }
     static var deletePathComponent: PathComponent { get }
-    static var rowIdPathComponent: PathComponent { get }
-    
-    static var modulePathComponents: [PathComponent] { get }
-    static var modulePath: String { get }
-    static var listPathComponents: [PathComponent] { get }
-    static var listPath: String { get }
-    static var createPathComponents: [PathComponent] { get }
-    static var createPath: String { get }
-    static func detailPathComponents(for id: UUID) -> [PathComponent]
-    static func detailPath(for id: UUID) -> String
-    static func updatePathComponents(for id: UUID) -> [PathComponent]
-    static func updatePath(for id: UUID) -> String
-    static func deletePathComponents(for id: UUID) -> [PathComponent]
-    static func deletePath(for id: UUID) -> String
-    
-    static func moduleLink(_ label: String) -> LinkContext
-    static func listLink(_ label: String) -> LinkContext
-    static func createLink(_ label: String) -> LinkContext
-    static func detailLink(_ label: String, id: UUID) -> LinkContext
-    static func updateLink(_ label: String, id: UUID) -> LinkContext
-    static func deleteLink(_ label: String, id: UUID) -> LinkContext
-    static func updateTableAction(_ label: String) -> LinkContext
-    static func deleteTableAction(_ label: String) -> LinkContext
-    
+
     // MARK: - contexts
     
     func listColumns() -> [ColumnContext]
@@ -80,90 +57,6 @@ public extension AdminController {
     static var createPathComponent: PathComponent { "create" }
     static var updatePathComponent: PathComponent { "update" }
     static var deletePathComponent: PathComponent { "delete" }
-    static var rowIdPathComponent: PathComponent { ":rowId" }
-
-    static var modulePathComponents: [PathComponent] {
-        [
-            Feather.config.paths.admin.pathComponent,
-            Model.Module.pathComponent,
-        ]
-    }
-    
-    static var modulePath: String {
-        modulePathComponents.path
-    }
-
-    static var listPathComponents: [PathComponent] {
-        modulePathComponents + [Model.pathComponent]
-    }
-    
-    static var listPath: String {
-        listPathComponents.path
-    }
-    
-    static var createPathComponents: [PathComponent] {
-        listPathComponents + [createPathComponent]
-    }
-    
-    static var createPath: String {
-        createPathComponents.path
-    }
-    
-    static func detailPathComponents(for id: UUID) -> [PathComponent] {
-        listPathComponents + [.init(stringLiteral: id.string)]
-    }
-    
-    static func detailPath(for id: UUID) -> String {
-        detailPathComponents(for: id).path
-    }
-    
-    static func updatePathComponents(for id: UUID) -> [PathComponent] {
-        detailPathComponents(for: id) + [updatePathComponent]
-    }
-    
-    static func updatePath(for id: UUID) -> String {
-        updatePathComponents(for: id).path
-    }
-    
-    static func deletePathComponents(for id: UUID) -> [PathComponent] {
-        detailPathComponents(for: id) + [deletePathComponent]
-    }
-    
-    static func deletePath(for id: UUID) -> String {
-        deletePathComponents(for: id).path
-    }
-
-    static func moduleLink(_ label: String = Model.Module.moduleKey.uppercasedFirst) -> LinkContext {
-        .init(label: label, url: modulePath)
-    }
-    
-    static func listLink(_ label: String = Self.modelName.plural.uppercasedFirst) -> LinkContext {
-        .init(label: label, url: listPath, permission: listPermission())
-    }
-    
-    static func createLink(_ label: String = "Create") -> LinkContext {
-        .init(label: label, url: createPath, permission: createPermission())
-    }
-
-    static func detailLink(_ label: String = "Details", id: UUID) -> LinkContext {
-        .init(label: label, url: detailPath(for: id), permission: detailPermission())
-    }
-    
-    static func updateLink(_ label: String = "Update", id: UUID) -> LinkContext {
-        .init(label: label, url: updatePath(for: id), permission: updatePermission())
-    }
-    
-    static func deleteLink(_ label: String = "Delete", id: UUID) -> LinkContext {
-        .init(label: label, url: deletePath(for: id), permission: deletePermission(), style: "destructive")
-    }
-    
-    static func updateTableAction(_ label: String = "Update") -> LinkContext {
-        .init(label: label, url: updatePathComponent.description, absolute: false, permission: updatePermission())
-    }
-
-    static func deleteTableAction(_ label: String = "Delete") -> LinkContext {
-        .init(label: label, url: deletePathComponent.description, absolute: false, permission: deletePermission())
-    }
 }
 
 public extension AdminController {
@@ -179,8 +72,8 @@ public extension AdminController {
                                  columns: listColumns(),
                                  rows: rows,
                                  actions: [
-                                    Self.updateTableAction(),
-                                    Self.deleteTableAction(),
+                                    LinkContext(label: "Update", path: Self.updatePathComponent.description),
+                                    LinkContext(label: "Delete", path: Self.deletePathComponent.description),
                                  ],
                                  options: .init(allowedOrders: listConfig.allowedOrders.map(\.description),
                                                 defaultSort: listConfig.defaultSort))
@@ -195,13 +88,17 @@ public extension AdminController {
     
     func listNavigation(_ req: Request) -> [LinkContext] {
         [
-           Self.createLink()
+            LinkContext(label: "Create",
+                        path: Self.createPathComponent.description,
+                        permission: Self.createPermission())
         ]
     }
     
     func listBreadcrumbs(_ req: Request) -> [LinkContext] {
         [
-           Self.moduleLink(),
+            LinkContext(label: Model.Module.moduleKey.uppercasedFirst,
+                        dropLast: 1,
+                        permission: Model.Module.permission.key),
         ]
     }
 
@@ -211,20 +108,29 @@ public extension AdminController {
               breadcrumbs: detailBreadcrumbs(req, model),
               links: detailLinks(req, model),
               actions: [
-                    Self.deleteLink(id: model.uuid),
+                LinkContext(label: "Delete",
+                            path: Self.deletePathComponent.description,
+                            permission: Self.deletePermission(),
+                            style: .destructive),
               ])
     }
-    
+
     func detailBreadcrumbs(_ req: Request, _ model: Model) -> [LinkContext] {
         [
-            Self.moduleLink(),
-            Self.listLink(),
+            LinkContext(label: Model.Module.moduleKey.uppercasedFirst,
+                        dropLast: 2,
+                        permission: Model.Module.permission.key),
+            LinkContext(label: Self.modelName.plural.uppercasedFirst,
+                        dropLast: 1,
+                        permission: Self.listPermission()),
         ]
     }
 
     func detailLinks(_ req: Request, _ model: Model) -> [LinkContext] {
         [
-            Self.updateLink(id: model.uuid)
+            LinkContext(label: "Update",
+                        path: Self.updatePathComponent.description,
+                        permission: Self.updatePermission()),
         ]
     }
 
@@ -236,8 +142,12 @@ public extension AdminController {
     
     func createBreadcrumbs(_ req: Request) -> [LinkContext] {
         [
-            Self.moduleLink(),
-            Self.listLink(),
+            LinkContext(label: Model.Module.moduleKey.uppercasedFirst,
+                        dropLast: 2,
+                        permission: Model.Module.permission.key),
+            LinkContext(label: Self.modelName.plural.uppercasedFirst,
+                        dropLast: 1,
+                        permission: Self.listPermission()),
         ]
     }
     
@@ -247,20 +157,30 @@ public extension AdminController {
              breadcrumbs: updateBreadcrumbs(req, editor.model as! Model),
              links: updateLinks(req, editor.model as! Model),
              actions: [
-                Self.deleteLink(id: editor.model.uuid),
+                LinkContext(label: "Delete",
+                            path: Self.deletePathComponent.description,
+                            dropLast: 1,
+                            permission: Self.deletePermission(),
+                            style: .destructive),
              ])
     }
     
     func updateBreadcrumbs(_ req: Request, _ model: Model) -> [LinkContext] {
         [
-            Self.moduleLink(),
-            Self.listLink(),
+            LinkContext(label: Model.Module.moduleKey.uppercasedFirst,
+                        dropLast: 2,
+                        permission: Model.Module.permission.key),
+            LinkContext(label: Self.modelName.plural.uppercasedFirst,
+                        dropLast: 1,
+                        permission: Self.listPermission()),
         ]
     }
     
     func updateLinks(_ req: Request, _ model: Model) -> [LinkContext] {
         [
-           Self.detailLink(id: model.uuid),
+            LinkContext(label: "Details",
+                        dropLast: 1,
+                        permission: Self.detailPermission()),
         ]
     }
     

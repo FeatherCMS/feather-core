@@ -8,6 +8,8 @@
 import Vapor
 import SwiftHtml
 
+
+
 public struct AdminListPageTemplate: TemplateRepresentable {
     
     unowned var req: Request
@@ -23,14 +25,7 @@ public struct AdminListPageTemplate: TemplateRepresentable {
             Div {
                 H1(context.title)
                 P {
-                    context.navigation.compactMap { item in
-                        guard req.checkPermission(item.permission) else {
-                            return nil
-                        }
-                        return A(item.label)
-                                .href(item.url)
-                                .target(.blank, item.isBlank)
-                    }
+                    context.navigation.compactMap { $0.render(req) }
                 }
             }
             .class("lead")

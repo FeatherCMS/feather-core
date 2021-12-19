@@ -21,9 +21,9 @@ struct BlogRouter: FeatherRouter {
         
         args.routes.get("blog") { req -> Response in
             let template = AdminModulePageTemplate(req, .init(title: "Blog", message: "module information", links: [
-                .init(label: "Posts", url: "/admin/blog/posts/"),
-                .init(label: "Categories", url: "/admin/blog/categories/"),
-                .init(label: "Authors", url: "/admin/blog/authors/"),
+                .init(label: "Posts", path: "/admin/blog/posts/"),
+                .init(label: "Categories", path: "/admin/blog/categories/"),
+                .init(label: "Authors", path: "/admin/blog/authors/"),
             ]))
             return req.html.render(template)
         }

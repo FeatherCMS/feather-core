@@ -85,17 +85,17 @@ public extension AdminController where Model: MetadataRepresentable {
     
     func detailLinks(_ req: Request, _ model: Model) -> [LinkContext] {
         [
-            Self.updateLink(id: model.uuid),
-            .init(label: "Preview", url: model.metadataDetails.slug.safePath(), isBlank: true),
-            WebMetadataController.updateLink("Metadata", id: model.metadataDetails.id),
+//            Self.updateLink(id: model.uuid),
+//            .init(label: "Preview", path: model.metadataDetails.slug.safePath(), isBlank: true),
+//            WebMetadataController.updateLink("Metadata", id: model.metadataDetails.id),
         ]
     }
 
     func updateLinks(_ req: Request, _ model: Model) -> [LinkContext] {
         [
-              Self.detailLink(id: model.uuid),
-              .init(label: "Preview", url: model.metadataDetails.slug.safePath(), isBlank: true),
-              WebMetadataController.updateLink("Metadata", id: model.metadataDetails.id),
+//              Self.detailLink(id: model.uuid),
+//              .init(label: "Preview", path: model.metadataDetails.slug.safePath(), isBlank: true),
+//              WebMetadataController.updateLink("Metadata", id: model.metadataDetails.id),
         ]
     }
 }

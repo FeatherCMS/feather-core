@@ -45,7 +45,7 @@ struct WebMetadataController: AdminController {
     
     func listCells(for model: Model) -> [CellContext] {
         [
-            .init(model.title, link: Self.detailLink(model.title ?? "Details", id: model.uuid)),
+            .init(model.title, link: LinkContext(label: model.title ?? "Details", permission: Self.detailPermission())),
             .init(model.module),
             .init(model.model),
         ]
@@ -91,19 +91,20 @@ struct WebMetadataController: AdminController {
         ].map { PathComponent(stringLiteral: $0) }.path
     }
 
+    #warning("fixme")
     func detailLinks(_ req: Request, _ model: Model) -> [LinkContext] {
         [
-            Self.updateLink(id: model.uuid),
-            .init(label: "Preview", url: model.slug.safePath(), isBlank: true),
-            .init(label: "Reference", url: referencePath(model)),
+//            Self.updateLink(id: model.uuid),
+//            .init(label: "Preview", path: model.slug.safePath(), isBlank: true),
+//            .init(label: "Reference", path: referencePath(model)),
         ]
     }
     
     func updateLinks(_ req: Request, _ model: WebMetadataModel) -> [LinkContext] {
         [
-            Self.detailLink(id: model.uuid),
-            .init(label: "Preview", url: model.slug.safePath()),
-            .init(label: "Reference", url: referencePath(model)),
+//            Self.detailLink(id: model.uuid),
+//            .init(label: "Preview", path: model.slug.safePath()),
+//            .init(label: "Reference", path: referencePath(model)),
         ]
     }
 }

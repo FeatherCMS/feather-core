@@ -24,19 +24,19 @@ struct BlogAdminWidgetTemplate: TemplateRepresentable {
             if BlogPostAdminController.hasListPermission(req) {
                 Li {
                     A("Posts")
-                        .href(BlogPostAdminController.listPath)
+                        .href("/admin/blog/posts/")
                 }
             }
             if BlogCategoryAdminController.hasListPermission(req) {
                 Li {
                     A("Categories")
-                        .href(BlogCategoryAdminController.listPath)
+                        .href("/admin/blog/categories/")
                 }
             }
             if BlogAuthorAdminController.hasListPermission(req) {
                 Li {
                     A("Authors")
-                        .href(BlogAuthorAdminController.listPath)
+                        .href("/admin/blog/authors/")
                 }
             }
         }

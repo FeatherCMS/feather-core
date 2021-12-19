@@ -31,7 +31,7 @@ public struct AdminModulePageTemplate: TemplateRepresentable {
                     context.links.map { link in
                         Li {
                             A(link.label)
-                                .href(link.url)
+                                .href(link.path)
                         }
                     }
                 }

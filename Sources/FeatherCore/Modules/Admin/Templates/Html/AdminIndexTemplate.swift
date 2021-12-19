@@ -66,7 +66,7 @@ public struct AdminIndexTemplate: TemplateRepresentable {
 
                         Div {
                             A("Sign out")
-                                .href("/logout/")
+                                .href(Feather.config.paths.logout.safePath())
 //                                .class("selected", req.url.path == "/")
                         }
                         .class("menu-items")
@@ -78,12 +78,9 @@ public struct AdminIndexTemplate: TemplateRepresentable {
                 Div {
                     Nav {
                         A("Admin")
-                            .href("/admin/")
+                            .href(Feather.config.paths.admin.safePath())
                         
-                        context.breadcrumbs.map { item in
-                            A(item.label)
-                                .href(item.url)
-                        }
+                        context.breadcrumbs.compactMap { $0.render(req) }
                     }
                 }
                 .class("breadcrumb")

@@ -24,14 +24,7 @@ struct AdminDetailPageTemplate: TemplateRepresentable {
             Div {
                 Div {
                     H1(context.title)
-                    for item in context.links {
-                        if req.checkPermission(item.permission) {
-                            A(item.label)
-                                .href(item.url)
-                                .target(.blank, item.isBlank)
-                                .class(item.style)
-                        }
-                    }
+                    context.links.compactMap { $0.render(req) }
                 }
                 .class("lead")
                
@@ -52,13 +45,7 @@ struct AdminDetailPageTemplate: TemplateRepresentable {
                 }
 
                 Section {
-                    for item in context.actions {
-                        if req.checkPermission(item.permission) {
-                            A(item.label)
-                                .href(item.url)
-                                .class(item.style)
-                        }
-                    }
+                    context.actions.compactMap { $0.render(req) }
                 }
             }
             .class("container")

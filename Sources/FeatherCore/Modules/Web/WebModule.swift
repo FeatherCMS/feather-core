@@ -144,7 +144,7 @@ struct WebModule: FeatherModule {
                                                                   title: "Install site",
                                                                   message: "First we have to setup the necessary components.",
                                                                   link: .init(label: "Start installation →",
-                                                                              url: installPath(for: currentStep, next: true))))
+                                                                              path: installPath(for: currentStep, next: true))))
             return args.req.html.render(template)
         }
         
@@ -158,7 +158,7 @@ struct WebModule: FeatherModule {
                                                                   title: "Custom step site",
                                                                   message: "First we have to setup the necessary components.",
                                                                   link: .init(label: "Start installation →",
-                                                                              url: installPath(for: currentStep, next: true))))
+                                                                              path: installPath(for: currentStep, next: true))))
             return args.req.html.render(template)
         }
         
@@ -171,7 +171,7 @@ struct WebModule: FeatherModule {
                                                                   title: "Setup completed",
                                                                   message: "Your site is now ready to use.",
                                                                   link: .init(label: "Let's get started →",
-                                                                              url: installPath(for: currentStep, next: true))))
+                                                                              path: installPath(for: currentStep, next: true))))
             return args.req.html.render(template)
         }
 
@@ -187,7 +187,7 @@ struct WebModule: FeatherModule {
 
     func webMenusHook(args: HookArguments) async throws -> [LinkContext] {
         [
-            .init(label: "Home", url: "/", priority: 100)
+            .init(label: "Home", path: "/", priority: 100)
         ]
     }
     

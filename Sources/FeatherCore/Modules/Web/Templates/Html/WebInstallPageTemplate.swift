@@ -25,7 +25,7 @@ public struct WebInstallPageTemplate: TemplateRepresentable {
             H1(context.title)
             P(context.message)
             A(context.link.label)
-                .href(context.link.url)
+                .href(context.link.path)
         }.tag
     }
 }

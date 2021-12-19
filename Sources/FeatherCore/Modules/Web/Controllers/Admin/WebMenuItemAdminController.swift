@@ -23,31 +23,12 @@ struct WebMenuItemAdminController: AdminController {
     
     static var modelName: FeatherModelName = .init(singular: "menu item")
     
-    static var modulePathComponents: [PathComponent] {
-        [
-            Feather.config.paths.admin.pathComponent,
-            Model.Module.pathComponent,
-            WebMenuModel.pathComponent,
-            WebMenuModel.idPathComponent
-        ]
-    }
-    
     func getBaseRoutes(_ routes: RoutesBuilder) -> RoutesBuilder {
         routes
             .grouped(WebModule.pathComponent)
             .grouped(WebMenuModel.pathComponent)
             .grouped(WebMenuModel.idPathComponent)
             .grouped(Model.pathComponent)
-    }
-    
-    func listNavigation(_ req: Request) -> [LinkContext] {
-        guard let menuId = WebMenuModel.getIdParameter(req: req) else {
-            return []
-        }
-        let path = WebMenuAdminController.detailPath(for: menuId) + "/items/create"
-        return [
-            LinkContext(label: "Create", url: path)
-        ]
     }
 
     func listQuery(_ req: Request, _ qb: QueryBuilder<Model>) -> QueryBuilder<Model> {
@@ -84,7 +65,7 @@ struct WebMenuItemAdminController: AdminController {
     
     func listCells(for model: Model) -> [CellContext] {
         [
-            .init(model.label, link: Self.detailLink(model.label, id: model.uuid)),
+            .init(model.label, link: LinkContext(label: model.label, permission: Self.detailPermission())),
         ]
     }
     
@@ -106,10 +87,66 @@ struct WebMenuItemAdminController: AdminController {
 
     func listBreadcrumbs(_ req: Request) -> [LinkContext] {
         [
-            WebMenuAdminController.moduleLink(),
+            LinkContext(label: WebModule.moduleKey.uppercasedFirst,
+                        dropLast: 3,
+                        permission: WebModule.permission.key),
+            LinkContext(label: WebMenuAdminController.modelName.plural.uppercasedFirst,
+                        dropLast: 2,
+                        permission: WebMenuAdminController.listPermission()),
+            LinkContext(label: WebMenuAdminController.modelName.singular.uppercasedFirst,
+                        dropLast: 1,
+                        permission: WebMenuAdminController.detailPermission()),
         ]
     }
-   
     
+    func detailBreadcrumbs(_ req: Request, _ model: WebMenuItemModel) -> [LinkContext] {
+        [
+            LinkContext(label: WebModule.moduleKey.uppercasedFirst,
+                        dropLast: 4,
+                        permission: WebModule.permission.key),
+            LinkContext(label: WebMenuAdminController.modelName.plural.uppercasedFirst,
+                        dropLast: 3,
+                        permission: WebMenuAdminController.listPermission()),
+            LinkContext(label: WebMenuAdminController.modelName.singular.uppercasedFirst,
+                        dropLast: 2,
+                        permission: WebMenuAdminController.detailPermission()),
+            LinkContext(label: Self.modelName.plural.uppercasedFirst,
+                        dropLast: 1,
+                        permission: Self.listPermission()),
+        ]
+    }
     
+    func updateBreadcrumbs(_ req: Request, _ model: WebMenuItemModel) -> [LinkContext] {
+        [
+            LinkContext(label: WebModule.moduleKey.uppercasedFirst,
+                        dropLast: 5,
+                        permission: WebModule.permission.key),
+            LinkContext(label: WebMenuAdminController.modelName.plural.uppercasedFirst,
+                        dropLast: 4,
+                        permission: WebMenuAdminController.listPermission()),
+            LinkContext(label: WebMenuAdminController.modelName.singular.uppercasedFirst,
+                        dropLast: 3,
+                        permission: WebMenuAdminController.detailPermission()),
+            LinkContext(label: Self.modelName.plural.uppercasedFirst,
+                        dropLast: 2,
+                        permission: Self.listPermission()),
+        ]
+    }
+    
+    func createBreadcrumbs(_ req: Request) -> [LinkContext] {
+        [
+            LinkContext(label: WebModule.moduleKey.uppercasedFirst,
+                        dropLast: 4,
+                        permission: WebModule.permission.key),
+            LinkContext(label: WebMenuAdminController.modelName.plural.uppercasedFirst,
+                        dropLast: 3,
+                        permission: WebMenuAdminController.listPermission()),
+            LinkContext(label: WebMenuAdminController.modelName.singular.uppercasedFirst,
+                        dropLast: 2,
+                        permission: WebMenuAdminController.detailPermission()),
+            LinkContext(label: Self.modelName.plural.uppercasedFirst,
+                        dropLast: 1,
+                        permission: Self.listPermission()),
+        ]
+    }
 }

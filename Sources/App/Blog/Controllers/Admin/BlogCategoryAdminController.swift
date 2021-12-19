@@ -45,8 +45,8 @@ struct BlogCategoryAdminController: AdminController {
     
     func listCells(for model: Model) -> [CellContext] {
         [
-            .init(model.title, link: Self.detailLink(model.title, id: model.uuid)),
-            .init(model.metadataDetails.title, link: Self.detailLink(model.title, id: model.uuid)),
+            .init(model.title, link: LinkContext(label: model.title, permission: Self.detailPermission())),
+            .init(model.metadataDetails.title, link: LinkContext(label: model.metadataDetails.title ?? "Details", permission: Self.detailPermission())),
         ]
     }
     

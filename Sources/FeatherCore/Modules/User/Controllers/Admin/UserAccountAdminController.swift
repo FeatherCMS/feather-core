@@ -46,7 +46,7 @@ struct UserAccountAdminController: AdminController {
     
     func listCells(for model: Model) -> [CellContext] {
         [
-            .init(model.email, link: Self.detailLink(model.email, id: model.uuid)),
+            .init(model.email, link: LinkContext(label: model.email, permission: Self.detailPermission())),
         ]
     }
     

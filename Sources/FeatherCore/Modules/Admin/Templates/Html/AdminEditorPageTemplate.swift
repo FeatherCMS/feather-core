@@ -24,27 +24,14 @@ struct AdminEditorPageTemplate: TemplateRepresentable {
             Div {
                 Div {
                     H1(context.title)
-                    for item in context.links {
-                        if req.checkPermission(item.permission) {
-                            A(item.label)
-                                .href(item.url)
-                                .target(.blank, item.isBlank)
-                                .class(item.style)
-                        }
-                    }
+                    context.links.compactMap { $0.render(req) }
                 }
                 .class("lead")
                
                 FormTemplate(req, context.form).tag
 
                 Section {
-                    for item in context.actions {
-                        if req.checkPermission(item.permission) {
-                            A(item.label)
-                                .href(item.url)
-                                .class(item.style)
-                        }
-                    }
+                    context.actions.compactMap { $0.render(req) }
                 }
             }
             .class("container")

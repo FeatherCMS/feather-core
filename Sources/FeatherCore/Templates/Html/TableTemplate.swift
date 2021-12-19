@@ -77,13 +77,14 @@ public struct TableTemplate: TemplateRepresentable {
                     Tr {
                         for cell in row.cells {
                             Td {
+                                // NOTE: refactor this later on...
                                 if let value = cell.value {
                                     switch cell.type {
                                     case .text:
                                         if let link = cell.link {
                                             if req.checkPermission(link.permission) {
                                                 A(link.label)
-                                                    .href(link.url)
+                                                    .href(link.url(req, row.id.pathComponents))
                                             }
                                             else {
                                                 Text(link.label)
@@ -98,7 +99,7 @@ public struct TableTemplate: TemplateRepresentable {
                                                 A {
                                                     Img(src: req.fs.resolve(key: value), alt: link.label)
                                                 }
-                                                .href(link.url)
+                                                .href(link.url(req, row.id.pathComponents))
                                             }
                                             else {
                                                 Img(src: req.fs.resolve(key: value), alt: link.label)
@@ -113,22 +114,7 @@ public struct TableTemplate: TemplateRepresentable {
                             .class("field")
                         }
 
-                        context.actions.compactMap { action in
-                            guard req.checkPermission(action.permission) else {
-                                return nil
-                            }
-                            return Td {
-                                if action.absolute {
-                                    A(action.label)
-                                        .href(action.url)
-                                }
-                                else {
-                                    A(action.label)
-                                        .href((req.url.path + "/" + row.id + "/" + action.url + "/").safePath())
-                                }
-                            }
-                            .class("field")
-                        }
+                        context.actions.compactMap { $0.renderTableAction(req, for: row.id)?.class("field") }
                     }
                     .id(row.id)
                 }

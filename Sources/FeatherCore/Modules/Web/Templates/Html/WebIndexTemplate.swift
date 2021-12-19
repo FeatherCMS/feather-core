@@ -82,8 +82,8 @@ public struct WebIndexTemplate: TemplateRepresentable {
                             Div {
                                 req.menuItems("main").map {
                                     A($0.label)
-                                        .href($0.url)
-                                        .class("selected", req.url.path == $0.url)
+                                        .href($0.path)
+                                        .class("selected", req.url.path == $0.path)
                                 }
                             }
                             .class("menu-items")

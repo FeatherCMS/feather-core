@@ -15,7 +15,7 @@ struct CommonRouter: FeatherRouter {
         
         args.routes.get("common") { req -> Response in
             let template = AdminModulePageTemplate(req, .init(title: "Common", message: "module information", links: [
-                .init(label: "Variables", url: "/admin/common/variables/")
+                .init(label: "Variables", path: "/admin/common/variables/")
             ]))
             return req.html.render(template)
         }
