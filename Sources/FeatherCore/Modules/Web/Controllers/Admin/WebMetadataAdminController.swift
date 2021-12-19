@@ -97,14 +97,14 @@ struct WebMetadataAdminController: AdminController {
                         path: Self.updatePathComponent.description,
                         permission: Self.updatePermission()),
             // NOTE: store permission for the metadata reference?
-            LinkContext(label: "Reference",
-                        path: "/admin/" + model.module + "/" + model.model + "/" + model.reference.string + "/update/",
-                        absolute: true,
-                        permission: nil),
             LinkContext(label: "Preview",
                         path: model.slug.safePath(),
                         absolute: true,
                         isBlank: true),
+            LinkContext(label: "Reference",
+                        path: "/admin/" + model.module + "/" + model.model + "/" + model.reference.string + "/update/",
+                        absolute: true,
+                        permission: nil),
         ]
     }
 
@@ -113,14 +113,14 @@ struct WebMetadataAdminController: AdminController {
             LinkContext(label: "Details",
                         dropLast: 1,
                         permission: Self.detailPermission()),
-            LinkContext(label: "Reference",
-                        path: "/admin/" + model.module + "/" + model.model + "/" + model.reference.string + "/update/",
-                        absolute: true,
-                        permission: nil),
             LinkContext(label: "Preview",
                         path: model.slug.safePath(),
                         absolute: true,
                         isBlank: true),
+            LinkContext(label: "Reference",
+                        path: "/admin/" + model.module + "/" + model.model + "/" + model.reference.string + "/update/",
+                        absolute: true,
+                        permission: nil),
         ]
     }
 }
