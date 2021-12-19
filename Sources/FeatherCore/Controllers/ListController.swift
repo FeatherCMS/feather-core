@@ -92,7 +92,7 @@ public protocol ListController: ModelController {
     func listTemplate(_ req: Request, _ list: ListContainer<Model>) -> TemplateRepresentable
     func listAccess(_ req: Request) async throws -> Bool
     func listView(_ req: Request) async throws -> Response
-    func listApi(_ req: Request) async throws -> ListContainer<Model>
+    func listApi(_ req: Request) async throws -> ListContainer<ListModelApi.ListObject> 
 }
 
 public extension ListController {
@@ -119,12 +119,17 @@ public extension ListController {
         try await req.checkAccess(for: Self.listPermission())
     }
 
-    func listApi(_ req: Request) async throws -> ListContainer<Model> {
+    func listApi(_ req: Request) async throws -> ListContainer<ListModelApi.ListObject> {
         let hasAccess = try await listAccess(req)
         guard hasAccess else {
             throw Abort(.forbidden)
         }
-        return try await list(req)
+        let api = ListModelApi()
+        let list = try await list(req)
+        let newItems = try await list.items.mapAsync { item in
+            try await api.mapList(req, model: item as! ListModelApi.Model)
+        }
+        return ListContainer<ListModelApi.ListObject>.init(newItems, info: list.info)
     }
 
     func listView(_ req: Request) async throws -> Response {

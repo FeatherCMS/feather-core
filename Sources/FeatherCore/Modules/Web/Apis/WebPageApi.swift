@@ -17,7 +17,7 @@ struct WebPageApi: FeatherApi {
     typealias Model = WebPageModel
 
     func mapList(_ req: Request, model: Model) async throws -> WebPage.List {
-        .init(id: model.uuid, title: model.title)
+        .init(id: model.uuid, title: model.title, metadata: model.metadataDetails)
     }
     
     func mapDetail(_ req: Request, model: Model) async throws -> WebPage.Detail {
