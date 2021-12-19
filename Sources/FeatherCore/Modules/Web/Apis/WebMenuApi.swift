@@ -6,6 +6,7 @@
 //
 
 import Vapor
+import Fluent
 
 extension WebMenu.List: Content {}
 extension WebMenu.Detail: Content {}
@@ -43,6 +44,12 @@ struct WebMenuApi: FeatherApi {
     }
     
     func validators(optional: Bool) -> [AsyncValidator] {
-        []
+        [
+            KeyedContentValidator<String>.required("name", optional: optional),
+            KeyedContentValidator<String>.required("key", optional: optional),
+            KeyedContentValidator<String>("key", "Key must be unique", optional: optional) { value, req in
+                await Model.isUniqueBy(\.$key == value, req: req)
+            }
+        ]
     }
 }

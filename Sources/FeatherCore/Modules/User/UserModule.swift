@@ -43,6 +43,7 @@ struct UserModule: FeatherModule {
         
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         app.hooks.register(.adminApiRoutes, use: router.adminApiRoutesHook)
+        app.hooks.register(.publicApiRoutes, use: router.publicApiRoutesHook)
         
         app.hooks.registerAsync(.installUserRoles, use: installUserRolesHook)
         app.hooks.registerAsync(.installUserPermissions, use: installUserPermissionsHook)
@@ -120,7 +121,7 @@ struct UserModule: FeatherModule {
         [
             // TODO: disable session authenticator later on.
             UserAccountSessionAuthenticator(),
-            UserTokenModel.authenticator(),
+            UserAccountTokenAuthenticator(),
             UserAccount.guardMiddleware(),
         ]
     }
