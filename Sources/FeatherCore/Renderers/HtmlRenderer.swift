@@ -16,6 +16,13 @@ public struct HtmlRenderer {
                  headers: ["content-type": "text/html"],
                  body: .init(string: DocumentRenderer(minify: minify, indent: indent).render(doc)))
     }
+    
+    public func renderXml(_ template: TemplateRepresentable, minify: Bool = false, indent: Int = 4) -> Response {
+        let doc = Document(.xml) { template.tag }
+        return Response(status: .ok,
+                 headers: ["content-type": "application/xml"],
+                 body: .init(string: DocumentRenderer(minify: minify, indent: indent).render(doc)))
+    }
 }
 
 public extension Request {

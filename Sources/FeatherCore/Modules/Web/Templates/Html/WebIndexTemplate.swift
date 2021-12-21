@@ -7,6 +7,7 @@
 
 import Vapor
 import SwiftHtml
+import SwiftSvg
 
 public struct WebIndexTemplate: TemplateRepresentable {
 
