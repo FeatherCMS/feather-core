@@ -44,6 +44,7 @@ public struct Feather {
             ApiModule(),
             AdminModule(),
             WebModule(),
+            RedirectModule()
         ] + modules
 
         for module in modules {
