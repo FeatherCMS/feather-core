@@ -168,10 +168,10 @@ public extension AdminController {
     func updateBreadcrumbs(_ req: Request, _ model: Model) -> [LinkContext] {
         [
             LinkContext(label: Model.Module.moduleKey.uppercasedFirst,
-                        dropLast: 2,
+                        dropLast: 3,
                         permission: Model.Module.permission.key),
             LinkContext(label: Self.modelName.plural.uppercasedFirst,
-                        dropLast: 1,
+                        dropLast: 2,
                         permission: Self.listPermission()),
         ]
     }

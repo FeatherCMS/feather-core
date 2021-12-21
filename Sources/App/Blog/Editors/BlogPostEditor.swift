@@ -43,7 +43,7 @@ struct BlogPostEditor: FeatherModelEditor {
             .read { $1.output.context.value = model.excerpt }
             .write { model.excerpt = $1.input }
 
-        TextareaField("content")
+        ContentField("content")
             .read { $1.output.context.value = model.content }
             .write { model.content = $1.input }
         

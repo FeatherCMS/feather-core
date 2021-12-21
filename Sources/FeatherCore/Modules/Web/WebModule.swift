@@ -33,7 +33,6 @@ struct WebModule: FeatherModule {
         app.hooks.register(.routes, use: router.routesHook)
         app.hooks.registerAsync(.response, use: responseHook)
         app.hooks.register(.webMiddlewares, use: webMiddlewaresHook)
-        app.hooks.registerAsync("web-menus", use: webMenusHook)
         app.hooks.registerAsync(.installStep, use: installStepHook)
         app.hooks.registerAsync(.installResponse, use: installResponseHook)
         
@@ -182,12 +181,6 @@ struct WebModule: FeatherModule {
         [
             WebMenuMiddleware(),
             WebErrorMiddleware(),
-        ]
-    }
-
-    func webMenusHook(args: HookArguments) async throws -> [LinkContext] {
-        [
-            .init(label: "Home", path: "/", priority: 100)
         ]
     }
     

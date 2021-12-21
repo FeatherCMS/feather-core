@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct UserRole {
+public struct UserRole: Codable {
     
     public var key: String
     public var permissions: [UserPermission]

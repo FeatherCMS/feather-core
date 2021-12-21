@@ -6,6 +6,13 @@
 //
 
 import Vapor
+import FeatherCoreApi
+
+#warning("place these somewhere else")
+extension UserToken: Content {}
+extension UserAccount: Content {}
+extension UserRole: Content {}
+extension UserPermission: Content {}
 
 struct UserAuthController {
 
@@ -49,8 +56,18 @@ struct UserAuthController {
         form.error = "Invalid email or password"
         return render(req, form: form)
     }
+    
+    func loginApi(req: Request) async throws -> UserToken {
+        guard let user = req.auth.get(UserAccount.self) else {
+            throw Abort(.unauthorized)
+        }
+        let tokenValue = [UInt8].random(count: 16).base64
+        let token = UserTokenModel(value: tokenValue, userId: user.id)
+        try await token.create(on: req.db)
+        return UserToken(id: token.uuid, value: token.value, user: user)
+    }
 
-    func logout(_ req: Request) throws -> Response {
+    func logout(_ req: Request) async throws -> Response {
         req.auth.logout(UserAccount.self)
         req.session.unauthenticate(UserAccount.self)
         return req.redirect(to: getCustomRedirect(req))

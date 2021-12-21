@@ -105,7 +105,30 @@ isBlank: Bool = false
 absolute: Bool = false
 dropLast: Int = 0 -> drop n last component
 
- 
+
+## API cURL examples
+
+```bash
+curl -X POST \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -d '{"email": "root@feathercms.com", "password": "FeatherCMS"}' \
+    http://localhost:8080/api/login/
 
 
+curl -X GET \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Authorization: Bearer TOKEN" \
+    http://localhost:8080/api/admin/web/menus
+
+
+curl -X POST \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Authorization: Bearer TOKEN" \
+    -d '{"key": "foo", "name": "foo"}' \
+    http://localhost:8080/api/admin/web/menus
+
+```
 

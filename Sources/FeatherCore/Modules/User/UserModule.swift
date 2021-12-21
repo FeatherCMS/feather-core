@@ -43,6 +43,7 @@ struct UserModule: FeatherModule {
         
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         app.hooks.register(.adminApiRoutes, use: router.adminApiRoutesHook)
+        app.hooks.register(.publicApiRoutes, use: router.publicApiRoutesHook)
         
         app.hooks.registerAsync(.installUserRoles, use: installUserRolesHook)
         app.hooks.registerAsync(.installUserPermissions, use: installUserPermissionsHook)
@@ -117,14 +118,12 @@ struct UserModule: FeatherModule {
     }
     
     func adminApiMiddlewaresHook(args: HookArguments) -> [Middleware] {
-        var middlewares = [
-            UserTokenModel.authenticator(),
+        [
+            // TODO: disable session authenticator later on.
+            UserAccountSessionAuthenticator(),
+            UserAccountTokenAuthenticator(),
             UserAccount.guardMiddleware(),
         ]
-//        if !Feather.disableApiSessionAuthMiddleware {
-            middlewares.append(UserAccountSessionAuthenticator())
-//        }
-        return middlewares
     }
     
     func permissionHook(args: HookArguments) -> Bool {

@@ -37,6 +37,12 @@ struct UserRouter: FeatherRouter {
             return req.html.render(template)
         }
     }
+    
+    func publicApiRoutesHook(args: HookArguments) {
+        args.routes
+            .grouped(UserAccountCredentialsAuthenticator())
+            .post(Feather.config.paths.login.pathComponent, use: authController.loginApi)
+    }
 
     func adminApiRoutesHook(args: HookArguments) {
         accountController.setupAdminApiRoutes(args.routes)
