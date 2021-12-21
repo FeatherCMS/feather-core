@@ -53,8 +53,8 @@ struct RedirectRuleAdminController: AdminController {
     
     func listCells(for model: Model) -> [CellContext] {
         [
-            .init(model.source), //, link: LinkContext(label: model.title, permission: Self.detailPermission()), type: .image),
-            .init(model.destination), //, link: LinkContext(label: model.title, permission: Self.detailPermission())),
+            .init(model.source),
+            .init(model.destination),
             .init(String(model.statusCode)),
         ]
     }
@@ -64,8 +64,7 @@ struct RedirectRuleAdminController: AdminController {
             .init("id", model.identifier),
             .init("source", model.source, label: "Source path (ie, \"/foo\")"),
             .init("destination", model.destination, label: "Destination URL or path"),
-            // TODO - status code should be a select
-            .init("statusCode", String(model.statusCode), label: "HTTP status code (303=normal, 301=permanent, 307=temporary)"),
+            .init("statusCode", String(model.statusCode), label: "HTTP status code"),
             .init("notes", model.notes)
         ]
     }

@@ -8,6 +8,13 @@
 import Foundation
 
 struct RedirectRuleEditor: FeatherModelEditor {
+    public enum StatusCodeOptions: String, Codable, CaseIterable {
+        case normal = "303"
+        case temporary = "301"
+        case permanent = "307"
+    }
+
+    
     let model: RedirectRuleModel
     let form: FeatherForm
 
@@ -39,14 +46,22 @@ struct RedirectRuleEditor: FeatherModelEditor {
                 FormFieldValidator.required($1)
             }
 
-        InputField("statusCode")
+        SelectField("statusCode")
             .config {
                 $0.output.context.label.required = true
+                
+                $0.output.context.options = StatusCodeOptions.allCases.map { OptionContext(key: $0.rawValue, label: $0.rawValue.uppercasedFirst) }
+                $0.output.context.value = StatusCodeOptions.normal.rawValue
+            }
+            .validators {
+                FormFieldValidator($1, "Invalid status") { field, _ in
+                    StatusCodeOptions(rawValue: field.input) != nil
+                }
             }
             .read { $1.output.context.value = String(model.statusCode) }
-            .write { model.statusCode = Int($1.input) ?? 303 }
-            .validators {
-                FormFieldValidator.required($1)
+            .write {
+                let value = StatusCodeOptions(rawValue: $1.input) ?? StatusCodeOptions.normal
+                model.statusCode = Int(value.rawValue)!
             }
         
         TextareaField("notes")
