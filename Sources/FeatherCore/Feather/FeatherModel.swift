@@ -48,7 +48,7 @@ public protocol FeatherModel: Model where Self.IDValue == UUID {
     static func getIdParameter(req: Request) -> UUID?
     static func permission(_ action: UserPermission.Action) -> UserPermission
     static func installPermissions() -> [UserPermission.Create]
-    static func isUniqueBy(_ filter:  ModelValueFilter<Self>, req: Request) async -> Bool
+    static func isUniqueBy(_ filter:  ModelValueFilter<Self>, req: Request) async throws -> Bool
 }
 
 public extension FeatherModel {
@@ -99,13 +99,12 @@ public extension FeatherModel {
         }
     }
     
-    static func isUniqueBy(_ filter:  ModelValueFilter<Self>, req: Request) async -> Bool {
+    static func isUniqueBy(_ filter:  ModelValueFilter<Self>, req: Request) async throws -> Bool {
         var query = query(on: req.db).filter(filter)
         if let modelId = getIdParameter(req: req) {
             query = query.filter(\Self._$id != modelId)
         }
-        // TODO: proper error handler...
-        let count = try? await query.count()
+        let count = try await query.count()
         return count == 0
     }
 }

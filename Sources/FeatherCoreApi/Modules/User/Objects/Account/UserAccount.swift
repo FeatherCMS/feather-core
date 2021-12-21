@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct UserAccount {
+public struct UserAccount: Codable {
     
     public var id: UUID
     public var email: String

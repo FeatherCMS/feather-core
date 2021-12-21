@@ -6,6 +6,7 @@
 //
 
 import Vapor
+import Fluent
 
 extension WebMetadata.List: Content {}
 extension WebMetadata.Detail: Content {}
@@ -37,7 +38,14 @@ struct WebMetadataApi: FeatherApi {
     }
     
     func validators(optional: Bool) -> [AsyncValidator] {
-        []
+        [
+            KeyedContentValidator<String>("slug", "Slug must be unique", optional: optional) { value, req in
+                guard Model.getIdParameter(req: req) == nil else {
+                    return true
+                }
+                return try await Model.isUniqueBy(\.$slug == value, req: req)
+            }
+        ]
     }
     
     // MARK: - internal helpers

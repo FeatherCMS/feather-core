@@ -21,6 +21,11 @@ struct WebMenuAdminController: AdminController {
     typealias PatchModelApi = WebMenuApi
     typealias DeleteModelApi = WebMenuApi
 
+    
+    func findBy(_ id: UUID, on db: Database) async throws -> Model {
+        try await Model.findWithItemsBy(id: id, on: db)
+    }
+
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
             "name",

@@ -11,20 +11,20 @@ public struct FormFieldValidator<Input: Decodable, Output: TemplateRepresentable
 
     public unowned var field: FormField<Input, Output>
     public let message: String
-    public let validation: ((FormField<Input, Output>, Request) async -> Bool)
+    public let validation: ((FormField<Input, Output>, Request) async throws -> Bool)
 
     public var key: String { field.key }
     
     public init(_ field: FormField<Input, Output>,
                 _ message: String,
-                _ validation: @escaping ((FormField<Input, Output>, Request) async -> Bool)) {
+                _ validation: @escaping ((FormField<Input, Output>, Request) async throws -> Bool)) {
         self.field = field
         self.message = message
         self.validation = validation
     }
 
-    public func validate(_ req: Request) async -> ValidationErrorDetail? {
-        let isValid = await validation(field, req)
+    public func validate(_ req: Request) async throws -> ValidationErrorDetail? {
+        let isValid = try await validation(field, req)
         if isValid {
             return nil
         }

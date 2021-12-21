@@ -17,23 +17,30 @@ struct WebFrontendController {
     }
     
     func renderSitemapTemplate(_ req: Request) async throws -> Response {
-        let template = WebWelcomePageTemplate(req, context: .init(index: .init(title: "title"),
-                                                              title: "Hello, World!",
-                                                              message: "Lorem ipsum dolor sit amet"))
-        return req.html.render(template)
+
+        let template = SitemapTemplate(req, context: "")
+        return req.html.renderXml(template)
     }
-    
+
     func renderRssTemplate(_ req: Request) async throws -> Response {
         let template = WebWelcomePageTemplate(req, context: .init(index: .init(title: "title"),
                                                               title: "Hello, World!",
                                                               message: "Lorem ipsum dolor sit amet"))
         return req.html.render(template)
     }
-    
+
     func renderRobotsTemplate(_ req: Request) async throws -> Response {
-        let template = WebWelcomePageTemplate(req, context: .init(index: .init(title: "title"),
-                                                              title: "Hello, World!",
-                                                              message: "Lorem ipsum dolor sit amet"))
-        return req.html.render(template)
+        let robots = """
+            Sitemap: #(baseUrl)\(Feather.config.paths.sitemap.safePath())
+
+            User-agent: *
+            Disallow: \(Feather.config.paths.admin.safePath())
+            Disallow: \(Feather.config.paths.api.safePath())
+            """
+        return Response(status: .ok,
+                        headers: [
+                            "content-type": "text/plain"
+                        ],
+                        body: .init(string: robots))
     }
 }

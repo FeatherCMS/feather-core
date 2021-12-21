@@ -38,3 +38,17 @@ final class WebMenuModel: FeatherModel {
         self.notes = notes
     }
 }
+
+extension WebMenuModel {
+    
+    
+    static func findWithItemsBy(id: UUID, on db: Database) async throws -> WebMenuModel {
+        guard
+            let model = try await WebMenuModel.query(on: db).filter(\.$id == id).with(\.$items).first()
+        else {
+            throw Abort(.notFound)
+        }
+        return model
+    }
+    
+}

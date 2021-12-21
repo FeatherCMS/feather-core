@@ -24,7 +24,7 @@ struct WebMetadataEditor: FeatherModelEditor {
         InputField("slug")
             .validators {
                 FormFieldValidator($1, "Slug must be unique") { field, req in
-                    await Model.isUniqueBy(\.$slug == field.input, req: req)
+                    try await Model.isUniqueBy(\.$slug == field.input, req: req)
                 }
             }
             .read { $1.output.context.value = model.slug }
