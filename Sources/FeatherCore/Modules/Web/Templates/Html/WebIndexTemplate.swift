@@ -103,13 +103,18 @@ public struct WebIndexTemplate: TemplateRepresentable {
                         Nav {
                             if let user = req.auth.get(UserAccount.self) {
                                 P(user.email)
+                                
+                                if req.checkPermission(AdminModule.permission) {
+                                    A("Admin")
+                                        .href(Feather.config.paths.admin.safePath())
+                                }
                                 A("Sign out")
-                                    .href("/logout/")
+                                    .href(Feather.config.paths.logout.safePath())
                             }
                             else {
-                                if req.url.path != "/login/" {
+                                if req.url.path.safePath() != Feather.config.paths.login.safePath() {
                                     A("Sign in")
-                                        .href("/login/")
+                                        .href(Feather.config.paths.login.safePath())
                                 }
                             }
                         }
