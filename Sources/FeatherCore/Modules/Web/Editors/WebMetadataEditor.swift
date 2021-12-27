@@ -23,7 +23,8 @@ struct WebMetadataEditor: FeatherModelEditor {
             }
             .read { $1.output.context.value = model.slug }
             .write { model.slug = $1.input }
-        #warning("fixme")
+
+        // @TODO: use proper variable
         ImageField("image", path: "web/metadata")
             .read {
                 if let key = model.imageKey {

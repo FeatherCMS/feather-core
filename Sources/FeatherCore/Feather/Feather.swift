@@ -207,14 +207,6 @@ private extension Feather {
 //    }
 }
 
-//open class FeatherModuleBuilder {
-//
-//    public required init() {}
-//
-//    open func build() -> FeatherModule {
-//        fatalError("The abstract Feather module builder can't create any modules. ¯\\_(ツ)_/¯")
-//    }
-//}
 
 //@_cdecl("createBlogModule")
 //public func createBlogModule() -> UnsafeMutableRawPointer {
