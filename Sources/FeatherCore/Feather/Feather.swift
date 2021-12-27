@@ -130,6 +130,9 @@ private extension Feather {
     func copyPublicFiles(at url: URL, to name: String) throws {
         let fm = FileManager.default
         let publicUrl = url.appendingPathComponent("Public")
+        guard fm.isExistingDirectory(at: publicUrl.path) else {
+            return
+        }
         let publicDirectories = try fm.contentsOfDirectory(atPath: publicUrl.path)
 
         for dir in publicDirectories {
@@ -208,14 +211,3 @@ private extension Feather {
 }
 
 
-//@_cdecl("createBlogModule")
-//public func createBlogModule() -> UnsafeMutableRawPointer {
-//    return Unmanaged.passRetained(BlogBuilder()).toOpaque()
-//}
-//
-//public final class BlogBuilder: FeatherModuleBuilder {
-//
-//    public override func build() -> FeatherModule {
-//        BlogModule()
-//    }
-//}
