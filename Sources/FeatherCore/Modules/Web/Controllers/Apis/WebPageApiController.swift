@@ -18,7 +18,7 @@ struct WebPageApiController: ApiController {
     
     func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> Web.Page.Detail {
         let content = try await model.filter(model.content, req)
-        return .init(id: model.uuid, title: model.title, content: content)
+        return .init(id: model.uuid, title: model.title, content: content, metadata: model.featherMetadata)
     }
     
     func createInput(_ req: Request, _ model: DatabaseModel, _ input: Web.Page.Create) async throws {

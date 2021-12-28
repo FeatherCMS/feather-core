@@ -23,7 +23,7 @@ public struct WebPageTemplate: TemplateRepresentable {
                 Text(context.page.content)
             }
             .id("page")
-            .class("container")
+            .class(["container", "\(context.page.metadata.slug)-page"])
         }
         .render(req)
     }
