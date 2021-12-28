@@ -19,7 +19,8 @@ public struct WebIndexTemplate: TemplateRepresentable {
     }
     
     private func getTitle(_ req: Request) -> String {
-        var components = [context.title]
+        let title = context.metadata?.title ?? context.title
+        var components = [title]
         if let suffix = req.variable("webSiteTitle"), !suffix.isEmpty {
             components += ["-", suffix]
         }
@@ -46,10 +47,83 @@ public struct WebIndexTemplate: TemplateRepresentable {
                     .name(.viewport)
                     .content(context.viewport)
 
+                // NOTE: come up with a better solution for this...
+                // TODO: check site noindex property!!!!
                 if context.noindex {
                     Meta()
                         .name(.robots)
                         .content("noindex")
+                }
+                else if let status = context.metadata?.status, status != .published {
+                    Meta()
+                        .name(.robots)
+                        .content("noindex")
+                }
+                
+                if let metadata = context.metadata {
+                    Meta()
+                        .name("twitter:card")
+                        .content("summary_large_image")
+                    Meta()
+                        .name("twitter:title")
+                        .content(getTitle(req))
+
+                    if let excerpt = metadata.excerpt, !excerpt.isEmpty {
+                        Meta()
+                            .name("twitter:description")
+                            .content(excerpt)
+                    }
+                    if let key = metadata.imageKey {
+                        Meta()
+                            .name("twitter:image")
+                            .content(req.fs.resolve(key: key))
+                    }
+
+                    Meta()
+                        .name("og:url")
+                        .content(req.absoluteUrl)
+                    Meta()
+                        .name("og:title")
+                        .content(getTitle(req))
+
+                    if let excerpt = metadata.excerpt, !excerpt.isEmpty {
+                        Meta()
+                            .name("og:description")
+                            .content(excerpt)
+                    }
+                    if let key = metadata.imageKey {
+                        Meta()
+                            .name("og:image")
+                            .content(req.fs.resolve(key: key))
+                    }
+
+//                    Link()
+//                        .rel(.manifest)
+//                        .href("/manifest.json")
+//                    Link()
+//                        .rel(.maskIcon)
+//                        .sizes("any")
+//                        .href("/img/logos/feather-logo-shape.svg")
+//
+//                    Link()
+//                        .rel("shortcut icon")
+//                        .href("/img/favicons/favicon.ico")
+//                        .type("image/x-icon")
+//                    Link()
+//                        .rel("shortcut icon")
+//                        .href("/img/favicons/favicon.png")
+//                        .type("image/png")
+//
+//                    Link()
+//                        .rel("apple-touch-icon")
+//                        .href("/img/apple/192.png")
+//
+//                    for size in [57, 72, 76, 114, 120, 144, 152, 180] {
+//                        Link()
+//                            .rel("apple-touch-icon")
+//                            .href("/img/apple/\(size).png")
+//                            .sizes("\(size)x\(size)")
+//                    }
                 }
 
                 let css: [String] = req.invokeAllOrdered(.webCss)
@@ -62,10 +136,25 @@ public struct WebIndexTemplate: TemplateRepresentable {
                     SwiftHtml.Style(css)
                         .type()
                 }
+
+                if let css = context.metadata?.css {
+                    Style(css)
+                        .type()
+                }
                 
-                if let canonicalUrl = context.canonicalUrl {
+                // NOTE: come up with a better solution for this...
+                if let canonicalUrl = context.canonicalUrl, !canonicalUrl.isEmpty {
                     Link(rel: .canonical)
                         .href(canonicalUrl)
+                }
+                else if let canonicalUrl = context.metadata?.canonicalUrl, !canonicalUrl.isEmpty {
+                    Link(rel: .canonical)
+                        .href(canonicalUrl)
+                }
+
+                if req.getQuery("page") != nil || req.getQuery("search") != nil {
+                    Link(rel: .canonical)
+                        .href(req.absoluteUrl)
                 }
             }
             Body {
@@ -150,6 +239,11 @@ public struct WebIndexTemplate: TemplateRepresentable {
                 }
 
                 if let js = req.variable("webSiteJs") {
+                    Script(js)
+                        .type(.javascript)
+                }
+                
+                if let js = context.metadata?.js {
                     Script(js)
                         .type(.javascript)
                 }

@@ -17,7 +17,7 @@ public struct WebPageTemplate: TemplateRepresentable {
     
     @TagBuilder
     public func render(_ req: Request) -> Tag {
-        WebIndexTemplate(context.index) {
+        WebIndexTemplate(.init(title: context.page.title, metadata: context.page.metadata)) {
             Div {
                 H1(context.page.title)
                 Text(context.page.content)

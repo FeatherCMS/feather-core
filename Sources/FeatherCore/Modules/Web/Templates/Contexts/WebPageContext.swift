@@ -6,11 +6,9 @@
 //
 
 public struct WebPageContext {
-    public var index: WebIndexContext
     public var page: Web.Page.Detail
     
-    public init(index: WebIndexContext, page: Web.Page.Detail) {
-        self.index = index
+    public init(page: Web.Page.Detail) {
         self.page = page
     }
 }
