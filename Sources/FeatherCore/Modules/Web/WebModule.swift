@@ -28,7 +28,7 @@ struct WebModule: FeatherModule {
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         app.hooks.register(.adminWidgets, use: adminWidgetsHook)
         app.hooks.register(.webMiddlewares, use: webMiddlewaresHook)
-        app.hooks.register(.webCss, use: cssHook)
+        app.hooks.register(.webCss, use: webCssHook)
         
         app.hooks.registerAsync(.install, use: installHook)
         app.hooks.registerAsync(.response, use: responseHook)
@@ -159,7 +159,7 @@ struct WebModule: FeatherModule {
         ]
     }
 
-    func cssHook(args: HookArguments) -> [OrderedHookResult<String>] {
+    func webCssHook(args: HookArguments) -> [OrderedHookResult<String>] {
         [
 //            .init("/css/web/local.css", order: 420)
         ]
