@@ -8,7 +8,7 @@
 extension Web.Menu.List: Content {}
 extension Web.Menu.Detail: Content {}
 
-struct WebMenuApi: ApiController {
+struct WebMenuApiController: ApiController {
     typealias ApiModel = Web.MenuItem
     typealias DatabaseModel = WebMenuModel
 
@@ -17,7 +17,7 @@ struct WebMenuApi: ApiController {
     }
     
     func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> Web.Menu.Detail {
-        let api = WebMenuItemApi()
+        let api = WebMenuItemApiController()
         let items = try await model.items.mapAsync { try await api.listOutput(req, $0) }
         return .init(id: model.uuid, key: model.key, name: model.name, notes: model.notes, items: items)
     }

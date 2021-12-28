@@ -8,7 +8,7 @@
 extension Web.Page.List: Content {}
 extension Web.Page.Detail: Content {}
 
-struct WebPageApi: ApiController {
+struct WebPageApiController: ApiController {
     typealias ApiModel = Web.Page
     typealias DatabaseModel = WebPageModel
 

@@ -8,7 +8,7 @@
 extension Web.Metadata.List: Content {}
 extension Web.Metadata.Detail: Content {}
 
-struct WebMetadataApi: ApiListController, ApiDetailController, ApiUpdateController, ApiPatchController {
+struct WebMetadataApiController: ApiListController, ApiDetailController, ApiUpdateController, ApiPatchController {
     
     typealias ApiModel = Web.Metadata
     typealias DatabaseModel = WebMetadataModel

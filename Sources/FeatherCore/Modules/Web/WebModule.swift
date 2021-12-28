@@ -188,7 +188,7 @@ struct WebModule: FeatherModule {
             }
         }
         
-        let data = try await WebPageApi().detailOutput(args.req, page)
+        let data = try await WebPageApiController().detailOutput(args.req, page)
         let template = WebPageTemplate(.init(index: .init(title: page.title), page: data))
         return args.req.templates.renderHtml(template)
     }

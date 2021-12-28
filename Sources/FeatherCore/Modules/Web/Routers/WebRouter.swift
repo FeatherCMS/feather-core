@@ -8,9 +8,13 @@
 struct WebRouter: FeatherRouter {
     
     let metadataAdminController = WebMetadataAdminController()
+    let metadataApiController = WebMetadataApiController()
     let pageAdminController = WebPageAdminController()
+    let pageApiController = WebPageApiController()
     let menuAdminController = WebMenuAdminController()
+    let menuApiController = WebMenuApiController()
     let menuItemAdminController = WebMenuItemAdminController()
+    let menuItemApiController = WebMenuItemApiController()
     let settingsAdminController = WebSettingsAdminController()
     
     func boot(_ app: Application) throws {
@@ -28,7 +32,6 @@ struct WebRouter: FeatherRouter {
         metadataAdminController.setupListRoutes(args.routes)
         metadataAdminController.setupDetailRoutes(args.routes)
         metadataAdminController.setupUpdateRoutes(args.routes)
-
         pageAdminController.setupRoutes(args.routes)
         menuAdminController.setupRoutes(args.routes)
         menuItemAdminController.setupRoutes(args.routes)
@@ -48,9 +51,11 @@ struct WebRouter: FeatherRouter {
     }
 
     func apiRoutesHook(args: HookArguments) {
-//        metadataController.setupApiRoutes(args.routes)
-//        pageController.setupApiRoutes(args.routes)
-//        menuController.setupApiRoutes(args.routes)
-//        menuItemController.setupApiRoutes(args.routes)
+        metadataApiController.setupListRoutes(args.routes)
+        metadataApiController.setupDetailRoutes(args.routes)
+        metadataApiController.setupUpdateRoutes(args.routes)
+        pageApiController.setupRoutes(args.routes)
+        menuApiController.setupRoutes(args.routes)
+        menuItemApiController.setupRoutes(args.routes)
     }
 }

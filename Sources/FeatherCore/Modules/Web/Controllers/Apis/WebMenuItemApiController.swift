@@ -8,10 +8,18 @@
 extension Web.MenuItem.List: Content {}
 extension Web.MenuItem.Detail: Content {}
 
-struct WebMenuItemApi: ApiController {
+struct WebMenuItemApiController: ApiController {
     typealias ApiModel = Web.MenuItem
     typealias DatabaseModel = WebMenuItemModel
 
+    func getBaseRoutes(_ routes: RoutesBuilder) -> RoutesBuilder {
+        routes
+            .grouped(Web.pathKey.pathComponent)
+            .grouped(Web.Menu.pathKey.pathComponent)
+            .grouped(Web.Menu.pathIdComponent)
+            .grouped(ApiModel.pathKey.pathComponent)
+    }
+    
     func listOutput(_ req: Request, _ model: DatabaseModel) async throws -> Web.MenuItem.List {
         .init(id: model.uuid, label: model.label, url: model.url, menuId: model.$menu.id)
     }
