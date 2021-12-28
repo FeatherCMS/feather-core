@@ -30,6 +30,9 @@ struct SystemStartInstallStepController: SystemInstallStepController {
             let moduleName = type(of: module).featherIdentifier.lowercased()
             
             let assetsUrl = moduleUrl.appendingPathComponent("Assets")
+            guard fm.isExistingDirectory(at: assetsUrl.path) else {
+                continue
+            }
             let assetsDirectories = try fm.contentsOfDirectory(atPath: assetsUrl.path)
 
             for dir in assetsDirectories {

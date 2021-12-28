@@ -137,8 +137,10 @@ private extension Feather {
 
         for dir in publicDirectories {
             let dirUrl = publicUrl.appendingPathComponent(dir)
+            guard fm.isExistingDirectory(at: dirUrl.path) else {
+                continue
+            }
             let assetFiles = try fm.contentsOfDirectory(atPath: dirUrl.path)
-
             for file in assetFiles {
                 let fileUrl = dirUrl.appendingPathComponent(file)
                 let destDir = Feather.Paths.public
