@@ -18,11 +18,11 @@ public struct WebPageTemplate: TemplateRepresentable {
     @TagBuilder
     public func render(_ req: Request) -> Tag {
         WebIndexTemplate(context.index) {
-            H1(context.page.title)
-
             Div {
+                H1(context.page.title)
                 Text(context.page.content)
             }
+            .class("container")
         }
         .render(req)
     }
