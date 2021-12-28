@@ -22,6 +22,7 @@ public struct WebPageTemplate: TemplateRepresentable {
                 H1(context.page.title)
                 Text(context.page.content)
             }
+            .id("page")
             .class("container")
         }
         .render(req)
