@@ -48,8 +48,7 @@ public struct TableTemplate: TemplateRepresentable {
 
     @TagBuilder
     public func render(_ req: Request) -> Tag {
-        SwiftHtml.Style(css(req))
-            .type()
+        SwiftHtml.Style(css(req)).css()
 
         Table {
             Thead {
