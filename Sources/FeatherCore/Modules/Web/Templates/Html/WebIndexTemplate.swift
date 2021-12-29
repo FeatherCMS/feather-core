@@ -134,12 +134,12 @@ public struct WebIndexTemplate: TemplateRepresentable {
                 
                 if let css = req.variable("webSiteCss") {
                     SwiftHtml.Style(css)
-                        .type()
+                        .css()
                 }
 
                 if let css = context.metadata?.css {
                     Style(css)
-                        .type()
+                        .css()
                 }
                 
                 // NOTE: come up with a better solution for this...
