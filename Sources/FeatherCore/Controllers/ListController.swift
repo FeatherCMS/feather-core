@@ -159,7 +159,7 @@ public extension ListController where DatabaseModel: MetadataRepresentable {
         return qb.sort(order, direction)
     }
     
-    func listQuery(_ req: Request, _ qb: QueryBuilder<DatabaseModel>) throws -> QueryBuilder<DatabaseModel> {
+    func listQuery(_ req: Request, _ qb: QueryBuilder<DatabaseModel>) async throws -> QueryBuilder<DatabaseModel> {
         qb.joinMetadata()
     }
     
