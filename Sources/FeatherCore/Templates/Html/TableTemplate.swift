@@ -60,7 +60,7 @@ public struct TableTemplate: TemplateRepresentable {
                                 SortingTemplate(.init(key: column.key,
                                                       label: column.label,
                                                       isDefault: context.options.allowedOrders.first == column.key,
-                                                      sort: context.options.defaultSort)).render(req)
+                                                      defaultSort: context.options.defaultSort)).render(req)
                             }
                             else {
                                 Text(column.label)

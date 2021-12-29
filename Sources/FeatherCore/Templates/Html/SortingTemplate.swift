@@ -16,7 +16,7 @@ public struct SortingTemplate: TemplateRepresentable {
     }
 
     private func indicator(_ req: Request) -> String {
-        let isSortedAscending = (req.getQuery("sort") ?? context.sort.rawValue) == "asc"
+        let isSortedAscending = (req.getQuery("sort") ?? context.defaultSort.rawValue) == "asc"
         let arrow = isSortedAscending ? "▴" : "▾"
         let order = req.getQuery("order")
 
@@ -28,30 +28,28 @@ public struct SortingTemplate: TemplateRepresentable {
     
     private func query(_ req: Request) -> String {
         var queryItems = req.queryDictionary
-        /// we check the old order and sort values
         let oldOrder = queryItems["order"]
         let oldSort = queryItems["sort"]
-        /// we update the order based on the input
-        queryItems["order"] = context.key
-        let isDefaultOrder = context.isDefault
-        /// if there was no old order and this is the default order that means we have to use the default sort
-        if oldOrder == nil && isDefaultOrder {
-            queryItems["sort"] = (context.sort == .asc) ? "desc" : "asc"
+        
+        var newOrder = oldOrder
+        if context.key != oldOrder {
+            newOrder = context.key
         }
-        /// if the old order was equal with the field key we just flip the sort
-        else if oldOrder == context.key {
-            if let sort = oldSort {
-                queryItems["sort"] = (sort == "asc") ? "desc" : sort
-            }
-            else {
-                queryItems["sort"] = (context.sort == .asc) ? "desc" : "asc"
-            }
+        if context.isDefault {
+            newOrder = nil
         }
-        /// otherwise this is a completely new order we can remove the sort key completely
-        else {
-            queryItems.removeValue(forKey: "sort")
+
+        var newSort: String? = ((oldSort ?? context.defaultSort.rawValue) == "asc") ? "desc" : "asc"
+        if oldOrder != newOrder {
+            newSort = context.defaultSort.rawValue
         }
-        return "\(req.url.path)?\(queryItems.queryString)"
+        if context.defaultSort.rawValue == newSort {
+            newSort = nil
+        }
+        queryItems["order"] = newOrder
+        queryItems["sort"] = newSort
+        queryItems = queryItems.compactMapValues { $0 }
+        return req.url.path.safePath() + (queryItems.queryString.isEmpty ? "" : ("?" + queryItems.queryString))
     }
     
     @TagBuilder
