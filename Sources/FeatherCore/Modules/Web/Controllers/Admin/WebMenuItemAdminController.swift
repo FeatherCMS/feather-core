@@ -15,7 +15,7 @@ struct WebMenuItemAdminController: AdminController {
     
     static var modelName: FeatherModelName = .init(singular: "item")
 
-    func listQuery(_ req: Request, _ qb: QueryBuilder<DatabaseModel>) throws -> QueryBuilder<DatabaseModel> {
+    func listQuery(_ req: Request, _ qb: QueryBuilder<DatabaseModel>) async throws -> QueryBuilder<DatabaseModel> {
         guard let id = Web.Menu.getIdParameter(req) else {
             return qb
         }

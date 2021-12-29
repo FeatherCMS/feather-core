@@ -19,6 +19,15 @@ extension FeatherAccount: SessionAuthenticatable {
 }
 
 
+public extension User.Account {
+    
+    static func queryOptions(_ req: Request) async throws -> [OptionContext] {
+        try await UserAccountModel.query(on: req.db).all().map {
+            .init(key: $0.uuid.string, label: $0.email)
+        }
+    }
+}
+
 public extension HookName {
 
     static let permission: HookName = "permission"

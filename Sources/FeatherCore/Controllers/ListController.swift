@@ -76,7 +76,7 @@ public protocol ListController: ModelController {
     var listConfig: ListConfiguration { get }
     
     
-    func listQuery(_ req: Request, _ qb: QueryBuilder<DatabaseModel>) throws -> QueryBuilder<DatabaseModel>
+    func listQuery(_ req: Request, _ qb: QueryBuilder<DatabaseModel>) async throws -> QueryBuilder<DatabaseModel>
     func listSort(_ req: Request,
                   _ qb: QueryBuilder<DatabaseModel>,
                   _ order: FieldKey,
@@ -100,7 +100,7 @@ public extension ListController {
     }
 
     
-    func listQuery(_ req: Request, _ qb: QueryBuilder<DatabaseModel>) throws -> QueryBuilder<DatabaseModel> {
+    func listQuery(_ req: Request, _ qb: QueryBuilder<DatabaseModel>) async throws -> QueryBuilder<DatabaseModel> {
         qb
     }
     
@@ -118,7 +118,7 @@ public extension ListController {
         let config = listConfig
         let listLimit: Int = max(req.query[config.limitKey] ?? config.defaultLimit, 1)
         let listPage: Int = max(req.query[config.pageKey] ?? config.defaultPage, 1)
-        var qb = try listQuery(req, DatabaseModel.query(on: req.db))
+        var qb = try await listQuery(req, DatabaseModel.query(on: req.db))
 
         let allowedOrders = config.allowedOrders
         var fieldOrder = allowedOrders.first
