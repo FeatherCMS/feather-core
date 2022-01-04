@@ -13,22 +13,24 @@ struct WebMetadataApiController: ApiListController, ApiDetailController, ApiUpda
     typealias ApiModel = Web.Metadata
     typealias DatabaseModel = WebMetadataModel
     
-    func listOutput(_ req: Request, _ model: DatabaseModel) async throws -> Web.Metadata.List {
-        .init(id: model.uuid,
-              module: model.module,
-              model: model.model,
-              reference: model.reference,
-              slug: model.slug,
-              title: model.title,
-              excerpt: model.excerpt,
-              imageKey: model.imageKey,
-              date: model.date,
-              status: .init(rawValue: model.status.rawValue)!,
-              feedItem: model.feedItem,
-              canonicalUrl: model.canonicalUrl,
-              filters: model.filters,
-              css: model.css,
-              js: model.js)
+    func listOutput(_ req: Request, _ models: [DatabaseModel]) async throws -> [Web.Metadata.List] {
+        models.map { model in
+            .init(id: model.uuid,
+                  module: model.module,
+                  model: model.model,
+                  reference: model.reference,
+                  slug: model.slug,
+                  title: model.title,
+                  excerpt: model.excerpt,
+                  imageKey: model.imageKey,
+                  date: model.date,
+                  status: .init(rawValue: model.status.rawValue)!,
+                  feedItem: model.feedItem,
+                  canonicalUrl: model.canonicalUrl,
+                  filters: model.filters,
+                  css: model.css,
+                  js: model.js)
+        }
     }
     
     func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> Web.Metadata.Detail {
@@ -97,7 +99,7 @@ struct WebMetadataApiController: ApiListController, ApiDetailController, ApiUpda
         try await detailOutput(req, model).encodeResponse(for: req)
     }
 
-    func patchResponse(_ req: Request, model: DatabaseModel) async throws -> Response {
+    func patchResponse(_ req: Request, _ model: DatabaseModel) async throws -> Response {
         try await detailOutput(req, model).encodeResponse(for: req)
     }
 }

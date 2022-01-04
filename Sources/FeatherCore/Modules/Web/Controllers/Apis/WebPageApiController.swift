@@ -12,8 +12,9 @@ struct WebPageApiController: ApiController {
     typealias ApiModel = Web.Page
     typealias DatabaseModel = WebPageModel
 
-    func listOutput(_ req: Request, _ model: DatabaseModel) async throws -> Web.Page.List {
-        .init(id: model.uuid, title: model.title, metadata: model.featherMetadata)
+
+    func listOutput(_ req: Request, _ models: [DatabaseModel]) async throws -> [Web.Page.List] {
+        models.map { model in .init(id: model.uuid, title: model.title, metadata: model.featherMetadata) }
     }
     
     func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> Web.Page.Detail {

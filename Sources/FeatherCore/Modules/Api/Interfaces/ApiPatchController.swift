@@ -11,7 +11,7 @@ public protocol ApiPatchController: PatchController {
     func patchValidators() -> [AsyncValidator]
     func patchInput(_ req: Request, _ model: DatabaseModel, _ input: PatchObject) async throws
     func patchApi(_ req: Request) async throws -> Response
-    func patchResponse(_ req: Request, model: DatabaseModel) async throws -> Response
+    func patchResponse(_ req: Request, _ model: DatabaseModel) async throws -> Response
     func setupPatchRoutes(_ routes: RoutesBuilder)
 }
 
@@ -33,7 +33,7 @@ public extension ApiPatchController {
         try await beforePatch(req, model)
         try await model.update(on: req.db)
         try await afterPatch(req, model)
-        return try await patchResponse(req, model: model)
+        return try await patchResponse(req, model)
     }
     
     func setupPatchRoutes(_ routes: RoutesBuilder) {

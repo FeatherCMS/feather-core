@@ -12,13 +12,14 @@ struct WebMenuApiController: ApiController {
     typealias ApiModel = Web.MenuItem
     typealias DatabaseModel = WebMenuModel
 
-    func listOutput(_ req: Request, _ model: DatabaseModel) async throws -> Web.Menu.List {
-        .init(id: model.uuid, key: model.key, name: model.name, notes: model.notes)
+    func listOutput(_ req: Request, _ models: [DatabaseModel]) async throws -> [Web.Menu.List] {
+        [
+//            .init(id: model.uuid, key: model.key, name: model.name, notes: model.notes)
+        ]
     }
     
-    func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> Web.Menu.Detail {
-        let api = WebMenuItemApiController()
-        let items = try await model.items.mapAsync { try await api.listOutput(req, $0) }
+    func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> Web.Menu.Detail {    
+        let items = try await WebMenuItemApiController().listOutput(req, model.items)
         return .init(id: model.uuid, key: model.key, name: model.name, notes: model.notes, items: items)
     }
     

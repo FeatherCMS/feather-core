@@ -44,7 +44,7 @@ public extension ApiController {
         try await detailOutput(req, model).encodeResponse(for: req)
     }
 
-    func patchResponse(_ req: Request, model: DatabaseModel) async throws -> Response {
+    func patchResponse(_ req: Request, _ model: DatabaseModel) async throws -> Response {
         try await detailOutput(req, model).encodeResponse(for: req)
     }
     

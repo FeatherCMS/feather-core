@@ -17,7 +17,7 @@ struct WebFrontendController {
     func renderSitemapTemplate(_ req: Request) async throws -> Response {
         let metadatas = try await WebMetadataModel.findAll(on: req.db)
         let api = WebMetadataApiController()
-        let objects = try await metadatas.mapAsync { try await api.listOutput(req, $0) }
+        let objects = try await api.listOutput(req, metadatas)
         let template = WebSitemapTemplate(.init(items: objects))
         return req.templates.renderXml(template)
     }
@@ -25,7 +25,7 @@ struct WebFrontendController {
     func renderRssTemplate(_ req: Request) async throws -> Response {
         let metadatas = try await WebMetadataModel.findAll(on: req.db) { $0.filter(\.$feedItem == true) }
         let api = WebMetadataApiController()
-        let objects = try await metadatas.mapAsync { try await api.listOutput(req, $0) }
+        let objects = try await api.listOutput(req, metadatas) 
         let template = WebRssTemplate(.init(items: objects))
         return req.templates.renderXml(template)
     }

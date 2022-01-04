@@ -6,8 +6,7 @@
 //
 
 open class FormField<Input: Decodable, Output: TemplateRepresentable>: FormComponent {
-    
-    public typealias FormFieldBlock = (Request, FormField<Input, Output>) -> Void
+
     public typealias AsyncFormFieldBlock = (Request, FormField<Input, Output>) async throws -> Void
     public typealias FormFieldValidatorsBlock = ((Request, FormField<Input, Output>) -> [AsyncValidator])
     
@@ -36,14 +35,7 @@ open class FormField<Input: Decodable, Output: TemplateRepresentable>: FormCompo
     }
 
     // MARK: -
-    
-    open func load(_ block: @escaping FormFieldBlock) -> Self {
-        loadBlock = { req, field in
-            block(req, field)
-        }
-        return self
-    }
-    
+        
     open func load(_ block: @escaping AsyncFormFieldBlock) -> Self {
         loadBlock = block
         return self
@@ -58,14 +50,7 @@ open class FormField<Input: Decodable, Output: TemplateRepresentable>: FormCompo
         validatorsBlock = block
         return self
     }
-    
-    open func write(_ block: @escaping FormFieldBlock) -> Self {
-        writeBlock = { req, field in
-            block(req, field)
-        }
-        return self
-    }
-    
+
     open func write(_ block: @escaping AsyncFormFieldBlock) -> Self {
         writeBlock = block
         return self
@@ -73,20 +58,6 @@ open class FormField<Input: Decodable, Output: TemplateRepresentable>: FormCompo
 
     open func save(_ block: @escaping AsyncFormFieldBlock) -> Self {
         saveBlock = block
-        return self
-    }
-    
-    open func save(_ block: @escaping FormFieldBlock) -> Self {
-        saveBlock = { req, field in
-            block(req, field)
-        }
-        return self
-    }
-    
-    open func read(_ block: @escaping FormFieldBlock) -> Self {
-        readBlock = { req, field in
-            block(req, field)
-        }
         return self
     }
     

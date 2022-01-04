@@ -8,13 +8,12 @@
 extension User.Account.List: Content {}
 extension User.Account.Detail: Content {}
 
-
 struct UserAccountApi: ApiController {
     typealias ApiModel = User.Account
     typealias DatabaseModel = UserAccountModel
     
-    func listOutput(_ req: Request, _ model: DatabaseModel) async throws -> User.Account.List {
-        .init(id: model.uuid, email: model.email)
+    func listOutput(_ req: Request, _ models: [DatabaseModel]) async throws -> [User.Account.List] {
+        models.map { model in .init(id: model.uuid, email: model.email) }
     }
     
     func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> User.Account.Detail {

@@ -37,6 +37,9 @@ let package = Package(
         ], resources: [
             .copy("Bundle"),
         ]),
+        .testTarget(name: "FeatherCoreTests", dependencies: [
+            .target(name: "FeatherCore"),
+        ]),
         .testTarget(name: "FeatherCoreSdkTests", dependencies: [
             .target(name: "FeatherCoreSdk"),
         ])

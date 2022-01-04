@@ -19,9 +19,11 @@ struct WebMenuItemApiController: ApiController {
             .grouped(Web.Menu.pathIdComponent)
             .grouped(ApiModel.pathKey.pathComponent)
     }
-    
-    func listOutput(_ req: Request, _ model: DatabaseModel) async throws -> Web.MenuItem.List {
-        .init(id: model.uuid, label: model.label, url: model.url, menuId: model.$menu.id)
+
+    func listOutput(_ req: Request, _ models: [DatabaseModel]) async throws -> [Web.MenuItem.List] {
+        models.map { model in
+            .init(id: model.uuid, label: model.label, url: model.url, menuId: model.$menu.id)
+        }
     }
     
     func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> Web.MenuItem.Detail {

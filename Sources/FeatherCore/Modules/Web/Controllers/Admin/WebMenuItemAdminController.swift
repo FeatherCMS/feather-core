@@ -11,7 +11,6 @@ struct WebMenuItemAdminController: AdminController {
     
     typealias CreateModelEditor = WebMenuItemEditor
     typealias UpdateModelEditor = WebMenuItemEditor
-
     
     static var modelName: FeatherModelName = .init(singular: "item")
 
@@ -22,7 +21,7 @@ struct WebMenuItemAdminController: AdminController {
         return qb.filter(\.$menu.$id == id)
     }
     
-    func beforeCreate(_ req: Request, model: DatabaseModel) async throws {
+    func beforeCreate(_ req: Request, _ model: DatabaseModel) async throws {
         guard let id = Web.Menu.getIdParameter(req) else {
             throw Abort(.badRequest)
         }
@@ -83,7 +82,7 @@ struct WebMenuItemAdminController: AdminController {
         [
             LinkContext(label: WebModule.featherIdentifier.uppercasedFirst,
                         dropLast: 3,
-                        permission: nil), //Model.Module.permission.key),
+                        permission: Web.permission(for: .detail).key),
             LinkContext(label: WebMenuAdminController.modelName.plural.uppercasedFirst,
                         dropLast: 2,
                         permission: Web.Menu.permission(for: .list).key),
@@ -97,7 +96,7 @@ struct WebMenuItemAdminController: AdminController {
         [
             LinkContext(label: WebModule.featherIdentifier.uppercasedFirst,
                         dropLast: 4,
-                        permission: nil), //Model.Module.permission.key),
+                        permission: Web.permission(for: .detail).key),
             LinkContext(label: WebMenuAdminController.modelName.plural.uppercasedFirst,
                         dropLast: 3,
                         permission: Web.Menu.permission(for: .list).key),
@@ -114,7 +113,7 @@ struct WebMenuItemAdminController: AdminController {
         [
             LinkContext(label: WebModule.featherIdentifier.uppercasedFirst,
                         dropLast: 5,
-                        permission: nil), //Model.Module.permission.key),
+                        permission: Web.permission(for: .detail).key),
             LinkContext(label: WebMenuAdminController.modelName.plural.uppercasedFirst,
                         dropLast: 4,
                         permission: Web.Menu.permission(for: .list).key),
@@ -131,7 +130,7 @@ struct WebMenuItemAdminController: AdminController {
         [
             LinkContext(label: WebModule.featherIdentifier.uppercasedFirst,
                         dropLast: 4,
-                        permission: nil), //Model.Module.permission.key),
+                        permission: Web.permission(for: .detail).key),
             LinkContext(label: WebMenuAdminController.modelName.plural.uppercasedFirst,
                         dropLast: 3,
                         permission: Web.Menu.permission(for: .list).key),

@@ -12,8 +12,8 @@ struct CommonVariableApiController: ApiController {
     typealias ApiModel = Common.Variable
     typealias DatabaseModel = CommonVariableModel
 
-    func listOutput(_ req: Request, _ model: DatabaseModel) async throws -> Common.Variable.List {
-        .init(id: model.uuid, key: model.key, value: model.value)
+    func listOutput(_ req: Request, _ models: [DatabaseModel]) async throws -> [Common.Variable.List] {
+        models.map { model in .init(id: model.uuid, key: model.key, value: model.value) }
     }
     
     func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> Common.Variable.Detail {
