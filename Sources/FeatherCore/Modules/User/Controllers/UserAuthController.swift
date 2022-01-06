@@ -52,7 +52,10 @@ struct UserAuthController {
         guard let user = req.auth.get(FeatherAccount.self) else {
             throw Abort(.unauthorized)
         }
-        let tokenValue = [UInt8].random(count: 16).base64
+        
+        let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789="
+        let tokenValue = String((0..<64).map { _ in letters.randomElement()! })
+//        let tokenValue = [UInt8].random(count: 32).base64
         let token = UserTokenModel(value: tokenValue, userId: user.id)
         try await token.create(on: req.db)
         return FeatherToken(id: token.uuid, value: token.value, user: user)

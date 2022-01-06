@@ -24,7 +24,6 @@ public struct KeyedContentValidator<T: Codable>: AsyncValidator {
 
     public func validate(_ req: Request) async throws -> ValidationErrorDetail? {
         let optionalValue = try? req.content.get(T.self, at: key)
-
         if let value = optionalValue {
             return try await validation(value, req) ? nil : error
         }
