@@ -52,7 +52,7 @@ public extension AdminListController {
                                  options: .init(allowedOrders: listConfig.allowedOrders.map(\.description),
                                                 defaultSort: listConfig.defaultSort))
 
-        return .init(title: Self.modelName.plural.uppercasedFirst,
+        return .init(title: Self.modelName.plural,
                      isSearchable: listConfig.isSearchable,
                      table: table,
                      pagination: list.info,
@@ -70,7 +70,7 @@ public extension AdminListController {
     
     func listBreadcrumbs(_ req: Request) -> [LinkContext] {
         [
-            LinkContext(label: DatabaseModel.Module.featherIdentifier.uppercasedFirst,
+            LinkContext(label: DatabaseModel.Module.featherName,
                         dropLast: 1,
                         permission: nil), //Model.Module.permission.key),
         ]

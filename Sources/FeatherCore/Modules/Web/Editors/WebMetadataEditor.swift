@@ -45,7 +45,7 @@ struct WebMetadataEditor: FeatherModelEditor {
         SelectField("status")
             .config {
                 $0.output.context.label.required = true
-                $0.output.context.options = FeatherMetadata.Status.allCases.map { OptionContext(key: $0.rawValue, label: $0.rawValue.uppercasedFirst) }
+                $0.output.context.options = FeatherMetadata.Status.allCases.map { OptionContext(key: $0.rawValue, label: $0.rawValue.capitalized) }
                 $0.output.context.value = FeatherMetadata.Status.draft.rawValue
             }
             .validators {

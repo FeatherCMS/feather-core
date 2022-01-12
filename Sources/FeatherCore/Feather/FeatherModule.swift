@@ -19,6 +19,8 @@ public protocol FeatherModule {
     /// default value is the lowercased name of the module by dropping the module suffix
     ///
     static var featherIdentifier: String { get }
+    
+    static var featherName: String { get }
 
     /// module boot function
     func boot(_ app: Application) throws
@@ -35,6 +37,10 @@ public extension FeatherModule {
     static var featherIdentifier: String {
         String(describing: self).dropLast(6).lowercased()
     }
+
+    static var featherName: String {
+        featherIdentifier.capitalized
+    }    
     
     func boot(_ app: Application) throws {
         // nothing to do here...

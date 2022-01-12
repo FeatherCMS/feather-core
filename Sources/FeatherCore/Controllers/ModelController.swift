@@ -21,7 +21,7 @@ public protocol ModelController: Controller {
 
 public extension ModelController {
 
-    static var moduleName: String { DatabaseModel.Module.featherIdentifier.uppercasedFirst }
+    static var moduleName: String { DatabaseModel.Module.featherIdentifier.lowercased().capitalized }
     static var modelName: FeatherModelName { .init(stringLiteral: String(DatabaseModel.featherIdentifier.dropLast(1))) }
     
     func getBaseRoutes(_ routes: RoutesBuilder) -> RoutesBuilder {

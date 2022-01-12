@@ -35,7 +35,7 @@ public extension AdminDetailController {
     }
 
     func detailContext(_ req: Request, _ model: DatabaseModel) -> AdminDetailPageContext {
-        .init(title: Self.modelName.singular.uppercasedFirst + " details",
+        .init(title: Self.modelName.singular + " details",
               fields: detailFields(for: model),
               navigation: detailNavigation(req, model),
               breadcrumbs: detailBreadcrumbs(req, model),
@@ -49,10 +49,10 @@ public extension AdminDetailController {
 
     func detailBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
-            LinkContext(label: DatabaseModel.Module.featherIdentifier.uppercasedFirst,
+            LinkContext(label: DatabaseModel.Module.featherName,
                         dropLast: 2,
                         permission: ApiModel.Module.permission(for: .detail).key),
-            LinkContext(label: Self.modelName.plural.uppercasedFirst,
+            LinkContext(label: Self.modelName.plural,
                         dropLast: 1,
                         permission: ApiModel.permission(for: .list).key),
         ]

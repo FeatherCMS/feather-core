@@ -68,7 +68,7 @@ struct WebMetadataAdminController: AdminListController, AdminDetailController, A
         []
     }
 
-    func detailLinks(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
+    func detailNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
             LinkContext(label: "Update",
                         path: Self.updatePathComponent.description,

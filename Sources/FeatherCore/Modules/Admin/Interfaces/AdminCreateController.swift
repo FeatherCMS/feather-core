@@ -77,10 +77,10 @@ public extension AdminCreateController {
     
     func createBreadcrumbs(_ req: Request) -> [LinkContext] {
         [
-            LinkContext(label: DatabaseModel.Module.featherIdentifier.uppercasedFirst,
+            LinkContext(label: DatabaseModel.Module.featherName,
                         dropLast: 2,
                         permission: ApiModel.Module.permission(for: .list).key),
-            LinkContext(label: Self.modelName.plural.uppercasedFirst,
+            LinkContext(label: Self.modelName.plural,
                         dropLast: 1,
                         permission: ApiModel.permission(for: .list).key),
         ]

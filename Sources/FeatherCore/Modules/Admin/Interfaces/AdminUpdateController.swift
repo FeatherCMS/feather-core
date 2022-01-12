@@ -86,10 +86,10 @@ public extension AdminUpdateController {
     
     func updateBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
-            LinkContext(label: DatabaseModel.Module.featherIdentifier.uppercasedFirst,
+            LinkContext(label: DatabaseModel.Module.featherName,
                         dropLast: 3,
                         permission: ApiModel.Module.permission(for: .detail).key),
-            LinkContext(label: Self.modelName.plural.uppercasedFirst,
+            LinkContext(label: Self.modelName.plural,
                         dropLast: 2,
                         permission: ApiModel.permission(for: .list).key),
         ]

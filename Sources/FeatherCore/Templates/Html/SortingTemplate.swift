@@ -54,7 +54,7 @@ public struct SortingTemplate: TemplateRepresentable {
     
     @TagBuilder
     public func render(_ req: Request) -> Tag {
-        A((context.label ?? context.key.uppercasedFirst) + indicator(req))
+        A((context.label ?? context.key.capitalized) + indicator(req))
             .href(query(req))
     }
 }

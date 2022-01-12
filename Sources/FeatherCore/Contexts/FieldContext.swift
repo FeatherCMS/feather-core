@@ -22,7 +22,7 @@ public struct FieldContext {
                 label: String? = nil,
                 type: `Type` = .text) {
         self.key = key
-        self.label = label ?? key.uppercasedFirst
+        self.label = label ?? key.capitalized
         self.value = value
         self.type = type
     }

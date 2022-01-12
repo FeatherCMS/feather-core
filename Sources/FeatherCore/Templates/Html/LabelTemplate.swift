@@ -18,7 +18,7 @@ public struct LabelTemplate: TemplateRepresentable {
     @TagBuilder
     public func render(_ req: Request) -> Tag {
         Label {
-            Text(context.title ?? context.key.uppercasedFirst)
+            Text(context.title ?? context.key.capitalized)
 
             if let more = context.more {
                 Span(more)

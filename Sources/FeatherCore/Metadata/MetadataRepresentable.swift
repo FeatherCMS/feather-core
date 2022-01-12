@@ -79,7 +79,7 @@ public extension MetadataRepresentable {
 
 public extension AdminController where DatabaseModel: MetadataRepresentable {
     
-    func detailLinks(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
+    func detailNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
             LinkContext(label: "Update",
                         path: Self.updatePathComponent.description,
