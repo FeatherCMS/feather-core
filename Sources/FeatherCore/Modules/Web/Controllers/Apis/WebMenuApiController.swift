@@ -41,13 +41,12 @@ struct WebMenuApiController: ApiController {
         model.notes = input.notes ?? model.notes
     }
     
+    @AsyncValidatorBuilder
     func validators(optional: Bool) -> [AsyncValidator] {
-        [
-            KeyedContentValidator<String>.required("name", optional: optional),
-            KeyedContentValidator<String>.required("key", optional: optional),
-            KeyedContentValidator<String>("key", "Key must be unique", optional: optional) { value, req in
-                try await DatabaseModel.isUnique(req, \.$key == value, Web.Menu.getIdParameter(req))
-            }
-        ]
+        KeyedContentValidator<String>.required("name", optional: optional)
+        KeyedContentValidator<String>.required("key", optional: optional)
+        KeyedContentValidator<String>("key", "Key must be unique", optional: optional) { value, req in
+            try await DatabaseModel.isUnique(req, \.$key == value, Web.Menu.getIdParameter(req))
+        }
     }
 }

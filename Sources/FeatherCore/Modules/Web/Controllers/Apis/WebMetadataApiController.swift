@@ -87,12 +87,11 @@ struct WebMetadataApiController: ApiListController, ApiDetailController, ApiUpda
         validators(optional: true)
     }
     
+    @AsyncValidatorBuilder
     func validators(optional: Bool) -> [AsyncValidator] {
-        [
-            KeyedContentValidator<String>("slug", "Slug must be unique", optional: optional) { value, req in
-                try await DatabaseModel.isUnique(req, \.$slug == value, ApiModel.getIdParameter(req))
-            }
-        ]
+        KeyedContentValidator<String>("slug", "Slug must be unique", optional: optional) { value, req in
+            try await DatabaseModel.isUnique(req, \.$slug == value, ApiModel.getIdParameter(req))
+        }
     }
     
     func updateResponse(_ req: Request, _ model: DatabaseModel) async throws -> Response {
