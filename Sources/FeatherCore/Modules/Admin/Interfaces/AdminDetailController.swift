@@ -15,7 +15,7 @@ public protocol AdminDetailController: DetailController {
     func detailBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
     func detailNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
     
-    func setupDetailRoutes(_ routes: RoutesBuilder)
+    func setUpDetailRoutes(_ routes: RoutesBuilder)
 }
 
 public extension AdminDetailController {
@@ -66,7 +66,7 @@ public extension AdminDetailController {
         ]
     }
     
-    func setupDetailRoutes(_ routes: RoutesBuilder) {
+    func setUpDetailRoutes(_ routes: RoutesBuilder) {
         let baseRoutes = getBaseRoutes(routes)
                 
         let existingModelRoutes = baseRoutes.grouped(ApiModel.pathIdComponent)

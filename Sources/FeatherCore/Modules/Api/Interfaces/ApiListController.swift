@@ -10,7 +10,7 @@ public protocol ApiListController: ListController {
     
     func listOutput(_ req: Request, _ models: [DatabaseModel]) async throws -> [ListObject]
     func listApi(_ req: Request) async throws -> ListContainer<ListObject>
-    func setupListRoutes(_ routes: RoutesBuilder)
+    func setUpListRoutes(_ routes: RoutesBuilder)
 }
 
 public extension ApiListController {
@@ -25,7 +25,7 @@ public extension ApiListController {
         return ListContainer<ListObject>(apiItems, info: list.info)
     }
     
-    func setupListRoutes(_ routes: RoutesBuilder) {
+    func setUpListRoutes(_ routes: RoutesBuilder) {
         let baseRoutes = getBaseRoutes(routes)
         baseRoutes.get(use: listApi)
     }

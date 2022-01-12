@@ -17,7 +17,7 @@ public protocol AdminDeleteController: DeleteController {
     func deleteInfo(_ model: DatabaseModel) -> String
     func deleteContext(_ req: Request, _ model: DatabaseModel, _ form: DeleteForm) -> AdminDeletePageContext
     
-    func setupDeleteRoutes(_ routes: RoutesBuilder)
+    func setUpDeleteRoutes(_ routes: RoutesBuilder)
 }
 
 public extension AdminDeleteController {
@@ -66,7 +66,7 @@ public extension AdminDeleteController {
               form: form.context(req))
     }
     
-    func setupDeleteRoutes(_ routes: RoutesBuilder) {
+    func setUpDeleteRoutes(_ routes: RoutesBuilder) {
         let baseRoutes = getBaseRoutes(routes)
         
         let existingModelRoutes = baseRoutes.grouped(ApiModel.pathIdComponent)

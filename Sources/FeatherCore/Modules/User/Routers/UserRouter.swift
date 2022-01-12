@@ -23,9 +23,9 @@ struct UserRouter: FeatherRouter {
     }
     
     func adminRoutesHook(args: HookArguments) {
-        accountController.setupRoutes(args.routes)
-        roleController.setupRoutes(args.routes)
-        permissionController.setupRoutes(args.routes)
+        accountController.setUpRoutes(args.routes)
+        roleController.setUpRoutes(args.routes)
+        permissionController.setUpRoutes(args.routes)
         
         args.routes.get("user") { req -> Response in
             let template = AdminModulePageTemplate(.init(title: "User", message: "module information", links: [

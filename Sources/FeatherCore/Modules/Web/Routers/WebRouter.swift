@@ -29,12 +29,12 @@ struct WebRouter: FeatherRouter {
     }
     
     func adminRoutesHook(args: HookArguments) {
-        metadataAdminController.setupListRoutes(args.routes)
-        metadataAdminController.setupDetailRoutes(args.routes)
-        metadataAdminController.setupUpdateRoutes(args.routes)
-        pageAdminController.setupRoutes(args.routes)
-        menuAdminController.setupRoutes(args.routes)
-        menuItemAdminController.setupRoutes(args.routes)
+        metadataAdminController.setUpListRoutes(args.routes)
+        metadataAdminController.setUpDetailRoutes(args.routes)
+        metadataAdminController.setUpUpdateRoutes(args.routes)
+        pageAdminController.setUpRoutes(args.routes)
+        menuAdminController.setUpRoutes(args.routes)
+        menuItemAdminController.setUpRoutes(args.routes)
         
         args.routes.grouped("web").get("settings", use: settingsAdminController.settingsView)
         args.routes.grouped("web").post("settings", use: settingsAdminController.settings)
@@ -51,11 +51,11 @@ struct WebRouter: FeatherRouter {
     }
 
     func apiRoutesHook(args: HookArguments) {
-        metadataApiController.setupListRoutes(args.routes)
-        metadataApiController.setupDetailRoutes(args.routes)
-        metadataApiController.setupUpdateRoutes(args.routes)
-        pageApiController.setupRoutes(args.routes)
-        menuApiController.setupRoutes(args.routes)
-        menuItemApiController.setupRoutes(args.routes)
+        metadataApiController.setUpListRoutes(args.routes)
+        metadataApiController.setUpDetailRoutes(args.routes)
+        metadataApiController.setUpUpdateRoutes(args.routes)
+        pageApiController.setUpRoutes(args.routes)
+        menuApiController.setUpRoutes(args.routes)
+        menuItemApiController.setUpRoutes(args.routes)
     }
 }

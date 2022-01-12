@@ -15,7 +15,7 @@ public protocol AdminListController: ListController {
     func listNavigation(_ req: Request) -> [LinkContext]
     func listBreadcrumbs(_ req: Request) -> [LinkContext]
     
-    func setupListRoutes(_ routes: RoutesBuilder)
+    func setUpListRoutes(_ routes: RoutesBuilder)
 }
 
 
@@ -76,7 +76,7 @@ public extension AdminListController {
         ]
     }
     
-    func setupListRoutes(_ routes: RoutesBuilder) {
+    func setUpListRoutes(_ routes: RoutesBuilder) {
         let baseRoutes = getBaseRoutes(routes)
         
         baseRoutes.get(use: listView)

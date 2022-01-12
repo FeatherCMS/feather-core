@@ -13,7 +13,7 @@ struct CommonRouter: FeatherRouter {
     let variableApiController = CommonVariableApiController()
 
     func adminRoutesHook(args: HookArguments) {
-        variableAdminController.setupRoutes(args.routes)
+        variableAdminController.setUpRoutes(args.routes)
 
         let moduleRoutes = args.routes.grouped("common")
         moduleRoutes.get("files", use: fileAdminController.listView)
@@ -39,7 +39,7 @@ struct CommonRouter: FeatherRouter {
     }
     
     func apiRoutesHook(args: HookArguments) {
-        variableApiController.setupRoutes(args.routes)
+        variableApiController.setUpRoutes(args.routes)
 
         let moduleRoutes = args.routes.grouped("common")
         moduleRoutes.get("files", use: fileApiController.listApi)

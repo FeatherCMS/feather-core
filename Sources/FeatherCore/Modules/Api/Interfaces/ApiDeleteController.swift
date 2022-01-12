@@ -8,7 +8,7 @@
 public protocol ApiDeleteController: DeleteController {
     
     func deleteApi(_ req: Request) async throws -> HTTPStatus
-    func setupDeleteRoutes(_ routes: RoutesBuilder)
+    func setUpDeleteRoutes(_ routes: RoutesBuilder)
 }
 
 public extension ApiDeleteController {
@@ -25,7 +25,7 @@ public extension ApiDeleteController {
         return .noContent
     }
     
-    func setupDeleteRoutes(_ routes: RoutesBuilder) {
+    func setUpDeleteRoutes(_ routes: RoutesBuilder) {
         let baseRoutes = getBaseRoutes(routes)
         let existingModelRoutes = baseRoutes.grouped(ApiModel.pathIdComponent)
         existingModelRoutes.delete(use: deleteApi)

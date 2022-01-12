@@ -19,7 +19,7 @@ public protocol AdminUpdateController: UpdateController {
     func updateBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
     func updateNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
     
-    func setupUpdateRoutes(_ routes: RoutesBuilder)
+    func setUpUpdateRoutes(_ routes: RoutesBuilder)
 }
 
 public extension AdminUpdateController {
@@ -103,7 +103,7 @@ public extension AdminUpdateController {
         ]
     }
     
-    func setupUpdateRoutes(_ routes: RoutesBuilder) {
+    func setUpUpdateRoutes(_ routes: RoutesBuilder) {
         let baseRoutes = getBaseRoutes(routes)
 
         let existingModelRoutes = baseRoutes.grouped(ApiModel.pathIdComponent)

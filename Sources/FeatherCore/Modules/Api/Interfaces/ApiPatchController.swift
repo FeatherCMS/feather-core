@@ -12,7 +12,7 @@ public protocol ApiPatchController: PatchController {
     func patchInput(_ req: Request, _ model: DatabaseModel, _ input: PatchObject) async throws
     func patchApi(_ req: Request) async throws -> Response
     func patchResponse(_ req: Request, _ model: DatabaseModel) async throws -> Response
-    func setupPatchRoutes(_ routes: RoutesBuilder)
+    func setUpPatchRoutes(_ routes: RoutesBuilder)
 }
 
 public extension ApiPatchController {
@@ -36,7 +36,7 @@ public extension ApiPatchController {
         return try await patchResponse(req, model)
     }
     
-    func setupPatchRoutes(_ routes: RoutesBuilder) {
+    func setUpPatchRoutes(_ routes: RoutesBuilder) {
         let baseRoutes = getBaseRoutes(routes)
         let existingModelRoutes = baseRoutes.grouped(ApiModel.pathIdComponent)
         existingModelRoutes.patch(use: patchApi)

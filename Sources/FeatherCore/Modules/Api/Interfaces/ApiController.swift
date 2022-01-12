@@ -12,8 +12,8 @@ public protocol ApiController: ApiListController,
                                ApiPatchController,
                                ApiDeleteController
 {
-    func setupRoutes(_ routes: RoutesBuilder)
-    func setupPublicRoutes(_ routes: RoutesBuilder)
+    func setUpRoutes(_ routes: RoutesBuilder)
+    func setUpPublicRoutes(_ routes: RoutesBuilder)
     
     func validators(optional: Bool) -> [AsyncValidator]
 }
@@ -49,16 +49,16 @@ public extension ApiController {
     }
     
 
-    func setupRoutes(_ routes: RoutesBuilder) {
-        setupListRoutes(routes)
-        setupDetailRoutes(routes)
-        setupCreateRoutes(routes)
-        setupUpdateRoutes(routes)
-        setupPatchRoutes(routes)
-        setupDeleteRoutes(routes)
+    func setUpRoutes(_ routes: RoutesBuilder) {
+        setUpListRoutes(routes)
+        setUpDetailRoutes(routes)
+        setUpCreateRoutes(routes)
+        setUpUpdateRoutes(routes)
+        setUpPatchRoutes(routes)
+        setUpDeleteRoutes(routes)
     }
     
-    func setupPublicRoutes(_ routes: RoutesBuilder) {
+    func setUpPublicRoutes(_ routes: RoutesBuilder) {
         // do not expose anything by default
     }
 }
