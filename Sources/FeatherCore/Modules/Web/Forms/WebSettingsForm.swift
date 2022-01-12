@@ -95,7 +95,7 @@ final class WebSettingsForm: FeatherForm {
                 $0.output.context.value = Feather.config.region.locale
             }
             .validators {
-                FormFieldValidator($1, "Invalid locale value") { field, _ in
+                FormFieldValidator($1, "Invalid locale value") { req, field in
                     OptionContext.locales.map(\.key).contains(field.input)
                 }
             }
@@ -111,7 +111,7 @@ final class WebSettingsForm: FeatherForm {
                 $0.output.context.value = Feather.config.region.timezone
             }
             .validators {
-                FormFieldValidator($1, "Invalid time zone value") { field, _ in
+                FormFieldValidator($1, "Invalid time zone value") { _, field in
                     OptionContext.uniqueTimeZones.map(\.key).contains(field.input)
                 }
             }
@@ -127,7 +127,7 @@ final class WebSettingsForm: FeatherForm {
                 $0.output.context.value = String(Feather.config.listLimit)
             }
             .validators {
-                FormFieldValidator($1, "Invalid list limit value") { field, _ in
+                FormFieldValidator($1, "Invalid list limit value") { _, field in
                     OptionContext.listLimits.map(\.key).contains(field.input)
                 }
             }

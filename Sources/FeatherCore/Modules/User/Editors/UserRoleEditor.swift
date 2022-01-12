@@ -21,7 +21,7 @@ struct UserRoleEditor: FeatherModelEditor {
             }
             .validators {
                 FormFieldValidator.required($1)
-                FormFieldValidator($1, "Key must be unique") { field, req in
+                FormFieldValidator($1, "Key must be unique") { req, field in
                     try await Model.isUnique(req, \.$key == field.input, User.Role.getIdParameter(req))
                 }
             }

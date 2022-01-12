@@ -17,7 +17,7 @@ struct WebMetadataEditor: FeatherModelEditor {
     var formFields: [FormComponent] {
         InputField("slug")
             .validators {
-                FormFieldValidator($1, "Slug must be unique") { field, req in
+                FormFieldValidator($1, "Slug must be unique") { req, field in
                     try await Model.isUnique(req, \.$slug == field.input, Web.Metadata.getIdParameter(req))
                 }
             }
@@ -49,7 +49,7 @@ struct WebMetadataEditor: FeatherModelEditor {
                 $0.output.context.value = FeatherMetadata.Status.draft.rawValue
             }
             .validators {
-                FormFieldValidator($1, "Invalid status") { field, _ in
+                FormFieldValidator($1, "Invalid status") { _, field in
                     FeatherMetadata.Status(rawValue: field.input) != nil
                 }
             }
@@ -58,7 +58,7 @@ struct WebMetadataEditor: FeatherModelEditor {
         
         InputField("date")
             .validators {
-                FormFieldValidator($1, "Invalid date") { field, _ in
+                FormFieldValidator($1, "Invalid date") { _, field in
                     Feather.dateFormatter().date(from: field.input) != nil
                 }
             }

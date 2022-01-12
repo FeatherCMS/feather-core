@@ -40,7 +40,7 @@ struct WebPageApiController: ApiController {
     @AsyncValidatorBuilder
     func validators(optional: Bool) -> [AsyncValidator] {
         KeyedContentValidator<String>.required("title", optional: optional)
-        KeyedContentValidator<String>("title", "Title must be unique", optional: optional) { value, req in
+        KeyedContentValidator<String>("title", "Title must be unique", optional: optional) { req, value in
             guard ApiModel.getIdParameter(req) == nil else {
                 return true
             }

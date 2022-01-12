@@ -21,7 +21,7 @@ struct WebPageEditor: FeatherModelEditor {
             }
             .validators {
                 FormFieldValidator.required($1)
-                FormFieldValidator($1, "Title must be unique") { field, req in
+                FormFieldValidator($1, "Title must be unique") { req, field in
                     guard Web.Page.getIdParameter(req) == nil else {
                         return true
                     }
