@@ -85,7 +85,7 @@ struct WebMetadataAdminController: AdminListController, AdminDetailController, A
         ]
     }
 
-    func updateLinks(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
+    func updateNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
             LinkContext(label: "Details",
                         dropLast: 1,

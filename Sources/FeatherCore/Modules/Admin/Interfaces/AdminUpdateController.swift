@@ -17,7 +17,7 @@ public protocol AdminUpdateController: UpdateController {
     
     func updateContext(_ req: Request, _ editor: UpdateModelEditor) async -> AdminEditorPageContext
     func updateBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
-    func updateLinks(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
+    func updateNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
     
     func setupUpdateRoutes(_ routes: RoutesBuilder)
 }
@@ -74,7 +74,7 @@ public extension AdminUpdateController {
        .init(title: "Update " + Self.modelName.singular,
              form: editor.form.context(req),
              breadcrumbs: updateBreadcrumbs(req, editor.model as! DatabaseModel),
-             links: updateLinks(req, editor.model as! DatabaseModel),
+             links: updateNavigation(req, editor.model as! DatabaseModel),
              actions: [
                 LinkContext(label: "Delete",
                             path: "delete/?redirect=" + req.url.path.pathComponents.dropLast(2).path + "&cancel=" + req.url.path,
@@ -88,14 +88,14 @@ public extension AdminUpdateController {
         [
             LinkContext(label: DatabaseModel.Module.featherIdentifier.uppercasedFirst,
                         dropLast: 3,
-                        permission: nil), //Model.Module.permission.key),
+                        permission: ApiModel.Module.permission(for: .detail).key),
             LinkContext(label: Self.modelName.plural.uppercasedFirst,
                         dropLast: 2,
                         permission: ApiModel.permission(for: .list).key),
         ]
     }
     
-    func updateLinks(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
+    func updateNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
             LinkContext(label: "Details",
                         dropLast: 1,

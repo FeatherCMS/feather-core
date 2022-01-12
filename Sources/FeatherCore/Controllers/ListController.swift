@@ -71,10 +71,8 @@ public struct ListConfiguration {
 }
 
 public protocol ListController: ModelController {
-    
-    
+
     var listConfig: ListConfiguration { get }
-    
     
     func listQuery(_ req: Request, _ qb: QueryBuilder<DatabaseModel>) async throws -> QueryBuilder<DatabaseModel>
     func listSort(_ req: Request,

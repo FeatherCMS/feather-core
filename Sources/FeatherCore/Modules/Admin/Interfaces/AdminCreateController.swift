@@ -79,7 +79,7 @@ public extension AdminCreateController {
         [
             LinkContext(label: DatabaseModel.Module.featherIdentifier.uppercasedFirst,
                         dropLast: 2,
-                        permission: nil), //Model.Module.permission.key),
+                        permission: ApiModel.Module.permission(for: .list).key),
             LinkContext(label: Self.modelName.plural.uppercasedFirst,
                         dropLast: 1,
                         permission: ApiModel.permission(for: .list).key),

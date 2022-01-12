@@ -21,6 +21,11 @@ public protocol AdminDetailController: DetailController {
 public extension AdminDetailController {
     
     func detailView(_ req: Request) async throws -> Response {
+        let hasAccess = try await detailAccess(req)
+        guard hasAccess else {
+            throw Abort(.forbidden)
+        }
+        
         let model = try await findBy(identifier(req), on: req.db)
         return req.templates.renderHtml(detailTemplate(req, model))
     }
@@ -46,7 +51,7 @@ public extension AdminDetailController {
         [
             LinkContext(label: DatabaseModel.Module.featherIdentifier.uppercasedFirst,
                         dropLast: 2,
-                        permission: nil), //Model.Module.permission.key),
+                        permission: ApiModel.Module.permission(for: .detail).key),
             LinkContext(label: Self.modelName.plural.uppercasedFirst,
                         dropLast: 1,
                         permission: ApiModel.permission(for: .list).key),

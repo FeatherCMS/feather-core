@@ -92,7 +92,7 @@ struct WebMenuItemAdminController: AdminController {
         ]
     }
     
-    func detailBreadcrumbs(_ req: Request, _ model: WebMenuItemModel) -> [LinkContext] {
+    func detailBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
             LinkContext(label: WebModule.featherIdentifier.uppercasedFirst,
                         dropLast: 4,
@@ -109,7 +109,7 @@ struct WebMenuItemAdminController: AdminController {
         ]
     }
     
-    func updateBreadcrumbs(_ req: Request, _ model: WebMenuItemModel) -> [LinkContext] {
+    func updateBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
             LinkContext(label: WebModule.featherIdentifier.uppercasedFirst,
                         dropLast: 5,
