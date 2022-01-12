@@ -5,16 +5,16 @@
 //  Created by Tibor Bodecs on 2021. 11. 29..
 //
 
-public protocol FeatherModelEditor: FormComponent {
+public protocol FeatherModelEditor: FormEventResponder {
     associatedtype Model: FeatherDatabaseModel
     
     var model: Model { get }
-    var form: FeatherForm { get }
+    var form: AbstractForm { get }
     
-    init(model: Model, form: FeatherForm)
+    init(model: Model, form: AbstractForm)
         
-    @FormComponentBuilder
-    var formFields: [FormComponent] { get }
+    @FormFieldBuilder
+    var formFields: [FormField] { get }
 }
 
 public extension FeatherModelEditor {

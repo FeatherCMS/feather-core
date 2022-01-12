@@ -7,7 +7,7 @@
 
 struct UserInstallStepController: SystemInstallStepController {
 
-    private func render(_ req: Request, form: FeatherForm) -> Response {
+    private func render(_ req: Request, form: AbstractForm) -> Response {
         let template = UserInstallStepTemplate(.init(form: form.context(req)))
         return req.templates.renderHtml(template)
     }

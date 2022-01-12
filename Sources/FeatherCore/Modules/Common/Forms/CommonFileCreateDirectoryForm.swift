@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 22..
 //
 
-final class CommonFileCreateDirectoryForm: FeatherForm {
+final class CommonFileCreateDirectoryForm: AbstractForm {
 
     var name: String!
     
@@ -14,8 +14,8 @@ final class CommonFileCreateDirectoryForm: FeatherForm {
         self.submit = "Create"
     }
 
-    @FormComponentBuilder
-    override func createFields() -> [FormComponent] {
+    @FormFieldBuilder
+    override func createFields() -> [FormField] {
         InputField("name")
             .config {
                 $0.output.context.label.required = true

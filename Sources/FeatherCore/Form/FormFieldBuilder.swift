@@ -6,9 +6,9 @@
 //
 
 @resultBuilder
-public enum FormComponentBuilder {
+public enum FormFieldBuilder {
     
-    public static func buildBlock(_ components: FormComponent...) -> [FormComponent] {
+    public static func buildBlock(_ components: FormField...) -> [FormField] {
         components
     }
 }

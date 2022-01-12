@@ -5,15 +5,15 @@
 //  Created by Tibor Bodecs on 2021. 11. 26..
 //
 
-final class UserLoginForm: FeatherForm {
+final class UserLoginForm: AbstractForm {
 
     init() {
         super.init()
         self.submit = "Sign in"
     }
 
-    @FormComponentBuilder
-    override func createFields() -> [FormComponent] {
+    @FormFieldBuilder
+    override func createFields() -> [FormField] {
         InputField("email")
             .config {
                 $0.output.context.type = .email

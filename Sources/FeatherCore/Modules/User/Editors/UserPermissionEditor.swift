@@ -7,14 +7,14 @@
 
 struct UserPermissionEditor: FeatherModelEditor {
     let model: UserPermissionModel
-    let form: FeatherForm
+    let form: AbstractForm
 
-    init(model: UserPermissionModel, form: FeatherForm) {
+    init(model: UserPermissionModel, form: AbstractForm) {
         self.model = model
         self.form = form
     }
 
-    var formFields: [FormComponent] {
+    var formFields: [FormField] {
         InputField("namespace")
             .validators {
                 FormFieldValidator.required($1)

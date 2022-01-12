@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 11. 26..
 //
 
-public protocol FormComponent {
+public protocol FormEventResponder {
     
     func load(req: Request) async throws
     func process(req: Request) async throws
@@ -14,6 +14,5 @@ public protocol FormComponent {
     func write(req: Request) async throws
     func save(req: Request) async throws
     func read(req: Request) async throws
-
-    func render(req: Request) -> TemplateRepresentable
 }
+

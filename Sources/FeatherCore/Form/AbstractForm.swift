@@ -5,14 +5,14 @@
 //  Created by Tibor Bodecs on 2021. 11. 26..
 //
 
-open class FeatherForm: FormComponent {    
+open class AbstractForm: FormEventResponder {
 
     open var id: String
     open var token: String
     open var action: FormAction
     open var error: String?
     open var submit: String?
-    open var fields: [FormComponent] {
+    open var fields: [FormField] {
         didSet {
             if !fields.filter({ $0 is ImageField || $0 is MultifileField /*|| $0 is FileField*/ }).isEmpty {
                 action.enctype = .multipart
@@ -25,7 +25,7 @@ open class FeatherForm: FormComponent {
                 action: FormAction = .init(),
                 error: String? = nil,
                 submit: String? = nil,
-                fields: [FormComponent] = []) {
+                fields: [FormField] = []) {
         self.id = id
         self.token = token
         self.action = action
@@ -37,9 +37,9 @@ open class FeatherForm: FormComponent {
             self.fields = createFields()
         }
     }
-    
-    @FormComponentBuilder
-    open func createFields() -> [FormComponent] {
+
+    @FormFieldBuilder
+    open func createFields() -> [FormField] {
         
     }
 

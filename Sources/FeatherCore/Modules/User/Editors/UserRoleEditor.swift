@@ -7,14 +7,14 @@
 
 struct UserRoleEditor: FeatherModelEditor {
     let model: UserRoleModel
-    let form: FeatherForm
+    let form: AbstractForm
 
-    init(model: UserRoleModel, form: FeatherForm) {
+    init(model: UserRoleModel, form: AbstractForm) {
         self.model = model
         self.form = form
     }
 
-    var formFields: [FormComponent] {
+    var formFields: [FormField] {
         InputField("key")
             .config {
                 $0.output.context.label.required = true

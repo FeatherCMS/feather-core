@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 25..
 //
 
-final class UserInstallForm: FeatherForm {
+final class UserInstallForm: AbstractForm {
 
     var email: String = "root@feathercms.com"
     var password: String = "FeatherCMS"
@@ -16,8 +16,8 @@ final class UserInstallForm: FeatherForm {
         self.submit = "Create user"
     }
 
-    @FormComponentBuilder
-    override func createFields() -> [FormComponent] {
+    @FormFieldBuilder
+    override func createFields() -> [FormField] {
         InputField("email")
             .config {
                 $0.output.context.type = .email

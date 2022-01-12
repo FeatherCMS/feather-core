@@ -7,14 +7,14 @@
 
 struct WebMenuEditor: FeatherModelEditor {
     let model: WebMenuModel
-    let form: FeatherForm
+    let form: AbstractForm
 
-    init(model: WebMenuModel, form: FeatherForm) {
+    init(model: WebMenuModel, form: AbstractForm) {
         self.model = model
         self.form = form
     }
 
-    var formFields: [FormComponent] {
+    var formFields: [FormField] {
         InputField("key")
             .config {
                 $0.output.context.label.required = true

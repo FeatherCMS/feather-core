@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 01..
 //
 
-public final class ImageField: FormField<ImageInput, ImageFieldTemplate> {
+public final class ImageField: AbstractFormField<ImageInput, ImageFieldTemplate> {
 
     public var imageKey: String? {
         didSet {

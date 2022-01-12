@@ -7,14 +7,14 @@
 
 struct WebPageEditor: FeatherModelEditor {
     let model: WebPageModel
-    let form: FeatherForm
+    let form: AbstractForm
 
-    init(model: WebPageModel, form: FeatherForm) {
+    init(model: WebPageModel, form: AbstractForm) {
         self.model = model
         self.form = form
     }
 
-    var formFields: [FormComponent] {
+    var formFields: [FormField] {
         InputField("title")
             .config {
                 $0.output.context.label.required = true

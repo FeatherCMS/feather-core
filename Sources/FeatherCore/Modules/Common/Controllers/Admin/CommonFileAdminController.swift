@@ -15,7 +15,7 @@ struct CommonFileAdminController: CommonFileController {
     
     // MARK: - create directory
     
-    private func renderCreateDirectoryView(_ req: Request, form: FeatherForm) -> Response {
+    private func renderCreateDirectoryView(_ req: Request, form: AbstractForm) -> Response {
         let template = CommonFileCreateDirectoryTemplate(.init(form: form.context(req)))
         return req.templates.renderHtml(template)
     }
@@ -45,7 +45,7 @@ struct CommonFileAdminController: CommonFileController {
 
     // MARK: - upload
     
-    private func renderUploadView(_ req: Request, form: FeatherForm) -> Response {
+    private func renderUploadView(_ req: Request, form: AbstractForm) -> Response {
         let formatter = ByteCountFormatter()
         formatter.countStyle = .binary
         let byteCount = req.application.routes.defaultMaxBodySize

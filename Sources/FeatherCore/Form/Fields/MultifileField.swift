@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 01..
 //
 
-public final class MultifileField: FormField<[File], MultifileFieldTemplate> {
+public final class MultifileField: AbstractFormField<[File], MultifileFieldTemplate> {
 
     public convenience init(_ key: String) {
         self.init(key: key, input: [], output: .init(.init(key: key)))

@@ -7,14 +7,14 @@
 
 struct WebMenuItemEditor: FeatherModelEditor {
     let model: WebMenuItemModel
-    let form: FeatherForm
+    let form: AbstractForm
 
-    init(model: WebMenuItemModel, form: FeatherForm) {
+    init(model: WebMenuItemModel, form: AbstractForm) {
         self.model = model
         self.form = form
     }
 
-    var formFields: [FormComponent] {
+    var formFields: [FormField] {
         InputField("icon")
             .read { $1.output.context.value = model.icon }
             .write { model.icon = $1.input }

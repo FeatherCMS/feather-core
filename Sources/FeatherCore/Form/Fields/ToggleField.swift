@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 01..
 //
 
-public final class ToggleField: FormField<Bool, ToggleFieldTemplate> {
+public final class ToggleField: AbstractFormField<Bool, ToggleFieldTemplate> {
 
     public convenience init(_ key: String) {
         self.init(key: key, input: false, output: .init(.init(key: key)))

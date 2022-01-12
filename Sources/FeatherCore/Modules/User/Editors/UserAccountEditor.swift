@@ -7,14 +7,14 @@
 
 struct UserAccountEditor: FeatherModelEditor {
     let model: UserAccountModel
-    let form: FeatherForm
+    let form: AbstractForm
 
-    init(model: UserAccountModel, form: FeatherForm) {
+    init(model: UserAccountModel, form: AbstractForm) {
         self.model = model
         self.form = form
     }
 
-    var formFields: [FormComponent] {
+    var formFields: [FormField] {
         InputField("email")
             .config {
                 $0.output.context.type = .email

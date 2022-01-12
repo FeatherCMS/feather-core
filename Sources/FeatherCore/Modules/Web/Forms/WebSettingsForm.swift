@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 23..
 //
 
-final class WebSettingsForm: FeatherForm {
+final class WebSettingsForm: AbstractForm {
 
     init() {
         super.init()
@@ -14,8 +14,8 @@ final class WebSettingsForm: FeatherForm {
         self.submit = "Save"
     }
 
-    @FormComponentBuilder
-    override func createFields() -> [FormComponent] {
+    @FormFieldBuilder
+    override func createFields() -> [FormField] {
         ImageField("image", path: "feather")
             .read {
                 if let key = $0.variable("webSiteLogo") {

@@ -7,14 +7,14 @@
 
 struct WebMetadataEditor: FeatherModelEditor {
     let model: WebMetadataModel
-    let form: FeatherForm
+    let form: AbstractForm
 
-    init(model: WebMetadataModel, form: FeatherForm) {
+    init(model: WebMetadataModel, form: AbstractForm) {
         self.model = model
         self.form = form
     }
     
-    var formFields: [FormComponent] {
+    var formFields: [FormField] {
         InputField("slug")
             .validators {
                 FormFieldValidator($1, "Slug must be unique") { req, field in

@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 01..
 //
 
-public final class CheckboxField: FormField<[String], CheckboxFieldTemplate> {
+public final class CheckboxField: AbstractFormField<[String], CheckboxFieldTemplate> {
 
     public convenience init(_ key: String) {
         self.init(key: key, input: [], output: .init(.init(key: key)))

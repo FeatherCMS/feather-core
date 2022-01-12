@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 01..
 //
 
-public final class MultiselectField: FormField<[String], MultiselectFieldTemplate> {
+public final class MultiselectField: AbstractFormField<[String], MultiselectFieldTemplate> {
 
     public convenience init(_ key: String) {
         self.init(key: key, input: [], output: .init(.init(key: key)))

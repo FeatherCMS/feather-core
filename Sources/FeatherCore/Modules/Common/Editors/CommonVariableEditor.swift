@@ -7,15 +7,15 @@
 
 struct CommonVariableEditor: FeatherModelEditor {
     let model: CommonVariableModel
-    let form: FeatherForm
+    let form: AbstractForm
     
-    init(model: CommonVariableModel, form: FeatherForm) {
+    init(model: CommonVariableModel, form: AbstractForm) {
         self.model = model
         self.form = form
     }
 
-    @FormComponentBuilder
-    var formFields: [FormComponent] {
+    @FormFieldBuilder
+    var formFields: [FormField] {
         InputField("key")
             .config {
                 $0.output.context.label.required = true
