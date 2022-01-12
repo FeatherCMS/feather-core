@@ -40,12 +40,14 @@ struct WebRouter: FeatherRouter {
         args.routes.grouped("web").post("settings", use: settingsAdminController.settings)
         
         args.routes.get("web") { req -> Response in
-            let template = AdminModulePageTemplate(.init(title: "Web", message: "module information", links: [
-                .init(label: "Menus", path: "/admin/web/menus/"),
-                .init(label: "Pages", path: "/admin/web/pages/"),
-                .init(label: "Metadatas", path: "/admin/web/metadatas/"),
-                .init(label: "Settings", path: "/admin/web/settings/"),
-            ]))
+            let template = AdminModulePageTemplate(.init(title: "Web",
+                                                         message: "module information",
+                                                         navigation: [
+                                                            .init(label: "Menus", path: "/admin/web/menus/"),
+                                                            .init(label: "Pages", path: "/admin/web/pages/"),
+                                                            .init(label: "Metadatas", path: "/admin/web/metadatas/"),
+                                                            .init(label: "Settings", path: "/admin/web/settings/"),
+                                                         ]))
             return req.templates.renderHtml(template)
         }
     }

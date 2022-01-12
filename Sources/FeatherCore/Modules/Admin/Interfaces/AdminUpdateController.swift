@@ -73,8 +73,8 @@ public extension AdminUpdateController {
     func updateContext(_ req: Request, _ editor: UpdateModelEditor) async -> AdminEditorPageContext {
        .init(title: "Update " + Self.modelName.singular,
              form: editor.form.context(req),
+             navigation: updateNavigation(req, editor.model as! DatabaseModel),
              breadcrumbs: updateBreadcrumbs(req, editor.model as! DatabaseModel),
-             links: updateNavigation(req, editor.model as! DatabaseModel),
              actions: [
                 LinkContext(label: "Delete",
                             path: "delete/?redirect=" + req.url.path.pathComponents.dropLast(2).path + "&cancel=" + req.url.path,

@@ -26,7 +26,7 @@ public struct AdminModulePageTemplate: TemplateRepresentable {
             
             Section {
                 Ul {
-                    context.links.map { link in
+                    context.navigation.map { link in
                         Li {
                             A(link.label)
                                 .href(link.path)

@@ -30,10 +30,12 @@ struct CommonRouter: FeatherRouter {
         filesRoutes.post("delete", use: fileAdminController.deleteAction)
         
         args.routes.get("common") { req -> Response in
-            let template = AdminModulePageTemplate(.init(title: "Common", message: "module information", links: [
-                .init(label: "Variables", path: "/admin/common/variables/"),
-                .init(label: "Files", path: "/admin/common/files/"),
-            ]))
+            let template = AdminModulePageTemplate(.init(title: "Common",
+                                                         message: "module information",
+                                                         navigation: [
+                                                            .init(label: "Variables", path: "/admin/common/variables/"),
+                                                            .init(label: "Files", path: "/admin/common/files/"),
+                                                         ]))
             return req.templates.renderHtml(template)
         }
     }
