@@ -18,6 +18,8 @@ public protocol FeatherModelEditor: FormEventResponder {
 }
 
 public extension FeatherModelEditor {
+    
+    var formFields: [FormField] { [] }
 
     func load(req: Request) async throws {
         try await form.load(req: req)
