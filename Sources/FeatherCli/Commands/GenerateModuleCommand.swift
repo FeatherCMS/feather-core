@@ -56,9 +56,12 @@ struct GenerateModuleCommand: Command {
         }
         while addNextModel
         
-        console.info("Generating module...")
-//        let path = CommandLine.arguments[0]
-        let path = "/Users/tib/"
+        var path = CommandLine.arguments[0]
+        if path.contains("DerivedData") {
+            let arr = path.components(separatedBy: "/")
+            path = arr.dropLast(arr.count-3).joined(separator: "/")
+        }
+        console.info("Generating module at `\(path)`")
         try generateModule(ModuleDescriptor(name: moduleName, models: models), at: path)
         console.info("Module generated.")
     }
