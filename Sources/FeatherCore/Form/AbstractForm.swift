@@ -57,7 +57,7 @@ open class AbstractForm: FormEventResponder {
               fields: fields.map { $0.render(req: req) })
     }
     
-    // MARK: - FormComponent
+    // MARK: - FormField
 
     open func load(req: Request) async throws {
         token = req.generateNonce(for: id)

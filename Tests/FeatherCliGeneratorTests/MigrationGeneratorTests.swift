@@ -12,7 +12,7 @@ final class MigrationGeneratorTests: XCTestCase {
 
     func testGenerator() async throws {
         
-        let descriptor = ModuleDescriptor(name: "User", author: "", date: .init(), models: [
+        let descriptor = ModuleDescriptor(name: "User", models: [
             ModelDescriptor(name: "Account", properties: [
                 .init(name: "email", databaseType: .string, formFieldType: .text, isRequired: true, isSearchable: true, isOrderingAllowed: true),
                 .init(name: "password", databaseType: .string, formFieldType: .text, isRequired: true, isSearchable: true, isOrderingAllowed: true),

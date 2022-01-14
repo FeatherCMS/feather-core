@@ -11,7 +11,7 @@ import XCTest
 final class ApiModuleGeneratorTests: XCTestCase {
 
     func testGenerator() async throws {
-        let descriptor = ModuleDescriptor(name: "User", author: "", date: .init(), models: [])
+        let descriptor = ModuleDescriptor(name: "User", models: [])
         
         let result = ApiModuleGenerator(descriptor).generate()
         let expectation = """

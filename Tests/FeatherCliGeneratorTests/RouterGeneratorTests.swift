@@ -12,7 +12,7 @@ final class RouterGeneratorTests: XCTestCase {
 
     func testGenerator() async throws {
         
-        let descriptor = ModuleDescriptor(name: "User", author: "", date: .init(), models: [
+        let descriptor = ModuleDescriptor(name: "User", models: [
             ModelDescriptor(name: "Account", properties: [])
         ])
         

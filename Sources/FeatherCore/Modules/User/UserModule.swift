@@ -124,7 +124,7 @@ struct UserModule: FeatherModule {
         return permissions.map { .init($0) }
     }
 
-//    func formFieldsHook(args: HookArguments) async throws -> [FormComponent] {
+//    func formFieldsHook(args: HookArguments) async throws -> [FormField] {
 //        return [
 //            InputField("lorem")
 //                .validators {
