@@ -9,9 +9,9 @@ import SwiftHtml
 
 public struct MultifileFieldTemplate: TemplateRepresentable {
 
-    public var context: InputFieldContext
+    public var context: MultifileFieldContext
     
-    public init(_ context: InputFieldContext) {
+    public init(_ context: MultifileFieldContext) {
         self.context = context
     }
     
@@ -23,7 +23,7 @@ public struct MultifileFieldTemplate: TemplateRepresentable {
             .type(.file)
             .multiple()
             .key(context.key + "[]")
-//            .accept("")
+            .accept(context.accept)
             .class("field")
         if let error = context.error {
             Span(error)
