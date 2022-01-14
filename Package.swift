@@ -7,6 +7,7 @@ let package = Package(
        .macOS(.v12),
     ],
     products: [
+        .executable(name: "FeatherCli", targets: ["FeatherCli"]),
         .library(name: "FeatherCoreApi", targets: ["FeatherCoreApi"]),
         .library(name: "FeatherCoreSdk", targets: ["FeatherCoreSdk"]),
         .library(name: "FeatherCore", targets: ["FeatherCore"]),
@@ -20,6 +21,11 @@ let package = Package(
         .package(url: "https://github.com/binarybirds/swift-css", from: "1.0.0"),
     ],
     targets: [
+        .executableTarget(name: "FeatherCli", dependencies: [
+            .product(name: "Vapor", package: "vapor"),
+            .target(name: "FeatherCliGenerator"),
+        ]),
+        .target(name: "FeatherCliGenerator", dependencies: []),
         .target(name: "FeatherCoreApi", dependencies: []),
         .target(name: "FeatherCoreSdk", dependencies: [
             .target(name: "FeatherCoreApi"),
@@ -42,6 +48,9 @@ let package = Package(
         ]),
         .testTarget(name: "FeatherCoreSdkTests", dependencies: [
             .target(name: "FeatherCoreSdk"),
+        ]),
+        .testTarget(name: "FeatherCliGeneratorTests", dependencies: [
+            .target(name: "FeatherCliGenerator"),
         ])
     ]
 )
