@@ -19,7 +19,7 @@ public struct EditorGenerator {
     
     private func generateField(_ property: PropertyDescriptor) -> String {
         var res = """
-            InputField(\"\(property.name)\")
+            \(property.formFieldType.fieldName)(\"\(property.name)\")
         """
         if property.isRequired {
             res += """

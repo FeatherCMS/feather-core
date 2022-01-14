@@ -10,24 +10,29 @@ public struct PropertyDescriptor {
     public enum DatabaseFieldType: String, CaseIterable {
         case string
         case int
+        case double
         case bool
     }
 
     public enum FormFieldType: String, CaseIterable {
-        case checkboxBundle
-        case checkbox
-        case content
-        case file
-        case hidden
-        case image
         case input
-        case multipleFile
-        case multipleSelect
-        case radio
-        case select
-//        case submit
         case textarea
+        case content
+        case image
         case toggle
+        case radio
+        case checkbox
+        case checkboxBundle
+        case select
+        case multipleSelect
+        case file
+        case multipleFile
+        case hidden
+//        case submit
+
+        var fieldName: String {
+            rawValue.capitalized + "Field"
+        }
     }
 
     public let name: String
