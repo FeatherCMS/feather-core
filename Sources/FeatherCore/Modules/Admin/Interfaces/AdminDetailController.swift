@@ -10,7 +10,7 @@ public protocol AdminDetailController: DetailController {
     func detailView(_ req: Request) async throws -> Response
     func detailTemplate(_ req: Request, _ model: DatabaseModel) -> TemplateRepresentable
     
-    func detailFields(for model: DatabaseModel) -> [FieldContext]
+    func detailFields(for model: DatabaseModel) -> [DetailContext]
     func detailContext(_ req: Request, _ model: DatabaseModel) -> AdminDetailPageContext
     func detailBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
     func detailNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext]

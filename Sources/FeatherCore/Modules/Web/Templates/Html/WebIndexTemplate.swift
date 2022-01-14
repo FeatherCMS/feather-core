@@ -227,7 +227,7 @@ public struct WebIndexTemplate: TemplateRepresentable {
                             }
                         }
                         Nav {
-                            req.menuItems("footer").compactMap { $0.render(req) }
+                            req.menuItems("footer").map { LinkTemplate($0).render(req) }
                         }
                     }
                 }

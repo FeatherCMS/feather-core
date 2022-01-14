@@ -8,13 +8,13 @@
 public struct AdminDetailPageContext {
     
     public let title: String
-    public let fields: [FieldContext]
+    public let fields: [DetailContext]
     public let navigation: [LinkContext]
     public let breadcrumbs: [LinkContext]
     public let actions: [LinkContext]
 
     public init(title: String,
-                fields: [FieldContext],
+                fields: [DetailContext],
                 navigation: [LinkContext] = [],
                 breadcrumbs: [LinkContext] = [],
                 actions: [LinkContext] = []) {

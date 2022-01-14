@@ -81,7 +81,7 @@ public struct AdminIndexTemplate: TemplateRepresentable {
                                 .href(Feather.config.paths.admin.safePath())
                         }
                         
-                        context.breadcrumbs.compactMap { $0.render(req) }
+                        context.breadcrumbs.map { LinkTemplate($0).render(req) }
                     }
                 }
                 .class("breadcrumb")

@@ -42,7 +42,7 @@ struct WebMetadataAdminController: AdminListController, AdminDetailController, A
         ]
     }
     
-    func detailFields(for model: DatabaseModel) -> [FieldContext] {
+    func detailFields(for model: DatabaseModel) -> [DetailContext] {
         [
             .init("id", model.uuid.string),
 //            .init("module", model.module),

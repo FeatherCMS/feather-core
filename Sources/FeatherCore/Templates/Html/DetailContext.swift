@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 11. 28..
 //
 
-public struct FieldContext {
+public struct DetailContext {
 
     public enum `Type`: String {
         case text

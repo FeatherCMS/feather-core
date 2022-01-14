@@ -21,28 +21,16 @@ struct AdminDetailPageTemplate: TemplateRepresentable {
             Div {
                 Div {
                     H1(context.title)
-                    context.navigation.compactMap { $0.render(req) }
+                    context.navigation.map { LinkTemplate($0).render(req) }
                 }
                 .class("lead")
-               
+                
                 Dl {
-                    for field in context.fields {
-                        if let value = field.value {
-                            Dt(field.label)
-                            switch field.type {
-                            case .text:
-                                value.isEmpty ? Dd("&nbsp;") : Dd(value.replacingOccurrences(of: "\n", with: "<br>"))
-                            case .image:
-                                Dd {
-                                    Img(src: req.fs.resolve(key: value), alt: field.label)
-                                }
-                            }
-                        }
-                    }
+                    context.fields.map { DetailTemplate($0).render(req) }
                 }
 
                 Section {
-                    context.actions.compactMap { $0.render(req) }
+                    context.actions.map { LinkTemplate($0).render(req) }
                 }
             }
             .class("container")

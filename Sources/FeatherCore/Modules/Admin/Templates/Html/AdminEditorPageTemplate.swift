@@ -21,14 +21,14 @@ struct AdminEditorPageTemplate: TemplateRepresentable {
             Div {
                 Div {
                     H1(context.title)
-                    context.navigation.compactMap { $0.render(req) }
+                    context.navigation.map { LinkTemplate($0).render(req) }
                 }
                 .class("lead")
                
                 FormTemplate(context.form).render(req)
 
                 Section {
-                    context.actions.compactMap { $0.render(req) }
+                    context.actions.map { LinkTemplate($0).render(req) }
                 }
             }
             .class("container")

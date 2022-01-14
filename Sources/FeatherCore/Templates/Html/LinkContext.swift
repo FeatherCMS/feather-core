@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 2021. 11. 30..
 //
 
-import SwiftHtml
-
 public struct LinkContext {
 
     public enum Style {
@@ -55,9 +53,6 @@ public struct LinkContext {
         self.permission = permission
         self.style = style
     }
-}
-
-public extension LinkContext {
     
     func url(_ req: Request, _ infix: [PathComponent] = []) -> String {
         var finalUrl = path
@@ -65,15 +60,5 @@ public extension LinkContext {
             finalUrl = (req.url.path.pathComponents.dropLast(dropLast) + (infix + path.pathComponents)).path
         }
         return finalUrl.safePath()
-    }
-    
-    func render(_ req: Request) -> Tag? {
-        guard req.checkPermission(permission) else {
-            return nil
-        }
-        return A(label)
-            .href(url(req))
-            .target(.blank, isBlank)
-            .class(style.rawValue)
     }
 }

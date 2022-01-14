@@ -78,42 +78,7 @@ public struct TableTemplate: TemplateRepresentable {
                 for row in context.rows {
                     Tr {
                         for cell in row.cells {
-                            Td {
-                                // NOTE: refactor this later on...
-                                if let value = cell.value {
-                                    switch cell.type {
-                                    case .text:
-                                        if let link = cell.link {
-                                            if req.checkPermission(link.permission) {
-                                                A(link.label)
-                                                    .href(link.url(req, row.id.pathComponents))
-                                            }
-                                            else {
-                                                Text(link.label)
-                                            }
-                                        }
-                                        else {
-                                            Text(value)
-                                        }
-                                    case .image:
-                                        if let link = cell.link {
-                                            if req.checkPermission(link.permission) {
-                                                A {
-                                                    Img(src: req.fs.resolve(key: value), alt: link.label)
-                                                }
-                                                .href(link.url(req, row.id.pathComponents))
-                                            }
-                                            else {
-                                                Img(src: req.fs.resolve(key: value), alt: link.label)
-                                            }
-                                        }
-                                        else {
-                                            Img(src: req.fs.resolve(key: value), alt: row.id)
-                                        }
-                                    }
-                                }
-                            }
-                            .class("field")
+                            CellTemplate(cell, rowId: row.id).render(req)
                         }
 
                         availableActions(req).map { action in

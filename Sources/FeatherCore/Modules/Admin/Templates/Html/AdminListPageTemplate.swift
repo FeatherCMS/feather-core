@@ -21,7 +21,7 @@ public struct AdminListPageTemplate: TemplateRepresentable {
             Div {
                 H1(context.title)
                 P {
-                    context.navigation.compactMap { $0.render(req) }
+                    context.navigation.map { LinkTemplate($0).render(req) }
                 }
             }
             .class("lead")

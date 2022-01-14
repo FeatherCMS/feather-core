@@ -60,7 +60,7 @@ public struct AdminControllerGenerator {
                 ]
             }
             
-            func detailFields(for model: DatabaseModel) -> [FieldContext] {
+            func detailFields(for model: DatabaseModel) -> [DetailContext] {
                 [
                     .init("id", model.uuid.string),
                     \(details)
