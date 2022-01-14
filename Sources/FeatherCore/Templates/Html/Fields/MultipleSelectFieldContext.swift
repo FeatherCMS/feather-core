@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 01..
 //
 
-public struct MultiselectFieldContext {
+public struct MultipleSelectFieldContext {
     
     public let key: String
     public var label: LabelContext

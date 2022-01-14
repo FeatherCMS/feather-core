@@ -14,7 +14,7 @@ open class AbstractForm: FormEventResponder {
     open var submit: String?
     open var fields: [FormField] {
         didSet {
-            if !fields.filter({ $0 is ImageField || $0 is MultifileField /*|| $0 is FileField*/ }).isEmpty {
+            if !fields.filter({ $0 is ImageField || $0 is MultipleFileField /*|| $0 is FileField*/ }).isEmpty {
                 action.enctype = .multipart
             }
         }

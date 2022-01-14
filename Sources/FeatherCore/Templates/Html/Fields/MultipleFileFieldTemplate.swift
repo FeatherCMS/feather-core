@@ -7,11 +7,11 @@
 
 import SwiftHtml
 
-public struct MultifileFieldTemplate: TemplateRepresentable {
+public struct MultipleFileFieldTemplate: TemplateRepresentable {
 
-    public var context: MultifileFieldContext
+    public var context: MultipleFileFieldContext
     
-    public init(_ context: MultifileFieldContext) {
+    public init(_ context: MultipleFileFieldContext) {
         self.context = context
     }
     

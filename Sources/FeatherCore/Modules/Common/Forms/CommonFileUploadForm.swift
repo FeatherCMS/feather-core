@@ -17,7 +17,7 @@ final class CommonFileUploadForm: AbstractForm {
 
     @FormFieldBuilder
     override func createFields() -> [FormField] {
-        MultifileField("files")
+        MultipleFileField("files")
         .read { [unowned self] req, field in
             self.files = field.input
         }

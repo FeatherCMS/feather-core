@@ -7,11 +7,11 @@
 
 import SwiftHtml
 
-public struct MultiselectFieldTemplate: TemplateRepresentable {
+public struct MultipleSelectFieldTemplate: TemplateRepresentable {
 
-    var context: MultiselectFieldContext
+    var context: MultipleSelectFieldContext
     
-    public init(_ context: MultiselectFieldContext) {
+    public init(_ context: MultipleSelectFieldContext) {
         self.context = context
     }
     

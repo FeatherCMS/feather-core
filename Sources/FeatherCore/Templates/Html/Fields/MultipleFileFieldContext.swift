@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 01..
 //
 
-public struct MultifileFieldContext {
+public struct MultipleFileFieldContext {
 
     public var key: String
     public var label: LabelContext

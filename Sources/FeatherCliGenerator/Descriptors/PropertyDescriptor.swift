@@ -14,16 +14,20 @@ public struct PropertyDescriptor {
     }
 
     public enum FormFieldType: String, CaseIterable {
-        case text
-        case textarea
-        case content
-        case selection
-        case multiselection
-        case toggle
+        case checkboxBundle
         case checkbox
-        case radio
+        case content
         case file
+        case hidden
         case image
+        case input
+        case multipleFile
+        case multipleSelect
+        case radio
+        case select
+//        case submit
+        case textarea
+        case toggle
     }
 
     public let name: String
