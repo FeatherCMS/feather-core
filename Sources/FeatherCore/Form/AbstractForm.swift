@@ -7,6 +7,11 @@
 
 open class AbstractForm: FormEventResponder {
 
+    struct FormInput: Decodable {
+        let formId: String
+        let formToken: String
+    }
+    
     open var id: String
     open var token: String
     open var action: FormAction
