@@ -73,7 +73,7 @@ struct WebMetadataAdminController: AdminListController, AdminDetailController, A
             LinkContext(label: "Update",
                         path: Self.updatePathComponent.description,
                         permission: nil), //Self.updatePermission()),
-            // NOTE: store permission for the metadata reference?
+            // @NOTE: store permission for the metadata reference?
             LinkContext(label: "Preview",
                         path: model.slug.safePath(),
                         absolute: true,

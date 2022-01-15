@@ -11,14 +11,15 @@ let package = Package(
         .library(name: "FeatherCoreApi", targets: ["FeatherCoreApi"]),
         .library(name: "FeatherCoreSdk", targets: ["FeatherCoreSdk"]),
         .library(name: "FeatherCore", targets: ["FeatherCore"]),
+        .library(name: "XCTFeather", targets: ["XCTFeather"]),
     ],
     dependencies: [
         .package(url: "https://github.com/vapor/vapor", from: "4.54.0"),
         .package(url: "https://github.com/vapor/fluent", from: "4.4.0"),
         .package(url: "https://github.com/binarybirds/liquid", from: "1.3.0"),
         .package(url: "https://github.com/binarybirds/swift-html", from: "1.2.0"),
-//        .package(path: "../swift-html"),
         .package(url: "https://github.com/binarybirds/swift-css", from: "1.0.0"),
+        .package(url: "https://github.com/binarybirds/spec.git", from: "1.2.0"),
     ],
     targets: [
         .executableTarget(name: "FeatherCli", dependencies: [
@@ -43,6 +44,10 @@ let package = Package(
         ], resources: [
             .copy("Bundle"),
         ]),
+        .target(name: "XCTFeather", dependencies: [
+            .target(name: "FeatherCore"),
+            .product(name: "Spec", package: "spec"),
+        ]),
         .testTarget(name: "FeatherCoreTests", dependencies: [
             .target(name: "FeatherCore"),
         ]),
@@ -51,6 +56,11 @@ let package = Package(
         ]),
         .testTarget(name: "FeatherCliGeneratorTests", dependencies: [
             .target(name: "FeatherCliGenerator"),
+        ]),
+        .testTarget(name: "XCTFeatherTests", dependencies: [
+            .target(name: "XCTFeather"),
         ])
     ]
 )
+
+

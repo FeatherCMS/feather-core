@@ -117,8 +117,8 @@ extension WebMetadataModel {
 }
 
 extension FeatherDatabaseModel where Self: MetadataRepresentable {
-    
-    // TODO: better solution for this...
+
+    // @TODO: better solution for this...
     static func constructMetadataModel(for id: UUID, using input: FeatherMetadata) -> WebMetadataModel {
         .init(module: Module.featherIdentifier,
               model: Self.featherIdentifier,
@@ -128,7 +128,7 @@ extension FeatherDatabaseModel where Self: MetadataRepresentable {
               excerpt: input.excerpt,
               date: input.date,
               feedItem: input.feedItem,
-              filters: Feather.config.filters)
+              filters: []) //Feather.config.filters
     }
 
     static func queryMetadataBy(id: UUID, on db: Database) async throws -> QueryBuilder<WebMetadataModel> {

@@ -16,7 +16,7 @@ struct AdminRouter: FeatherRouter {
     func webRoutesHook(args: HookArguments) {
         let adminMiddlewares: [Middleware] = args.app.invokeAllFlat(.adminMiddlewares)
         let adminRoutes = args.routes
-            .grouped(Feather.config.paths.admin.pathComponent)
+            .grouped(args.app.feather.config.paths.admin.pathComponent)
             .grouped([
                 AccessGuardMiddleware(Admin.permission(for: .detail)),
                 AdminErrorMiddleware(),

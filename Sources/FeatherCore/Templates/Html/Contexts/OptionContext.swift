@@ -44,7 +44,7 @@ public extension OptionContext {
             .sorted(by: { $0.label < $1.label })
     }
 
-    /// NOTE: experimental gmt timezones
+    /// @NOTE: experimental gmt timezones
     static var gmtTimezones: [OptionContext] {
         TimeZone.knownTimeZoneIdentifiers
             .compactMap { TimeZone.init(identifier: $0) }
@@ -65,7 +65,7 @@ public extension OptionContext {
             }
     }
     
-    /// NOTE: experimental unique timezones (with most popular locations)
+    /// @NOTE: experimental unique timezones (with most popular locations)
     static var uniqueTimeZones: [OptionContext] {
         return [
             "Pacific/Pago_Pago": "GMT-11:00 - Midway Island, Samoa",

@@ -47,8 +47,8 @@ public struct WebIndexTemplate: TemplateRepresentable {
                     .name(.viewport)
                     .content(context.viewport)
 
-                // NOTE: come up with a better solution for this...
-                // TODO: check site noindex property!!!!
+                // @NOTE: come up with a better solution for this...
+                // @TODO: check site noindex property!!!!
                 if context.noindex {
                     Meta()
                         .name(.robots)
@@ -142,7 +142,7 @@ public struct WebIndexTemplate: TemplateRepresentable {
                         .css()
                 }
                 
-                // NOTE: come up with a better solution for this...
+                // @NOTE: come up with a better solution for this...
                 if let canonicalUrl = context.canonicalUrl, !canonicalUrl.isEmpty {
                     Link(rel: .canonical)
                         .href(canonicalUrl)
@@ -214,15 +214,15 @@ public struct WebIndexTemplate: TemplateRepresentable {
 
                                 if req.checkPermission(Admin.permission(for: .detail)) {
                                     A("Admin")
-                                        .href(Feather.config.paths.admin.safePath())
+                                        .href(req.feather.config.paths.admin.safePath())
                                 }
                                 A("Sign out")
-                                    .href(Feather.config.paths.logout.safePath())
+                                    .href(req.feather.config.paths.logout.safePath())
                             }
                             else {
-                                if req.url.path.safePath() != Feather.config.paths.login.safePath() {
+                                if req.url.path.safePath() != req.feather.config.paths.login.safePath() {
                                     A("Sign in")
-                                        .href(Feather.config.paths.login.safePath())
+                                        .href(req.feather.config.paths.login.safePath())
                                 }
                             }
                         }

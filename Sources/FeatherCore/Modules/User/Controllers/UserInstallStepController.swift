@@ -35,6 +35,6 @@ struct UserInstallStepController: SystemInstallStepController {
             .create(on: req.db)
         
         try await continueInstall(req, with: info.nextStep)
-        return req.redirect(to: installPath(for: info.nextStep))
+        return req.redirect(to: installPath(req, for: info.nextStep))
     }
 }

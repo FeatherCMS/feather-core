@@ -22,7 +22,7 @@ struct CommonFileApiController: CommonFileController {
         let key = try req.query.get(String.self, at: "key")
         let name = try req.query.get(String.self, at: "name")
 
-        // NOTE: use max value to limit file uploads?
+        // @NOTE: use max value to limit file uploads?
         guard
             let body = try await req.body.collect().get(),
             let data = body.getData(at: 0, length: body.readableBytes)

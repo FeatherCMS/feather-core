@@ -23,7 +23,7 @@ struct SystemRouter: FeatherRouter {
         
         let publicApiMiddlewares: [Middleware] = args.app.invokeAllFlat(.publicApiMiddlewares)
         let publicApiRoutes = args.routes
-            .grouped(Feather.config.paths.api.pathComponent)
+            .grouped(args.app.feather.config.paths.api.pathComponent)
             .grouped([SystemApiErrorMiddleware()])
             .grouped(publicApiMiddlewares)
         
@@ -35,7 +35,7 @@ struct SystemRouter: FeatherRouter {
 
         let apiMiddlewares: [Middleware] = args.app.invokeAllFlat(.apiMiddlewares)
         let apiRoutes = publicApiRoutes
-            .grouped(Feather.config.paths.admin.pathComponent)
+            .grouped(args.app.feather.config.paths.admin.pathComponent)
             .grouped(apiMiddlewares)
         var apiArguments = HookArguments()
         apiArguments.routes = apiRoutes
@@ -58,8 +58,8 @@ struct SystemRouter: FeatherRouter {
     // MARK: - catch all routes handler
 
     private func catchAll(_ req: Request) async throws -> Response {
-        guard Feather.config.install.isCompleted else {
-            let currentStep = Feather.config.install.currentStep
+        guard req.feather.config.install.isCompleted else {
+            let currentStep = req.feather.config.install.currentStep
             let steps: [SystemInstallStep] = req.invokeAllFlat(.installStep) + [.start, .finish]
             let orderedSteps = steps.sorted { $0.priority > $1.priority }.map(\.key)
 

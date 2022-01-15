@@ -28,7 +28,7 @@ public extension FeatherModelEditor {
     func process(req: Request) async throws {
         try await form.process(req: req)
     }
-    /// NOTE: throws instead of bool
+    /// @NOTE: throws instead of bool
     func validate(req: Request) async throws -> Bool {
         try await form.validate(req: req)
     }

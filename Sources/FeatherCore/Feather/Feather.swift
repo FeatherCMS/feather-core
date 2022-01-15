@@ -7,7 +7,7 @@
 
 import Vapor
 
-public struct Feather {
+public final class Feather {
     
     /*
      # .env example
@@ -19,33 +19,10 @@ public struct Feather {
      FEATHER_DISABLE_FILE_MIDDLEWARE=true
      FEATHER_DISABLE_API_SESSION_MIDDLEWARE=true
      */
-    private static let workDir = Environment.featherRequired("work_dir")
-    private static let https = Environment.featherBool("https")
-    private static let hostname = Environment.featherString("hostname", "127.0.0.1")
-    private static let port = Environment.featherInt("port", 8080)
-    private static let maxBodySize = ByteCount(stringLiteral: Environment.featherString("max_body_size", "10mb"))
-    private static let disableFileMiddleware = Environment.featherBool("disable_file_middleware")
-    internal static let disableApiSessionAuthMiddleware = Environment.featherBool("disable_api_session_middleware")
     
-    /// without trailing slash
-    public static let baseUrl: String = (Feather.https ? "https" : "http") + "://" + Feather.hostname + ":" + (Feather.port == 80 ? "" : String(Feather.port))
-
-    // paths are always absolute, with a trailing slash
-    public struct Paths {
-        public static let base = URL(fileURLWithPath: Feather.workDir)
-
-        public static let resources = base.appendingPathComponent(Directories.resources)
-        public static let `public` = base.appendingPathComponent(Directories.public)
-        public static let assets = `public`.appendingPathComponent(Directories.assets)
-        public static let css = `public`.appendingPathComponent(Directories.css)
-        public static let images = `public`.appendingPathComponent(Directories.images)
-        public static let javascript = `public`.appendingPathComponent(Directories.javascript)
-        public static let svg = `public`.appendingPathComponent(Directories.svg)
-    }
-
     // locations are always relative with a trailing slash
     public struct Directories {
-        public static let resources: String = "Resources"        
+        public static let resources: String = "Resources"
         public static let `public`: String = "Public"
         public static let assets: String = "assets"
         public static let css: String = "css"
@@ -53,15 +30,34 @@ public struct Feather {
         public static let javascript: String = "js"
         public static let svg: String = "svg"
     }
+
+    // paths are always absolute, with a trailing slash
+    public struct Paths {
+        public let base: URL
+
+        init(_ path: String) {
+            self.base = URL(fileURLWithPath: path)
+        }
+
+        public var resources: URL { base.appendingPathComponent(Directories.resources) }
+        public var `public`: URL {  base.appendingPathComponent(Directories.public) }
+        public var assets: URL {  `public`.appendingPathComponent(Directories.assets) }
+        public var css: URL {  `public`.appendingPathComponent(Directories.css) }
+        public var images: URL {  `public`.appendingPathComponent(Directories.images) }
+        public var javascript: URL {  `public`.appendingPathComponent(Directories.javascript) }
+        public var svg: URL {  `public`.appendingPathComponent(Directories.svg) }
+    }
     
     /// Logger for messages not associated with a request.  Requests have their own logger instance.
     public static let logger = Logger(label: "feather-core")
 
+    
     public static func dateFormatter(dateStyle: DateFormatter.Style = .short,
                                      timeStyle: DateFormatter.Style = .short) -> DateFormatter {
         let formatter = DateFormatter()
-        formatter.timeZone = TimeZone(identifier: Feather.config.region.timezone)
-        formatter.locale = Locale(identifier: Feather.config.region.locale)
+        #warning("fixme")
+//        formatter.timeZone = TimeZone(identifier: Feather.config.region.timezone)
+//        formatter.locale = Locale(identifier: Feather.config.region.locale)
         formatter.dateStyle = dateStyle
         formatter.timeStyle = timeStyle
         return formatter
@@ -70,14 +66,69 @@ public struct Feather {
     var app: Application
     public private(set) var modules: [FeatherModule]
     
+    public let baseUrl: String
+    public let workDir: String
+    public let https: Bool
+    public let hostname: String
+    public let port: Int
+    public let maxBodySize: ByteCount
+    public let disableFileMiddleware: Bool
+    public let disableApiSessionAuthMiddleware: Bool
+    public let paths: Paths
+    
+    private var _variables: Config?
+    private var _configUrl: URL {
+        paths.resources.appendingPathComponent("config").appendingPathExtension("json")
+    }
+
+    public var config: Config {
+        get {
+            guard _variables == nil else {
+                return _variables!
+            }
+            do {
+                let data = try Data(contentsOf: _configUrl)
+                _variables = try JSONDecoder().decode(Config.self, from: data)
+            }
+            catch {
+                _variables = .default
+            }
+            return _variables!
+        }
+        set {
+            do {
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = .prettyPrinted
+                let data = try encoder.encode(newValue)
+                try data.write(to: _configUrl)
+                _variables = newValue
+            }
+            catch {
+                Feather.logger.error("Error writing \(_configUrl): \(error.localizedDescription)")
+            }
+        }
+    }
+    
     public init(app: Application) {
         self.app = app
         self.modules = []
+        
+        self.workDir = Environment.featherRequired("work_dir") + (app.environment == .testing ? UUID().uuidString + "/" : "")
+        self.https = Environment.featherBool("https")
+        self.hostname = Environment.featherString("hostname", "127.0.0.1")
+        self.port = Environment.featherInt("port", 8080)
+        self.maxBodySize = ByteCount(stringLiteral: Environment.featherString("max_body_size", "10mb"))
+        self.disableFileMiddleware = Environment.featherBool("disable_file_middleware")
+        self.disableApiSessionAuthMiddleware = Environment.featherBool("disable_api_session_middleware")
+        self.baseUrl = (https ? "https" : "http") + "://" + hostname + ":" + (port == 80 ? "" : String(port))
+        self.paths = Paths(workDir)
     }
 
-    
-    public mutating func start(_ userModules: [FeatherModule] = []) throws {
-        
+    public func boot() {
+        app.directory = .init(workingDirectory: workDir)
+    }
+
+    public func start(_ userModules: [FeatherModule] = []) throws {
         guard app.databases.configuration() != nil else {
             fatalError("Missing database configuration")
         }
@@ -85,14 +136,14 @@ public struct Feather {
             fatalError("Missing file storage configuration")
         }
         
-        app.http.server.configuration.hostname = Self.hostname
-        app.http.server.configuration.port = Self.port
-        app.routes.defaultMaxBodySize = Self.maxBodySize
+        app.http.server.configuration.hostname = hostname
+        app.http.server.configuration.port = port
+        app.routes.defaultMaxBodySize = maxBodySize
         
-        if !Self.disableFileMiddleware {
+        if !disableFileMiddleware {
             app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
         }
-        
+
         app.sessions.use(.fluent)
         app.migrations.add(SessionRecord.migration)
         app.middleware.use(app.sessions.middleware)
@@ -123,8 +174,8 @@ private extension Feather {
     
     func createRequiredDirectories() throws {
         let fm = FileManager.default
-        try fm.createDirectory(at: Feather.Paths.public)
-        try fm.createDirectory(at: Feather.Paths.resources)
+        try fm.createDirectory(at: paths.public)
+        try fm.createDirectory(at: paths.resources)
     }
 
     func copyPublicFiles(at url: URL, to name: String) throws {
@@ -143,7 +194,7 @@ private extension Feather {
             let assetFiles = try fm.contentsOfDirectory(atPath: dirUrl.path)
             for file in assetFiles {
                 let fileUrl = dirUrl.appendingPathComponent(file)
-                let destDir = Feather.Paths.public
+                let destDir = paths.public
                     .appendingPathComponent(dir)
                     .appendingPathComponent(name.lowercased())
                 let destFile = destDir.appendingPathComponent(file)

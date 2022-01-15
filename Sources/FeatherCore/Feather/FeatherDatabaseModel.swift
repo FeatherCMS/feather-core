@@ -14,7 +14,7 @@ public protocol FeatherDatabaseModel: Model where Self.IDValue == UUID {
 
     var uuid: UUID { get }
     
-    // TODO: check call site for id param values...
+    // @TODO: check call site for id param values...
     static func isUnique(_ req: Request, _ filter: ModelValueFilter<Self>, _ id: UUID?) async throws -> Bool
 }
 

@@ -6,6 +6,7 @@
 //
 
 import Vapor
+import Darwin
 
 extension FeatherToken: Content {}
 extension FeatherAccount: Content {}
@@ -141,10 +142,14 @@ struct UserModule: FeatherModule {
         ]
     }
     
+    private func adminLogin(_ feather: Feather) -> String {
+        "/\(feather.config.paths.login)/?\(feather.config.paths.redirectQueryKey)=/\(feather.config.paths.admin)/"
+    }
+
     func adminMiddlewaresHook(args: HookArguments) -> [Middleware] {
         [
             UserAccountSessionAuthenticator(),
-            FeatherAccount.redirectMiddleware(path: Feather.config.paths.adminLogin),
+            FeatherAccount.redirectMiddleware(path: adminLogin(args.app.feather)),
         ]
     }
     
@@ -152,7 +157,7 @@ struct UserModule: FeatherModule {
         var middlewares: [Middleware] = [
             UserAccountTokenAuthenticator(),
         ]
-        if !Feather.disableApiSessionAuthMiddleware {
+        if !args.app.feather.disableApiSessionAuthMiddleware {
             middlewares.append(UserAccountSessionAuthenticator())
         }
         return middlewares + [FeatherAccount.guardMiddleware()]

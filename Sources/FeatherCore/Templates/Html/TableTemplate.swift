@@ -16,7 +16,7 @@ public struct TableTemplate: TemplateRepresentable {
     }
     
     func availableActions(_ req: Request) -> [LinkContext] {
-        // NOTE: cache?
+        // @NOTE: cache?
         context.actions.compactMap { action -> LinkContext? in
             guard req.checkPermission(action.permission) else {
                 return nil
@@ -26,7 +26,7 @@ public struct TableTemplate: TemplateRepresentable {
     }
     
     func css(_ req: Request) -> String {
-        /// NOTE: col.width support
+        /// @NOTE: col.width support
         let size = context.columns.map { _ in "1fr" } + availableActions(req).map { _ in "4rem" }
         return """
         tr {

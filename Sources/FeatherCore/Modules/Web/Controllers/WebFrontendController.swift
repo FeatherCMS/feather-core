@@ -32,11 +32,11 @@ struct WebFrontendController {
 
     func renderRobotsTemplate(_ req: Request) async throws -> Response {
         let robots = """
-            Sitemap: \(Feather.baseUrl)\(Feather.config.paths.sitemap.safePath())
+            Sitemap: \(req.feather.baseUrl)\(req.feather.config.paths.sitemap.safePath())
 
             User-agent: *
-            Disallow: \(Feather.config.paths.admin.safePath())
-            Disallow: \(Feather.config.paths.api.safePath())
+            Disallow: \(req.feather.config.paths.admin.safePath())
+            Disallow: \(req.feather.config.paths.api.safePath())
             """
         return Response(status: .ok,
                         headers: [

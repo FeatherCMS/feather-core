@@ -15,11 +15,11 @@ struct UserRouter: FeatherRouter {
     
     func webRoutesHook(args: HookArguments) {
         args.routes.grouped(UserAccountSessionAuthenticator())
-            .get(Feather.config.paths.login.pathComponent, use: authController.loginView)
+            .get(args.app.feather.config.paths.login.pathComponent, use: authController.loginView)
         args.routes.grouped(UserAccountCredentialsAuthenticator())
-            .post(Feather.config.paths.login.pathComponent, use: authController.login)
+            .post(args.app.feather.config.paths.login.pathComponent, use: authController.login)
         args.routes.grouped(UserAccountSessionAuthenticator())
-            .get(Feather.config.paths.logout.pathComponent, use: authController.logout)
+            .get(args.app.feather.config.paths.logout.pathComponent, use: authController.logout)
     }
     
     func adminRoutesHook(args: HookArguments) {
@@ -48,7 +48,7 @@ struct UserRouter: FeatherRouter {
     func publicApiRoutesHook(args: HookArguments) {
         args.routes
             .grouped(UserAccountCredentialsAuthenticator())
-            .post(Feather.config.paths.login.pathComponent, use: authController.loginApi)
+            .post(args.app.feather.config.paths.login.pathComponent, use: authController.loginApi)
     }
 
     func apiRoutesHook(args: HookArguments) {

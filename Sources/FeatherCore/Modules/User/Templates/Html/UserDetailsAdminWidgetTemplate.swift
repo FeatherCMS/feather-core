@@ -16,7 +16,7 @@ struct UserDetailsAdminWidgetTemplate: TemplateRepresentable {
             Li(req.auth.get(FeatherAccount.self)?.email ?? "unknown")
             Li {
                 A("Sign out")
-                    .href("/" + Feather.config.paths.logout)
+                    .href("/" + req.feather.config.paths.logout)
             }
         }
     }

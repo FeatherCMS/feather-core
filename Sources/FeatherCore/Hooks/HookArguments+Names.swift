@@ -53,9 +53,9 @@ public extension HookArguments {
     }
 
     var installInfo: SystemInstallInfo {
-        SystemInstallInfo(currentStep: Feather.config.install.currentStep,
+        SystemInstallInfo(currentStep: req.feather.config.install.currentStep,
                           nextStep: nextInstallStep,
-                          performStep: req.query[Feather.config.install.nextQueryKey] ?? false)
+                          performStep: req.query[req.feather.config.install.nextQueryKey] ?? false)
     }
     
 }

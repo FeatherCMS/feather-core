@@ -16,7 +16,7 @@ struct UserAuthController {
     }
 
     private func getCustomRedirect(_ req: Request) -> String {
-        if let customRedirect: String = req.query[Feather.config.paths.redirectQueryKey], !customRedirect.isEmpty {
+        if let customRedirect: String = req.query[req.feather.config.paths.redirectQueryKey], !customRedirect.isEmpty {
             return customRedirect.safePath()
         }
         return "/"

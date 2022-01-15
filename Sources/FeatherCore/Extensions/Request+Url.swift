@@ -12,7 +12,7 @@ public extension Request {
     }
     
     func absoluteUrl(_ path: String) -> String {
-        Feather.baseUrl + path.safePath()
+        feather.baseUrl + path.safePath()
     }
         
 }

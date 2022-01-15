@@ -68,7 +68,7 @@ struct WebMenuItemAdminController: AdminController {
     }
     
 
-    // NOTE: simplify this after we've got a pattern.
+    // @NOTE: simplify this after we've got a pattern.
 
     func getBaseRoutes(_ routes: RoutesBuilder) -> RoutesBuilder {
         routes

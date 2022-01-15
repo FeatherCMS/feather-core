@@ -12,7 +12,7 @@ struct SystemStartInstallStepController: SystemInstallStepController {
                                                        title: "Install site",
                                                        message: "First we have to setup the necessary components.",
                                                        link: .init(label: "Start installation →",
-                                                                   path: installPath(for: info.currentStep, next: true))))
+                                                                   path: installPath(req, for: info.currentStep, next: true))))
         return req.templates.renderHtml(template)
     }
 
@@ -20,7 +20,7 @@ struct SystemStartInstallStepController: SystemInstallStepController {
         let _: [Void] = try await req.invokeAllAsync(.install)
         try await installAssets(req)
         try await continueInstall(req, with: info.nextStep)
-        return req.redirect(to: installPath(for: info.nextStep))
+        return req.redirect(to: installPath(req, for: info.nextStep))
     }
     
     func installAssets(_ req: Request) async throws {
@@ -41,7 +41,7 @@ struct SystemStartInstallStepController: SystemInstallStepController {
 
                 for file in assetFiles {
                     let fileUrl = dirUrl.appendingPathComponent(file)
-                    /// NOTE: this is not the best solution, but it works for now... both the key & data lines.
+                    /// @NOTE: this is not the best solution, but it works for now... both the key & data lines.
                     let key = (moduleName + "/" + dir + "/" + file).safePath()
                     let data = try Data(contentsOf: fileUrl)
                     _ = try await req.fs.upload(key: key, data: data)

@@ -6,7 +6,7 @@
 //
 
 extension Environment {
-
+    
     private static func featherKey(_ key: String) -> String {
         ("feather_" + key).uppercased()
     }

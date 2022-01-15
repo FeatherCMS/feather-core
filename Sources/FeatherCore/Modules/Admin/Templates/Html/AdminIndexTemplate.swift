@@ -65,7 +65,7 @@ public struct AdminIndexTemplate: TemplateRepresentable {
 
                         Div {
                             A("Sign out")
-                                .href(Feather.config.paths.logout.safePath())
+                                .href(req.feather.config.paths.logout.safePath())
 //                                .class("selected", req.url.path == "/")
                         }
                         .class("menu-items")
@@ -78,7 +78,7 @@ public struct AdminIndexTemplate: TemplateRepresentable {
                     Nav {
                         if req.checkPermission(Admin.permission(for: .detail)) {
                             A("Admin")
-                                .href(Feather.config.paths.admin.safePath())
+                                .href(req.feather.config.paths.admin.safePath())
                         }
                         
                         context.breadcrumbs.map { LinkTemplate($0).render(req) }

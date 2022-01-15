@@ -7,6 +7,7 @@
 
 import SwiftHtml
 import SwiftCss
+import Vapor
 
 public struct TemplateRenderer {
     
@@ -16,10 +17,10 @@ public struct TemplateRenderer {
         self.req = req
     }
     
-    public func renderHtml(_ template: TemplateRepresentable, minify: Bool = true, indent: Int = 4) -> Response {
+    public func renderHtml(_ template: TemplateRepresentable, minify: Bool = true, indent: Int = 4, status: HTTPStatus = .ok) -> Response {
         let doc = Document(.html) { template.render(req) }
         let html = DocumentRenderer(minify: minify, indent: indent).render(doc)
-        return Response(status: .ok,
+        return Response(status: status,
                         headers: ["content-type": "text/html"],
                         body: .init(string: html))
     }
