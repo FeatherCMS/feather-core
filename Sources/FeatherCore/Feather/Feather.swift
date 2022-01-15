@@ -63,7 +63,7 @@ public final class Feather {
         return formatter
     }
 
-    var app: Application
+    unowned var app: Application
     public private(set) var modules: [FeatherModule]
     
     public let baseUrl: String
