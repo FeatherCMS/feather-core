@@ -58,18 +58,18 @@ open class FeatherTestApp {
             .get("/login/")
             .expect(.ok)
             .expect(.html)
-            .test(.inMemory)
+            .test()
         
         try app.describe("User should be able to log in")
             .post("/login/")
             .body(PostData(formId: "", formToken: "", email: email, password: password))
             .expect(.seeOther)
-            .expect { [unowned self] value in
-                XCTAssertNotNil(value.headers.setCookie)
-                XCTAssertTrue(value.body.string.isEmpty)
-                cookies = value.headers.setCookie
+            .expect { [unowned self] res in
+                XCTAssertNotNil(res.headers.setCookie)
+                XCTAssertTrue(res.body.string.isEmpty)
+                cookies = res.headers.setCookie
             }
-            .test(.inMemory)
+            .test()
     }
 
     open func setUp() throws {
