@@ -24,7 +24,9 @@ struct CommonFileBrowserTemplate: TemplateRepresentable {
     
     @TagBuilder
     func render(_ req: Request) -> Tag {
-        AdminIndexTemplate(.init(title: "File browser")) {
+        AdminIndexTemplate(.init(title: "File browser", breadcrumbs: [
+            LinkContext(label: "Common", dropLast: 1),
+        ])) {
             Div {
                 Div {
                     H1("File browser")

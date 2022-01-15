@@ -24,7 +24,10 @@ struct CommonFileCreateDirectoryTemplate: TemplateRepresentable {
     
     @TagBuilder
     func render(_ req: Request) -> Tag {
-        AdminIndexTemplate(.init(title: "Create directory")) {
+        AdminIndexTemplate(.init(title: "Create directory", breadcrumbs: [
+            LinkContext(label: "Common", dropLast: 2),
+            LinkContext(label: "Files", dropLast: 1),
+        ])) {
             Div {
                 Div {
                     H1("Create directory")

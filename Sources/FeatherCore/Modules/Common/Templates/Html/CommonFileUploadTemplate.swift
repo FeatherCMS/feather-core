@@ -24,7 +24,10 @@ struct CommonFileUploadTemplate: TemplateRepresentable {
     
     @TagBuilder
     func render(_ req: Request) -> Tag {
-        AdminIndexTemplate(.init(title: "Upload files")) {
+        AdminIndexTemplate(.init(title: "Upload files", breadcrumbs: [
+            LinkContext(label: "Common", dropLast: 2),
+            LinkContext(label: "Files", dropLast: 1),
+        ])) {
             Div {
                 Div {
                     H1("Upload files")
