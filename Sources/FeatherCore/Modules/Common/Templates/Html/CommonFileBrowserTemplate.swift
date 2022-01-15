@@ -45,6 +45,7 @@ struct CommonFileBrowserTemplate: TemplateRepresentable {
                             Td("Name")
                             if req.checkPermission("file.browser.delete") {
                                 Td("Delete")
+                                    .class("action")
                             }
                         }
                     }
@@ -52,8 +53,11 @@ struct CommonFileBrowserTemplate: TemplateRepresentable {
                         if let parent = context.list.parent {
                             Tr {
                                 Td {
-                                    A("dir")
-                                        .href((req.url.path.safePath() + "?key=" + parent.key))
+                                    A {
+                                        Img(src: "/svg/web/folder.svg", alt: parent.key)
+                                            .style("width: 32px; height: 32px;")
+                                    }
+                                    .href((req.url.path.safePath() + "?key=" + parent.key))
                                 }
                                 Td {
                                     A("..")
@@ -61,6 +65,7 @@ struct CommonFileBrowserTemplate: TemplateRepresentable {
                                 }
                                 if req.checkPermission("file.browser.delete") {
                                     Td("&nbsp;")
+                                        .class("action")
                                 }
                             }
                         }
@@ -72,7 +77,7 @@ struct CommonFileBrowserTemplate: TemplateRepresentable {
                                         Td {
                                             A {
                                                 Img(src: req.fs.resolve(key: item.key), alt: item.name)
-                                                    .style("width: 128px")
+                                                    .style("width: 32px; max-height: 32px;")
                                             }
                                             .href(req.fs.resolve(key: item.key))
                                             .target(.blank)
@@ -83,7 +88,10 @@ struct CommonFileBrowserTemplate: TemplateRepresentable {
                                     }
                                 }
                                 else {
-                                    Td("dir")
+                                    Td {
+                                        Img(src: "/svg/web/folder.svg", alt: item.key)
+                                            .style("width: 32px; height: 32px;")
+                                    }
                                 }
                                 
                                 Td {
@@ -101,8 +109,12 @@ struct CommonFileBrowserTemplate: TemplateRepresentable {
                                 if req.checkPermission("file.browser.delete") {
                                     Td {
                                         A("Delete")
-                                            .href(("/admin/common/files/delete/".safePath() + "?key=" + item.key))
+                                            .href(("/admin/common/files/delete/".safePath() +
+                                                   "?key=" + item.key +
+                                                   "&cancel=" + req.url.path + "?key=" + currentKey(req) +
+                                                   "&redirect=" + req.url.path + "?key=" + currentKey(req)))
                                     }
+                                    .class("action")
                                 }
                             }
                         }

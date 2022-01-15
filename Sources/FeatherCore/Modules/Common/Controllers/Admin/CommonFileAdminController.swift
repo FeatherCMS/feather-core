@@ -117,8 +117,8 @@ struct CommonFileAdminController: CommonFileController {
             try await req.fs.delete(key: keyValue)
         }
 
-        var url = "/admin/common/files/" //req.url.path//.trimmingLastPathComponents(2)
-        if let redirect = try? req.content.get(String.self, at: "redirect") {
+        var url = "/admin/common/files/"
+        if let redirect = try? req.query.get(String.self, at: "redirect") {
             url = redirect
         }
         return req.redirect(to: url)
