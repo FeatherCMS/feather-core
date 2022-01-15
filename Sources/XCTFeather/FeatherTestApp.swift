@@ -75,9 +75,6 @@ open class FeatherTestApp {
     open func setUp() throws {
         app.feather.boot()
         try configure()
-
-        print("Setup", self.app, "-------------", app.directory.workingDirectory)
-
         try app.feather.start(testModules())
 
         if try checkInstall() {
@@ -94,7 +91,7 @@ open class FeatherTestApp {
             try FileManager.default.removeItem(at: path)
         }
         catch {
-            // do nothing...
+            print(error.localizedDescription)
         }
     }
 }
