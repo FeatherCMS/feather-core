@@ -16,7 +16,7 @@ public struct MigrationGenerator {
     }
     
     func generatePropertyField(_ property: PropertyDescriptor, modelName: String) -> String {
-        ".field(\(descriptor.name)\(modelName)Model.FieldKeys.v1.\(property.name), \(property.databaseType)" + (property.isRequired ? ", .required)": ")")
+        ".field(\(descriptor.name)\(modelName)Model.FieldKeys.v1.\(property.name), .\(property.databaseType)" + (property.isRequired ? ", .required)": ")")
     }
 
     func generateModelPrepare(_ model: ModelDescriptor) -> String {

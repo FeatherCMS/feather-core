@@ -25,12 +25,10 @@ public struct ModuleGenerator {
             let router = \(descriptor.name)Router()
 
             func boot(_ app: Application) throws {
-                app.migrations.add(UserMigrations.v1())
+                app.migrations.add(\(descriptor.name)Migrations.v1())
 
-                app.hooks.register(.webRoutes, use: router.webRoutesHook)
                 app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
                 app.hooks.register(.apiRoutes, use: router.apiRoutesHook)
-                app.hooks.register(.publicApiRoutes, use: router.publicApiRoutesHook)
                 app.hooks.register(.installUserPermissions, use: installUserPermissionsHook)
                 
                 try router.boot(app)

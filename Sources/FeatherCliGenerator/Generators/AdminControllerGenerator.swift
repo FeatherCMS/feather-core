@@ -17,7 +17,7 @@ public struct AdminControllerGenerator {
     
     public func generate() -> String {
         let orders = descriptor.properties.filter { $0.isOrderingAllowed }.map { "\"" + $0.name + "\"" }.joined(separator: ",\n")
-        let search = descriptor.properties.filter { $0.isSearchable }.map { "\\.$" + $0.name + "~~ term" }.joined(separator: ",\n")
+        let search = descriptor.properties.filter { $0.isSearchable }.map { "\\.$" + $0.name + " ~~ term" }.joined(separator: ",\n")
         let columns = descriptor.properties.filter { $0.isOrderingAllowed }.map { ".init(\"" + $0.name + "\")" }.joined(separator: ",\n")
         
         let cells = descriptor.properties.filter { $0.isOrderingAllowed }.map {
@@ -29,7 +29,7 @@ public struct AdminControllerGenerator {
         }.joined(separator: ",\n")
 
         return """
-        struct \(module)AccountAdminController: AdminController {
+        struct \(module)\(descriptor.name)AdminController: AdminController {
             typealias ApiModel = \(module).\(descriptor.name)
             typealias DatabaseModel = \(module)\(descriptor.name)Model
             

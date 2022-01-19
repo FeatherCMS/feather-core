@@ -21,7 +21,7 @@ public struct ApiControllerGenerator {
         extension \(module).\(descriptor.name).List: Content {}
         extension \(module).\(descriptor.name).Detail: Content {}
 
-        struct \(module)AccountApiController: ApiController {
+        struct \(module)\(descriptor.name)ApiController: ApiController {
             typealias ApiModel = \(module).\(descriptor.name)
             typealias DatabaseModel = \(module)\(descriptor.name)Model
             
