@@ -14,8 +14,8 @@ final class MigrationGeneratorTests: XCTestCase {
         
         let descriptor = ModuleDescriptor(name: "User", models: [
             ModelDescriptor(name: "Account", properties: [
-                .init(name: "email", databaseType: .string, formFieldType: .text, isRequired: true, isSearchable: true, isOrderingAllowed: true),
-                .init(name: "password", databaseType: .string, formFieldType: .text, isRequired: true, isSearchable: true, isOrderingAllowed: true),
+                .init(name: "email", databaseType: .string, formFieldType: .input, isRequired: true, isSearchable: true, isOrderingAllowed: true),
+                .init(name: "password", databaseType: .string, formFieldType: .input, isRequired: true, isSearchable: true, isOrderingAllowed: true),
             ])
         ])
         
@@ -28,8 +28,8 @@ final class MigrationGeneratorTests: XCTestCase {
                     func prepare(on db: Database) async throws {
                        try await db.schema(UserAccountModel.schema)
                             .id()
-                            .field(UserAccountModel.FieldKeys.v1.email, string, .required)
-                            .field(UserAccountModel.FieldKeys.v1.password, string, .required)
+                            .field(UserAccountModel.FieldKeys.v1.email, .string, .required)
+                            .field(UserAccountModel.FieldKeys.v1.password, .string, .required)
                             .create()
                     }
 

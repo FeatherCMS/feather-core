@@ -12,8 +12,8 @@ final class EditorGeneratorTests: XCTestCase {
 
     func testGenerator() async throws {
         let descriptor = ModelDescriptor(name: "Account", properties: [
-            .init(name: "email", databaseType: .string, formFieldType: .text, isRequired: false, isSearchable: true, isOrderingAllowed: true),
-            .init(name: "password", databaseType: .string, formFieldType: .text, isRequired: true, isSearchable: true, isOrderingAllowed: true),
+            .init(name: "email", databaseType: .string, formFieldType: .input, isRequired: false, isSearchable: true, isOrderingAllowed: true),
+            .init(name: "password", databaseType: .string, formFieldType: .input, isRequired: true, isSearchable: true, isOrderingAllowed: true),
         ])
         
         let result = EditorGenerator(descriptor, module: "User").generate()

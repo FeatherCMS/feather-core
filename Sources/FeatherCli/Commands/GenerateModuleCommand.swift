@@ -92,6 +92,10 @@ struct GenerateModuleCommand: Command {
         try forceCreateDirectory(at: moduleUrl)
         try forceWrite(moduleFileContents, at: moduleFile)
         
+        let builderFileContents = ModuleBuilderGenerator(moduleDescriptor).generate()
+        let builderFile = moduleUrl.appendingPathComponent(moduleDescriptor.name + "Builder.swift")
+        try forceWrite(builderFileContents, at: builderFile)
+        
         // APIs
         let apiUrl = baseUrl.appendingPathComponent(moduleDescriptor.name + "Api")
         let moduleApiFileContents = ApiModuleGenerator(moduleDescriptor).generate()

@@ -14,8 +14,8 @@ final class ModuleGeneratorTests: XCTestCase {
         
         let descriptor = ModuleDescriptor(name: "User", models: [
             ModelDescriptor(name: "Account", properties: [
-                .init(name: "email", databaseType: .string, formFieldType: .text, isRequired: true, isSearchable: true, isOrderingAllowed: true),
-                .init(name: "password", databaseType: .string, formFieldType: .text, isRequired: true, isSearchable: true, isOrderingAllowed: true),
+                .init(name: "email", databaseType: .string, formFieldType: .input, isRequired: true, isSearchable: true, isOrderingAllowed: true),
+                .init(name: "password", databaseType: .string, formFieldType: .input, isRequired: true, isSearchable: true, isOrderingAllowed: true),
             ])
         ])
         
@@ -31,10 +31,8 @@ final class ModuleGeneratorTests: XCTestCase {
                 func boot(_ app: Application) throws {
                     app.migrations.add(UserMigrations.v1())
 
-                    app.hooks.register(.webRoutes, use: router.webRoutesHook)
                     app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
                     app.hooks.register(.apiRoutes, use: router.apiRoutesHook)
-                    app.hooks.register(.publicApiRoutes, use: router.publicApiRoutesHook)
                     app.hooks.register(.installUserPermissions, use: installUserPermissionsHook)
                     
                     try router.boot(app)

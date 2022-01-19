@@ -18,6 +18,31 @@ public struct EditorGenerator {
     }
     
     private func generateField(_ property: PropertyDescriptor) -> String {
+        switch property.formFieldType {
+        case .image:
+            return generateImageField(property)
+        default:
+            return generateDefaultField(property)
+        }
+    }
+ 
+    private func generateImageField(_ property: PropertyDescriptor) -> String {
+        var res = """
+            \(property.formFieldType.fieldName)(\"\(property.name)\", path: "\(module)/\(descriptor.name.lowercased())")
+        """
+        res += """
+            .read {
+                    if let key = model.\(property.name) {
+                        $1.output.context.previewUrl = $0.fs.resolve(key: key)
+                    }
+                    ($1 as! ImageField).imageKey = model.\(property.name)
+            }
+            .write { model.\(property.name) = ($1 as! ImageField).imageKey }
+        """
+        return res
+    }
+    
+    private func generateDefaultField(_ property: PropertyDescriptor) -> String {
         var res = """
             \(property.formFieldType.fieldName)(\"\(property.name)\")
         """
