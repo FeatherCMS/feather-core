@@ -5,8 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 11. 23..
 //
 
-import Vapor
-import Darwin
+import FeatherCoreApi
 
 extension FeatherToken: Content {}
 extension FeatherAccount: Content {}
@@ -37,6 +36,9 @@ public extension HookName {
     static let installUserRoles: HookName = "install-user-roles"
     static let installUserPermissions: HookName = "install-user-permissions"
     static let installUserAccounts: HookName = "install-user-accounts"
+    
+    static let installUserRolePermissions: HookName = "install-user-role-permissions"
+    static let installUserAccountRoles: HookName = "install-user-account-roles"
 }
 
 struct UserModule: FeatherModule {
@@ -101,7 +103,58 @@ struct UserModule: FeatherModule {
         try await accounts.map { UserAccountModel(email: $0.email,
                                                    password: try Bcrypt.hash($0.password),
                                                    isRoot: $0.isRoot) }.create(on: args.req.db)
-
+        
+        
+        let rolePermissions: [User.RolePermission.Create] = args.req.invokeAllFlat(.installUserRolePermissions)
+        for rolePermission in rolePermissions {
+            guard
+                let role = try await UserRoleModel
+                    .query(on: args.req.db)
+                    .filter(\.$key == rolePermission.key)
+                    .first()
+            else {
+                continue
+            }
+            for permission in rolePermission.permissionKeys {
+                let p = FeatherPermission(permission)
+                guard
+                    let permission = try await UserPermissionModel
+                        .query(on: args.req.db)
+                        .filter(\.$namespace == p.namespace)
+                        .filter(\.$context == p.context)
+                        .filter(\.$action == p.action.key)
+                        .first()
+                else {
+                    continue
+                }
+                let rpm = UserRolePermissionModel(roleId: role.uuid, permissionId: permission.uuid)
+                try await rpm.create(on: args.req.db)
+            }
+        }
+        
+        let accountRoles: [User.AccountRole.Create] = args.req.invokeAllFlat(.installUserAccountRoles)
+        for accountRole in accountRoles {
+            guard
+                let account = try await UserAccountModel
+                    .query(on: args.req.db)
+                    .filter(\.$email == accountRole.email)
+                    .first()
+            else {
+                continue
+            }
+            for roleKey in accountRole.roleKeys {
+                guard
+                    let role = try await UserRoleModel
+                        .query(on: args.req.db)
+                        .filter(\.$key == roleKey)
+                        .first()
+                else {
+                    continue
+                }
+                let arm = UserAccountRoleModel(accountId: account.uuid, roleId: role.uuid)
+                try await arm.create(on: args.req.db)
+            }
+        }
     }
 
     func installUserRolesHook(args: HookArguments) -> [User.Role.Create] {

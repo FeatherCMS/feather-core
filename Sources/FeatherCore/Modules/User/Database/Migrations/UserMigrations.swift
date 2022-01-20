@@ -21,8 +21,8 @@ struct UserMigrations {
             try await db.schema(UserTokenModel.schema)
                 .id()
                 .field(UserTokenModel.FieldKeys.v1.value, .string, .required)
-                .field(UserTokenModel.FieldKeys.v1.userId, .uuid, .required)
-                .foreignKey(UserTokenModel.FieldKeys.v1.userId, references: UserAccountModel.schema, .id)
+                .field(UserTokenModel.FieldKeys.v1.accountId, .uuid, .required)
+                .foreignKey(UserTokenModel.FieldKeys.v1.accountId, references: UserAccountModel.schema, .id)
                 .unique(on: UserTokenModel.FieldKeys.v1.value)
                 .create()
             
@@ -48,7 +48,7 @@ struct UserMigrations {
             
             try await db.schema(UserAccountRoleModel.schema)
                 .id()
-                .field(UserAccountRoleModel.FieldKeys.v1.userId, .uuid, .required)
+                .field(UserAccountRoleModel.FieldKeys.v1.accountId, .uuid, .required)
                 .field(UserAccountRoleModel.FieldKeys.v1.roleId, .uuid, .required)
                 .create()
             

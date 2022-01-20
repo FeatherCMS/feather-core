@@ -11,23 +11,23 @@ final class UserTokenModel: FeatherDatabaseModel {
     struct FieldKeys {
         struct v1 {
             static var value: FieldKey { "value" }
-            static var userId: FieldKey { "user_id" }
+            static var accountId: FieldKey { "account_id" }
         }
     }
     
     @ID() var id: UUID?
     @Field(key: FieldKeys.v1.value) var value: String
-    @Parent(key: FieldKeys.v1.userId) var user: UserAccountModel
+    @Parent(key: FieldKeys.v1.accountId) var account: UserAccountModel
 
     init() { }
     
     init(id: UUID? = nil,
          value: String,
-         userId: UUID)
+         accountId: UUID)
     {
         self.id = id
         self.value = value
-        self.$user.id = userId
+        self.$account.id = accountId
     }
 }
 

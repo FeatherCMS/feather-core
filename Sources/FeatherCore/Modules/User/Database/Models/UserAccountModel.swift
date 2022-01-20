@@ -20,7 +20,7 @@ final class UserAccountModel: FeatherDatabaseModel {
     @Field(key: FieldKeys.v1.email) var email: String
     @Field(key: FieldKeys.v1.password) var password: String
     @Field(key: FieldKeys.v1.isRoot) var isRoot: Bool
-    @Siblings(through: UserAccountRoleModel.self, from: \.$user, to: \.$role) var roles: [UserRoleModel]
+    @Siblings(through: UserAccountRoleModel.self, from: \.$account, to: \.$role) var roles: [UserRoleModel]
     
     init() {
         self.isRoot = false
