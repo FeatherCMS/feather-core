@@ -27,7 +27,13 @@ public struct WebIndexTemplate: TemplateRepresentable {
         return components.joined(separator: " ")
     }
     
-    private func getLogoUrl(_ req: Request) -> String {
+    private func getLogoUrl(_ req: Request, darkMode: Bool = false) -> String {
+        if darkMode {
+            if let logo = req.variable("webSiteLogoDark"), !logo.isEmpty {
+                return req.fs.resolve(key: logo)
+            }
+            return "/img/web/logo-dark.png"
+        }
         if let logo = req.variable("webSiteLogo"), !logo.isEmpty {
             return req.fs.resolve(key: logo)
         }
@@ -161,9 +167,14 @@ public struct WebIndexTemplate: TemplateRepresentable {
                 Header {
                     Div {
                         A {
-                            Img(src: getLogoUrl(req), alt: "Logo of \(getTitle(req))")
-                                .title(getTitle(req))
-                                .style("width: 300px")
+                            Picture {
+                                Source()
+                                    .srcset(getLogoUrl(req, darkMode: true))
+                                    .media(value: "(prefers-color-scheme: dark)")
+                                Img(src: getLogoUrl(req), alt: "Logo of \(getTitle(req))")
+                                    .title(getTitle(req))
+                                    .style("width: 300px")
+                            }
                         }
                         .href("/")
                         Nav {

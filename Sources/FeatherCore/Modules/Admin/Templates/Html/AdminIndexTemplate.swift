@@ -34,9 +34,14 @@ public struct AdminIndexTemplate: TemplateRepresentable {
             Body {
                 Div {
                     A {
-                        Img(src: "/img/web/logo.png", alt: "Logo of Feather CMS")
-                            .title("Feather CMS")
-                            .style("width: 300px")
+                        Picture {
+                            Source()
+                                .srcset("/img/web/logo-dark.png")
+                                .media(value: "(prefers-color-scheme: dark)")
+                            Img(src: "/img/web/logo.png", alt: "Logo of Feather CMS")
+                                .title("Feather CMS")
+                                .style("width: 300px")
+                        }
                     }
                     .href("/")
                     
