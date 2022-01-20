@@ -24,9 +24,11 @@ public struct LinkTemplate: TemplateRepresentable {
         if !req.checkPermission(context.permission) {
             Text("") // @NOTE: this is a bit of a hack, but we don't want to render anything
         }
-        A { body }
+        else {
+            A { body }
             .href(context.url(req, pathInfix?.pathComponents ?? []))
             .target(.blank, context.isBlank)
             .class(context.style.rawValue)
+        }
     }
 }
