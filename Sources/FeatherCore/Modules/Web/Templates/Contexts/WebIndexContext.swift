@@ -18,7 +18,7 @@ public struct WebIndexContext {
     public var metadata: FeatherMetadata?
     
     public init(title: String,
-                css: [String] = ["/css/web/global.css"],
+                css: [String] = ["/css/web/style.css"],
                 js: [String] = [],
                 lang: String = "en",
                 charset: String = "utf-8",

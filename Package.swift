@@ -17,8 +17,8 @@ let package = Package(
         .package(url: "https://github.com/vapor/vapor", from: "4.54.0"),
         .package(url: "https://github.com/vapor/fluent", from: "4.4.0"),
         .package(url: "https://github.com/binarybirds/liquid", from: "1.3.0"),
-        .package(url: "https://github.com/binarybirds/swift-html", from: "1.2.0"),
-        .package(url: "https://github.com/binarybirds/swift-css", from: "1.0.0"),
+        .package(url: "https://github.com/binarybirds/swift-html", from: "1.3.0"),
+//        .package(url: "https://github.com/binarybirds/swift-css", from: "1.0.0"),
         .package(url: "https://github.com/binarybirds/spec.git", from: "1.2.0"),
     ],
     targets: [
@@ -40,7 +40,7 @@ let package = Package(
             .product(name: "SwiftSvg", package: "swift-html"),
             .product(name: "SwiftRss", package: "swift-html"),
             .product(name: "SwiftSitemap", package: "swift-html"),
-            .product(name: "SwiftCss", package: "swift-css"),
+//            .product(name: "SwiftCss", package: "swift-css"),
         ], resources: [
             .copy("Bundle"),
         ]),

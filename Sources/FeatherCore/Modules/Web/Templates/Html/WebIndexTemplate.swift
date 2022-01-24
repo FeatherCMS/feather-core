@@ -32,12 +32,12 @@ public struct WebIndexTemplate: TemplateRepresentable {
             if let logo = req.variable("webSiteLogoDark"), !logo.isEmpty {
                 return req.fs.resolve(key: logo)
             }
-            return "/img/web/logo-dark.png"
+            return "/img/web/logos/feather-logo-dark.png"
         }
         if let logo = req.variable("webSiteLogo"), !logo.isEmpty {
             return req.fs.resolve(key: logo)
         }
-        return "/img/web/logo.png"
+        return "/img/web/logos/feather-logo.png"
     }
 
     @TagBuilder
@@ -180,7 +180,7 @@ public struct WebIndexTemplate: TemplateRepresentable {
                             Picture {
                                 Source()
                                     .srcset(getLogoUrl(req, darkMode: true))
-                                    .media(value: "(prefers-color-scheme: dark)")
+                                    .media(.prefersColorScheme(.dark))
                                 Img(src: getLogoUrl(req), alt: "Logo of \(getTitle(req))")
                                     .title(getTitle(req))
                                     .style("width: 300px")

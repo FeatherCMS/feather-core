@@ -6,7 +6,6 @@
 //
 
 import SwiftHtml
-import SwiftCss
 import Vapor
 
 public struct TemplateRenderer {
@@ -31,14 +30,6 @@ public struct TemplateRenderer {
         return Response(status: .ok,
                         headers: ["content-type": "application/xml"],
                         body: .init(string: xml))
-    }
-    
-    public func renderCss(_ template: CssRepresentable) -> Response {
-        let stylesheet = Stylesheet(template.rules(req))
-        let css = StylesheetRenderer().render(stylesheet)
-        return Response(status: .ok,
-                        headers: ["content-type": "text/css"],
-                        body: .init(string: css))
     }
 }
 

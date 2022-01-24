@@ -36,9 +36,9 @@ public struct AdminIndexTemplate: TemplateRepresentable {
                     A {
                         Picture {
                             Source()
-                                .srcset("/img/web/logo-dark.png")
-                                .media(value: "(prefers-color-scheme: dark)")
-                            Img(src: "/img/web/logo.png", alt: "Logo of Feather CMS")
+                                .srcset("/img/web/logos/feather-logo-dark.png")
+                                .media(.prefersColorScheme(.dark))
+                            Img(src: "/img/web/logos/feather-logo.png", alt: "Logo of Feather CMS")
                                 .title("Feather CMS")
                                 .style("width: 300px")
                         }
@@ -97,7 +97,7 @@ public struct AdminIndexTemplate: TemplateRepresentable {
                 
                 Footer {
                     Section {
-                        Img(src: "/img/web/logo.png", alt: "Logo of Feather CMS")
+                        Img(src: "/img/web/logos/feather-logo.png", alt: "Logo of Feather CMS")
                             .title("Feather CMS")
                             .style("width: 128px")
 
@@ -124,7 +124,10 @@ public struct AdminIndexTemplate: TemplateRepresentable {
                         }
                     }
                 }
-                
+              
+                Script()
+                    .type(.javascript)
+                    .src("/js/admin/main.js")
             }
         }
         .lang(context.lang)
