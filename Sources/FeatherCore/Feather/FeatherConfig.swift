@@ -25,6 +25,7 @@ public struct Config: Codable {
         public var sitemap: String
         public var rss: String
         public var robots: String
+        public var manifest: String
     }
     
     public struct Region: Codable {
@@ -50,7 +51,8 @@ public struct Config: Codable {
                            logout: "logout",
                            sitemap: "sitemap.xml",
                            rss: "rss.xml",
-                           robots: "robots.txt"),
+                           robots: "robots.txt",
+                           manifest: "manifest.json"),
               region: .init(timezone: "America/Los_Angeles", locale: "en_US"),
               filters: ["markdown", "swifty"],
               listLimit: 20)

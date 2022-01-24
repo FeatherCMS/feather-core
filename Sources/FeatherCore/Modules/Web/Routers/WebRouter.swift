@@ -22,6 +22,7 @@ struct WebRouter: FeatherRouter {
         app.routes.get(app.feather.config.paths.sitemap.pathComponent, use: frontendController.renderSitemapTemplate)
         app.routes.get(app.feather.config.paths.rss.pathComponent, use: frontendController.renderRssTemplate)
         app.routes.get(app.feather.config.paths.robots.pathComponent, use: frontendController.renderRobotsTemplate)
+        app.routes.get(app.feather.config.paths.manifest.pathComponent, use: frontendController.webManifestView)
     }
 
     func routesHook(args: HookArguments) {

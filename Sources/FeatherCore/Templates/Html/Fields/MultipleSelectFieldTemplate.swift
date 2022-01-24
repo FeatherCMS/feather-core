@@ -23,6 +23,7 @@ public struct MultipleSelectFieldTemplate: TemplateRepresentable {
             for item in context.options {
                 Option(item.label)
                     .value(item.key)
+                    .label(item.label)
                     .selected(context.values.contains(item.key))
             }
         }

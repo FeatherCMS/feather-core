@@ -23,6 +23,7 @@ public struct SelectFieldTemplate: TemplateRepresentable {
             for item in context.options {
                 Option(item.label)
                     .value(item.key)
+                    .label(item.label)
                     .selected(context.value == item.key)
             }
         }

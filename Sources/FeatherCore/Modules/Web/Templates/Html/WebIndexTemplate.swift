@@ -52,6 +52,14 @@ public struct WebIndexTemplate: TemplateRepresentable {
                 Meta()
                     .name(.viewport)
                     .content(context.viewport)
+                
+                Meta()
+                    .name("apple-mobile-web-app-capable")
+                    .content("yes")
+                Meta()
+                    .name("apple-mobile-web-app-status-bar-style")
+                    .content("black-translucent")
+
 
                 // @NOTE: come up with a better solution for this...
                 // @TODO: check site noindex property!!!!
@@ -103,9 +111,8 @@ public struct WebIndexTemplate: TemplateRepresentable {
                             .content(req.fs.resolve(key: key))
                     }
 
-//                    Link()
-//                        .rel(.manifest)
-//                        .href("/manifest.json")
+                    
+
 //                    Link()
 //                        .rel(.maskIcon)
 //                        .sizes("any")
@@ -131,6 +138,9 @@ public struct WebIndexTemplate: TemplateRepresentable {
 //                            .sizes("\(size)x\(size)")
 //                    }
                 }
+
+                Link(rel: .manifest)
+                    .href("/manifest.json")
 
                 let css: [String] = req.invokeAllOrdered(.webCss)
                 for file in context.css + css {

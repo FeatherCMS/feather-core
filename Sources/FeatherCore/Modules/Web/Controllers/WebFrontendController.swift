@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 24..
 //
 
+extension WebManifestContext: Content {}
+
 struct WebFrontendController {
     
     func renderWelcomeTemplate(_ req: Request) async throws -> Response {
@@ -43,5 +45,15 @@ struct WebFrontendController {
                             "content-type": "text/plain"
                         ],
                         body: .init(string: robots))
+    }
+    
+    func webManifestView(_ req: Request) async throws -> WebManifestContext {
+        WebManifestContext(shortName: "Feather",
+                           name: "Feather CMS",
+                           startUrl: "",
+                           backgroundColor: "#cafe00",
+                           display: .standalone,
+                           icons: [],
+                           shortcuts: [])
     }
 }
