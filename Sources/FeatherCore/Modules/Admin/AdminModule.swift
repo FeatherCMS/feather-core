@@ -11,6 +11,9 @@ public extension HookName {
     static let adminRoutes: HookName = "admin-routes"
     static let adminMiddlewares: HookName = "admin-middlewares"
     static let adminWidgets: HookName = "admin-widgets"
+    
+    static let adminCss: HookName = "admin-css"
+    static let adminJs: HookName = "admin-js"
 }
 
 struct AdminModule: FeatherModule {

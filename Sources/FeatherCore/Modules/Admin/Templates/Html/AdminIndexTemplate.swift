@@ -27,8 +27,10 @@ public struct AdminIndexTemplate: TemplateRepresentable {
                 Meta().charset(context.charset)
                 Meta().name(.viewport).content(context.viewport)
 
-                for file in context.css {
-                    Link(rel: .stylesheet).href(file)
+                let css: [String] = req.invokeAllOrdered(.adminCss)
+                for file in context.css + css {
+                    Link(rel: .stylesheet)
+                        .href(file)
                 }
             }
             Body {
@@ -128,6 +130,13 @@ public struct AdminIndexTemplate: TemplateRepresentable {
                 Script()
                     .type(.javascript)
                     .src("/js/admin/main.js")
+                
+                let js: [String] = req.invokeAllOrdered(.adminJs)
+                for file in context.js + js {
+                    Script()
+                        .type(.javascript)
+                        .src(file)
+                }
             }
         }
         .lang(context.lang)

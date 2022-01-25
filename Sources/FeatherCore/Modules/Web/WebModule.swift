@@ -10,6 +10,7 @@ public extension HookName {
     static let installWebMenuItems: HookName = "install-web-menu-items"
     
     static let webCss: HookName = "web-css"
+    static let webJs: HookName = "web-js"
 }
 
 struct WebModule: FeatherModule {

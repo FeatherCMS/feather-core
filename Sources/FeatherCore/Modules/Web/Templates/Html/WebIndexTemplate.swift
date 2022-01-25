@@ -253,7 +253,8 @@ public struct WebIndexTemplate: TemplateRepresentable {
                     }
                 }
 
-                for file in context.js {
+                let js: [String] = req.invokeAllOrdered(.webJs)
+                for file in context.js + js {
                     Script()
                         .type(.javascript)
                         .src(file)
