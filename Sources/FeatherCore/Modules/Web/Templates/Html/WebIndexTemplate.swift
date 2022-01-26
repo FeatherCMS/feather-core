@@ -86,10 +86,8 @@ public struct WebIndexTemplate: TemplateRepresentable {
                 .href(req.feather.config.paths.logout.safePath())
         }
         else {
-            if req.url.path.safePath() != req.feather.config.paths.login.safePath() {
-                A("Sign in")
-                    .href(req.feather.config.paths.login.safePath())
-            }
+            A("Sign in")
+                .href(req.feather.config.paths.login.safePath())
         }
     }
 
@@ -148,7 +146,7 @@ public struct WebIndexTemplate: TemplateRepresentable {
                                                  icon: Text("&#9776;"),
                                                  items: mainMenuItems(req)),
                                      account: .init(id: "account",
-                                                    icon: Img(src: "/svg/web/user.svg", alt: "Profile"),
+                                                    icon: Img(src: "/img/web/profile.png", alt: "Profile"),
                                                     items: profileMenuItems(req))))
                     .render(req)
 
