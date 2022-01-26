@@ -85,7 +85,7 @@ private extension ApplePwaMetaTemplate {
                 .webkitDevicePixelRatio(ratio),
                 .orientation(orientation),
             ])
-            .href("/img/web/apple/splash/\(calc(width, height, ratio, orientation))\(mode == .light ? "" : "_dark").png")
+            .href("/img/web/apple/splash/\(calc(width, height, ratio, orientation))\(mode == .light ? "" : "_dark").jpg")
     }
 
     @TagBuilder
