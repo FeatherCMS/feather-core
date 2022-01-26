@@ -7,6 +7,7 @@
 
 import SwiftHtml
 import SwiftSvg
+import SwiftSgml
 
 public struct WebIndexTemplate: TemplateRepresentable {
 
@@ -39,6 +40,58 @@ public struct WebIndexTemplate: TemplateRepresentable {
         }
         return "/img/web/logos/feather-logo.png"
     }
+    
+    var noindex: Bool {
+        if context.noindex {
+            return true
+        }
+        if let status = context.metadata?.status, status != .published {
+            return true
+        }
+        // @TODO: check site noindex property!!!!
+        return false
+    }
+    
+    func getCanonicalUrl(_ req: Request) -> String? {
+        if let canonicalUrl = context.canonicalUrl, !canonicalUrl.isEmpty {
+            return canonicalUrl
+        }
+        if let canonicalUrl = context.metadata?.canonicalUrl, !canonicalUrl.isEmpty {
+            return canonicalUrl
+        }
+        if req.getQuery("page") != nil || req.getQuery("search") != nil {
+            return req.absoluteUrl
+        }
+        return nil
+    }
+    
+    func mainMenuItems(_ req: Request) -> [Tag] {
+        req.menuItems("main").map {
+            A($0.label)
+                .href($0.path)
+                .class("selected", req.url.path == $0.path)
+        }
+    }
+    
+    @TagBuilder
+    func profileMenuItems(_ req: Request) -> [Tag] {
+        if let user = req.auth.get(FeatherAccount.self) {
+//            P(user.email)
+
+            if req.checkPermission(Admin.permission(for: .detail)) {
+                A("Admin")
+                    .href(req.feather.config.paths.admin.safePath())
+            }
+            A("Sign out")
+                .href(req.feather.config.paths.logout.safePath())
+        }
+        else {
+            if req.url.path.safePath() != req.feather.config.paths.login.safePath() {
+                A("Sign in")
+                    .href(req.feather.config.paths.login.safePath())
+            }
+        }
+    }
 
     @TagBuilder
     public func render(_ req: Request) -> Tag {
@@ -46,98 +99,25 @@ public struct WebIndexTemplate: TemplateRepresentable {
             Head {
                 Title(getTitle(req))
 
-                Meta()
-                    .charset(context.charset)
-                
-                Meta()
-                    .name(.viewport)
-                    .content(context.viewport)
-                
-                Meta()
-                    .name("apple-mobile-web-app-capable")
-                    .content("yes")
-                Meta()
-                    .name("apple-mobile-web-app-status-bar-style")
-                    .content("black-translucent")
+                //"width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no"
+                MetaTemplate(.init(charset: context.charset,
+                                   viewport: context.viewport,
+                                   noindex: noindex))
+                    .render(req)
 
-
-                // @NOTE: come up with a better solution for this...
-                // @TODO: check site noindex property!!!!
-                if context.noindex {
-                    Meta()
-                        .name(.robots)
-                        .content("noindex")
-                }
-                else if let status = context.metadata?.status, status != .published {
-                    Meta()
-                        .name(.robots)
-                        .content("noindex")
-                }
-                
                 if let metadata = context.metadata {
-                    Meta()
-                        .name("twitter:card")
-                        .content("summary_large_image")
-                    Meta()
-                        .name("twitter:title")
-                        .content(getTitle(req))
-
-                    if let excerpt = metadata.excerpt, !excerpt.isEmpty {
-                        Meta()
-                            .name("twitter:description")
-                            .content(excerpt)
-                    }
-                    if let key = metadata.imageKey {
-                        Meta()
-                            .name("twitter:image")
-                            .content(req.fs.resolve(key: key))
-                    }
-
-                    Meta()
-                        .name("og:url")
-                        .content(req.absoluteUrl)
-                    Meta()
-                        .name("og:title")
-                        .content(getTitle(req))
-
-                    if let excerpt = metadata.excerpt, !excerpt.isEmpty {
-                        Meta()
-                            .name("og:description")
-                            .content(excerpt)
-                    }
-                    if let key = metadata.imageKey {
-                        Meta()
-                            .name("og:image")
-                            .content(req.fs.resolve(key: key))
-                    }
-
-                    
-
-//                    Link()
-//                        .rel(.maskIcon)
-//                        .sizes("any")
-//                        .href("/img/logos/feather-logo-shape.svg")
-//
-//                    Link()
-//                        .rel("shortcut icon")
-//                        .href("/img/favicons/favicon.ico")
-//                        .type("image/x-icon")
-//                    Link()
-//                        .rel("shortcut icon")
-//                        .href("/img/favicons/favicon.png")
-//                        .type("image/png")
-//
-//                    Link()
-//                        .rel("apple-touch-icon")
-//                        .href("/img/apple/192.png")
-//
-//                    for size in [57, 72, 76, 114, 120, 144, 152, 180] {
-//                        Link()
-//                            .rel("apple-touch-icon")
-//                            .href("/img/apple/\(size).png")
-//                            .sizes("\(size)x\(size)")
-//                    }
+                    TwitterMetaTemplate(.init(title: metadata.title ?? getTitle(req),
+                                              excerpt: metadata.excerpt,
+                                              imageUrl: ""))
+                        .render(req)
+                    OgMetaTemplate(.init(url: "",
+                                         title: metadata.title ?? getTitle(req),
+                                         excerpt: metadata.excerpt,
+                                         imageUrl: ""))
+                        .render(req)
                 }
+                
+                ApplePwaMetaTemplate(.init(title: getTitle(req))).render(req)
 
                 Link(rel: .manifest)
                     .href("/manifest.json")
@@ -157,101 +137,24 @@ public struct WebIndexTemplate: TemplateRepresentable {
                     Style(css)
                         .css()
                 }
-                
-                // @NOTE: come up with a better solution for this...
-                if let canonicalUrl = context.canonicalUrl, !canonicalUrl.isEmpty {
-                    Link(rel: .canonical)
-                        .href(canonicalUrl)
-                }
-                else if let canonicalUrl = context.metadata?.canonicalUrl, !canonicalUrl.isEmpty {
-                    Link(rel: .canonical)
-                        .href(canonicalUrl)
-                }
 
-                if req.getQuery("page") != nil || req.getQuery("search") != nil {
+                if let canonicalUrl = getCanonicalUrl(req) {
                     Link(rel: .canonical)
-                        .href(req.absoluteUrl)
+                        .href(canonicalUrl)
                 }
             }
             Body {
-                Header {
-                    Div {
-                        A {
-                            Picture {
-                                Source()
-                                    .srcset(getLogoUrl(req, darkMode: true))
-                                    .media(.prefersColorScheme(.dark))
-                                Img(src: getLogoUrl(req), alt: "Logo of \(getTitle(req))")
-                                    .title(getTitle(req))
-                                    .style("width: 300px")
-                            }
-                        }
-                        .href("/")
-                        Nav {
-                            Input()
-                                .type(.checkbox)
-                                .id("primary-menu-button")
-                                .name("menu-button")
-                                .class("menu-button")
-                            Label {
-                                Svg {
-                                    Line(x1: 3, y1: 12, x2: 21, y2: 12)
-                                    Line(x1: 3, y1: 6, x2: 21, y2: 6)
-                                    Line(x1: 3, y1: 18, x2: 21, y2: 18)
-                                }
-                                .width(24)
-                                .height(24)
-                                .viewBox(minX: 0, minY: 0, width: 24, height: 24)
-                                .fill("none")
-                                .stroke("currentColor")
-                                .strokeWidth(2)
-                                .strokeLinecap("round")
-                                .strokeLinejoin("round")
-                            }
-                            .for("primary-menu-button")
-                            Div {
-                                req.menuItems("main").map {
-                                    A($0.label)
-                                        .href($0.path)
-                                        .class("selected", req.url.path == $0.path)
-                                }
-                            }
-                            .class("menu-items")
-                        }
-                        .id("primary-menu")
-                    }
-                    .id("navigation")
-                }
-                
-                Main {
-                    body
-                }
+                HeaderTemplate(.init(main: .init(id: "main",
+                                                 icon: Text("&#9776;"),
+                                                 items: mainMenuItems(req)),
+                                     account: .init(id: "account",
+                                                    icon: Img(src: "/svg/web/user.svg", alt: "Profile"),
+                                                    items: profileMenuItems(req))))
+                    .render(req)
 
-                Footer {
-                    Section {
-                        Nav {
-                            if let user = req.auth.get(FeatherAccount.self) {
-                                P(user.email)
-
-                                if req.checkPermission(Admin.permission(for: .detail)) {
-                                    A("Admin")
-                                        .href(req.feather.config.paths.admin.safePath())
-                                }
-                                A("Sign out")
-                                    .href(req.feather.config.paths.logout.safePath())
-                            }
-                            else {
-                                if req.url.path.safePath() != req.feather.config.paths.login.safePath() {
-                                    A("Sign in")
-                                        .href(req.feather.config.paths.login.safePath())
-                                }
-                            }
-                        }
-                        Nav {
-                            req.menuItems("footer").map { LinkTemplate($0).render(req) }
-                        }
-                    }
-                }
+                MainTemplate(.init(body: body)).render(req)
+                // req.menuItems("footer").map { LinkTemplate($0).render(req) }
+                FooterTemplate(.init()).render(req)
 
                 let js: [String] = req.invokeAllOrdered(.webJs)
                 for file in context.js + js {

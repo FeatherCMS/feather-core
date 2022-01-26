@@ -24,51 +24,21 @@ public struct SystemIndexTemplate: TemplateRepresentable {
             Head {
                 Title(context.title)
 
-                Meta()
-                    .charset(context.charset)
-                
-                Meta()
-                    .name(.viewport)
-                    .content(context.viewport)
-
-                Meta()
-                    .name(.robots)
-                    .content("noindex")
-
+                MetaTemplate(.init(charset: context.charset,
+                                   viewport: context.viewport,
+                                   noindex: true)).render(req)
 
                 for file in context.css {
                     Link(rel: .stylesheet)
                         .href(file)
                 }
-
             }
             Body {
-                Header {
-                    Div {
-                        A {
-                            Picture {
-                                Source()
-                                    .srcset("/img/web/logos/feather-logo-dark.png")
-                                    .media(.prefersColorScheme(.dark))
-                                Img(src: "/img/web/logos/feather-logo.png", alt: "Logo of Feather CMS")
-                                    .title("Feather CMS")
-                                    .style("width: 300px")
-                            }
-                        }
-                        .href("/")
-                    }
-                    .id("navigation")
-                }
-                
-                Main {
-                    Div {
-                        body
-                    }
-                    .class("container")
-                }
+                HeaderTemplate(.init()).render(req)
+                MainTemplate(.init(body: body)).render(req)
+                FooterTemplate(.init()).render(req)
             }
         }
         .lang(context.lang)
     }
-    
 }

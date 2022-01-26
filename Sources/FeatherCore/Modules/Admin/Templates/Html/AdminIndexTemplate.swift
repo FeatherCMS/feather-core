@@ -24,8 +24,10 @@ public struct AdminIndexTemplate: TemplateRepresentable {
             Head {
                 Title(context.title)
 
-                Meta().charset(context.charset)
-                Meta().name(.viewport).content(context.viewport)
+                MetaTemplate(.init(charset: context.charset,
+                                   viewport: context.viewport,
+                                   noindex: true))
+                    .render(req)
 
                 let css: [String] = req.invokeAllOrdered(.adminCss)
                 for file in context.css + css {
@@ -34,99 +36,24 @@ public struct AdminIndexTemplate: TemplateRepresentable {
                 }
             }
             Body {
-                Div {
-                    A {
-                        Picture {
-                            Source()
-                                .srcset("/img/web/logos/feather-logo-dark.png")
-                                .media(.prefersColorScheme(.dark))
-                            Img(src: "/img/web/logos/feather-logo.png", alt: "Logo of Feather CMS")
-                                .title("Feather CMS")
-                                .style("width: 300px")
-                        }
-                    }
-                    .href("/")
-                    
-                    Nav {
-                        Input()
-                            .type(.checkbox)
-                            .id("secondary-menu-button")
-                            .name("menu-button")
-                            .class("menu-button")
-                        Label {
-                            Svg {
-                                Circle(cx: 12, cy: 12, r: 1)
-                                Circle(cx: 12, cy: 5, r: 1)
-                                Circle(cx: 12, cy: 19, r: 1)
-                            }
-                            .width(24)
-                            .height(24)
-                            .viewBox(minX: 0, minY: 0, width: 24, height: 24)
-                            .fill("none")
-                            .stroke("currentColor")
-                            .strokeWidth(2)
-                            .strokeLinecap("round")
-                            .strokeLinejoin("round")
-                        }
-                        .for("secondary-menu-button")
+                HeaderTemplate(.init(account: .init(id: "account",
+                                                    icon: Img(src: "/svg/web/user.svg", alt: "Profile"),
+                                                    items: [
+                                                        A("Sign out")
+                                                            .href(req.feather.config.paths.logout.safePath())
+                                                    ]
+                                                   )))
+                    .render(req)
 
-                        Div {
-                            A("Sign out")
-                                .href(req.feather.config.paths.logout.safePath())
-//                                .class("selected", req.url.path == "/")
-                        }
-                        .class("menu-items")
-                    }
-                    .id("secondary-menu")
-                }
-                .id("navigation")
                 
-                Div {
-                    Nav {
-                        if req.checkPermission(Admin.permission(for: .detail)) {
-                            A("Admin")
-                                .href(req.feather.config.paths.admin.safePath())
-                        }
-                        
-                        context.breadcrumbs.map { LinkTemplate($0).render(req) }
-                    }
-                }
-                .class("breadcrumb")
-
-                Main {
-                    body
-                }
+                BreadcrumbTemplate(.init(links: [
+                    LinkContext(label: "Admin", path: req.feather.config.paths.admin.safePath(), absolute: true)
+                ] + context.breadcrumbs)).render(req)
                 
-                Footer {
-                    Section {
-                        Img(src: "/img/web/logos/feather-logo.png", alt: "Logo of Feather CMS")
-                            .title("Feather CMS")
-                            .style("width: 128px")
+                MainTemplate(.init(body: body)).render(req)
+                // req.menuItems("footer").map { LinkTemplate($0).render(req) }
+                FooterTemplate(.init()).render(req)
 
-                        P {
-                            Text("Thank you for using Feather CMS, ")
-                            A("join the discussion")
-                                .href("https://discord.gg/wMSkxCUXAD")
-                                .target(.blank)
-                            Text(" on our discord server.")
-                        }
-                        
-                        Nav {
-                            A("Feather")
-                                .href("https://feathercms.com/")
-                                .target(.blank)
-                            Text(" · ")
-                            A("Vapor")
-                                .href("https://vapor.codes/")
-                                .target(.blank)
-                            Text(" · ")
-                            A("Swift")
-                                .href("https://swift.org/")
-                                .target(.blank)
-                        }
-                    }
-                }
-              
                 Script()
                     .type(.javascript)
                     .src("/js/admin/main.js")
