@@ -37,7 +37,7 @@ public struct AdminIndexTemplate: TemplateRepresentable {
             }
             Body {
                 HeaderTemplate(.init(account: .init(id: "account",
-                                                    icon: Img(src: "/svg/web/user.svg", alt: "Profile"),
+                                                    icon: Img(src: "/img/web/profile.png", alt: "Profile"),
                                                     items: [
                                                         A("Sign out")
                                                             .href(req.feather.config.paths.logout.safePath())
