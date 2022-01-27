@@ -19,6 +19,7 @@ struct UserAccountCredentialsAuthenticator: AsyncCredentialsAuthenticator {
         if let isValid = try? Bcrypt.verify(credentials.password, created: model.password), isValid {
             req.auth.login(model.featherAccount)
         }
+        
     }
 }
 

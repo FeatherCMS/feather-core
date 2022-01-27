@@ -75,9 +75,7 @@ public struct WebIndexTemplate: TemplateRepresentable {
     
     @TagBuilder
     func profileMenuItems(_ req: Request) -> [Tag] {
-        if let user = req.auth.get(FeatherAccount.self) {
-//            P(user.email)
-
+        if req.auth.has(FeatherAccount.self) {
             if req.checkPermission(Admin.permission(for: .detail)) {
                 A("Admin")
                     .href(req.feather.config.paths.admin.safePath())

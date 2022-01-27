@@ -54,7 +54,6 @@ struct UserAuthController {
         guard let user = req.auth.get(FeatherAccount.self) else {
             throw Abort(.unauthorized)
         }
-        
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789="
         let tokenValue = String((0..<64).map { _ in letters.randomElement()! })
 //        let tokenValue = [UInt8].random(count: 32).base64

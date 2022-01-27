@@ -55,7 +55,7 @@ public final class Feather {
     public static func dateFormatter(dateStyle: DateFormatter.Style = .short,
                                      timeStyle: DateFormatter.Style = .short) -> DateFormatter {
         let formatter = DateFormatter()
-        #warning("fixme")
+//        #warning("fixme")
 //        formatter.timeZone = TimeZone(identifier: Feather.config.region.timezone)
 //        formatter.locale = Locale(identifier: Feather.config.region.locale)
         formatter.dateStyle = dateStyle
