@@ -14,7 +14,8 @@ struct WebMetadataEditor: FeatherModelEditor {
         self.form = form
     }
     
-    var formFields: [FormField] {
+    @FormFieldBuilder
+    func createFields(_ req: Request) -> [FormField] {
         InputField("slug")
             .validators {
                 FormFieldValidator($1, "Slug must be unique") { req, field in

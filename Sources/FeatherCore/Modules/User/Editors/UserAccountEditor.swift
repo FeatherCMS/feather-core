@@ -13,8 +13,9 @@ struct UserAccountEditor: FeatherModelEditor {
         self.model = model
         self.form = form
     }
-
-    var formFields: [FormField] {
+    
+    @FormFieldBuilder
+    func createFields(_ req: Request) -> [FormField] {
         InputField("email")
             .config {
                 $0.output.context.type = .email

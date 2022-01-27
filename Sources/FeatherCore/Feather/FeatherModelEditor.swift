@@ -14,12 +14,14 @@ public protocol FeatherModelEditor: FormEventResponder {
     init(model: Model, form: AbstractForm)
         
     @FormFieldBuilder
-    var formFields: [FormField] { get }
+    func createFields(_ req: Request) -> [FormField]
 }
 
 public extension FeatherModelEditor {
-    
-    var formFields: [FormField] { [] }
+
+    func createFields(_ req: Request) -> [FormField] {
+        []
+    }
 
     func load(req: Request) async throws {
         try await form.load(req: req)

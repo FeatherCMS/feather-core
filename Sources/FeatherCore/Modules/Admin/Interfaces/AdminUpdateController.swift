@@ -38,7 +38,7 @@ public extension AdminUpdateController {
 
         let model = try await findBy(identifier(req), on: req.db)
         let editor = UpdateModelEditor(model: model as! UpdateModelEditor.Model, form: .init())
-        editor.form.fields = editor.formFields
+        editor.form.fields = editor.createFields(req)
         try await editor.load(req: req)
         try await editor.read(req: req)
         return await render(req, editor: editor)
@@ -51,7 +51,7 @@ public extension AdminUpdateController {
         }
         let model = try await findBy(identifier(req), on: req.db)
         let editor = UpdateModelEditor(model: model as! UpdateModelEditor.Model, form: .init())
-        editor.form.fields = editor.formFields
+        editor.form.fields = editor.createFields(req)
         try await editor.load(req: req)
         try await editor.process(req: req)
         let isValid = try await editor.validate(req: req)

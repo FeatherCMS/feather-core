@@ -14,7 +14,8 @@ struct UserPermissionEditor: FeatherModelEditor {
         self.form = form
     }
 
-    var formFields: [FormField] {
+    @FormFieldBuilder
+    func createFields(_ req: Request) -> [FormField] {
         InputField("namespace")
             .validators {
                 FormFieldValidator.required($1)

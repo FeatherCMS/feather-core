@@ -15,7 +15,7 @@ final class WebSettingsForm: AbstractForm {
     }
 
     @FormFieldBuilder
-    override func createFields() -> [FormField] {
+    override func createFields(_ req: Request) -> [FormField] {
         ImageField("image", path: "feather")
             .read {
                 if let key = $0.variable("webSiteLogo") {

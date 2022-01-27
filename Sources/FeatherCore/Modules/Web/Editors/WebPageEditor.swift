@@ -14,7 +14,8 @@ struct WebPageEditor: FeatherModelEditor {
         self.form = form
     }
 
-    var formFields: [FormField] {
+    @FormFieldBuilder
+    func createFields(_ req: Request) -> [FormField] {
         InputField("title")
             .config {
                 $0.output.context.label.required = true

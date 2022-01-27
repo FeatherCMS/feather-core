@@ -13,7 +13,7 @@ final class UserLoginForm: AbstractForm {
     }
 
     @FormFieldBuilder
-    override func createFields() -> [FormField] {
+    override func createFields(_ req: Request) -> [FormField] {
         InputField("email")
             .config {
                 $0.output.context.type = .email

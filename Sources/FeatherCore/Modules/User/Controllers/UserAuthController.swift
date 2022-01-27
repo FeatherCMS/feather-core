@@ -27,6 +27,7 @@ struct UserAuthController {
     func loginView(_ req: Request) async throws -> Response {
         guard req.auth.has(FeatherAccount.self) else {
             let form = UserLoginForm()
+            form.fields = form.createFields(req)
             try await form.load(req: req)
             return render(req, form: form)
         }
@@ -41,6 +42,7 @@ struct UserAuthController {
         }
 
         let form = UserLoginForm()
+        form.fields = form.createFields(req)
         try await form.load(req: req)
         try await form.process(req: req)
         _ = try await form.validate(req: req)

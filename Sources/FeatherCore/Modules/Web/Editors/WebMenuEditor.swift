@@ -13,8 +13,9 @@ struct WebMenuEditor: FeatherModelEditor {
         self.model = model
         self.form = form
     }
-
-    var formFields: [FormField] {
+    
+    @FormFieldBuilder
+    func createFields(_ req: Request) -> [FormField] {
         InputField("key")
             .config {
                 $0.output.context.label.required = true

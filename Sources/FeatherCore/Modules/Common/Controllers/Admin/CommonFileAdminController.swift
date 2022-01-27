@@ -22,12 +22,14 @@ struct CommonFileAdminController: CommonFileController {
     
     func createDirectoryView(_ req: Request) async throws -> Response {
         let form = CommonFileCreateDirectoryForm()
+        form.fields = form.createFields(req)
         try await form.load(req: req)
         return renderCreateDirectoryView(req, form: form)
     }
     
     func createDirectoryAction(_ req: Request) async throws -> Response {
         let form = CommonFileCreateDirectoryForm()
+        form.fields = form.createFields(req)
         try await form.load(req: req)
         try await form.process(req: req)
         let isValid = try await form.validate(req: req)
@@ -57,12 +59,14 @@ struct CommonFileAdminController: CommonFileController {
     
     func uploadView(_ req: Request) async throws -> Response {
         let form = CommonFileUploadForm()
+        form.fields = form.createFields(req)
         try await form.load(req: req)
         return renderUploadView(req, form: form)
     }
     
     func uploadAction(_ req: Request) async throws -> Response {
         let form = CommonFileUploadForm()
+        form.fields = form.createFields(req)
         try await form.process(req: req)
         let isValid = try await form.validate(req: req)
         guard isValid else {

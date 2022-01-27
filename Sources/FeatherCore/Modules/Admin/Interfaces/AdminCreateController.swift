@@ -34,7 +34,7 @@ public extension AdminCreateController {
             throw Abort(.forbidden)
         }
         let editor = CreateModelEditor(model: .init(), form: .init())
-        editor.form.fields = editor.formFields
+        editor.form.fields = editor.createFields(req)
         try await editor.load(req: req)
         return render(req, editor: editor)
     }
@@ -46,7 +46,7 @@ public extension AdminCreateController {
         }
         let model = DatabaseModel()
         let editor = CreateModelEditor(model: model as! CreateModelEditor.Model, form: .init())
-        editor.form.fields = editor.formFields
+        editor.form.fields = editor.createFields(req)
         try await editor.load(req: req)
         try await editor.process(req: req)
         let isValid = try await editor.validate(req: req)

@@ -37,14 +37,10 @@ open class AbstractForm: FormEventResponder {
         self.error = error
         self.submit = submit
         self.fields = fields
-
-        if self.fields.isEmpty {
-            self.fields = createFields()
-        }
     }
 
     @FormFieldBuilder
-    open func createFields() -> [FormField] {
+    open func createFields(_ req: Request) -> [FormField] {
         
     }
 
