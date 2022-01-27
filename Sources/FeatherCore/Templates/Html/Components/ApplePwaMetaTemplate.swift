@@ -105,6 +105,6 @@ private extension ApplePwaMetaTemplate {
                 .href("/img/web/apple/icons/\(size).png")
         }
         return link
-            .href("/img/web/apple/192.png")
+            .href("/img/web/apple/icons/192.png")
     }
 }

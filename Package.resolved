@@ -119,21 +119,12 @@
         }
       },
       {
-        "package": "swift-css",
-        "repositoryURL": "https://github.com/binarybirds/swift-css",
-        "state": {
-          "branch": null,
-          "revision": "c5a1741c83ca7eb6dcd0aec0eeefb7a0ca5d8d43",
-          "version": "1.0.1"
-        }
-      },
-      {
         "package": "swift-html",
         "repositoryURL": "https://github.com/binarybirds/swift-html",
         "state": {
           "branch": null,
-          "revision": "9fd087d92c552dbd9507ddb98d3058547b9369f9",
-          "version": "1.2.0"
+          "revision": "99295373a2f21647b561a8e880531b587c0aca50",
+          "version": "1.3.3"
         }
       },
       {
