@@ -14,6 +14,7 @@ struct UserInstallStepController: SystemInstallStepController {
 
     func installStep(_ req: Request, info: SystemInstallInfo) async throws -> Response {
         let form = UserInstallForm()
+        form.fields = form.createFields(req)
         try await form.load(req: req)
         try await form.read(req: req)
         return render(req, form: form)
@@ -21,6 +22,7 @@ struct UserInstallStepController: SystemInstallStepController {
 
     func performInstallStep(_ req: Request, info: SystemInstallInfo) async throws -> Response? {
         let form = UserInstallForm()
+        form.fields = form.createFields(req)
         try await form.load(req: req)
         try await form.process(req: req)
         let isValid = try await form.validate(req: req)
