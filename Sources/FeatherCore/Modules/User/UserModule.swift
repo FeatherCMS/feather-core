@@ -59,7 +59,6 @@ struct UserModule: FeatherModule {
         app.hooks.register(.publicApiRoutes, use: router.publicApiRoutesHook)
         app.hooks.register(.installUserRoles, use: installUserRolesHook)
         app.hooks.register(.installUserPermissions, use: installUserPermissionsHook)
-        app.hooks.register(.installUserAccounts, use: installUserAccountsHook)
         app.hooks.register(.installStep, use: installStepHook)
 
         app.hooks.registerAsync(.install, use: installHook)
@@ -163,13 +162,6 @@ struct UserModule: FeatherModule {
         ]
     }
 
-    func installUserAccountsHook(args: HookArguments) -> [User.Account.Create] {
-        [
-//            .init(email: "root@feathercms.com", password: "FeatherCMS", isRoot: true),
-//            .init(email: "user@feathercms.com", password: "FeatherCMS"),
-        ]
-    }
-    
     func installUserPermissionsHook(args: HookArguments) -> [User.Permission.Create] {
         var permissions = User.availablePermissions()
         permissions += User.Account.availablePermissions()

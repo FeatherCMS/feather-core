@@ -7,8 +7,8 @@
 
 final class UserInstallForm: AbstractForm {
 
-    var email: String = "root@feathercms.com"
-    var password: String = "FeatherCMS"
+    var email: String = ""
+    var password: String = ""
     
     init() {
         super.init()

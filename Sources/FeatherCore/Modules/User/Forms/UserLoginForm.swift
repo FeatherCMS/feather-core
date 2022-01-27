@@ -17,7 +17,6 @@ final class UserLoginForm: AbstractForm {
         InputField("email")
             .config {
                 $0.output.context.type = .email
-                $0.output.context.value = "root@feathercms.com"
             }
             .validators {
                 FormFieldValidator.required($1)
@@ -27,7 +26,6 @@ final class UserLoginForm: AbstractForm {
         InputField("password")
             .config {
                 $0.output.context.type = .password
-                $0.output.context.value = "FeatherCMS"
             }
             .validators {
                 FormFieldValidator.required($1)

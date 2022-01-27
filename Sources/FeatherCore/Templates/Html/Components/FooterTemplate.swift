@@ -19,13 +19,19 @@ struct FooterTemplate: TemplateRepresentable {
     init(_ context: FooterContext) {
         self.context = context
     }
-    
+
     func render(_ req: Request) -> Tag {
         Footer {
             Div {
                 Div {
                     Section {
+                        if req.checkPermission(Admin.permission(for: .detail)) {
+                            A("Admin")
+                                .href(req.feather.config.paths.admin.safePath())
+                        }
+
                         P {
+                            
                             Text("This site is powered by ")
                             A("Swift")
                                 .href("https://swift.org")
