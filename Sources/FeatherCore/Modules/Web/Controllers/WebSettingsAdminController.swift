@@ -14,6 +14,7 @@ struct WebSettingsAdminController {
 
     func settingsView(_ req: Request) async throws -> Response {
         let form = WebSettingsForm()
+        form.fields = form.createFields(req)
         try await form.load(req: req)
         try await form.read(req: req)
         return render(req, form: form)
@@ -21,6 +22,7 @@ struct WebSettingsAdminController {
 
     func settings(_ req: Request) async throws -> Response {
         let form = WebSettingsForm()
+        form.fields = form.createFields(req)
         try await form.load(req: req)
         try await form.process(req: req)
         let isValid = try await form.validate(req: req)
