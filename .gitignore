@@ -15,3 +15,4 @@ db.sqlite
 /Tests/tmp
 /Tests/Public
 /Tests/Resources
+/docs

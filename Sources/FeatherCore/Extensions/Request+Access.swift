@@ -7,6 +7,18 @@
 
 public extension Request {
 
+    /// Check user access
+    ///
+    /// This method checks if the user has access using a given permission
+    /// The appropriate access hook function will be called using the arguments
+    ///
+    /// If the user has access the function returns true, otherwise false
+    ///
+    /// - Parameters:
+    ///   - permission: The permission used to check the corresponding access
+    ///   - args: Additional hook function arguments that you might want to provide
+    /// - Returns: True if the user has access, otherwise false.
+    ///
     func checkAccess(for permission: FeatherPermission, args: HookArguments = [:]) async throws -> Bool {
         var accessArgs = args
         accessArgs["permission"] = permission
