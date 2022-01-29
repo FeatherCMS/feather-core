@@ -27,7 +27,8 @@ final class EditorGeneratorTests: XCTestCase {
                     self.form = form
                 }
 
-                var formFields: [FormField] {
+                    @FormFieldBuilder
+                    func createFields(_ req: Request) -> [FormField] {
                         InputField("email")
                 .read { $1.output.context.value = model.email }
                 .write { model.email = $1.input }

@@ -80,7 +80,8 @@ public struct EditorGenerator {
                 self.form = form
             }
 
-            var formFields: [FormField] {
+                @FormFieldBuilder
+                func createFields(_ req: Request) -> [FormField] {
                 \(fields)
             }
         }
