@@ -9,7 +9,7 @@ import SwiftHtml
 
 public struct MultipleSelectFieldTemplate: TemplateRepresentable {
 
-    var context: MultipleSelectFieldContext
+    public var context: MultipleSelectFieldContext
     
     public init(_ context: MultipleSelectFieldContext) {
         self.context = context
