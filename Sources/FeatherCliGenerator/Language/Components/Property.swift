@@ -11,6 +11,7 @@ class Property {
     let constant: Bool
     let name: String
     let type: String
+    let value: String?
     let getter: String?
     let setter: String?
     let access: Access
@@ -18,12 +19,14 @@ class Property {
     init(constant: Bool = false,
          name: String,
          type: String,
+         value: String? = nil,
          getter: String? = nil,
          setter: String? = nil,
          access: Access = .internal) {
         self.constant = constant
         self.name = name
         self.type = type
+        self.value = value
         self.getter = getter
         self.setter = setter
         self.access = access

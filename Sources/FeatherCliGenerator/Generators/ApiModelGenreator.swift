@@ -18,6 +18,19 @@ public struct ApiModelGenerator {
     
     public func generate() -> String {
 
+        let props = descriptor.properties.map { Property(name: $0.name, type: $0.swiftType, access: .public) }
+        let idProps = [Property(name: "id", type: "UUID")] + props
+        
+        let patchProps = descriptor.properties.map {
+            Property(name: $0.name, type: $0.databaseType.rawValue.capitalized + "?", value: "nil", access: .public)
+        }
+        
+        let list = Object(type: "struct", name: "List", inherits: ["Codable"], properties: idProps, generateInit: true)
+        let detail = Object(type: "struct", name: "Detail", inherits: ["Codable"], properties: idProps, generateInit: true)
+        let create = Object(type: "struct", name: "Create", inherits: ["Codable"], properties: props, generateInit: true)
+        let update = Object(type: "struct", name: "Update", inherits: ["Codable"], properties: props, generateInit: true)
+        let patch = Object(type: "struct", name: "Patch", inherits: ["Codable"], properties: patchProps, generateInit: true)
+                
         return """
         public extension \(module) {
             
@@ -28,48 +41,21 @@ public struct ApiModelGenerator {
 
         public extension \(module).\(descriptor.name) {
         
-                // MARK: -
+            // MARK: -
         
-                struct List: Codable {
-                    public let id: UUID
-                    \(generateFields())
+        \(list.debugDescription.indentLines())
+            // MARK: -
         
-                    \(generateInit())
-                }
+        \(detail.debugDescription.indentLines())
+            // MARK: -
         
-                // MARK: -
+        \(create.debugDescription.indentLines())
+            // MARK: -
         
-                struct Detail: Codable {
-                    public let id: UUID
-                    \(generateFields())
+        \(update.debugDescription.indentLines())
+            // MARK: -
         
-                    \(generateInit())
-                }
-        
-                // MARK: -
-        
-                struct Create: Codable {
-                    \(generateFields())
-        
-                    \(generateInit(withId: false))
-                }
-
-
-                // MARK: -
-        
-                struct Update: Codable {
-                    \(generateFields())
-        
-                    \(generateInit(withId: false))
-                }
-
-                // MARK: -
-        
-                struct Patch: Codable {
-                    \(generateFields())
-        
-                    \(generateInit(withId: false))
-                }
+        \(patch.debugDescription.indentLines())
         
         }
         """
@@ -95,24 +81,30 @@ private extension ApiModelGenerator {
         "    self.\(name) = \(name)"
     }
     
-    func generateInit(withId: Bool = true) -> String {
+    func generateInit(withId: Bool = true, optionals: Bool = false) -> String {
         let arguments = descriptor.properties.map { generateInitArgument($0) }.joined(separator: ",\n    ")
         let setters = descriptor.properties.map { generateInitSetter($0.name) }.joined(separator: "\n    ")
         
         if withId {
             return """
-            public init(id: UUID,
-                \(arguments)) {
+            public init(
+                id: UUID,
+                \(arguments)
+            ) {
                 self.id = id
-                \(setters)
-                }
+            \(setters.indentLines())
+            }
             """
         }
         return """
-        public init(\(arguments)) {
-            \(setters)
-            }
+        public init(
+        \(arguments.indentLines())
+        ) {
+        \(setters.indentLines())
+        }
         """
     }
+    
+    
 }
 
