@@ -12,6 +12,7 @@ public struct PropertyDescriptor {
         case int
         case double
         case bool
+        case date
     }
 
     public enum FormFieldType: String, CaseIterable {
