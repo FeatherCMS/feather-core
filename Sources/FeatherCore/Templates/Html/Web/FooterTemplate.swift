@@ -14,6 +14,10 @@ struct FooterContext {
 
 struct FooterTemplate: TemplateRepresentable {
     
+    private func getTitle(_ req: Request) -> String {
+        req.variable("webSiteTitle") ?? ""
+    }
+    
     let context: FooterContext
     
     init(_ context: FooterContext) {
@@ -24,36 +28,76 @@ struct FooterTemplate: TemplateRepresentable {
         Footer {
             Div {
                 Div {
-                    Section {
-                        if req.auth.has(FeatherAccount.self) {
-                            if req.checkPermission(Admin.permission(for: .detail)) {
-                                A("Admin")
-                                    .href(req.feather.config.paths.admin.safePath())
+                    Div {
+                        Section {
+                            H4("Main")
+                            Ul {
+                                req.menuItems("main").map { ctx -> Tag in
+                                    Li {
+                                        LinkTemplate(ctx).render(req)
+                                    }
+                                }
                             }
-                            A("Sign out")
-                                .href(req.feather.config.paths.logout.safePath())
                         }
-                        else {
-                            A("Sign in")
-                                .href(req.feather.config.paths.login.safePath())
+                        Section {
+                            H4("Footer")
+                            Ul {
+                                req.menuItems("footer").map { ctx -> Tag in
+                                    Li {
+                                        LinkTemplate(ctx).render(req)
+                                    }
+                                }
+                            }
                         }
-
-                        P {
-                            
-                            Text("This site is powered by ")
-                            A("Swift")
-                                .href("https://swift.org")
-                                .target(.blank)
-                            Text(" & ")
-                            A("Vapor")
-                                .href("https://vapor.codes")
-                                .target(.blank)
-                            Text(".")
+                        Section {
+                            H4("User")
+                            Ul {
+                                if req.auth.has(FeatherAccount.self) {
+                                    if req.checkPermission(Admin.permission(for: .detail)) {
+                                        Li {
+                                            A("Admin")
+                                                .href(req.feather.config.paths.admin.safePath())
+                                        }
+                                    }
+                                    Li {
+                                        A("Sign out")
+                                            .href(req.feather.config.paths.logout.safePath())
+                                    }
+                                }
+                                else {
+                                    Li {
+                                        A("Sign in")
+                                            .href(req.feather.config.paths.login.safePath())
+                                    }
+                                }
+                            }
                         }
-                        P("myPage &copy; \(Calendar.current.component(.year, from: Date()))")
+                        Section {
+                            H4("Links")
+                            Ul {
+                                Li {
+                                    A("Feather")
+                                        .href("https://feathercms.com/")
+                                        .target(.blank)
+                                }
+                                Li {
+                                    A("Vapor")
+                                        .href("https://vapor.codes/")
+                                        .target(.blank)
+                                }
+                                Li {
+                                    A("Swift")
+                                        .href("https://swift.org/")
+                                        .target(.blank)
+                                }
+                            }
+                        }
                     }
+                    .class("grid-421")    
                 }
                 .class("wrapper")
+                
+                P("\(getTitle(req)) &copy; \(Calendar.current.component(.year, from: Date()))")
             }
             .class("safe-area")
         }
