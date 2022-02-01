@@ -58,8 +58,10 @@ final class ApiControllerGeneratorTests: XCTestCase {
                 model.password = input.password ?? model.password
             }
         
+            @AsyncValidatorBuilder
             func validators(optional: Bool) -> [AsyncValidator] {
-                []
+                KeyedContentValidator<string>.required("email", optional: optional)
+                KeyedContentValidator<string>.required("password", optional: optional)
             }
         }
         

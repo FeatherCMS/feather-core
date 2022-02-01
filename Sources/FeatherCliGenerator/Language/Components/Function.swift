@@ -14,26 +14,34 @@ class Function {
     let body: String
     let access: Access
     let modifiers: [String]
+    let wrappers: [String]
     
     init(name: String,
          arguments: [Argument] = [],
          returns: String? = nil,
          body: String,
          access: Access = .internal,
-         modifiers: [String] = []) {
+         modifiers: [String] = [],
+         wrappers: [String] = []
+    ) {
         self.name = name
         self.arguments = arguments
         self.returns = returns
         self.body = body
         self.access = access
         self.modifiers = modifiers
+        self.wrappers = wrappers
     }
 }
 
 extension Function: CustomDebugStringConvertible {
 
     var debugDescription: String {
-        var res = access.debugDescription + "func "
+        var res = ""
+        if !wrappers.isEmpty {
+            res = res + wrappers.joined(separator: "\n") + "\n    "
+        }
+        res = res + access.debugDescription + "func "
         res += name
         res += "("
         res += arguments.map(\.debugDescription).joined(separator: ", ")

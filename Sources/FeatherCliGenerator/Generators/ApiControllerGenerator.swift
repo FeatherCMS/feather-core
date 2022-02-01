@@ -17,6 +17,11 @@ public struct ApiControllerGenerator {
     }
     
     public func generate() -> String {
+
+        let validators = descriptor.properties.filter { $0.isRequired }.map {
+            "KeyedContentValidator<\($0.databaseType.rawValue)>.required(\"\($0.name)\", optional: optional)"
+        }.joined(separator: "\n")
+        
         let ctrl = Object(type: "struct",
                           name: "\(module)\(descriptor.name)ApiController",
                           inherits: ["ApiController"],
@@ -87,8 +92,9 @@ public struct ApiControllerGenerator {
                                   ],
                                   returns: "[AsyncValidator]",
                                   body: """
-                                    []
-                                    """),
+                                    \(validators)
+                                    """,
+                                 wrappers: ["@AsyncValidatorBuilder"]),
                                 
                         ])
         
