@@ -25,9 +25,17 @@ struct FooterTemplate: TemplateRepresentable {
             Div {
                 Div {
                     Section {
-                        if req.checkPermission(Admin.permission(for: .detail)) {
-                            A("Admin")
-                                .href(req.feather.config.paths.admin.safePath())
+                        if req.auth.has(FeatherAccount.self) {
+                            if req.checkPermission(Admin.permission(for: .detail)) {
+                                A("Admin")
+                                    .href(req.feather.config.paths.admin.safePath())
+                            }
+                            A("Sign out")
+                                .href(req.feather.config.paths.logout.safePath())
+                        }
+                        else {
+                            A("Sign in")
+                                .href(req.feather.config.paths.login.safePath())
                         }
 
                         P {
@@ -42,7 +50,7 @@ struct FooterTemplate: TemplateRepresentable {
                                 .target(.blank)
                             Text(".")
                         }
-                        P("myPage &copy; 2020-2022")
+                        P("myPage &copy; \(Calendar.current.component(.year, from: Date()))")
                     }
                 }
                 .class("wrapper")

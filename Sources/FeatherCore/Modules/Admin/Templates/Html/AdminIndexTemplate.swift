@@ -24,7 +24,7 @@ public struct AdminIndexTemplate: TemplateRepresentable {
             Head {
                 Title(context.title)
 
-                MetaTemplate(.init(charset: context.charset,
+                StandardMetaTemplate(.init(charset: context.charset,
                                    viewport: context.viewport,
                                    noindex: true))
                     .render(req)

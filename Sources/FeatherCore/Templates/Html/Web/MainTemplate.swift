@@ -7,19 +7,16 @@
 
 import SwiftHtml
 
-struct MainContext {
-    var body: Tag
-}
-
-struct MainTemplate: TemplateRepresentable {
+public struct MainTemplate: TemplateRepresentable {
     
-    let context: MainContext
+    public let context: MainContext
     
-    init(_ context: MainContext) {
+    public init(_ context: MainContext) {
         self.context = context
     }
     
-    func render(_ req: Request) -> Tag {
+    // @TODO: optional wrapper?
+    public func render(_ req: Request) -> Tag {
         Main {
             Div {
                 Div {

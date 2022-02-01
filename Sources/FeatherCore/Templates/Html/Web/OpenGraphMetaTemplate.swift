@@ -7,41 +7,37 @@
 
 import SwiftHtml
 
-struct TwitterMetaContext {
-    let title: String
-    let excerpt: String?
-    let imageUrl: String?
-}
-
-struct TwitterMetaTemplate: TemplateRepresentable {
+// https://ogp.me
+public struct OpenGraphMetaTemplate: TemplateRepresentable {
     
-    let context: TwitterMetaContext
+    public let context: OpenGraphMetaContext
     
-    init(_ context: TwitterMetaContext) {
+    public init(_ context: OpenGraphMetaContext) {
         self.context = context
     }
     
     @TagBuilder
-    func render(_ req: Request) -> Tag {
-
+    public func render(_ req: Request) -> Tag {
+        
         Meta()
-            .name("twitter:card")
-            .content("summary_large_image")
-
+            .name("og:url")
+            .content(context.url)
         Meta()
-            .name("twitter:title")
+            .name("og:title")
             .content(context.title)
 
         if let excerpt = context.excerpt, !excerpt.isEmpty {
             Meta()
-                .name("twitter:description")
+                .name("og:description")
                 .content(excerpt)
         }
         if let url = context.imageUrl, !url.isEmpty {
             Meta()
-                .name("twitter:image")
+                .name("og:image")
                 .content(url)
         }
     }
 }
+
+
 

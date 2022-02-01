@@ -7,18 +7,16 @@
 
 import SwiftHtml
 
-struct ApplePwaMetaContext {
-    let title: String
-}
+// https://theswiftdev.com/progressive-web-apps-on-ios/
+public struct ApplePwaMetaTemplate: TemplateRepresentable {
 
-struct ApplePwaMetaTemplate: TemplateRepresentable {
-    let context: ApplePwaMetaContext
+    public let context: ApplePwaMetaContext
     
-    init(_ context: ApplePwaMetaContext) {
+    public init(_ context: ApplePwaMetaContext) {
         self.context = context
     }
     
-    func render(_ req: Request) -> Tag {
+    public func render(_ req: Request) -> Tag {
         Meta()
             .name(.appleMobileWebAppTitle)
             .content(context.title)

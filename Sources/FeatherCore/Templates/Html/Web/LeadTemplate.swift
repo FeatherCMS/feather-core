@@ -7,11 +7,7 @@
 
 import SwiftHtml
 
-struct LeadContext {
-    let title: String
-    let excerpt: String
-    let icon: String?
-}
+
 
 struct LeadTemplate: TemplateRepresentable {
     

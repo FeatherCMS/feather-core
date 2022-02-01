@@ -17,7 +17,6 @@ public struct ToggleFieldTemplate: TemplateRepresentable {
 
     @TagBuilder
     public func render(_ req: Request) -> Tag {
-        
 
         Input()
             .type(.checkbox)

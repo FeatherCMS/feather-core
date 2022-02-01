@@ -7,21 +7,15 @@
 
 import SwiftHtml
 
-struct MenuContext {
-    let id: String
-    let icon: Tag
-    let items: [Tag]
-}
-
-struct MenuTemplate: TemplateRepresentable {
+public struct MenuTemplate: TemplateRepresentable {
     
-    let context: MenuContext
+    public let context: MenuContext
     
-    init(_ context: MenuContext) {
+    public init(_ context: MenuContext) {
         self.context = context
     }
 
-    func render(_ req: Request) -> Tag {
+    public func render(_ req: Request) -> Tag {
         Nav {
             Label {
                 context.icon

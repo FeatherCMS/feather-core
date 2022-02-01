@@ -7,22 +7,16 @@
 
 import SwiftHtml
 
-struct MetaContext {
-    let charset: String
-    let viewport: String
-    let noindex: Bool
-}
-
-struct MetaTemplate: TemplateRepresentable {
+public struct StandardMetaTemplate: TemplateRepresentable {
     
-    let context: MetaContext
+    public let context: StandardMetaContext
     
-    init(_ context: MetaContext) {
+    public init(_ context: StandardMetaContext) {
         self.context = context
     }
     
     @TagBuilder
-    func render(_ req: Request) -> Tag {
+    public func render(_ req: Request) -> Tag {
         Meta()
             .charset(context.charset)
 

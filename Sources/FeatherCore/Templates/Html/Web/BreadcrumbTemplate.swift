@@ -7,20 +7,16 @@
 
 import SwiftHtml
 
-struct BreadcrumbContext {
-    let links: [LinkContext]
-}
-
-struct BreadcrumbTemplate: TemplateRepresentable {
+public struct BreadcrumbTemplate: TemplateRepresentable {
     
-    let context: BreadcrumbContext
+    public let context: BreadcrumbContext
     
-    init(_ context: BreadcrumbContext) {
+    public init(_ context: BreadcrumbContext) {
         self.context = context
     }
     
     @TagBuilder
-    func render(_ req: Request) -> Tag {
+    public func render(_ req: Request) -> Tag {
         Div {
             Nav {
                 context.links.map { LinkTemplate($0).render(req) }

@@ -96,7 +96,7 @@ public struct WebIndexTemplate: TemplateRepresentable {
                 Title(getTitle(req))
 
                 //"width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no"
-                MetaTemplate(.init(charset: context.charset,
+                StandardMetaTemplate(.init(charset: context.charset,
                                    viewport: context.viewport,
                                    noindex: noindex))
                     .render(req)
@@ -106,7 +106,7 @@ public struct WebIndexTemplate: TemplateRepresentable {
                                               excerpt: metadata.excerpt,
                                               imageUrl: ""))
                         .render(req)
-                    OgMetaTemplate(.init(url: "",
+                    OpenGraphMetaTemplate(.init(url: "",
                                          title: metadata.title ?? getTitle(req),
                                          excerpt: metadata.excerpt,
                                          imageUrl: ""))

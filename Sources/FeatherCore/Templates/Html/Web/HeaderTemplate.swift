@@ -7,26 +7,15 @@
 
 import SwiftHtml
 
-struct HeaderContext {
-
-    let main: MenuContext?
-    let account: MenuContext?
+public struct HeaderTemplate: TemplateRepresentable {
     
-    init(main: MenuContext? = nil, account: MenuContext? = nil) {
-        self.main = main
-        self.account = account
-    }
-}
-
-struct HeaderTemplate: TemplateRepresentable {
+    public let context: HeaderContext
     
-    let context: HeaderContext
-    
-    init(_ context: HeaderContext) {
+    public init(_ context: HeaderContext) {
         self.context = context
     }
     
-    func render(_ req: Request) -> Tag {
+    public func render(_ req: Request) -> Tag {
         Header {
             Div {
                 A {
