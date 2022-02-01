@@ -125,7 +125,19 @@ footer {
     background: var(--bg-color);
     padding-bottom: 3rem;
 }
-
+footer h4 {
+    margin-top: 0;
+}
+footer {
+    padding-bottom: 0;
+}
+footer .wrapper {
+    padding-bottom: 1rem;
+}
+footer p {
+    padding: 1rem;
+    border-top: 1px solid var(--bg-color-2);
+}
 a {
     text-decoration: none;
 }
