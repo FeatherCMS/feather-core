@@ -17,40 +17,86 @@ public struct ApiControllerGenerator {
     }
     
     public func generate() -> String {
+        let ctrl = Object(type: "struct",
+                          name: "\(module)\(descriptor.name)ApiController",
+                          inherits: ["ApiController"],
+                          typealiases: [
+                            .init(name: "ApiModel", value: "\(module).\(descriptor.name)"),
+                            .init(name: "DatabaseModel", value: "\(module)\(descriptor.name)Model"),
+                        ], functions: [
+                            .init(name: "listOutput",
+                                  arguments: [
+                                    .init(name: "req", type: "Request", label: "_"),
+                                    .init(name: "models", type: "[DatabaseModel]", label: "_"),
+                                  ],
+                                  returns: "[\(module).\(descriptor.name).List]",
+                                  body: """
+                                    models.map { model in
+                                    \(generateInit().indentLines())
+                                    }
+                                    """,
+                                  modifiers: ["async", "throws"]),
+                            
+                            .init(name: "detailOutput",
+                                  arguments: [
+                                    .init(name: "req", type: "Request", label: "_"),
+                                    .init(name: "model", type: "DatabaseModel", label: "_"),
+                                  ],
+                                  returns: "\(module).\(descriptor.name).Detail",
+                                  body: """
+                                    \(generateInit())
+                                    """,
+                                 modifiers: ["async", "throws"]),
+                            
+                            .init(name: "createInput",
+                                  arguments: [
+                                    .init(name: "req", type: "Request", label: "_"),
+                                    .init(name: "model", type: "DatabaseModel", label: "_"),
+                                    .init(name: "input", type: "\(module).\(descriptor.name).Create", label: "_"),
+                                  ],
+                                  body: """
+                                    \(generateUpsertFields())
+                                    """,
+                                 modifiers: ["async", "throws"]),
+                            
+                            .init(name: "updateInput",
+                                  arguments: [
+                                    .init(name: "req", type: "Request", label: "_"),
+                                    .init(name: "model", type: "DatabaseModel", label: "_"),
+                                    .init(name: "input", type: "\(module).\(descriptor.name).Update", label: "_")
+                                  ],
+                                  body: """
+                                    \(generateUpsertFields())
+                                    """,
+                                 modifiers: ["async", "throws"]),
+                            
+                            .init(name: "patchInput",
+                                  arguments: [
+                                    .init(name: "req", type: "Request", label: "_"),
+                                    .init(name: "model", type: "DatabaseModel", label: "_"),
+                                    .init(name: "input", type: "\(module).\(descriptor.name).Patch", label: "_")
+                                  ],
+                                  body: """
+                                    \(generatePatchFields())
+                                    """,
+                                 modifiers: ["async", "throws"]),
+                            
+                            .init(name: "validators",
+                                  arguments: [
+                                    .init(name: "optional", type: "Bool"),
+                                  ],
+                                  returns: "[AsyncValidator]",
+                                  body: """
+                                    []
+                                    """),
+                                
+                        ])
+        
         return """
         extension \(module).\(descriptor.name).List: Content {}
         extension \(module).\(descriptor.name).Detail: Content {}
-
-        struct \(module)\(descriptor.name)ApiController: ApiController {
-            typealias ApiModel = \(module).\(descriptor.name)
-            typealias DatabaseModel = \(module)\(descriptor.name)Model
-            
-            func listOutput(_ req: Request, _ models: [DatabaseModel]) async throws -> [\(module).\(descriptor.name).List] {
-                models.map { model in
-                    \(generateInit())
-                }
-            }
-            
-            func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> \(module).\(descriptor.name).Detail {
-                \(generateInit())
-            }
-            
-            func createInput(_ req: Request, _ model: DatabaseModel, _ input: \(module).\(descriptor.name).Create) async throws {
-                \(generateUpsertFields())
-            }
-            
-            func updateInput(_ req: Request, _ model: DatabaseModel, _ input: \(module).\(descriptor.name).Update) async throws {
-                \(generateUpsertFields())
-            }
-            
-            func patchInput(_ req: Request, _ model: DatabaseModel, _ input: \(module).\(descriptor.name).Patch) async throws {
-                \(generatePatchFields())
-            }
-            
-            func validators(optional: Bool) -> [AsyncValidator] {
-                []
-            }
-        }
+        
+        \(ctrl.debugDescription)
         """
     }
 }
@@ -62,7 +108,7 @@ private extension ApiControllerGenerator {
     }
 
     func generatePatchFields() -> String {
-        descriptor.properties.map { generatePatchField($0) }.joined(separator: "\n    ")
+        descriptor.properties.map { generatePatchField($0) }.joined(separator: "\n")
     }
     
     func generateUpsertField(_ property: PropertyDescriptor) -> String {
@@ -70,7 +116,7 @@ private extension ApiControllerGenerator {
     }
 
     func generateUpsertFields() -> String {
-        descriptor.properties.map { generateUpsertField($0) }.joined(separator: "\n    ")
+        descriptor.properties.map { generateUpsertField($0) }.joined(separator: "\n")
     }
 
     
@@ -79,11 +125,13 @@ private extension ApiControllerGenerator {
     }
     
     func generateInit() -> String {
-        let arguments = descriptor.properties.map { generateInitArgument($0) }.joined(separator: ",\n    ")
+        let arguments = descriptor.properties.map { generateInitArgument($0) }.joined(separator: ",\n")
 
         return """
-        .init(id: model.uuid,
-            \(arguments))
+        .init(
+            id: model.uuid,
+        \(arguments.indentLines())
+        )
         """
     }
 }

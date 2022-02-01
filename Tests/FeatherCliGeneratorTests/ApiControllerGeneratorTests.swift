@@ -24,40 +24,45 @@ final class ApiControllerGeneratorTests: XCTestCase {
         struct UserAccountApiController: ApiController {
             typealias ApiModel = User.Account
             typealias DatabaseModel = UserAccountModel
-            
+        
             func listOutput(_ req: Request, _ models: [DatabaseModel]) async throws -> [User.Account.List] {
                 models.map { model in
-                    .init(id: model.uuid,
-            email: model.email,
-            password: model.password)
+                    .init(
+                        id: model.uuid,
+                        email: model.email,
+                        password: model.password
+                    )
                 }
             }
-            
+        
             func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> User.Account.Detail {
-                .init(id: model.uuid,
-            email: model.email,
-            password: model.password)
+                .init(
+                    id: model.uuid,
+                    email: model.email,
+                    password: model.password
+                )
             }
-            
+        
             func createInput(_ req: Request, _ model: DatabaseModel, _ input: User.Account.Create) async throws {
                 model.email = input.email
-            model.password = input.password
+                model.password = input.password
             }
-            
+        
             func updateInput(_ req: Request, _ model: DatabaseModel, _ input: User.Account.Update) async throws {
                 model.email = input.email
-            model.password = input.password
+                model.password = input.password
             }
-            
+        
             func patchInput(_ req: Request, _ model: DatabaseModel, _ input: User.Account.Patch) async throws {
                 model.email = input.email ?? model.email
-            model.password = input.password ?? model.password
+                model.password = input.password ?? model.password
             }
-            
+        
             func validators(optional: Bool) -> [AsyncValidator] {
                 []
             }
         }
+        
         """
 
         XCTAssertEqual(expectation, result)

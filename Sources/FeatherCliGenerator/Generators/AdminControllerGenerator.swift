@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Tibor Bodecs on 2022. 01. 14..
 //
@@ -16,62 +16,87 @@ public struct AdminControllerGenerator {
     }
     
     public func generate() -> String {
-        let orders = descriptor.properties.filter { $0.isOrderingAllowed }.map { "\"" + $0.name + "\"" }.joined(separator: ",\n")
-        let search = descriptor.properties.filter { $0.isSearchable }.map { "\\.$" + $0.name + " ~~ term" }.joined(separator: ",\n")
-        let columns = descriptor.properties.filter { $0.isOrderingAllowed }.map { ".init(\"" + $0.name + "\")" }.joined(separator: ",\n")
+        let orders = descriptor.properties.filter { $0.isOrderingAllowed }.map { "\"" + $0.name + "\"," }.joined(separator: "\n")
+        let search = descriptor.properties.filter { $0.isSearchable }.map { "\\.$" + $0.name + " ~~ term," }.joined(separator: "\n")
+        let columns = descriptor.properties.filter { $0.isOrderingAllowed }.map { ".init(\"" + $0.name + "\")," }.joined(separator: "\n")
         
         let cells = descriptor.properties.filter { $0.isOrderingAllowed }.map {
-            ".init(model.\($0.name), link: LinkContext(label: model.\($0.name), permission: ApiModel.permission(for: .detail).key))"
-        }.joined(separator: ",\n")
+            ".init(model.\($0.name), link: LinkContext(label: model.\($0.name), permission: ApiModel.permission(for: .detail).key)),"
+        }.joined(separator: "\n")
         
         let details = descriptor.properties.filter { $0.isOrderingAllowed }.map {
             ".init(\"\($0.name)\", model.\($0.name)),"
-        }.joined(separator: ",\n")
+        }.joined(separator: "\n")
 
-        return """
-        struct \(module)\(descriptor.name)AdminController: AdminController {
-            typealias ApiModel = \(module).\(descriptor.name)
-            typealias DatabaseModel = \(module)\(descriptor.name)Model
-            
-            typealias CreateModelEditor = \(module)\(descriptor.name)Editor
-            typealias UpdateModelEditor = \(module)\(descriptor.name)Editor
-            
-            var listConfig: ListConfiguration {
-                .init(allowedOrders: [
-                    \(orders)
-                ])
-            }
+        let ctrl = Object(type: "struct",
+                          name: "\(module)\(descriptor.name)AdminController",
+                          inherits: ["AdminController"],
+                          typealiases: [
+                            .init(name: "ApiModel", value: "\(module).\(descriptor.name)"),
+                            .init(name: "DatabaseModel", value: "\(module)\(descriptor.name)Model"),
+                            .init(name: "CreateModelEditor", value: "\(module)\(descriptor.name)Editor"),
+                            .init(name: "UpdateModelEditor", value: "\(module)\(descriptor.name)Editor"),
+                        ], properties: [
+                            .init(name: "listConfig",
+                                  type: "ListConfiguration",
+                                  getter: """
+                                    .init(allowedOrders: [
+                                    \(orders.indentLines())
+                                    ])
+                                    """)
+                        ], functions: [
+                            .init(name: "listSearch",
+                                  arguments: [
+                                    .init(name: "term", type: "String", label: "_")
+                                  ],
+                                  returns: "[ModelValueFilter<DatabaseModel>]",
+                                  body: """
+                                    [
+                                    \(search.indentLines())
+                                    ]
+                                    """),
+                            
+                                .init(name: "listColumns",
+                                      returns: "[ColumnContext]",
+                                      body: """
+                                        [
+                                        \(columns.indentLines())
+                                        ]
+                                        """),
+                            
+                                .init(name: "listCells",
+                                      arguments: [
+                                        .init(name: "model", type: "DatabaseModel", label: "for")
+                                      ],
+                                      returns: "[CellContext]",
+                                      body: """
+                                        [
+                                        \(cells.indentLines())
+                                        ]
+                                        """),
+                            
+                                .init(name: "detailFields",
+                                      arguments: [
+                                        .init(name: "model", type: "DatabaseModel", label: "for")
+                                      ],
+                                      returns: "[DetailContext]",
+                                      body: """
+                                        [
+                                            .init("id", model.uuid.string),
+                                        \(details.indentLines())
+                                        ]
+                                        """),
+                            
+                                .init(name: "deleteInfo",
+                                      arguments: [
+                                        .init(name: "model", type: "DatabaseModel", label: "_")
+                                      ],
+                                      returns: "String",
+                                      body: """
+                                        model.uuid.string
+                                        """),
+                        ])
 
-            func listSearch(_ term: String) -> [ModelValueFilter<DatabaseModel>] {
-                [
-                    \(search)
-                ]
-            }
-
-            func listColumns() -> [ColumnContext] {
-                [
-                    \(columns)
-                ]
-            }
-            
-            func listCells(for model: DatabaseModel) -> [CellContext] {
-                [
-                    \(cells)
-                ]
-            }
-            
-            func detailFields(for model: DatabaseModel) -> [DetailContext] {
-                [
-                    .init("id", model.uuid.string),
-                    \(details)
-                ]
-            }
-            
-            func deleteInfo(_ model: DatabaseModel) -> String {
-                model.uuid.string
-            }
-        }
-        """
+        return ctrl.debugDescription
     }
 }
-
