@@ -54,7 +54,6 @@ struct WebModule: FeatherModule {
         let menuItems: [Web.MenuItem.Create] = args.req.invokeAllFlat(.installWebMenuItems, args: arguments)
         let items = menuItems.map { item -> WebMenuItemModel in
             WebMenuItemModel(id: .init(),
-                             icon: item.icon,
                              label: item.label,
                              url: item.url,
                              priority: item.priority,

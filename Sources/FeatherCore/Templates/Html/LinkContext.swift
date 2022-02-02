@@ -24,7 +24,6 @@ public struct LinkContext {
         }
     }
 
-    public let icon: String?
     public let label: String
     public let path: String
     public let absolute: Bool
@@ -34,8 +33,7 @@ public struct LinkContext {
     public let permission: String?
     public let style: Style
 
-    public init(icon: String? = nil,
-                label: String,
+    public init(label: String,
                 path: String = "",
                 absolute: Bool = false,
                 isBlank: Bool = false,
@@ -43,7 +41,6 @@ public struct LinkContext {
                 priority: Int = 0,
                 permission: String? = nil,
                 style: Style = .`default`) {
-        self.icon = icon
         self.label = label
         self.path = path
         self.absolute = absolute

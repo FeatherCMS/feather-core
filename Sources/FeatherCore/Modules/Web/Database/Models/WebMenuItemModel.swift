@@ -12,7 +12,6 @@ final class WebMenuItemModel: FeatherDatabaseModel {
     
     struct FieldKeys {
         struct v1 {
-            static var icon: FieldKey { "icon" }
             static var label: FieldKey { "label" }
             static var url: FieldKey { "url" }
             static var priority: FieldKey { "priority" }
@@ -23,7 +22,6 @@ final class WebMenuItemModel: FeatherDatabaseModel {
     }
 
     @ID() var id: UUID?
-    @Field(key: FieldKeys.v1.icon) var icon: String?
     @Field(key: FieldKeys.v1.label) var label: String
     @Field(key: FieldKeys.v1.url) var url: String
     @Field(key: FieldKeys.v1.priority) var priority: Int
@@ -34,7 +32,6 @@ final class WebMenuItemModel: FeatherDatabaseModel {
     init() { }
 
     init(id: UUID? = nil,
-         icon: String? = nil,
          label: String,
          url: String,
          priority: Int = 100,
@@ -43,7 +40,6 @@ final class WebMenuItemModel: FeatherDatabaseModel {
          menuId: UUID)
     {
         self.id = id
-        self.icon = icon
         self.label = label
         self.url = url
         self.priority = priority

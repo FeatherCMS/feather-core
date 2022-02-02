@@ -55,7 +55,6 @@ struct WebMenuItemAdminController: AdminController {
     func detailFields(for model: DatabaseModel) -> [DetailContext] {
         [
             .init("id", model.uuid.string),
-            .init("icon", model.icon),
             .init("label", model.label),
             .init("url", model.url),
             .init("target", "Open in " + (model.isBlank ? "new" : "same") + " window / tab"),

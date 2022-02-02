@@ -21,8 +21,7 @@ struct WebMenuMiddleware: AsyncMiddleware {
         for menu in menus {
             let items = menu.items
                 .sorted { $0.priority > $1.priority }
-                .map { LinkContext(icon: $0.icon,
-                                   label: $0.label,
+                .map { LinkContext(label: $0.label,
                                    path: $0.url,
                                    absolute: true,
                                    isBlank: $0.isBlank,

@@ -16,10 +16,7 @@ struct WebMenuItemEditor: FeatherModelEditor {
 
     @FormFieldBuilder
     func createFields(_ req: Request) -> [FormField] {
-        InputField("icon")
-            .read { $1.output.context.value = model.icon }
-            .write { model.icon = $1.input }
-        
+
         InputField("label")
             .config {
                 $0.output.context.label.required = true

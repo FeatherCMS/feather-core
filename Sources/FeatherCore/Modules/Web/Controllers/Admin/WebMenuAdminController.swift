@@ -64,6 +64,18 @@ struct WebMenuAdminController: AdminController {
         ]
     }
     
+    func updateNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
+        [
+            LinkContext(label: "Details",
+                        dropLast: 1,
+                        permission: ApiModel.permission(for: .detail).key),
+            LinkContext(label: WebMenuItemAdminController.modelName.plural,
+                        path: Web.MenuItem.pathKey,
+                        dropLast: 1,
+                        permission: Web.MenuItem.permission(for: .list).key),
+        ]
+    }
+    
     func deleteInfo(_ model: DatabaseModel) -> String {
         model.key
     }

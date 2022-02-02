@@ -30,7 +30,6 @@ struct WebMenuItemApiController: ApiController {
         .init(id: model.uuid,
               label: model.label,
               url: model.url,
-              icon: model.icon,
               isBlank: model.isBlank,
               priority: model.priority,
               permission: model.permission,
@@ -40,7 +39,6 @@ struct WebMenuItemApiController: ApiController {
     func createInput(_ req: Request, _ model: DatabaseModel, _ input: Web.MenuItem.Create) async throws {
         model.label = input.label
         model.url = input.url
-        model.icon = input.icon
         model.isBlank = input.isBlank
         model.priority = input.priority
         model.permission = input.permission
@@ -50,7 +48,6 @@ struct WebMenuItemApiController: ApiController {
     func updateInput(_ req: Request, _ model: DatabaseModel, _ input: Web.MenuItem.Update) async throws {
         model.label = input.label
         model.url = input.url
-        model.icon = input.icon
         model.isBlank = input.isBlank
         model.priority = input.priority
         model.permission = input.permission
@@ -60,7 +57,6 @@ struct WebMenuItemApiController: ApiController {
     func patchInput(_ req: Request, _ model: DatabaseModel, _ input: Web.MenuItem.Patch) async throws {
         model.label = input.label ?? model.label
         model.url = input.url ?? model.url
-        model.icon = input.icon ?? model.icon
         model.isBlank = input.isBlank ?? model.isBlank
         model.priority = input.priority ?? model.priority
         model.permission = input.permission ?? model.permission

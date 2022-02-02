@@ -18,8 +18,6 @@ public struct PaginationTemplate: TemplateRepresentable {
     @TagBuilder
     public func render(_ req: Request) -> Tag {
         if context.total > 1 && context.current <= context.total {
-            Hr()
-            
             Div {
                 if context.current > 1 {
                     A("«")
