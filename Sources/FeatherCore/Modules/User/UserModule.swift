@@ -233,11 +233,10 @@ struct UserModule: FeatherModule {
         permissionHook(args: args)
     }
     
-    func adminWidgetsHook(args: HookArguments) -> [TemplateRepresentable] {
+    func adminWidgetsHook(args: HookArguments) -> [OrderedHookResult<TemplateRepresentable>] {
         if args.req.checkPermission(User.permission(for: .detail)) {
             return [
-                UserDetailsAdminWidgetTemplate(),
-                UserAdminWidgetTemplate(),
+                .init(UserAdminWidgetTemplate(), order: 800),
             ]
         }
         return []

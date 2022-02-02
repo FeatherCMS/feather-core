@@ -7,10 +7,14 @@
 
 public struct HeaderContext {
 
+    public let logoLink: String
     public let main: NavigationContext?
     public let account: NavigationContext?
     
-    public init(main: NavigationContext? = nil, account: NavigationContext? = nil) {
+    public init(logoLink: String = "/",
+                main: NavigationContext? = nil,
+                account: NavigationContext? = nil) {
+        self.logoLink = logoLink
         self.main = main
         self.account = account
     }

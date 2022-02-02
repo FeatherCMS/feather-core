@@ -28,7 +28,7 @@ public struct HeaderTemplate: TemplateRepresentable {
                     }
                 }
                 .id("logo")
-                .href("/")
+                .href(context.logoLink)
                 
                 if let main = context.main {
                     NavigationTemplate(main).render(req)

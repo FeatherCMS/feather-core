@@ -8,7 +8,7 @@
 struct AdminDashboardController {
     
     func renderDashboardTemplate(_ req: Request) async throws -> Response {
-        let widgets: [TemplateRepresentable] = req.invokeAllFlat(.adminWidgets)
+        let widgets: [TemplateRepresentable] = req.invokeAllOrdered(.adminWidgets)
         let tags = widgets.map { $0.render(req) }
         let template = AdminDashboardTemplate(.init(title: "Dashboard", widgets: tags))
         return req.templates.renderHtml(template)

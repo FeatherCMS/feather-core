@@ -227,10 +227,10 @@ struct WebModule: FeatherModule {
         ]
     }
 
-    func adminWidgetsHook(args: HookArguments) -> [TemplateRepresentable] {
+    func adminWidgetsHook(args: HookArguments) -> [OrderedHookResult<TemplateRepresentable>] {
         if args.req.checkPermission(Web.permission(for: .detail)) {
             return [
-                WebAdminWidgetTemplate(),
+                .init(WebAdminWidgetTemplate(), order: 900),
             ]
         }
         return []

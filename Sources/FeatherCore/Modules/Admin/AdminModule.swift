@@ -23,6 +23,7 @@ struct AdminModule: FeatherModule {
     func boot(_ app: Application) throws {
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         app.hooks.register(.webRoutes, use: router.webRoutesHook)
+        app.hooks.register(.adminWidgets, use: adminWidgetsHook)
         
         app.hooks.register(.installUserPermissions, use: installUserPermissionsHook)
         
@@ -32,5 +33,11 @@ struct AdminModule: FeatherModule {
     func installUserPermissionsHook(args: HookArguments) -> [User.Permission.Create] {
         let permissions = Admin.availablePermissions()
         return permissions.map { .init($0) }
-    }    
+    }
+    
+    func adminWidgetsHook(args: HookArguments) -> [OrderedHookResult<TemplateRepresentable>] {
+        [
+            .init(AdminDetailsWidgetTemplate(), order: 1000)
+        ]
+    }
 }

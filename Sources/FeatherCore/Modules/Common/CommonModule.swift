@@ -83,10 +83,10 @@ struct CommonModule: FeatherModule {
         ]
     }
     
-    func adminWidgetsHook(args: HookArguments) -> [TemplateRepresentable] {
+    func adminWidgetsHook(args: HookArguments) -> [OrderedHookResult<TemplateRepresentable>] {
         if args.req.checkPermission(Common.permission(for: .detail)) {
             return [
-                CommonAdminWidgetTemplate(),
+                .init(CommonAdminWidgetTemplate(), order: 100),
             ]
         }
         return []

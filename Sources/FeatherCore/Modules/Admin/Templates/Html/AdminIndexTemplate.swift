@@ -36,7 +36,8 @@ public struct AdminIndexTemplate: TemplateRepresentable {
                 }
             }
             Body {
-                HeaderTemplate(.init(account: .init(id: "account",
+                HeaderTemplate(.init(logoLink: req.feather.config.paths.admin.safePath(),
+                                     account: .init(id: "account",
                                                     icon: Img(src: "/img/web/profile.png", alt: "Profile"),
                                                     items: [
                                                         A("Sign out")
@@ -47,7 +48,7 @@ public struct AdminIndexTemplate: TemplateRepresentable {
 
                 
                 BreadcrumbTemplate(.init(links: [
-                    LinkContext(label: "Admin", path: req.feather.config.paths.admin.safePath(), absolute: true)
+                    LinkContext(label: "Admin", path: req.feather.config.paths.admin.safePath(), absolute: true),
                 ] + context.breadcrumbs)).render(req)
                 
                 MainTemplate(.init(body: body)).render(req)
