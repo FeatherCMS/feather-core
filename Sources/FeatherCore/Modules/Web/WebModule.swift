@@ -63,15 +63,42 @@ struct WebModule: FeatherModule {
                              menuId: item.menuId)
         }
         try await items.create(on: args.req.db)
+        
+        // MARK: footer
+        
+        let footer1 = WebMenuModel(id: .init(), key: "footer-1", name: "Main", notes: nil)
+        try await footer1.create(on: args.req.db)
 
-        let footerMenu = WebMenuModel(id: .init(), key: "footer", name: "Footer menu", notes: nil)
-        try await footerMenu.create(on: args.req.db)
+        try await [
+            WebMenuItemModel(label: "Home", url: "/", priority: 100, menuId: footer1.uuid),
+            WebMenuItemModel(label: "About", url: "/about/", priority: 90, menuId: footer1.uuid),
+        ].create(on: args.req.db)
+        
+        let footer2 = WebMenuModel(id: .init(), key: "footer-2", name: "Footer", notes: nil)
+        try await footer2.create(on: args.req.db)
 
-        let footerItems = [
-            WebMenuItemModel(label: "Sitemap", url: "/sitemap.xml", priority: 1000, isBlank: true, menuId: footerMenu.uuid),
-            WebMenuItemModel(label: "RSS", url: "/rss.xml", priority: 900, isBlank: true, menuId: footerMenu.uuid),
-        ]
-        try await footerItems.create(on: args.req.db)
+        try await [
+            WebMenuItemModel(label: "Sitemap", url: "/sitemap.xml", priority: 100, isBlank: true, menuId: footer2.uuid),
+            WebMenuItemModel(label: "RSS", url: "/rss.xml", priority: 90, isBlank: true, menuId: footer2.uuid),
+        ].create(on: args.req.db)
+        
+        let footer3 = WebMenuModel(id: .init(), key: "footer-3", name: "User", notes: nil)
+        try await footer3.create(on: args.req.db)
+
+        try await [
+            WebMenuItemModel(label: "Admin", url: "/admin/", priority: 100, permission: "admin.module.detail", menuId: footer3.uuid),
+            WebMenuItemModel(label: "Sign in", url: "/login/", priority: 90, permission: "user.account.login", menuId: footer3.uuid),
+            WebMenuItemModel(label: "Sign out", url: "/logout/", priority: 90, permission: "user.account.logout", menuId: footer3.uuid),
+        ].create(on: args.req.db)
+        
+        let footer4 = WebMenuModel(id: .init(), key: "footer-4", name: "Links", notes: nil)
+        try await footer4.create(on: args.req.db)
+
+        try await [
+            WebMenuItemModel(label: "Feather", url: "https://feathercms.com/", priority: 100, isBlank: true, menuId: footer4.uuid),
+            WebMenuItemModel(label: "Vapor", url: "https://vapor.codes/", priority: 90, isBlank: true, menuId: footer4.uuid),
+            WebMenuItemModel(label: "Swift", url: "https://swift.org/", priority: 90, isBlank: true, menuId: footer4.uuid),
+        ].create(on: args.req.db)
         
         // MARK: pages
 

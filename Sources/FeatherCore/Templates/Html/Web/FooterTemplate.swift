@@ -24,6 +24,22 @@ struct FooterTemplate: TemplateRepresentable {
         self.context = context
     }
 
+    private func renderMenu(_ req: Request, _ id: String) -> Tag {
+        Ul {
+            (req.menu(id)?.items ?? []).filter { item -> Bool in
+                if let permission = item.permission {
+                    return req.checkPermission(permission)
+                }
+                return true
+            }
+            .map { ctx -> Tag in
+                Li {
+                    LinkTemplate(ctx).render(req)
+                }
+            }
+        }
+    }
+
     func render(_ req: Request) -> Tag {
         Footer {
             Div {
@@ -31,66 +47,19 @@ struct FooterTemplate: TemplateRepresentable {
                     Div {
                         Section {
                             H4("Main")
-                            Ul {
-                                req.menuItems("main").map { ctx -> Tag in
-                                    Li {
-                                        LinkTemplate(ctx).render(req)
-                                    }
-                                }
-                            }
+                            renderMenu(req, "footer-1")
                         }
                         Section {
                             H4("Footer")
-                            Ul {
-                                req.menuItems("footer").map { ctx -> Tag in
-                                    Li {
-                                        LinkTemplate(ctx).render(req)
-                                    }
-                                }
-                            }
+                            renderMenu(req, "footer-2")
                         }
                         Section {
                             H4("User")
-                            Ul {
-                                if req.auth.has(FeatherAccount.self) {
-                                    if req.checkPermission(Admin.permission(for: .detail)) {
-                                        Li {
-                                            A("Admin")
-                                                .href(req.feather.config.paths.admin.safePath())
-                                        }
-                                    }
-                                    Li {
-                                        A("Sign out")
-                                            .href(req.feather.config.paths.logout.safePath())
-                                    }
-                                }
-                                else {
-                                    Li {
-                                        A("Sign in")
-                                            .href(req.feather.config.paths.login.safePath())
-                                    }
-                                }
-                            }
+                            renderMenu(req, "footer-3")
                         }
                         Section {
                             H4("Links")
-                            Ul {
-                                Li {
-                                    A("Feather")
-                                        .href("https://feathercms.com/")
-                                        .target(.blank)
-                                }
-                                Li {
-                                    A("Vapor")
-                                        .href("https://vapor.codes/")
-                                        .target(.blank)
-                                }
-                                Li {
-                                    A("Swift")
-                                        .href("https://swift.org/")
-                                        .target(.blank)
-                                }
-                            }
+                            renderMenu(req, "footer-4")
                         }
                     }
                     .class("grid-421")    

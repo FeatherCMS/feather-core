@@ -9,8 +9,8 @@ fileprivate let scope = "web.menus"
 
 public extension Request {
     
-    func menuItems(_ key: String) -> [LinkContext] {
-        globals.get(key, scope: scope) ?? []
+    func menu(_ key: String) -> MenuContext? {
+        globals.get(key, scope: scope)
     }
 }
 
@@ -31,7 +31,7 @@ struct WebMenuMiddleware: AsyncMiddleware {
                                    permission: $0.permission,
                                    style: .default) }
             
-            req.globals.set(menu.key, value: items, scope: scope)
+            req.globals.set(menu.key, value: MenuContext(key: menu.key, name: menu.name, items: items), scope: scope)
         }
         return try await next.respond(to: req)
     }

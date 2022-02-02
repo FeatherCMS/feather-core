@@ -66,11 +66,11 @@ public struct WebIndexTemplate: TemplateRepresentable {
     }
     
     func mainMenuItems(_ req: Request) -> [Tag] {
-        req.menuItems("main").map {
+        req.menu("main")?.items.map {
             A($0.label)
                 .href($0.path)
                 .class("selected", req.url.path == $0.path)
-        }
+        } ?? []
     }
     
     @TagBuilder

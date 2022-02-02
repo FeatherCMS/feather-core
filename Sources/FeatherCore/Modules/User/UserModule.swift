@@ -167,8 +167,13 @@ struct UserModule: FeatherModule {
         permissions += User.Account.availablePermissions()
         permissions += User.Permission.availablePermissions()
         permissions += User.Role.availablePermissions()
+        permissions += [
+            .init(namespace: "user", context: "account", action: .custom("login")),
+            .init(namespace: "user", context: "account", action: .custom("logout")),
+        ]
         return permissions.map { .init($0) }
     }
+    
 
 //    func formFieldsHook(args: HookArguments) async throws -> [FormField] {
 //        return [
@@ -209,6 +214,12 @@ struct UserModule: FeatherModule {
     }
     
     func permissionHook(args: HookArguments) -> Bool {
+        if args.permission.key == "user.account.login" {
+            return !args.req.auth.has(FeatherAccount.self)
+        }
+        if args.permission.key == "user.account.logout" {
+            return args.req.auth.has(FeatherAccount.self)
+        }
         guard let user = args.req.auth.get(FeatherAccount.self) else {
             return false
         }

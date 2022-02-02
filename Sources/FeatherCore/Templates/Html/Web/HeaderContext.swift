@@ -7,10 +7,10 @@
 
 public struct HeaderContext {
 
-    public let main: MenuContext?
-    public let account: MenuContext?
+    public let main: NavigationContext?
+    public let account: NavigationContext?
     
-    public init(main: MenuContext? = nil, account: MenuContext? = nil) {
+    public init(main: NavigationContext? = nil, account: NavigationContext? = nil) {
         self.main = main
         self.account = account
     }

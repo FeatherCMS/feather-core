@@ -7,11 +7,11 @@
 
 import SwiftHtml
 
-public struct MenuTemplate: TemplateRepresentable {
+public struct NavigationTemplate: TemplateRepresentable {
     
-    public let context: MenuContext
+    public let context: NavigationContext
     
-    public init(_ context: MenuContext) {
+    public init(_ context: NavigationContext) {
         self.context = context
     }
 

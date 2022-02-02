@@ -31,10 +31,10 @@ public struct HeaderTemplate: TemplateRepresentable {
                 .href("/")
                 
                 if let main = context.main {
-                    MenuTemplate(main).render(req)
+                    NavigationTemplate(main).render(req)
                 }
                 if let account = context.account {
-                    MenuTemplate(account).render(req)
+                    NavigationTemplate(account).render(req)
                 }
             }
             .class("safe-area")

@@ -7,7 +7,7 @@
 
 import SwiftHtml
 
-public struct MenuContext {
+public struct NavigationContext {
 
     public let id: String
     public let icon: Tag
