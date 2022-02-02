@@ -68,26 +68,6 @@ struct CommonModule: FeatherModule {
                   name: "Page not found link URL",
                   value: "/",
                   notes: "Retry link URL for the not found page"),
-            
-            .init(key: "emptyListIcon",
-                  name: "Empty list icon",
-                  value: "🔍",
-                  notes: "Icon for the empty list results view."),
-        
-            .init(key: "emptyListTitle",
-                  name: "Empty list title",
-                  value: "Empty list",
-                  notes: "Title for the empty list results view."),
-        
-            .init(key: "emptyListDescription",
-                  name: "Empty list description",
-                  value: "Unfortunately there are no results.",
-                  notes: "Description of the empty list box"),
-        
-            .init(key: "emptyListLinkLabel",
-                  name: "Empty list link label",
-                  value: "Try again from scratch →",
-                  notes: "Start over link text for the empty list box"),
         ]
     }
     

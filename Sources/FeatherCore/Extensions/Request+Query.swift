@@ -22,6 +22,10 @@ public extension Request {
         return queryItems
     }
     
+    func hasQuery(_ key: String) -> Bool {
+        getQuery(key) != nil
+    }
+    
     /// Get a query parameter value as an optional string
     ///
     /// - Parameters:

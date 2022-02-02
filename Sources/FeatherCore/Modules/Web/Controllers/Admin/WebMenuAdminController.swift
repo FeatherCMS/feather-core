@@ -18,24 +18,28 @@ struct WebMenuAdminController: AdminController {
 
     var listConfig: ListConfiguration {
         .init(allowedOrders: [
+            "key",
             "name",
         ])
     }
     
     func listSearch(_ term: String) -> [ModelValueFilter<DatabaseModel>] {
         [
+            \.$key ~~ term,
             \.$name ~~ term,
         ]
     }
     
     func listColumns() -> [ColumnContext] {
         [
+            .init("key"),
             .init("name"),
         ]
     }
     
     func listCells(for model: DatabaseModel) -> [CellContext] {
         [
+            .init(model.key, link: LinkContext(label: model.key, permission: ApiModel.permission(for: .detail).key)),
             .init(model.name, link: LinkContext(label: model.name, permission: ApiModel.permission(for: .detail).key)),
         ]
     }
