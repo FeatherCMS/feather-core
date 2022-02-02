@@ -24,9 +24,9 @@ struct FooterTemplate: TemplateRepresentable {
         self.context = context
     }
 
-    private func renderMenu(_ req: Request, _ id: String) -> Tag {
+    private func renderMenu(_ req: Request, _ items: [LinkContext]) -> Tag {
         Ul {
-            (req.menu(id)?.items ?? []).filter { item -> Bool in
+            items.filter { item -> Bool in
                 if let permission = item.permission {
                     return req.checkPermission(permission)
                 }
@@ -39,28 +39,23 @@ struct FooterTemplate: TemplateRepresentable {
             }
         }
     }
+    
+    private func renderSection(_ req: Request, _ id: String) -> Tag? {
+        guard let menu = req.menu(id) else {
+            return nil
+        }
+        return Section {
+            H4(menu.name)
+            renderMenu(req, menu.items)
+        }
+    }
 
     func render(_ req: Request) -> Tag {
         Footer {
             Div {
                 Div {
                     Div {
-                        Section {
-                            H4("Main")
-                            renderMenu(req, "footer-1")
-                        }
-                        Section {
-                            H4("Footer")
-                            renderMenu(req, "footer-2")
-                        }
-                        Section {
-                            H4("User")
-                            renderMenu(req, "footer-3")
-                        }
-                        Section {
-                            H4("Links")
-                            renderMenu(req, "footer-4")
-                        }
+                        (1...4).compactMap { renderSection(req, "footer-\($0)") }
                     }
                     .class("grid-421")    
                 }
