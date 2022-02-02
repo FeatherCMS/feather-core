@@ -43,7 +43,7 @@ struct WebModule: FeatherModule {
     
     func installHook(args: HookArguments) async throws {
         
-        let mainMenu = WebMenuModel(id: .init(), key: "main", name: "Main menu", notes: nil)
+        let mainMenu = WebMenuModel(id: .init(), key: "main", name: "Main", notes: nil)
         try await mainMenu.create(on: args.req.db)
         
         let aboutMenuItem = WebMenuItemModel(label: "About", url: "/about/", priority: 0, menuId: mainMenu.uuid)
@@ -66,7 +66,7 @@ struct WebModule: FeatherModule {
         
         // MARK: footer
         
-        let footer1 = WebMenuModel(id: .init(), key: "footer-1", name: "Main", notes: nil)
+        let footer1 = WebMenuModel(id: .init(), key: "footer-1", name: "Navigation", notes: nil)
         try await footer1.create(on: args.req.db)
 
         try await [
@@ -74,7 +74,7 @@ struct WebModule: FeatherModule {
             WebMenuItemModel(label: "About", url: "/about/", priority: 90, menuId: footer1.uuid),
         ].create(on: args.req.db)
         
-        let footer2 = WebMenuModel(id: .init(), key: "footer-2", name: "Footer", notes: nil)
+        let footer2 = WebMenuModel(id: .init(), key: "footer-2", name: "Feed", notes: nil)
         try await footer2.create(on: args.req.db)
 
         try await [
