@@ -125,8 +125,16 @@ footer {
     background: var(--bg-color);
     padding-bottom: 3rem;
 }
+footer section {
+    padding: 1rem;
+}
 footer h4 {
     margin-top: 0;
+    border-bottom: 1px solid var(--bg-color-2);
+    margin-bottom: 1rem;
+}
+footer ul {
+    margin-left: 0;
 }
 footer li {
     list-style-type: none;
