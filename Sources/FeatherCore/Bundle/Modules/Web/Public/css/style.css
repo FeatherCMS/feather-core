@@ -131,7 +131,7 @@ footer section {
 footer h4 {
     margin-top: 0;
     border-bottom: 1px solid var(--bg-color-2);
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 footer ul {
     margin-left: 0;

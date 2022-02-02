@@ -3,6 +3,16 @@
     left: env(safe-area-inset-left);
     transform: none;
 }
+#dashboard h2 {
+    border-bottom: 1px solid var(--bg-color-2);
+    margin-bottom: 0.5rem;
+}
+#dashboard ul {
+    margin-left: 0;
+}
+#dashboard li {
+    list-style-type: none;
+}
 
 #analytics-overview .right {
     text-align: right;
