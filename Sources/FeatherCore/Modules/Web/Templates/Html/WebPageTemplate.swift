@@ -19,11 +19,14 @@ public struct WebPageTemplate: TemplateRepresentable {
     public func render(_ req: Request) -> Tag {
         WebIndexTemplate(.init(title: context.page.title, metadata: context.page.metadata)) {
             Div {
-                H1(context.page.title)
-                Text(context.page.content)
+                Div {
+                    H1(context.page.title)
+                    Text(context.page.content)
+                }
+                .class("container", "\(context.page.metadata.slug)-page")
             }
-            .id("page")
-            .class(["container", "\(context.page.metadata.slug)-page"])
+            .id("web-page")
+            .class("wrapper")
         }
         .render(req)
     }

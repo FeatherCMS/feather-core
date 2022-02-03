@@ -23,9 +23,9 @@ public struct WebWelcomePageTemplate: TemplateRepresentable {
                     H1(context.title)
                     P(context.message)
                 }
-                .class("container")
+                .class("container", "welcome-page")
             }
-            .id("page")
+            .id("welcome-page")
             .class("wrapper")
         }
         .render(req)
