@@ -21,7 +21,7 @@ public struct AdminListPageTemplate: TemplateRepresentable {
             Div {
                 LeadTemplate(.init(title: context.title, links: context.navigation)).render(req)
                 
-                if context.isSearchable && !context.table.rows.isEmpty {
+                if context.isSearchable && (req.hasQuery("search") || !context.table.rows.isEmpty) {
                     Form {
                         Input()
                             .type(.text)
@@ -50,25 +50,16 @@ public struct AdminListPageTemplate: TemplateRepresentable {
                 if context.table.rows.isEmpty {
                     if req.hasQuery("search") {
                         Div {
-                            Span("🔍")
-                                .class("icon")
-                            H2("Oh no")
-                            P("This list is empty right now.")
+                            P("There are no results for the given search term.")
                             A("Try again →")
                                 .href(req.url.path)
-                                .class("button-1")
                         }
-                        .class(["lead", "container", "center"])
+                        .class("list-search-empty-results")
                     }
                     else {
-                        Div {
-                            Span("🤔")
-                                .class("icon")
-                            H2("Seems like")
-                            P("There are not list items just yet.")
-                        }
-                        .class(["lead", "container", "center"])
+                        P("There are no items in this list just yet.")
                     }
+                    
                 }
                 else {
                     TableTemplate(context.table).render(req)

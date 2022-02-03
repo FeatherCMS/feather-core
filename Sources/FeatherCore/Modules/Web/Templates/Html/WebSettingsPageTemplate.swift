@@ -22,13 +22,12 @@ struct WebSettingsPageTemplate: TemplateRepresentable {
         ])) {
             Div {
                 Div {
-                    H1("Settings")
+                    LeadTemplate(.init(title: "Settings")).render(req)
+                    FormTemplate(context.form).render(req)
                 }
-                .class("lead")
-                
-                FormTemplate(context.form).render(req)
+                .class("container")
             }
-            .class("container")
+            .class("wrapper")
         }
         .render(req)
     }

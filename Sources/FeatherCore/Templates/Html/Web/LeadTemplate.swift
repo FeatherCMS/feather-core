@@ -19,9 +19,6 @@ public struct LeadTemplate: TemplateRepresentable {
     @TagBuilder
     public func render(_ req: Request) -> Tag {
         Div {
-            if let icon = context.icon {
-                Img(src: "svg/\(icon).svg", alt: icon)
-            }
             H1(context.title)
             if let excerpt = context.excerpt {
                 P(excerpt)

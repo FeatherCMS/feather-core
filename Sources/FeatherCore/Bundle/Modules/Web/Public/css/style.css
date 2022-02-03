@@ -20,7 +20,6 @@
     
     --white-color: #ffffff;
     --black-color: #000000;
-    
     --green-color: #2ec04f;
     --dark-green-color: #2ec04f;
     --red-color: #ff342a;
@@ -55,7 +54,6 @@
         
         --white-color: #ffffff;
         --black-color: #000000;
-
         --green-color: #2acb4e;
         --dark-color: #2acb4e;
         --red-color: #ff3c33;
@@ -124,9 +122,6 @@ main {
 footer {
     background: var(--bg-color);
     padding-bottom: 3rem;
-}
-footer section {
-    padding: 1rem;
 }
 footer h4 {
     margin-top: 0;
@@ -208,16 +203,10 @@ ol, ul {
     margin-left: 1rem;
 }
 dt {
-    margin: 0.5rem;
-    color: var(--text-color-1);
+    font-weight: bold;
 }
 dd {
     margin-bottom: 1.5rem;
-    background: var(--bg-color);
-    color: var(--text-color);
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px -1px, rgba(0, 0, 0, 0.06) 0px 1px 2px -1px;
 }
 pre {
     font-size: 1rem;
@@ -431,6 +420,7 @@ span.icon + h1 {
     display: block;
     clear: both;
     max-width: var(--container);
+/*    min-height: 50vh;*/
     margin-left: auto;
     margin-right: auto;
     overflow: visible;
@@ -675,7 +665,7 @@ form textarea {
     resize: none;
     height: 8rem;
 }
-form textarea.large {
+form textarea.content {
     height: 20rem;
 }
 
@@ -844,4 +834,19 @@ thead td.action {
         background: var(--bg-color-1);
         box-shadow: none;
     }
+}
+
+.list-search-empty-results {
+    text-align: center;
+}
+
+#delete-confirmation {
+    text-align: center;
+}
+#delete-confirmation input {
+    width: 50%;
+    background-color: var(--red-color);
+}
+#delete-confirmation input:hover {
+    background-color: var(--dark-red-color);
 }

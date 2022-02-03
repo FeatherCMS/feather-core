@@ -22,7 +22,7 @@ public struct ContentFieldTemplate: TemplateRepresentable {
         Textarea(context.value)
             .name(context.key)
             .placeholder(context.placeholder)
-            .class("xl")
+            .class("content")
         
         if let error = context.error {
             Span(error)

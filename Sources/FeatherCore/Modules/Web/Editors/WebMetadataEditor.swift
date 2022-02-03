@@ -67,6 +67,9 @@ struct WebMetadataEditor: FeatherModelEditor {
             .write { model.date = Feather.dateFormatter().date(from: $1.input) ?? Date() }
         
         InputField("canonicalUrl")
+            .config {
+                $0.output.context.label.title = "Canonical URL"
+            }
             .read { $1.output.context.value = model.canonicalUrl }
             .write { model.canonicalUrl = $1.input }
         
