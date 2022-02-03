@@ -19,13 +19,7 @@ public struct AdminListPageTemplate: TemplateRepresentable {
     public func render(_ req: Request) -> Tag {
         AdminIndexTemplate(.init(title: context.title, breadcrumbs: context.breadcrumbs)) {
             Div {
-                Div {
-                    H1(context.title)
-                    P {
-                        context.navigation.map { LinkTemplate($0).render(req) }
-                    }
-                }
-                .class("lead")
+                LeadTemplate(.init(title: context.title, links: context.navigation)).render(req)
                 
                 if context.isSearchable && !context.table.rows.isEmpty {
                     Form {

@@ -8,16 +8,16 @@
 import SwiftHtml
 import Darwin
 
-struct LeadTemplate: TemplateRepresentable {
+public struct LeadTemplate: TemplateRepresentable {
     
-    let context: LeadContext
+    public let context: LeadContext
     
-    init(_ context: LeadContext) {
+    public init(_ context: LeadContext) {
         self.context = context
     }
     
     @TagBuilder
-    func render(_ req: Request) -> Tag {
+    public func render(_ req: Request) -> Tag {
         Div {
             if let icon = context.icon {
                 Img(src: "svg/\(icon).svg", alt: icon)
