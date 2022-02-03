@@ -16,6 +16,7 @@ public protocol AdminDeleteController: DeleteController {
     
     func deleteInfo(_ model: DatabaseModel) -> String
     func deleteContext(_ req: Request, _ model: DatabaseModel, _ form: DeleteForm) -> AdminDeletePageContext
+    func deleteBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
     
     func setUpDeleteRoutes(_ routes: RoutesBuilder)
 }
@@ -63,7 +64,22 @@ public extension AdminDeleteController {
         .init(title: "Delete " + Self.modelName.singular,
               name: deleteInfo(model),
               type: Self.modelName.singular,
-              form: form.context(req))
+              form: form.context(req),
+              breadcrumbs: deleteBreadcrumbs(req, model))
+    }
+    
+    func deleteBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
+        [
+            LinkContext(label: DatabaseModel.Module.featherName,
+                        dropLast: 3,
+                        permission: ApiModel.Module.permission(for: .detail).key),
+            LinkContext(label: Self.modelName.plural,
+                        dropLast: 2,
+                        permission: ApiModel.permission(for: .list).key),
+            LinkContext(label: Self.modelName.singular,
+                        dropLast: 1,
+                        permission: ApiModel.permission(for: .detail).key),
+        ]
     }
     
     func setUpDeleteRoutes(_ routes: RoutesBuilder) {
