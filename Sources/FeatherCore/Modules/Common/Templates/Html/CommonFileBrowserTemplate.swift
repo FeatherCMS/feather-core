@@ -28,18 +28,16 @@ struct CommonFileBrowserTemplate: TemplateRepresentable {
             LinkContext(label: "Common", dropLast: 1),
         ])) {
             Div {
-                Div {
-                    H1("File browser")
-                    
-                    A("Create directory")
-                        .href("/admin/common/files/directory/?key=" + currentKey(req))
-                    
-                    A("Upload files")
-                        .href("/admin/common/files/upload/?key=" + currentKey(req))
-                }
-                .class("lead")
+                LeadTemplate(.init(title: "File browser",
+                                   links: [
+                                    .init(label: "Create directory",
+                                          path: "/admin/common/files/directory/?key=" + currentKey(req),
+                                          absolute: true),
+                                    .init(label: "Upload files",
+                                          path: "/admin/common/files/upload/?key=" + currentKey(req),
+                                          absolute: true),
+                                   ])).render(req)
 
-                
                 Table {
                     Thead {
                         Tr {
@@ -123,6 +121,7 @@ struct CommonFileBrowserTemplate: TemplateRepresentable {
                     }
                 }
             }
+            .class("wrapper")
         }
         .render(req)
     }

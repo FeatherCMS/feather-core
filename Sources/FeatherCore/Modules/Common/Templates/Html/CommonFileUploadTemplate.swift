@@ -14,7 +14,7 @@ struct CommonFileUploadTemplate: TemplateRepresentable {
     init(_ context: CommonFileUploadContext) {
         self.context = context
     }
-
+    
     func currentKey(_ req: Request) -> String {
         if let key = try? req.query.get(String.self, at: "key") {
             return key
@@ -30,13 +30,12 @@ struct CommonFileUploadTemplate: TemplateRepresentable {
         ])) {
             Div {
                 Div {
-                    H1("Upload files")
-                    
+                    LeadTemplate(.init(title: "Upload files")).render(req)
+                    FormTemplate(context.form).render(req)
                 }
-                .class("lead")
-                
-                FormTemplate(context.form).render(req)
+                .class("container")
             }
+            .class("wrapper")
         }
         .render(req)
     }

@@ -30,13 +30,12 @@ struct CommonFileCreateDirectoryTemplate: TemplateRepresentable {
         ])) {
             Div {
                 Div {
-                    H1("Create directory")
-                    
+                    LeadTemplate(.init(title: "Create directory")).render(req)
+                    FormTemplate(context.form).render(req)
                 }
-                .class("lead")
-                
-                FormTemplate(context.form).render(req)
+                .class("container")
             }
+            .class("wrapper")
         }
         .render(req)
     }

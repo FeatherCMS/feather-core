@@ -6,8 +6,7 @@
 //
 
 import SwiftHtml
-
-
+import Darwin
 
 struct LeadTemplate: TemplateRepresentable {
     
@@ -24,7 +23,14 @@ struct LeadTemplate: TemplateRepresentable {
                 Img(src: "svg/\(icon).svg", alt: icon)
             }
             H1(context.title)
-            P(context.excerpt)
+            if let excerpt = context.excerpt {
+                P(excerpt)
+            }
+            if !context.links.isEmpty {
+                Nav {
+                    context.links.map { LinkTemplate($0).render(req) }
+                }
+            }
         }
         .class("lead")
     }

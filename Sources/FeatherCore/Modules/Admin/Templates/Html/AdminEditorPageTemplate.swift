@@ -20,20 +20,19 @@ struct AdminEditorPageTemplate: TemplateRepresentable {
         AdminIndexTemplate(.init(title: context.title, breadcrumbs: context.breadcrumbs)) {
             Div {
                 Div {
-                    H1(context.title)
-                    Nav {
-                        context.navigation.map { LinkTemplate($0).render(req) }
+                    LeadTemplate(.init(title: context.title, links: context.navigation)).render(req)
+                   
+                    FormTemplate(context.form).render(req)
+
+                    Section {
+                        Nav {
+                            context.actions.map { LinkTemplate($0).render(req) }
+                        }
                     }
                 }
-                .class("lead")
-               
-                FormTemplate(context.form).render(req)
-
-                Section {
-                    context.actions.map { LinkTemplate($0).render(req) }
-                }
+                .class("container")
             }
-            .class("container")
+            .class("wrapper")
         }
         .render(req)
     }

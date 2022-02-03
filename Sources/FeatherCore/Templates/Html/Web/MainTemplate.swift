@@ -14,15 +14,11 @@ public struct MainTemplate: TemplateRepresentable {
     public init(_ context: MainContext) {
         self.context = context
     }
-    
-    // @TODO: optional wrapper?
+
     public func render(_ req: Request) -> Tag {
         Main {
             Div {
-                Div {
-                    context.body
-                }
-                .class("wrapper")
+                context.body
             }
             .class("safe-area")
         }

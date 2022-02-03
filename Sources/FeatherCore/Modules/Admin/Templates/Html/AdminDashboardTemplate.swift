@@ -20,11 +20,8 @@ public struct AdminDashboardTemplate: TemplateRepresentable {
     public func render(_ req: Request) -> Tag {
         AdminIndexTemplate(.init(title: context.title)) {
             Div {
-                Div {
-                    H1("Dashboard")
-                    P("Overview of the content management system.")
-                }
-                .class("lead")
+                LeadTemplate(.init(title: "Dashboard",
+                                   excerpt: "Overview of the content management system.")).render(req)
                 
                 Section {
                     context.widgets.map { widget in
@@ -40,6 +37,7 @@ public struct AdminDashboardTemplate: TemplateRepresentable {
                 .class("grid-321")
             }
             .id("dashboard")
+            .class("wrapper")
         }
         .render(req)
     }
