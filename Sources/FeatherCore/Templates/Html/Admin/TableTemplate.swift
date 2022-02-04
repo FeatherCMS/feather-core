@@ -27,7 +27,7 @@ public struct TableTemplate: TemplateRepresentable {
     
     func css(_ req: Request) -> String {
         /// @NOTE: col.width support
-        let size = context.columns.map { _ in "1fr" } + availableActions(req).map { _ in "4rem" }
+        let size = context.columns.map { c in c.width ?? "1fr" } + availableActions(req).map { _ in "4rem" }
         return """
         tr {
             grid-template-columns: repeat(\(max(1, availableActions(req).count)), 1fr);
@@ -62,7 +62,7 @@ public struct TableTemplate: TemplateRepresentable {
                                                       defaultSort: context.options.defaultSort)).render(req)
                             }
                             else {
-                                Text(column.label)
+                                Span(column.label)
                             }
                         }
                         .id(column.key)

@@ -24,7 +24,7 @@ public struct PaginationTemplate: TemplateRepresentable {
                         .href(req.buildQuery(["page": 1]))
                 }
                 else {
-                    Text("«")
+                    Span("«")
                 }
                 
                 if context.current > 1 {
@@ -32,7 +32,7 @@ public struct PaginationTemplate: TemplateRepresentable {
                         .href(req.buildQuery(["page": context.current - 1]))
                 }
                 else {
-                    Text("‹")
+                    Span("‹")
                 }
                 
                 Span("Page \(context.current) of \(context.total)")
@@ -42,7 +42,7 @@ public struct PaginationTemplate: TemplateRepresentable {
                         .href(req.buildQuery(["page": context.current + 1]))
                 }
                 else {
-                    Text("›")
+                    Span("›")
                 }
                 
                 if context.current < context.total {
@@ -50,7 +50,7 @@ public struct PaginationTemplate: TemplateRepresentable {
                         .href(req.buildQuery(["page": context.total]))
                 }
                 else {
-                    Text("»")
+                    Span("»")
                 }
             }
             .id("pagination")

@@ -63,6 +63,6 @@ public struct CellTemplate: TemplateRepresentable {
                 }
             }
         }
-        .class("field")
+        .class("image", context.type == .image)
     }
 }

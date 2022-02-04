@@ -204,9 +204,13 @@ ol, ul {
 }
 dt {
     font-weight: bold;
+    margin: 0.25rem 0.75rem;
 }
 dd {
     margin-bottom: 1.5rem;
+    background: var(--bg-color-2);
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
 }
 pre {
     font-size: 1rem;
@@ -548,10 +552,7 @@ span.icon + h1 {
 }
 
 .lead {
-    margin-bottom: 3rem;
-}
-.lead nav {
-    margin-top: 1rem;
+    margin-bottom: 1.5rem;
 }
 .lead nav a {
     margin-right: 1rem;
@@ -567,17 +568,25 @@ form section.caption {
     border-top: 0.125rem solid var(--bg-color-2);
 }
 form fieldset {
+    position: relative;
     border: none;
     background: var(--bg-color-2);
     border-radius: 0.5rem;
     padding: 1rem;
     margin-bottom: 2rem;
+    padding-top: 4rem;
 }
 form legend {
-    background: var(--bg-color-2);
-    border-radius: 0.5rem;
-    margin: 0 1rem;
-    padding: 0.25rem 1rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+/*    border-radius: 0.5rem;*/
+    padding: 1rem 0;
+/*    border-bottom: 1px solid var(--bg-color-1);*/
 }
 form label {
     display: block;
@@ -736,10 +745,13 @@ tr {
     border-radius: 0.5rem;
     padding: 0.25rem 0.5rem;
     margin: 0.5rem 0;
+    margin-bottom: 1rem;
 }
 thead tr {
     font-weight: bold;
+    text-align: left;
 }
+
 tbody tr {
     background: var(--bg-color);
     box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px -1px, rgba(0, 0, 0, 0.06) 0px 1px 2px -1px;
@@ -763,17 +775,17 @@ td.action {
 }
 td {
     text-align: center;
-    padding: var(--space-xs) 0;
+    padding: 0.5 0;
 }
-td.field {
+td {
     grid-column: span 2;
 }
-td.field.last {
+td.last {
     border-bottom: 2px solid var(--bg-color-1);
-    padding-bottom: var(--space);
-    margin-bottom: var(--space-2xs);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
 }
-thead td.field.last {
+thead td.last {
     padding-bottom: 0;
     margin-bottom: 0;
     border: none;
@@ -781,11 +793,92 @@ thead td.field.last {
 thead td.action {
     display: none;
 }
+thead tr {
+    display: block;
+}
+thead tr th {
+    width: 100%;
+    text-align: center;
+}
+thead tr th.action {
+    display: none;
+}
+dd img {
+    border-radius: 0.25rem;
+    margin-top: 0.25rem;
+}
+table img {
+    width: 100%;
+    margin: 0.25rem 0;
+    border-radius: 0.25rem;
+}
+table tr td {
+    padding: 0.5rem 1rem;
+}
+td.image {
+    line-height: 0;
+}
+td.action {
+    border-top: 1px solid var(--bg-color-1);
+}
+table tr td {
+    font-weight: bold;
+    padding: 0.75rem;
+}
+td.action {
+    font-weight: normal;
+}
+th span {
+    display: none;
+}
+
+#pagination {
+    margin: 1rem 0;
+    text-align: center;
+}
+#pagination span, #pagination a {
+    padding: 0 0.5rem;
+}
+
+
 @media screen and (min-width: 600px) {
+    table img {
+        width: 3rem;
+        margin: 0.25rem 0;
+        border-radius: 0.25rem;
+    }
+    th span {
+        display: inline;
+    }
+    td.action {
+        border: none;
+    }
+    td {
+        font-weight: normal;
+    }
+
+    thead tr {
+        display: grid;
+    }
+    thead tr th {
+        display: table-cell;
+        width: auto;
+        text-align: left;
+    }
+    thead tr th.action {
+        display: table-cell;
+    }
+    table tr td {
+        padding: 0;
+        font-weight: normal;
+    }
+    table tr {
+        margin: 0.5rem 0;
+    }
     thead td.action {
         display: block;
     }
-    td.field.last {
+    td.last {
         border: none;
         padding-bottom: 0;
         margin-bottom: 0;
@@ -795,6 +888,7 @@ thead td.action {
         padding: 0;
         grid-column: span 1;
     }
+    
 }
 
 .delete {

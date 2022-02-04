@@ -25,7 +25,7 @@ public struct DetailTemplate: TemplateRepresentable {
                 Dd(value.replacingOccurrences(of: "\n", with: "<br>"))
             }
             else {
-                Dd("-")
+                Dd("&nbsp;")
             }
         case .image:
             Dd {
@@ -33,7 +33,7 @@ public struct DetailTemplate: TemplateRepresentable {
                     Img(src: req.fs.resolve(key: value), alt: context.label)
                 }
                 else {
-                    Text("-")
+                    Text("&nbsp;")
                 }
             }
         }
