@@ -8,6 +8,7 @@ let package = Package(
     ],
     products: [
         .executable(name: "FeatherCli", targets: ["FeatherCli"]),
+        .library(name: "FeatherIcons", targets: ["FeatherIcons"]),
         .library(name: "FeatherCoreApi", targets: ["FeatherCoreApi"]),
         .library(name: "FeatherCoreSdk", targets: ["FeatherCoreSdk"]),
         .library(name: "FeatherCore", targets: ["FeatherCore"]),
@@ -26,12 +27,16 @@ let package = Package(
             .product(name: "Vapor", package: "vapor"),
             .target(name: "FeatherCliGenerator"),
         ]),
+        .target(name: "FeatherIcons", dependencies: [
+            .product(name: "SwiftSvg", package: "swift-html"),
+        ]),
         .target(name: "FeatherCliGenerator", dependencies: []),
         .target(name: "FeatherCoreApi", dependencies: []),
         .target(name: "FeatherCoreSdk", dependencies: [
             .target(name: "FeatherCoreApi"),
         ]),
         .target(name: "FeatherCore", dependencies: [
+            .target(name: "FeatherIcons"),
             .target(name: "FeatherCoreApi"),
             .product(name: "Vapor", package: "vapor"),
             .product(name: "Fluent", package: "fluent"),
