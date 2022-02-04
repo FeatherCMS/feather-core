@@ -748,10 +748,14 @@ tr {
     margin-bottom: 1rem;
 }
 thead tr {
-    font-weight: bold;
     text-align: left;
 }
-
+table {
+    margin-top: 1.5rem;
+}
+thead th {
+    font-weight: normal;
+}
 tbody tr {
     background: var(--bg-color);
     box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px -1px, rgba(0, 0, 0, 0.06) 0px 1px 2px -1px;
@@ -852,6 +856,7 @@ th span {
     }
     td.action {
         border: none;
+        text-align: left;
     }
     td {
         font-weight: normal;
