@@ -917,6 +917,14 @@ th span {
 .card h2 {
     margin-top: 0rem;
 }
+.card li {
+    margin-top: 1rem;
+}
+@media screen and (min-width: 600px) {
+    .card li {
+        margin-top: 0;
+    }
+}
 @media screen and (display-mode: standalone) {
     dt {
         margin: 0;
@@ -951,3 +959,4 @@ th span {
 #delete-confirmation input:hover {
     background-color: var(--dark-red-color);
 }
+
