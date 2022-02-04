@@ -22,12 +22,15 @@ struct UserLoginTemplate: TemplateRepresentable {
     func render(_ req: Request) -> Tag {
         WebIndexTemplate(context.index) {
             Div {
-                LeadTemplate(.init(title: "Sign in",
-                                   excerpt: "Please enter your user credentials to sign in.")).render(req)
+                Div {
+                    LeadTemplate(.init(title: "Sign in",
+                                       excerpt: "Please enter your user credentials to sign in.")).render(req)
 
-                form.render(req)
+                    form.render(req)
+                }
+                .class("container")
             }
-            .class("container")
+            .class("wrapper")
         }
         .render(req)
     }
