@@ -29,7 +29,6 @@ struct WebModule: FeatherModule {
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         app.hooks.register(.adminWidgets, use: adminWidgetsHook)
         app.hooks.register(.webMiddlewares, use: webMiddlewaresHook)
-        app.hooks.register(.webCss, use: webCssHook)
         
         app.hooks.registerAsync(.install, use: installHook)
         app.hooks.registerAsync(.response, use: responseHook)
@@ -183,12 +182,6 @@ struct WebModule: FeatherModule {
                   name: "Welcome page link url",
                   value: "/admin/",
                   notes: "Link URL of the welcome page"),
-        ]
-    }
-
-    func webCssHook(args: HookArguments) -> [OrderedHookResult<String>] {
-        [
-//            .init("/css/web/local.css", order: 420)
         ]
     }
 
