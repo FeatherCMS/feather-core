@@ -49,4 +49,16 @@ public extension FeatherModule {
     func config(_ app: Application) throws {
         // nothing to do here...
     }
+    
+//    static func sample(named name: String) -> String {
+//        do {
+//            guard let url = bundleUrl?.appendingPathComponent("Samples").appendingPathComponent(name) else {
+//                return ""
+//            }
+//            return try String(contentsOf: url, encoding: .utf8)
+//        }
+//        catch {
+//            return ""
+//        }
+//    }
 }
