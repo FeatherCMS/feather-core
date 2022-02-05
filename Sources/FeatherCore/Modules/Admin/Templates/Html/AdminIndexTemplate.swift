@@ -57,7 +57,7 @@ public struct AdminIndexTemplate: TemplateRepresentable {
 
                 Script()
                     .type(.javascript)
-                    .src("/js/admin/main.js")
+                    .src("/js/admin/admin.js")
                 
                 let js: [String] = req.invokeAllOrdered(.adminJs)
                 for file in context.js + js {
