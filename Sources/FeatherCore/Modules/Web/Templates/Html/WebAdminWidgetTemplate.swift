@@ -6,11 +6,14 @@
 //
 
 import SwiftHtml
+import FeatherIcons
 
 struct WebAdminWidgetTemplate: TemplateRepresentable {
  
     @TagBuilder
     func render(_ req: Request) -> Tag {
+        Svg.icon(.compass)
+
         H2("Web")
         Ul {
             if req.checkPermission(Web.Page.permission(for: .list)) {

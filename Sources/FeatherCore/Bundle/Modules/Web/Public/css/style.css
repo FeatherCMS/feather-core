@@ -613,7 +613,7 @@ form input, form textarea, form select, form button {
     line-height: inherit;
     box-sizing: border-box;
     border: none;
-    padding: 0.25rem 0.75rem;
+    padding: 0.5rem 0.75rem;
     border-radius: 0.5rem;
     background-color: var(--bg-color);
     color: var(--text-color);
