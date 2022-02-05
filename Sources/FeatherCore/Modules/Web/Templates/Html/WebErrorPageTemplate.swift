@@ -19,7 +19,7 @@ public struct WebErrorPageTemplate: TemplateRepresentable {
     public func render(_ req: Request) -> Tag {
         WebIndexTemplate(context.index) {
             Wrapper {
-                Div {
+                Container {
                     Span("⚠️")
                         .class("icon")
                     H1(context.title)
@@ -27,7 +27,6 @@ public struct WebErrorPageTemplate: TemplateRepresentable {
                     A("Home →")
                         .href("/")
                 }
-                .class("container")
             }
         }
         .render(req)
