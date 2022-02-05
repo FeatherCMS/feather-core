@@ -22,8 +22,8 @@ public struct AdminDeletePageTemplate: TemplateRepresentable {
     @TagBuilder
     public func render(_ req: Request) -> Tag {
         AdminIndexTemplate(.init(title: context.title, breadcrumbs: context.breadcrumbs)) {
-            Div {
-                Div {
+            Wrapper {
+                Container {
                     LeadTemplate(.init(title: context.title, excerpt: excerpt)) .render(req)
 
                     FormTemplate(context.form).render(req)
@@ -31,10 +31,8 @@ public struct AdminDeletePageTemplate: TemplateRepresentable {
                     A("Cancel")
                         .href(req.getQuery("cancel") ?? "#")
                 }
-                .class("container")
             }
             .id("delete-confirmation")
-            .class("wrapper")
         }
         .render(req)
     }

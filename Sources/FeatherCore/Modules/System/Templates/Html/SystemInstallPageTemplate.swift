@@ -18,8 +18,8 @@ public struct SystemInstallPageTemplate: TemplateRepresentable {
     @TagBuilder
     public func render(_ req: Request) -> Tag {
         SystemIndexTemplate(.init(title: context.title)) {
-            Div {
-                Div {
+            Wrapper {
+                Container {
                     Span(context.icon)
                         .class("icon")
                     H1(context.title)
@@ -27,9 +27,7 @@ public struct SystemInstallPageTemplate: TemplateRepresentable {
                     A(context.link.label)
                         .href(context.link.path)
                 }
-                .class("container")
             }
-            .class("wrapper")
         }
         .render(req)
     }

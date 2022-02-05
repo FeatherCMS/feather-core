@@ -20,14 +20,12 @@ struct WebSettingsPageTemplate: TemplateRepresentable {
         AdminIndexTemplate(.init(title: "Settings", breadcrumbs: [
             LinkContext(label: "Web", dropLast: 1),
         ])) {
-            Div {
-                Div {
+            Wrapper {
+                Container {
                     LeadTemplate(.init(title: "Settings")).render(req)
                     FormTemplate(context.form).render(req)
                 }
-                .class("container")
             }
-            .class("wrapper")
         }
         .render(req)
     }

@@ -18,8 +18,8 @@ struct AdminDetailPageTemplate: TemplateRepresentable {
     @TagBuilder
     func render(_ req: Request) -> Tag {
         AdminIndexTemplate(.init(title: context.title, breadcrumbs: context.breadcrumbs)) {
-            Div {
-                Div {
+            Wrapper {
+                Container {
                     LeadTemplate(.init(title: context.title, links: context.navigation)).render(req)
                     
                     Dl {
@@ -32,9 +32,7 @@ struct AdminDetailPageTemplate: TemplateRepresentable {
                         }
                     }
                 }
-                .class("container")
             }
-            .class("wrapper")
         }
         .render(req)
     }

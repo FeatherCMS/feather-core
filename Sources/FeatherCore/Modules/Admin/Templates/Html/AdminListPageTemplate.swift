@@ -18,7 +18,7 @@ public struct AdminListPageTemplate: TemplateRepresentable {
     @TagBuilder
     public func render(_ req: Request) -> Tag {
         AdminIndexTemplate(.init(title: context.title, breadcrumbs: context.breadcrumbs)) {
-            Div {
+            Wrapper {
                 LeadTemplate(.init(title: context.title, links: context.navigation)).render(req)
                 
                 if context.isSearchable && (req.hasQuery("search") || !context.table.rows.isEmpty) {
@@ -66,7 +66,6 @@ public struct AdminListPageTemplate: TemplateRepresentable {
                 }
                 PaginationTemplate(context.pagination).render(req)
             }
-            .class("wrapper")
         }
         .render(req)
     }

@@ -28,7 +28,7 @@ struct CommonFileBrowserTemplate: TemplateRepresentable {
         AdminIndexTemplate(.init(title: "File browser", breadcrumbs: [
             LinkContext(label: "Common", dropLast: 1),
         ])) {
-            Div {
+            Wrapper {
                 LeadTemplate(.init(title: "File browser",
                                    links: [
                                     .init(label: "Create directory",
@@ -123,7 +123,6 @@ struct CommonFileBrowserTemplate: TemplateRepresentable {
                     }
                 }
             }
-            .class("wrapper")
         }
         .render(req)
     }

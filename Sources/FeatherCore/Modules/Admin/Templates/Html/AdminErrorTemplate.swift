@@ -18,13 +18,15 @@ public struct AdminErrorTemplate: TemplateRepresentable {
     @TagBuilder
     public func render(_ req: Request) -> Tag {
         AdminIndexTemplate(.init(title: context.title)) {
-            Div {
-                Span("⚠️")
-                    .class("icon")
-                H1(context.title)
-                P(context.message)
-                A("Home →")
-                    .href("/")
+            Wrapper {
+                Container {
+                    Span("⚠️")
+                        .class("icon")
+                    H1(context.title)
+                    P(context.message)
+                    A("Home →")
+                        .href("/")
+                }
             }
         }
         .render(req)

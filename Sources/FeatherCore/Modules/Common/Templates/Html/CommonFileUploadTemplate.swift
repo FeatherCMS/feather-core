@@ -28,14 +28,12 @@ struct CommonFileUploadTemplate: TemplateRepresentable {
             LinkContext(label: "Common", dropLast: 2),
             LinkContext(label: "Files", dropLast: 1),
         ])) {
-            Div {
-                Div {
+            Wrapper {
+                Container {
                     LeadTemplate(.init(title: "Upload files")).render(req)
                     FormTemplate(context.form).render(req)
                 }
-                .class("container")
             }
-            .class("wrapper")
         }
         .render(req)
     }

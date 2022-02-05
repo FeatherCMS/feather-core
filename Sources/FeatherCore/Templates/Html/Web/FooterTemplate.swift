@@ -20,13 +20,12 @@ public struct FooterTemplate: TemplateRepresentable {
         Footer {
             Div {
                 if context.displayTopSection {
-                    Div {
+                    Wrapper {
                         Div {
                             (1...4).compactMap { renderSection(req, "footer-\($0)") }
                         }
                         .class("grid-421")
                     }
-                    .class("wrapper")
                 }
                     
                 P("\(getTitle(req)) &copy; \(Calendar.current.component(.year, from: Date()))")
