@@ -14,6 +14,17 @@
     list-style-type: none;
 }
 
+#dashboard .card svg {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    color: var(--link-color-1);
+}
+
+
 #analytics-overview .right {
     text-align: right;
 }
