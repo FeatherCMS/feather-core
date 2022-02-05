@@ -6,6 +6,7 @@
 //
 
 import SwiftHtml
+import FeatherIcons
 
 struct CommonFileBrowserTemplate: TemplateRepresentable {
     
@@ -54,6 +55,7 @@ struct CommonFileBrowserTemplate: TemplateRepresentable {
                             Tr {
                                 Td {
                                     A {
+                                        Svg.icon(.folder)
                                         Img(src: "/svg/web/folder.svg", alt: parent.key)
                                             .style("width: 32px; height: 32px;")
                                     }

@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 2022. 02. 04..
 //
 
-import SwiftSvg
-import SwiftSgml
 
 public extension Svg {
 
