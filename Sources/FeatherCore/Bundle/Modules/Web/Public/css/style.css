@@ -965,3 +965,10 @@ th span {
     background-color: var(--dark-red-color);
 }
 
+#pagination {
+    margin-top: 1rem;
+    text-align: center;
+}
+#pagination span, #pagination a {
+    margin: 0 0.5rem;
+}
