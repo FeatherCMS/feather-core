@@ -21,4 +21,8 @@ public struct CellContext {
         self.value = value
         self.link = link
     }
+    
+    public static func link(_ name: String, _ permission: FeatherPermission? = nil) -> CellContext {
+        .init(name, link: LinkContext(label: name, permission: permission?.key))
+    }
 }
