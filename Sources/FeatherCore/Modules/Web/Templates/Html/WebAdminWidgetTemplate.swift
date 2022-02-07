@@ -12,7 +12,7 @@ struct WebAdminWidgetTemplate: TemplateRepresentable {
  
     @TagBuilder
     func render(_ req: Request) -> Tag {
-        Svg.icon(.compass)
+        Svg.compass
 
         H2("Web")
         Ul {

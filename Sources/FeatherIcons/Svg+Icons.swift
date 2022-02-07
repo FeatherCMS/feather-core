@@ -6,18 +6,11 @@
 //
 
 
-public extension Svg {
-
-    static func icon(_ value: String) -> Svg? {
-        guard let icon = Icons(rawValue: value) else {
-            return nil
-        }
-        return .icon(icon)
-    }
+extension Svg {
     
-    static func icon(_ value: Icons) -> Svg {
+    static func icon(_ tags: [Tag]) -> Svg {
         Svg {
-            value.tags
+            tags
         }
         .width(24)
         .height(24)
@@ -29,5 +22,3 @@ public extension Svg {
         .strokeLinejoin("round")
     }
 }
-
-

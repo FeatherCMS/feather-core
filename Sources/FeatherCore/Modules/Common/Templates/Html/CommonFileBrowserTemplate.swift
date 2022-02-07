@@ -55,7 +55,7 @@ struct CommonFileBrowserTemplate: TemplateRepresentable {
                             Tr {
                                 Td {
                                     A {
-                                        Svg.icon(.folder)
+                                        Svg.folder
                                         Img(src: "/svg/web/folder.svg", alt: parent.key)
                                             .style("width: 32px; height: 32px;")
                                     }

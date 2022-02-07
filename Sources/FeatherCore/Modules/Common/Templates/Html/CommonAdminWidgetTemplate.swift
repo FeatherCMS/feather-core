@@ -12,7 +12,7 @@ struct CommonAdminWidgetTemplate: TemplateRepresentable {
 
     @TagBuilder
     func render(_ req: Request) -> Tag {
-        Svg.icon(.package)
+        Svg.package
         H2("Common")
         Ul {
             if req.checkPermission(Common.Variable.permission(for: .list)) {

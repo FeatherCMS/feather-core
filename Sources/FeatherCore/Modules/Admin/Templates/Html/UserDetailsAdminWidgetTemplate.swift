@@ -12,7 +12,7 @@ struct AdminDetailsWidgetTemplate: TemplateRepresentable {
  
     @TagBuilder
     func render(_ req: Request) -> Tag {
-        Svg.icon(.command)
+        Svg.command
         H2("Admin")
         Ul {
             Li(req.auth.get(FeatherAccount.self)?.email ?? "unknown")

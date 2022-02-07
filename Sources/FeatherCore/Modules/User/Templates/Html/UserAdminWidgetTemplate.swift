@@ -12,7 +12,7 @@ struct UserAdminWidgetTemplate: TemplateRepresentable {
     
     @TagBuilder
     func render(_ req: Request) -> Tag {
-        Svg.icon(.user)
+        Svg.user
         H2("User")
         Ul {
             if req.checkPermission(User.Account.permission(for: .list)) {
