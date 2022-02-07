@@ -77,9 +77,9 @@ public extension AdminCreateController {
     
     func createBreadcrumbs(_ req: Request) -> [LinkContext] {
         [
-            LinkContext(label: DatabaseModel.Module.featherName,
+            LinkContext(label: Self.moduleName,
                         dropLast: 2,
-                        permission: ApiModel.Module.permission(for: .list).key),
+                        permission: ApiModel.Module.permission(for: .detail).key),
             LinkContext(label: Self.modelName.plural,
                         dropLast: 1,
                         permission: ApiModel.permission(for: .list).key),

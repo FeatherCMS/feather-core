@@ -70,9 +70,9 @@ public extension AdminListController {
     
     func listBreadcrumbs(_ req: Request) -> [LinkContext] {
         [
-            LinkContext(label: DatabaseModel.Module.featherName,
+            LinkContext(label: Self.moduleName,
                         dropLast: 1,
-                        permission: nil), //Model.Module.permission.key),
+                        permission: ApiModel.Module.permission(for: .detail).key),
         ]
     }
     

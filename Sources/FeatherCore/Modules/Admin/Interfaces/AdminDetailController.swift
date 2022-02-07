@@ -49,7 +49,7 @@ public extension AdminDetailController {
 
     func detailBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
-            LinkContext(label: DatabaseModel.Module.featherName,
+            LinkContext(label: Self.moduleName,
                         dropLast: 2,
                         permission: ApiModel.Module.permission(for: .detail).key),
             LinkContext(label: Self.modelName.plural,

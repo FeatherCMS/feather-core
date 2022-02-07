@@ -70,7 +70,7 @@ public extension AdminDeleteController {
     
     func deleteBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
-            LinkContext(label: DatabaseModel.Module.featherName,
+            LinkContext(label: Self.moduleName,
                         dropLast: 3,
                         permission: ApiModel.Module.permission(for: .detail).key),
             LinkContext(label: Self.modelName.plural,
