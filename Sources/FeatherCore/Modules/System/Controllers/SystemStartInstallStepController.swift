@@ -25,9 +25,10 @@ struct SystemStartInstallStepController: SystemInstallStepController {
     
     func installAssets(_ req: Request) async throws {
         let fm = FileManager.default
-        for module in req.application.feather.modules.filter({ $0.bundleUrl != nil }) {
-            let moduleUrl = module.bundleUrl!
-            let moduleName = type(of: module).featherIdentifier.lowercased()
+        for module in req.application.feather.modules.filter({ type(of: $0).bundleUrl != nil }) {
+            let staticModule = type(of: module)
+            let moduleUrl = staticModule.bundleUrl!
+            let moduleName = staticModule.featherIdentifier.lowercased()
             
             let assetsUrl = moduleUrl.appendingPathComponent("Assets")
             guard fm.isExistingDirectory(at: assetsUrl.path) else {

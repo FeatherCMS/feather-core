@@ -12,7 +12,7 @@ public protocol FeatherModule {
     ///
     /// e.g. Bundle.module.resourceURL?.appendingPathComponent("Bundle")
     ///
-    var bundleUrl: URL? { get }
+    static var bundleUrl: URL? { get }
     
     /// a unique identifier for the module
     ///
@@ -32,7 +32,7 @@ public protocol FeatherModule {
 
 public extension FeatherModule {
     
-    var bundleUrl: URL? { nil }
+    static var bundleUrl: URL? { nil }
     
     static var featherIdentifier: String {
         String(describing: self).dropLast(6).lowercased()
@@ -50,15 +50,15 @@ public extension FeatherModule {
         // nothing to do here...
     }
     
-//    static func sample(named name: String) -> String {
-//        do {
-//            guard let url = bundleUrl?.appendingPathComponent("Samples").appendingPathComponent(name) else {
-//                return ""
-//            }
-//            return try String(contentsOf: url, encoding: .utf8)
-//        }
-//        catch {
-//            return ""
-//        }
-//    }
+    static func sample(named name: String) -> String {
+        do {
+            guard let url = bundleUrl?.appendingPathComponent("Samples").appendingPathComponent(name) else {
+                return ""
+            }
+            return try String(contentsOf: url, encoding: .utf8)
+        }
+        catch {
+            return ""
+        }
+    }
 }

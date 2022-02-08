@@ -220,9 +220,10 @@ private extension Feather {
     }
     
     func copyModuleBundles(_ modules: [FeatherModule]) throws {
-        for module in modules.filter({ $0.bundleUrl != nil }) {
-            let moduleUrl = module.bundleUrl!
-            let moduleName = type(of: module).featherIdentifier.lowercased()
+        for module in modules.filter({ type(of: $0).bundleUrl != nil }) {
+            let staticModule = type(of: module)
+            let moduleUrl = staticModule.bundleUrl!
+            let moduleName = staticModule.featherIdentifier.lowercased()
             try copyPublicFiles(at: moduleUrl, to: moduleName)
         }
     }
