@@ -552,7 +552,7 @@ span.icon + h1 {
 }
 
 .lead {
-    margin-bottom: 1.5rem;
+    margin: 1rem 0;
 }
 .lead nav a {
     margin-right: 1rem;
