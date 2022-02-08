@@ -61,6 +61,12 @@ struct GenerateModuleCommand: Command {
             let arr = path.components(separatedBy: "/")
             path = arr.dropLast(arr.count-3).joined(separator: "/")
         }
+        
+        let outputPath = context.console.ask("Output path <\(path)>:")
+        if !outputPath.isEmpty {
+            path = outputPath
+        }
+
         console.info("Generating module at `\(path)`")
         try generateModule(ModuleDescriptor(name: moduleName, models: models), at: path)
         console.info("Module generated.")
