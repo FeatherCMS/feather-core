@@ -20,12 +20,13 @@ public struct SystemInstallPageTemplate: TemplateRepresentable {
         SystemIndexTemplate(.init(title: context.title)) {
             Wrapper {
                 Container {
-                    Span(context.icon)
-                        .class("icon")
-                    H1(context.title)
-                    P(context.message)
-                    A(context.link.label)
-                        .href(context.link.path)
+                    LeadTemplate(.init(icon: context.icon,
+                                       title: context.title,
+                                       excerpt: context.message,
+                                       links: [
+                                            .init(label: context.link.label, path: context.link.path, absolute: true)
+                                       ]))
+                        .render(req)
                 }
             }
         }

@@ -52,10 +52,9 @@ public struct LinkContext {
     }
     
     func url(_ req: Request, _ infix: [PathComponent] = []) -> String {
-        var finalUrl = path
-        if !absolute {
-            finalUrl = (req.url.path.pathComponents.dropLast(dropLast) + (infix + path.pathComponents)).path
+        if absolute {
+           return path
         }
-        return finalUrl.safePath()
+        return ((req.url.path.pathComponents.dropLast(dropLast) + (infix + path.pathComponents)).path).safePath()
     }
 }
