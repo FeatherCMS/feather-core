@@ -28,6 +28,7 @@ public struct ModuleGenerator {
                 app.migrations.add(\(descriptor.name)Migrations.v1())
 
                 app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
+                app.hooks.register(.adminWidgets, use: adminWidgetsHook)
                 app.hooks.register(.apiRoutes, use: router.apiRoutesHook)
                 app.hooks.register(.installUserPermissions, use: installUserPermissionsHook)
                 
@@ -40,6 +41,15 @@ public struct ModuleGenerator {
                 var permissions = \(descriptor.name).availablePermissions()
                 \(generateModelPermissions())
                 return permissions.map { .init($0) }
+            }
+        
+            func adminWidgetsHook(args: HookArguments) -> [OrderedHookResult<TemplateRepresentable>] {
+                if args.req.checkPermission(\(descriptor.name).permission(for: .detail)) {
+                    return [
+                        .init(\(descriptor.name)AdminWidgetTemplate(), order: 100),
+                    ]
+                }
+                return []
             }
         }
         """

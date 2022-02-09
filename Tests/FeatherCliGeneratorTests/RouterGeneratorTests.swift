@@ -31,8 +31,8 @@ final class RouterGeneratorTests: XCTestCase {
                     accountAdminController.setUpRoutes(args.routes)
 
                     args.routes.get(User.pathKey.pathComponent) { req -> Response in
-                                    let template = AdminModulePageTemplate(.init(title: "User",
-                                                                                 tag: UserAdminWidgetTemplate().render(req)))
+                        let template = AdminModulePageTemplate(.init(title: "User",
+                                                                     tag: UserAdminWidgetTemplate().render(req)))
                         return req.templates.renderHtml(template)
                     }
                 }

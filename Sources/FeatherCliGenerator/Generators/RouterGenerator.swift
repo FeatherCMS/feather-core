@@ -49,8 +49,8 @@ public struct RouterGenerator {
                 \(adminCalls)
 
                 args.routes.get(\(descriptor.name).pathKey.pathComponent) { req -> Response in
-                                let template = AdminModulePageTemplate(.init(title: "\(descriptor.name)",
-                                                                             tag: \(descriptor.name)AdminWidgetTemplate().render(req)))
+                    let template = AdminModulePageTemplate(.init(title: "\(descriptor.name)",
+                                                                 tag: \(descriptor.name)AdminWidgetTemplate().render(req)))
                     return req.templates.renderHtml(template)
                 }
             }

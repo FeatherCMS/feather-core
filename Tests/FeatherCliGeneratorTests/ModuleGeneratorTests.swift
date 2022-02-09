@@ -32,6 +32,7 @@ final class ModuleGeneratorTests: XCTestCase {
                     app.migrations.add(UserMigrations.v1())
 
                     app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
+                    app.hooks.register(.adminWidgets, use: adminWidgetsHook)
                     app.hooks.register(.apiRoutes, use: router.apiRoutesHook)
                     app.hooks.register(.installUserPermissions, use: installUserPermissionsHook)
                     
@@ -44,6 +45,15 @@ final class ModuleGeneratorTests: XCTestCase {
                     var permissions = User.availablePermissions()
                     permissions += User.Account.availablePermissions()
                     return permissions.map { .init($0) }
+                }
+            
+                func adminWidgetsHook(args: HookArguments) -> [OrderedHookResult<TemplateRepresentable>] {
+                    if args.req.checkPermission(User.permission(for: .detail)) {
+                        return [
+                            .init(UserAdminWidgetTemplate(), order: 100),
+                        ]
+                    }
+                    return []
                 }
             }
             """
