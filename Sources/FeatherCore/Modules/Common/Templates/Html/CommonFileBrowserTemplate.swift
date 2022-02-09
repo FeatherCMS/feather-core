@@ -56,8 +56,6 @@ struct CommonFileBrowserTemplate: TemplateRepresentable {
                                 Td {
                                     A {
                                         Svg.folder
-                                        Img(src: "/svg/web/folder.svg", alt: parent.key)
-                                            .style("width: 32px; height: 32px;")
                                     }
                                     .href((req.url.path.safePath() + "?key=" + parent.key))
                                 }
@@ -91,8 +89,7 @@ struct CommonFileBrowserTemplate: TemplateRepresentable {
                                 }
                                 else {
                                     Td {
-                                        Img(src: "/svg/web/folder.svg", alt: item.key)
-                                            .style("width: 32px; height: 32px;")
+                                        Svg.folder
                                     }
                                 }
                                 
