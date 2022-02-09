@@ -19,7 +19,7 @@ public struct ApiControllerGenerator {
     public func generate() -> String {
 
         let validators = descriptor.properties.filter { $0.isRequired }.map {
-            "KeyedContentValidator<\($0.databaseType.rawValue)>.required(\"\($0.name)\", optional: optional)"
+            "KeyedContentValidator<\($0.databaseType.rawValue.capitalized)>.required(\"\($0.name)\", optional: optional)"
         }.joined(separator: "\n")
         
         let ctrl = Object(type: "struct",

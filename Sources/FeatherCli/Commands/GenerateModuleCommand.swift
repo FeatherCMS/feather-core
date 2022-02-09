@@ -139,12 +139,16 @@ struct GenerateModuleCommand: Command {
         try forceCreateDirectory(at: editorsUrl)
 
         // Templates
-//        let templatesUrl = moduleUrl.appendingPathComponent("Templates")
-//        try forceCreateDirectory(at: templatesUrl)
+        let templatesUrl = moduleUrl.appendingPathComponent("Templates")
+        try forceCreateDirectory(at: templatesUrl)
 //        let contextsUrl = templatesUrl.appendingPathComponent("Contexts")
 //        try forceCreateDirectory(at: contextsUrl)
-//        let htmlUrl = templatesUrl.appendingPathComponent("Html")
-//        try forceCreateDirectory(at: htmlUrl)
+        let htmlUrl = templatesUrl.appendingPathComponent("Html")
+        try forceCreateDirectory(at: htmlUrl)
+        
+        let adminWidgetFileContents = AdminWidgetGenerator(moduleDescriptor).generate()
+        let adminWidgetFile = htmlUrl.appendingPathComponent(moduleDescriptor.name + "AdminWidgetTemplate.swift")
+        try forceWrite(adminWidgetFileContents, at: adminWidgetFile)
         
         for modelDescriptor in moduleDescriptor.models {
             let prefix = moduleDescriptor.name + modelDescriptor.name
