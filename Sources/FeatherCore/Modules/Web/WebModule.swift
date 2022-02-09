@@ -15,6 +15,13 @@ public extension HookName {
 
 struct WebModule: FeatherModule {
     
+    static var bundleUrl: URL? {
+        Bundle.module.resourceURL?
+            .appendingPathComponent("Bundle")
+            .appendingPathComponent("Modules")
+            .appendingPathComponent("Web")
+    }
+    
     let router = WebRouter()
     
     func boot(_ app: Application) throws {
@@ -33,7 +40,7 @@ struct WebModule: FeatherModule {
         app.hooks.registerAsync(.install, use: installHook)
         app.hooks.registerAsync(.response, use: responseHook)
         
-        app.hooks.registerAsync("web-welcome-page", use: webWelcomePageHook)
+//        app.hooks.registerAsync("web-welcome-page", use: webWelcomePageHook)
         
         try router.boot(app)
     }
@@ -105,11 +112,11 @@ struct WebModule: FeatherModule {
         try await pages.create(on: args.req.db)
         try await pages.forEachAsync { try await $0.publishMetadata(args.req) }
         
-        let aboutPage = WebPageModel(title: "About", content: "This is an example about page.")
+        let aboutPage = WebPageModel(title: "About", content: WebModule.sample(named: "About.md"))
         try await aboutPage.create(on: args.req.db)
         try await aboutPage.publishMetadata(args.req)
         
-        let homePage = WebPageModel(title: "Welcome", content: "[web-welcome-page]")
+        let homePage = WebPageModel(title: "Welcome", content: WebModule.sample(named: "Welcome.md"))
         try await homePage.create(on: args.req.db)
         try await homePage.publishMetadataAsHome(args.req)
     }
@@ -123,12 +130,12 @@ struct WebModule: FeatherModule {
         return permissions.map { .init($0) }
     }
 
-    func webWelcomePageHook(args: HookArguments) async throws -> Response? {
-        let template = WebWelcomePageTemplate(.init(index: .init(title: "Welcome"),
-                                                    title: "Welcome",
-                                                    message: "This is the welcome page"))
-        return args.req.templates.renderHtml(template)
-    }
+//    func webWelcomePageHook(args: HookArguments) async throws -> Response? {
+//        let template = WebWelcomePageTemplate(.init(index: .init(title: "Welcome"),
+//                                                    title: "Welcome",
+//                                                    message: "This is the welcome page"))
+//        return args.req.templates.renderHtml(template)
+//    }
     
     func installCommonVariablesHook(args: HookArguments) -> [Common.Variable.Create] {
         [

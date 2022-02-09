@@ -14,7 +14,9 @@ public extension MetadataRepresentable {
 
     func filter(_ content: String, _ req: Request) async throws -> String {
         let allFilters: [FeatherFilter] = req.invokeAllFlat(.filters)
-        let filters = allFilters.filter { featherMetadata.filters.contains($0.key) }.sorted { $0.priority > $1.priority }
+        let filters = allFilters.filter { f in
+            featherMetadata.filters.isEmpty || featherMetadata.filters.contains(f.key)
+        }.sorted { $0.priority > $1.priority }
         var result = content
         try await filters.forEachAsync { filter in
             result = try await filter.filter(result, req)
