@@ -552,7 +552,7 @@ span.icon + h1 {
 }
 
 .lead {
-    margin: 1rem 0;
+    margin-bottom: 2rem;
 }
 .lead nav a {
     margin-right: 1rem;
@@ -903,6 +903,7 @@ th span {
 }
 
 .card {
+    display: block;
     position: relative;
     overflow: hidden;
     background-color: var(--bg-color);
