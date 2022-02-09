@@ -22,7 +22,7 @@ public struct AdminIndexTemplate: TemplateRepresentable {
     public func render(_ req: Request) -> Tag {
         Html {
             Head {
-                Title(context.title)
+                Title(context.title + " - " + "Feather")
 
                 StandardMetaTemplate(.init(charset: context.charset,
                                    viewport: context.viewport,
