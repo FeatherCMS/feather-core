@@ -30,14 +30,9 @@ final class RouterGeneratorTests: XCTestCase {
                 func adminRoutesHook(args: HookArguments) {
                     accountAdminController.setUpRoutes(args.routes)
 
-                    args.routes.get("user") { req -> Response in
-                        let template = AdminModulePageTemplate(.init(title: "User",
-                                                                     message: "module information",
-                                                                     navigation: [
-                    .init(label: "Account",
-                          path: "/admin/user/account/",
-                          permission: User.Account.permission(for: .list).key),
-                                                                     ]))
+                    args.routes.get(User.pathKey.pathComponent) { req -> Response in
+                                    let template = AdminModulePageTemplate(.init(title: "User",
+                                                                                 tag: UserAdminWidgetTemplate().render(req)))
                         return req.templates.renderHtml(template)
                     }
                 }

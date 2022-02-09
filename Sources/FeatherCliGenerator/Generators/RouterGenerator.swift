@@ -30,21 +30,11 @@ public struct RouterGenerator {
         "\(model.name.lowercased())AdminController.setUpRoutes(args.routes)"
     }
     
-    private func generateNavigationLink(_ model: ModelDescriptor) -> String {
-        """
-            .init(label: "\(model.name)",
-                      path: "/admin/\(descriptor.name.lowercased())/\(model.name.lowercased())/",
-                      permission: \(descriptor.name).\(model.name).permission(for: .list).key),
-        """
-    }
-    
     public func generate() -> String {
 
         let controllers = descriptor.models.map { generateControllers($0) }.joined(separator: "\n\n")
         let apiCalls = descriptor.models.map { generateSetUpApiCall($0) }.joined(separator: "\n")
         let adminCalls = descriptor.models.map { generateSetUpAdminCall($0) }.joined(separator: "\n")
-        let navLinks = descriptor.models.map { generateNavigationLink($0) }.joined(separator: "\n\n")
-        
         
         return """
         struct \(descriptor.name)Router: FeatherRouter {
@@ -58,12 +48,9 @@ public struct RouterGenerator {
             func adminRoutesHook(args: HookArguments) {
                 \(adminCalls)
 
-                args.routes.get("\(descriptor.name.lowercased())") { req -> Response in
-                    let template = AdminModulePageTemplate(.init(title: "\(descriptor.name)",
-                                                                 message: "module information",
-                                                                 navigation: [
-            \(navLinks)
-                                                                 ]))
+                args.routes.get(\(descriptor.name).pathKey.pathComponent) { req -> Response in
+                                let template = AdminModulePageTemplate(.init(title: "\(descriptor.name)",
+                                                                             tag: \(descriptor.name)AdminWidgetTemplate().render(req)))
                     return req.templates.renderHtml(template)
                 }
             }
