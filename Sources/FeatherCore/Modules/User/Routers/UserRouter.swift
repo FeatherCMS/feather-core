@@ -27,20 +27,9 @@ struct UserRouter: FeatherRouter {
         roleController.setUpRoutes(args.routes)
         permissionController.setUpRoutes(args.routes)
         
-        args.routes.get("user") { req -> Response in
+        args.routes.get(User.pathKey.pathComponent) { req -> Response in
             let template = AdminModulePageTemplate(.init(title: "User",
-                                                         message: "module information",
-                                                         navigation: [
-                                                            .init(label: "Accounts",
-                                                                  path: "/admin/user/accounts/",
-                                                                  permission: User.Account.permission(for: .list).key),
-                                                            .init(label: "Roles",
-                                                                  path: "/admin/user/roles/",
-                                                                  permission: User.Role.permission(for: .list).key),
-                                                            .init(label: "Permissions",
-                                                                  path: "/admin/user/permissions/",
-                                                                  permission: User.Permission.permission(for: .list).key),
-                                                         ]))
+                                                         tag: UserAdminWidgetTemplate().render(req)))
             return req.templates.renderHtml(template)
         }
     }

@@ -20,17 +20,9 @@ public struct AdminModulePageTemplate: TemplateRepresentable {
         AdminIndexTemplate(.init(title: context.title)) {
             Wrapper {
                 Container {
-                    LeadTemplate(.init(title: context.title, excerpt: context.message)).render(req)
-
-                    Ul {
-                        context.navigation.map { link in
-                            Li {
-                                A(link.label)
-                                    .href(link.path)
-                            }
-                        }
-                    }       
+                    context.tag       
                 }
+                .class(add: "module-page")
             }
         }
         .render(req)

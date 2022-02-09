@@ -18,12 +18,12 @@ struct CommonAdminWidgetTemplate: TemplateRepresentable {
             if req.checkPermission(Common.Variable.permission(for: .list)) {
                 Li {
                     A("Variables")
-                        .href("common/variables/")
+                        .href("/admin/common/variables/")
                 }
             }
             Li {
                 A("Files")
-                    .href("common/files/")
+                    .href("/admin/common/files/")
             }
         }
     }

@@ -5,18 +5,16 @@
 //  Created by Tibor Bodecs on 2021. 12. 02..
 //
 
-public struct AdminModulePageContext {
+import SwiftHtml
 
-    public let title: String
-    public let message: String
-    public let navigation: [LinkContext]
+public struct AdminModulePageContext {
     
-    public init(title: String,
-                message: String,
-                navigation: [LinkContext] = []) {
+    public let title: String
+    public let tag: Tag
+    
+    public init(title: String, tag: Tag) {
         self.title = title
-        self.message = message
-        self.navigation = navigation
-    }
+        self.tag = tag
+    } 
 }
 

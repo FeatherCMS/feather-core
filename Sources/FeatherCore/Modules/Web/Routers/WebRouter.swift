@@ -37,18 +37,12 @@ struct WebRouter: FeatherRouter {
         menuAdminController.setUpRoutes(args.routes)
         menuItemAdminController.setUpRoutes(args.routes)
         
-        args.routes.grouped("web").get("settings", use: settingsAdminController.settingsView)
-        args.routes.grouped("web").post("settings", use: settingsAdminController.settings)
+        args.routes.grouped(Web.pathKey.pathComponent).get("settings", use: settingsAdminController.settingsView)
+        args.routes.grouped(Web.pathKey.pathComponent).post("settings", use: settingsAdminController.settings)
         
-        args.routes.get("web") { req -> Response in
+        args.routes.get(Web.pathKey.pathComponent) { req -> Response in
             let template = AdminModulePageTemplate(.init(title: "Web",
-                                                         message: "module information",
-                                                         navigation: [
-                                                            .init(label: "Menus", path: "/admin/web/menus/"),
-                                                            .init(label: "Pages", path: "/admin/web/pages/"),
-                                                            .init(label: "Metadatas", path: "/admin/web/metadatas/"),
-                                                            .init(label: "Settings", path: "/admin/web/settings/"),
-                                                         ]))
+                                                         tag: WebAdminWidgetTemplate().render(req)))
             return req.templates.renderHtml(template)
         }
     }

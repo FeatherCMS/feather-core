@@ -15,7 +15,7 @@ struct CommonRouter: FeatherRouter {
     func adminRoutesHook(args: HookArguments) {
         variableAdminController.setUpRoutes(args.routes)
 
-        let moduleRoutes = args.routes.grouped("common")
+        let moduleRoutes = args.routes.grouped(Common.pathKey.pathComponent)
         moduleRoutes.get("files", use: fileAdminController.listView)
         
         let filesRoutes = moduleRoutes.grouped("files")
@@ -29,13 +29,9 @@ struct CommonRouter: FeatherRouter {
         filesRoutes.get("delete", use: fileAdminController.deleteView)
         filesRoutes.post("delete", use: fileAdminController.deleteAction)
         
-        args.routes.get("common") { req -> Response in
+        args.routes.get(Common.pathKey.pathComponent) { req -> Response in
             let template = AdminModulePageTemplate(.init(title: "Common",
-                                                         message: "module information",
-                                                         navigation: [
-                                                            .init(label: "Variables", path: "/admin/common/variables/"),
-                                                            .init(label: "Files", path: "/admin/common/files/"),
-                                                         ]))
+                                                         tag: CommonAdminWidgetTemplate().render(req)))
             return req.templates.renderHtml(template)
         }
     }
@@ -43,7 +39,7 @@ struct CommonRouter: FeatherRouter {
     func apiRoutesHook(args: HookArguments) {
         variableApiController.setUpRoutes(args.routes)
 
-        let moduleRoutes = args.routes.grouped("common")
+        let moduleRoutes = args.routes.grouped(Common.pathKey.pathComponent)
         moduleRoutes.get("files", use: fileApiController.listApi)
         moduleRoutes.post("files", use: fileApiController.uploadApi)
         moduleRoutes.delete("files", use: fileApiController.deleteApi)
