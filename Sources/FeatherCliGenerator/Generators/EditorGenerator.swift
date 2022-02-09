@@ -28,7 +28,7 @@ public struct EditorGenerator {
  
     private func generateImageField(_ property: PropertyDescriptor) -> String {
         var res = """
-            \(property.formFieldType.fieldName)(\"\(property.name)\", path: "\(module)/\(descriptor.name.lowercased())")
+            \(property.formFieldType.fieldName)(\"\(property.name)\", path: "\(module.lowercased())/\(descriptor.name.lowercased())")
         """
         res += """
             .read {
