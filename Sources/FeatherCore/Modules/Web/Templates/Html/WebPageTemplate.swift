@@ -23,7 +23,7 @@ public struct WebPageTemplate: TemplateRepresentable {
                     H1(context.page.title)
                     Text(context.page.content)
                 }
-                .class("\(context.page.metadata.slug)-page", !context.page.metadata.slug.isEmpty)
+                .class(add: "\(context.page.metadata.slug)-page", !context.page.metadata.slug.isEmpty)
             }
             .id("web-page")
         }
