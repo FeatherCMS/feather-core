@@ -983,7 +983,7 @@ th span {
     margin-bottom: 0rem;
 }
 #feed-items .group {
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
 }
 #feed-items .group > p {
     font-weight: bold;
@@ -992,6 +992,9 @@ th span {
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
+}
+#feed-items .card {
+    margin-bottom: 2rem;
 }
 #feed-items .card h3 {
     margin-top: 0;
