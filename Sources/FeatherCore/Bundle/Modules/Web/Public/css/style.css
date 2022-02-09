@@ -975,6 +975,13 @@ th span {
 }
 
 /* NOTE: move this to the aggregator module */
+#feed-items .lead h1 {
+    margin-bottom: 0rem;
+}
+#feed-items .lead p {
+    margin-top: 0.5rem;
+    margin-bottom: 0rem;
+}
 #feed-items .group {
     margin-bottom: 3rem;
 }
