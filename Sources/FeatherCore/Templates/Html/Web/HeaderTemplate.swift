@@ -6,6 +6,7 @@
 //
 
 import SwiftHtml
+import FeatherIcons
 
 public struct HeaderTemplate: TemplateRepresentable {
     
@@ -21,25 +22,53 @@ public struct HeaderTemplate: TemplateRepresentable {
                 A {
                     Picture {
                         Source()
-                            .srcset("/img/web/logos/feather-logo-dark.png")
+                            .srcset(getLogoUrl(req, darkMode: true))
                             .media(.prefersColorScheme(.dark))
-                        Img(src: "/img/web/logos/feather-logo.png", alt: "Logo of Feather")
-                            .title("Feather")
+                        Img(src: getLogoUrl(req), alt: "Logo of \(context.title)")
+                            .title(context.title)
                     }
                 }
-                .id("logo")
+                .id("site-logo")
                 .href(context.logoLink)
                 
                 if let main = context.main {
                     NavigationTemplate(main).render(req)
                 }
-                if let account = context.account {
-                    NavigationTemplate(account).render(req)
+  
+                if let action = context.action {
+                    Nav {
+                        A {
+                            action.icon
+                            Span(action.title)
+                        }
+                            .class("button")
+                            .href(action.link)
+                        }
+                    .class("action-item")
                 }
             }
             .class("safe-area")
         }
         .id("navigation")
         .class("noselect")
+    }
+}
+
+
+private extension HeaderTemplate {
+
+    func getLogoUrl(_ req: Request, darkMode: Bool = false) -> String {
+        if darkMode {
+            if let logo = req.variable("webSiteLogoDark"), !logo.isEmpty {
+                return req.fs.resolve(key: logo)
+            }
+            let logoName: String? = req.invoke(.webLogo)
+            return "/img/\(logoName ?? "web/logos/feather-logo")-dark.png"
+        }
+        if let logo = req.variable("webSiteLogo"), !logo.isEmpty {
+            return req.fs.resolve(key: logo)
+        }
+        let logoName: String? = req.invoke(.webLogo)
+        return "/img/\(logoName ?? "web/logos/feather-logo").png"
     }
 }

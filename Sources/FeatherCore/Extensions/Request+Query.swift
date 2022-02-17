@@ -36,6 +36,10 @@ public extension Request {
         try? query.get(String.self, at: key)
     }
     
+    func getQuery<T: Decodable>(_ key: String, as: T.Type) -> T? {
+        try? query.get(T.self, at: key)
+    }
+    
     func buildQuery(_ dict: [String: Any]) -> String {
         var queryItems = queryDictionary
         for (key, value) in dict {

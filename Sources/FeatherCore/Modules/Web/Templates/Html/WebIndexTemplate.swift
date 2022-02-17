@@ -18,61 +18,7 @@ public struct WebIndexTemplate: TemplateRepresentable {
         self.context = context
         self.body = builder()
     }
-    
-    private func getTitle(_ req: Request) -> String {
-        let title = context.metadata?.title ?? context.title
-        var components = [title]
-        if let suffix = req.variable("webSiteTitle"), !suffix.isEmpty {
-            components += ["-", suffix]
-        }
-        return components.joined(separator: " ")
-    }
-    
-    private func getLogoUrl(_ req: Request, darkMode: Bool = false) -> String {
-        if darkMode {
-            if let logo = req.variable("webSiteLogoDark"), !logo.isEmpty {
-                return req.fs.resolve(key: logo)
-            }
-            return "/img/web/logos/feather-logo-dark.png"
-        }
-        if let logo = req.variable("webSiteLogo"), !logo.isEmpty {
-            return req.fs.resolve(key: logo)
-        }
-        return "/img/web/logos/feather-logo.png"
-    }
-    
-    var noindex: Bool {
-        if context.noindex {
-            return true
-        }
-        if let status = context.metadata?.status, status != .published {
-            return true
-        }
-        // @TODO: check site noindex property!!!!
-        return false
-    }
-    
-    func getCanonicalUrl(_ req: Request) -> String? {
-        if let canonicalUrl = context.canonicalUrl, !canonicalUrl.isEmpty {
-            return canonicalUrl
-        }
-        if let canonicalUrl = context.metadata?.canonicalUrl, !canonicalUrl.isEmpty {
-            return canonicalUrl
-        }
-        if req.getQuery("page") != nil || req.getQuery("search") != nil {
-            return req.absoluteUrl
-        }
-        return nil
-    }
-    
-    func mainMenuItems(_ req: Request) -> [Tag] {
-        req.menu("main")?.items.map {
-            A($0.label)
-                .href($0.path)
-                .class("selected", req.url.path == $0.path)
-        } ?? []
-    }
-    
+
     @TagBuilder
     func profileMenuItems(_ req: Request) -> [Tag] {
         if req.auth.has(FeatherAccount.self) {
@@ -98,18 +44,19 @@ public struct WebIndexTemplate: TemplateRepresentable {
                 //"width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no"
                 StandardMetaTemplate(.init(charset: context.charset,
                                    viewport: context.viewport,
-                                   noindex: noindex))
+                                   noindex: getNoindex(req)))
                     .render(req)
 
+                // TODO: fix absolute URLs
                 if let metadata = context.metadata {
                     TwitterMetaTemplate(.init(title: metadata.title ?? getTitle(req),
                                               excerpt: metadata.excerpt,
-                                              imageUrl: ""))
+                                              imageUrl: metadata.imageKey?.resolve(req) ?? ""))
                         .render(req)
                     OpenGraphMetaTemplate(.init(url: "",
                                          title: metadata.title ?? getTitle(req),
                                          excerpt: metadata.excerpt,
-                                         imageUrl: ""))
+                                         imageUrl: metadata.imageKey?.resolve(req) ?? ""))
                         .render(req)
                 }
                 
@@ -140,12 +87,11 @@ public struct WebIndexTemplate: TemplateRepresentable {
                 }
             }
             Body {
-                HeaderTemplate(.init(main: .init(id: "main",
+                HeaderTemplate(.init(title: getTitle(req),
+                                     main: .init(id: "main",
                                                  icon: Text("&#9776;"),
                                                  items: mainMenuItems(req)),
-                                     account: .init(id: "account",
-                                                    icon: Img(src: "/img/web/profile.png", alt: "Profile"),
-                                                    items: profileMenuItems(req))))
+                                     action: req.invoke(.webAction)))
                     .render(req)
 
                 MainTemplate(.init(body: body)).render(req)
@@ -173,4 +119,50 @@ public struct WebIndexTemplate: TemplateRepresentable {
         .lang(context.lang)
     }
     
+}
+
+private extension WebIndexTemplate {
+
+    func getTitle(_ req: Request) -> String {
+        let title = context.metadata?.title ?? context.title
+        var components = [title]
+        if let suffix = req.variable("webSiteTitle"), !suffix.isEmpty {
+            components += ["-", suffix]
+        }
+        return components.joined(separator: " ")
+    }
+    
+    func getNoindex(_ req: Request) -> Bool {
+        if context.noindex {
+            return true
+        }
+        if let status = context.metadata?.status, status != .published {
+            return true
+        }
+        if let noindex = req.variable("webSiteNoIndex") {
+            return Bool(noindex) ?? false
+        }
+        return false
+    }
+    
+    func getCanonicalUrl(_ req: Request) -> String? {
+        if let canonicalUrl = context.canonicalUrl, !canonicalUrl.isEmpty {
+            return canonicalUrl
+        }
+        if let canonicalUrl = context.metadata?.canonicalUrl, !canonicalUrl.isEmpty {
+            return canonicalUrl
+        }
+        if req.getQuery("page") != nil || req.getQuery("search") != nil {
+            return req.absoluteUrl
+        }
+        return nil
+    }
+
+    func mainMenuItems(_ req: Request) -> [Tag] {
+        req.menu("main")?.items.map {
+            A($0.label)
+                .href($0.path)
+                .class("selected", req.url.path == $0.path)
+        } ?? []
+    }
 }

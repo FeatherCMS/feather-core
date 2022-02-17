@@ -22,7 +22,7 @@ public struct AdminIndexTemplate: TemplateRepresentable {
     public func render(_ req: Request) -> Tag {
         Html {
             Head {
-                Title(context.title + " - " + "Feather")
+                Title(getTitle())
 
                 StandardMetaTemplate(.init(charset: context.charset,
                                    viewport: context.viewport,
@@ -36,14 +36,9 @@ public struct AdminIndexTemplate: TemplateRepresentable {
                 }
             }
             Body {
-                HeaderTemplate(.init(logoLink: req.feather.config.paths.admin.safePath(),
-                                     account: .init(id: "account",
-                                                    icon: Img(src: "/img/web/profile.png", alt: "Profile"),
-                                                    items: [
-                                                        A("Sign out")
-                                                            .href(req.feather.config.paths.logout.safePath())
-                                                    ]
-                                                   )))
+                HeaderTemplate(.init(title: getTitle(),
+                                     logoLink: req.feather.config.paths.admin.safePath(),
+                                     action: .init(icon: .compass, title: "View site", link: "/")))
                     .render(req)
 
                 
@@ -70,4 +65,12 @@ public struct AdminIndexTemplate: TemplateRepresentable {
         .lang(context.lang)
     }
     
+}
+
+
+private extension AdminIndexTemplate {
+    
+    func getTitle() -> String {
+        context.title + " - " + "Feather"
+    }
 }

@@ -22,7 +22,7 @@ public struct SystemIndexTemplate: TemplateRepresentable {
     public func render(_ req: Request) -> Tag {
         Html {
             Head {
-                Title(context.title + " - " + "Feather")
+                Title(getTitle())
 
                 StandardMetaTemplate(.init(charset: context.charset,
                                    viewport: context.viewport,
@@ -34,11 +34,17 @@ public struct SystemIndexTemplate: TemplateRepresentable {
                 }
             }
             Body {
-                HeaderTemplate(.init()).render(req)
+                HeaderTemplate(.init(title: getTitle())).render(req)
                 MainTemplate(.init(body: body)).render(req)
                 FooterTemplate(.init(displayTopSection: false)).render(req)
             }
         }
         .lang(context.lang)
+    }
+}
+
+private extension SystemIndexTemplate {
+    func getTitle() -> String {
+        context.title + " - " + "Feather"
     }
 }

@@ -242,6 +242,14 @@ img {
 p + * {
     margin-top: 1.5rem;
 }
+p {
+    text-shadow: 0px 1px 0px #fff;
+}
+@media (prefers-color-scheme: dark) {
+    p {
+        text-shadow: -1px -1px 0px #000;
+    }
+}
 span.icon {
     font-size: 2.5rem;
     line-height: 3rem;
@@ -258,6 +266,16 @@ span.icon + h1 {
     user-select: none;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
+.center {
+    text-align: center;
+}
+.left {
+    text-align: left;
+}
+.right {
+    text-align: right;
+}
+
 #navigation {
     background: var(--bg-color);
     height: 4rem;
@@ -266,26 +284,23 @@ span.icon + h1 {
 #navigation a {
     font-size: 0.75rem;
 }
-#logo {
+#site-logo {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
 }
-#logo img {
+#site-logo img {
     padding: 1.25rem;
     max-width: 6rem;
     max-height: 100%;
 }
-#main-menu-button, #main-menu-items, #account-menu-button, #account-menu-items {
+#main-menu-button, #main-menu-items {
     display: none;
-}
-#account-menu input:checked ~ #account-menu-items {
-    display: block;
 }
 #main-menu input:checked ~ #main-menu-items {
     display: block;
 }
-#main-menu label:hover, #account-menu label:hover {
+#main-menu label:hover {
     cursor: pointer;
 }
 #main-menu label {
@@ -308,47 +323,60 @@ span.icon + h1 {
     border-top: 1px solid var(--bg-color-2);
     padding: 1rem;
 }
-#account-menu label {
+#main-menu a {
+    color: var(--text-color-2);
+    text-shadow: 0px 1px 0px #fff;
+}
+@media (prefers-color-scheme: dark) {
+    #main-menu a {
+        text-shadow: -1px -1px 0px #000;
+    }
+}
+#main-menu a:hover {
+    color: var(--link-color-1);
+}
+
+nav.action-item {
     position: absolute;
-    top: 0px;
-    right: env(safe-area-inset-right);
-    display: inline-block;
-    padding: 0;
+    top: 1.25rem;
+    right: 0.75rem;
+    z-index: 9999999;
+/*    display: none;*/
+/*    visibility: hidden;*/
 }
-#account-menu label img {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    padding: 1.25rem 1rem;
+nav.action-item a.button {
+    margin: 0;
+    font-size: 0.75rem !important;
+    padding: 0.0625rem 1rem !important
 }
-#account-menu-items {
-    z-index: 999;
-    position: absolute;
-    top: 3.5rem;
-    right: calc(0.75rem + env(safe-area-inset-right));
-    background: var(--bg-color);
-    border: 1px solid var(--bg-color-1);
-    box-shadow: rgba(0, 0, 0, 0.2) 0 1px 20px;
-    border-radius: 0.5rem;
-    min-width: 6rem;
-}
-#account-menu-items a {
-    display: block;
-    padding: 1rem;
-    border-top: 1px solid var(--bg-color-1);
-}
-#account-menu-items a:first-child {
-    border: none;
+@media screen and (max-width: 600px) {
+    nav.action-item a.button {
+        border: none;
+        background: none;
+        color: var(--text-color);
+    }
+    nav.action-item a.button span {
+        display: none;
+        visibility: hidden;
+    }
 }
 @media screen and (min-width: 600px) {
+    nav.action-item {
+        top: 0.625rem;
+    }
+    nav.action-item a.button svg {
+        display: none;
+        visibility: hidden;
+    }
+
     #navigation {
         height: 3rem;
     }
-    #logo {
+    #site-logo {
         left: env(safe-area-inset-left);
         transform: none;
     }
-    #logo img {
+    #site-logo img {
         padding: 0.75rem;
     }
     #main-menu label, #main-menu-button {
@@ -376,25 +404,14 @@ span.icon + h1 {
         border: none;
         padding: 1rem;
     }
-    #account-menu label img {
-        padding: 0.5rem;
-    }
-    #account-menu-items {
-        top: 2.5rem;
-    }
-    #account-menu-items a {
-        padding: 0.5rem 1rem;
-    }
+    
 }
 
 @media screen and (display-mode: standalone) {
     body {
         background: var(--bg-color);
     }
-    #account-menu-items {
-        background: var(--bg-color-3);
-        border: 1px solid var(--bg-color-2);
-    }
+    
     main {
         border: none;
         padding-bottom: 0;
@@ -689,9 +706,20 @@ form input[type=reset], form input[type=submit], form button, a.button {
     background-color: var(--link-color);
     box-shadow: 0 3px 6px rgba(0,0,0,0.06), 0 3px 6px rgba(0,0,0,0.13);
     text-align: center;
+    
+    box-shadow: none;
+    border-radius: 1rem;
+    font-size: 1rem !important;
+    padding: 0.25rem 1.5rem;
+    background: #21a9ff;
+    transition: 0.3s;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+    font-weight: bold;
 }
 form input[type=reset]:hover, form input[type=submit]:hover, form button:hover, a.button:hover {
     background-color: var(--link-color-1);
+    
 }
 
 a.destructive {

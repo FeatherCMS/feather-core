@@ -8,6 +8,19 @@
 public extension HookName {
     static let installWebPages: HookName = "install-web-pages"
     static let installWebMenuItems: HookName = "install-web-menu-items"
+
+    ///
+    ///  A String containing the path of the logo without the png extension.
+    ///
+    ///  e.g. `site/my-logo`
+    ///
+    ///  Logo files should be located at the following URLs:
+    ///     - `/img/[webLogo].png`
+    ///     - `/img/[webLogo]-dark.png`
+    ///
+    static let webLogo: HookName = "web-logo"
+    /// return a HeaderContext.Action item to display an action next to the menu
+    static let webAction: HookName = "web-action"
     
     static let webCss: HookName = "web-css"
     static let webJs: HookName = "web-js"
@@ -146,6 +159,10 @@ struct WebModule: FeatherModule {
             .init(key: "webSiteLogo",
                   name: "Site logo",
                   notes: "Logo of the website"),
+            
+            .init(key: "webSiteLogoDark",
+                  name: "Site logo (dark mode)",
+                  notes: "Logo of the website in dark mode"),
         
             .init(key: "webSiteTitle",
                   name: "Site title",
@@ -164,31 +181,6 @@ struct WebModule: FeatherModule {
             .init(key: "webSiteJs",
                   name: "Site JS",
                   notes: "Global JavaScript injection for the site"),
-        
-            .init(key: "welcomePageIcon",
-                  name: "Welcome page icon",
-                  value: "🪶",
-                  notes: "Icon of the welcome page"),
-
-            .init(key: "welcomePageTitle",
-                  name: "Welcome page title",
-                  value: "Welcome",
-                  notes: "Title of the welcome page"),
-            
-            .init(key: "welcomePageExcerpt",
-                  name: "Welcome page excerpt",
-                  value: "This is your brand new Feather CMS powered website",
-                  notes: "Excerpt for the welcome page"),
-
-            .init(key: "welcomePageLinkLabel",
-                  name: "Welcome page link label",
-                  value: "Start customizing →",
-                  notes: "Link label of the welcome page"),
-
-            .init(key: "welcomePageLinkUrl",
-                  name: "Welcome page link url",
-                  value: "/admin/",
-                  notes: "Link URL of the welcome page"),
         ]
     }
 
