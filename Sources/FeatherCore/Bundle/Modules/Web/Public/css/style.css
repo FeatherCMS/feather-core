@@ -614,6 +614,7 @@ form label .required {
 }
 form label .more {
     color: var(--text-color-2);
+    margin-left: 0.25rem;
 }
 form .error {
     display: block;
