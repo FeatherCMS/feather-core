@@ -233,6 +233,7 @@ hr {
     width: 3rem;
     border: none;
     border-bottom: 0.25rem solid var(--link-color);
+    border-radius: 1rem;
 }
 img {
     width: 100%;
@@ -606,8 +607,12 @@ form legend {
 /*    border-bottom: 1px solid var(--bg-color-1);*/
 }
 form label {
+    font-weight: bold;
     display: block;
     margin: 0.25rem 0.75rem;
+}
+form input + label {
+    font-weight: normal;
 }
 form label .required {
     color: var(--link-color);
@@ -775,7 +780,7 @@ table {
     margin-top: 1.5rem;
 }
 thead th {
-    font-weight: normal;
+    font-weight: bold;
 }
 tbody tr {
     background: var(--bg-color);
