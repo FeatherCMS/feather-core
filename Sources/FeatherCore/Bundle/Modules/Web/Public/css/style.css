@@ -37,8 +37,8 @@
 }
 @media (prefers-color-scheme: dark) {
     :root {
-        --link-color: #21a9ff;
-        --link-color-1: #fa3ebe;
+        --link-color: #007BC7;
+        --link-color-1: #DD0398;
         --link-color-2: purple;
         --link-color-3: #105CD5;
 
