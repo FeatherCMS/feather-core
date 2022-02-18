@@ -80,7 +80,7 @@ struct WebModule: FeatherModule {
                              permission: item.permission,
                              menuId: item.menuId)
         }
-        try await items.create(on: args.req.db)
+        try await items.create(on: args.req.db, chunks: 25)
         
         // MARK: footer
         
@@ -122,7 +122,7 @@ struct WebModule: FeatherModule {
 
         let pageItems: [Web.Page.Create] = args.req.invokeAllFlat(.installWebPages)
         let pages = pageItems.map { WebPageModel(title: $0.title, content: $0.content) }
-        try await pages.create(on: args.req.db)
+        try await pages.create(on: args.req.db, chunks: 25)
         try await pages.forEachAsync { try await $0.publishMetadata(args.req) }
         
         let aboutPage = WebPageModel(title: "About", content: WebModule.sample(named: "About.md"))

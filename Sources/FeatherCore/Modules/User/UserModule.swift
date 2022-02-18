@@ -41,6 +41,7 @@ public extension HookName {
     static let installUserAccountRoles: HookName = "install-user-account-roles"
 }
 
+
 struct UserModule: FeatherModule {
     let router = UserRouter()
 
@@ -88,7 +89,7 @@ struct UserModule: FeatherModule {
     
     func installHook(args: HookArguments) async throws {
         let roles: [User.Role.Create] = args.req.invokeAllFlat(.installUserRoles)
-        try await roles.map { UserRoleModel(key: $0.key, name: $0.name, notes: $0.notes) }.create(on: args.req.db)
+        try await roles.map { UserRoleModel(key: $0.key, name: $0.name, notes: $0.notes) }.create(on: args.req.db, chunks: 25)
         
 
         let permissions: [User.Permission.Create] = args.req.invokeAllFlat(.installUserPermissions)
@@ -96,12 +97,12 @@ struct UserModule: FeatherModule {
                                                          context: $0.context,
                                                          action: $0.action,
                                                          name: $0.name,
-                                                         notes: $0.notes) }.create(on: args.req.db)
+                                                         notes: $0.notes) }.create(on: args.req.db, chunks: 25)
         
         let accounts: [User.Account.Create] = args.req.invokeAllFlat(.installUserAccounts)
         try await accounts.map { UserAccountModel(email: $0.email,
                                                    password: try Bcrypt.hash($0.password),
-                                                   isRoot: $0.isRoot) }.create(on: args.req.db)
+                                                   isRoot: $0.isRoot) }.create(on: args.req.db, chunks: 25)
         
         
         let rolePermissions: [User.RolePermission.Create] = args.req.invokeAllFlat(.installUserRolePermissions)
