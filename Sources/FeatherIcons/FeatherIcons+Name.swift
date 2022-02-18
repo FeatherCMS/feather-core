@@ -7,9 +7,9 @@
 
 import Foundation
 
-extension Svg {
+public extension Svg {
     
-    func icon(_ name: String) -> Svg? {
+    static func icon(_ name: String) -> Svg? {
         guard let icon = Icons(rawValue: name) else {
             return nil
         }

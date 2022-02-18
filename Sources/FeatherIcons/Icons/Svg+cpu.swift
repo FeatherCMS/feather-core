@@ -1,7 +1,7 @@
 public extension Svg {
     static var cpu: Svg {
 		.icon([
-			Rect(x: 4, y: 4, width: 16, height: 16),
+			Rect(x: 4, y: 4, width: 16, height: 16, rx: 2, ry: 2),
 			Rect(x: 9, y: 9, width: 6, height: 6),
 			Line(x1: 9, y1: 1, x2: 9, y2: 4),
 			Line(x1: 15, y1: 1, x2: 15, y2: 4),
