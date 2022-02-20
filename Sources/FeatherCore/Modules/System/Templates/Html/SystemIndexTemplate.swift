@@ -34,7 +34,7 @@ public struct SystemIndexTemplate: TemplateRepresentable {
                 }
             }
             Body {
-                HeaderTemplate(.init(title: getTitle())).render(req)
+                HeaderTemplate(.init(title: getTitle(), assets: "web")).render(req)
                 MainTemplate(.init(body: body)).render(req)
                 FooterTemplate(.init(displayTopSection: false)).render(req)
             }

@@ -55,6 +55,10 @@ public struct ApplePwaMetaTemplate: TemplateRepresentable {
 }
 
 private extension ApplePwaMetaTemplate {
+    
+    var appleImagesDir: String {
+        "/img/\(context.assets)/apple"
+    }
 
     func calc(_ width: Int,
                       _ height: Int,
@@ -83,7 +87,7 @@ private extension ApplePwaMetaTemplate {
                 .webkitDevicePixelRatio(ratio),
                 .orientation(orientation),
             ])
-            .href("/img/web/apple/splash/\(calc(width, height, ratio, orientation))\(mode == .light ? "" : "_dark").jpg")
+            .href(appleImagesDir + "/splash/\(calc(width, height, ratio, orientation))\(mode == .light ? "" : "_dark").jpg")
     }
 
     @TagBuilder
@@ -100,9 +104,9 @@ private extension ApplePwaMetaTemplate {
         if let size = size {
             return link
                 .sizes("\(size)x\(size)")
-                .href("/img/web/apple/icons/\(size).png")
+                .href(appleImagesDir + "/icons/\(size).png")
         }
         return link
-            .href("/img/web/apple/icons/192.png")
+            .href(appleImagesDir + "/icons/192.png")
     }
 }

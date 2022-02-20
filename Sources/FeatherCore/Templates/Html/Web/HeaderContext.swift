@@ -26,14 +26,18 @@ public struct HeaderContext {
     public let logoLink: String
     public let main: NavigationContext?
     public let action: Action?
+    public let assets: String
     
     public init(title: String,
                 logoLink: String = "/",
                 main: NavigationContext? = nil,
-                action: Action? = nil) {
+                action: Action? = nil,
+                assets: String) {
         self.title = title
         self.logoLink = logoLink
         self.main = main
         self.action = action
+        self.assets = assets
+        
     }
 }

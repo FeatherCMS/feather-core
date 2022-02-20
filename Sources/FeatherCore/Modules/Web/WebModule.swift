@@ -9,18 +9,11 @@ public extension HookName {
     static let installWebPages: HookName = "install-web-pages"
     static let installWebMenuItems: HookName = "install-web-menu-items"
 
-    ///
-    ///  A String containing the path of the logo without the png extension.
-    ///
-    ///  e.g. `site/my-logo`
-    ///
-    ///  Logo files should be located at the following URLs:
-    ///     - `/img/[webLogo].png`
-    ///     - `/img/[webLogo]-dark.png`
-    ///
-    static let webLogo: HookName = "web-logo"
     /// return a HeaderContext.Action item to display an action next to the menu
     static let webAction: HookName = "web-action"
+    
+    /// reuturn a module name and provide the web assets under that module location `/img/[module]/...`
+    static let webAssets: HookName = "web-assets"
     
     static let webCss: HookName = "web-css"
     static let webJs: HookName = "web-js"

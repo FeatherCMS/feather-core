@@ -38,7 +38,8 @@ public struct AdminIndexTemplate: TemplateRepresentable {
             Body {
                 HeaderTemplate(.init(title: getTitle(),
                                      logoLink: req.feather.config.paths.admin.safePath(),
-                                     action: .init(icon: .compass, title: "View site", link: "/")))
+                                     action: .init(icon: .compass, title: "View site", link: "/"),
+                                     assets: "web"))
                     .render(req)
 
                 

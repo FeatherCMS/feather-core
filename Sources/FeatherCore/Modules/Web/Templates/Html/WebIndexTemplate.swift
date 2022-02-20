@@ -20,22 +20,6 @@ public struct WebIndexTemplate: TemplateRepresentable {
     }
 
     @TagBuilder
-    func profileMenuItems(_ req: Request) -> [Tag] {
-        if req.auth.has(FeatherAccount.self) {
-            if req.checkPermission(Admin.permission(for: .detail)) {
-                A("Admin")
-                    .href(req.feather.config.paths.admin.safePath())
-            }
-            A("Sign out")
-                .href(req.feather.config.paths.logout.safePath())
-        }
-        else {
-            A("Sign in")
-                .href(req.feather.config.paths.login.safePath())
-        }
-    }
-
-    @TagBuilder
     public func render(_ req: Request) -> Tag {
         Html {
             Head {
@@ -60,7 +44,20 @@ public struct WebIndexTemplate: TemplateRepresentable {
                         .render(req)
                 }
                 
-                ApplePwaMetaTemplate(.init(title: getTitle(req))).render(req)
+                Link(rel: .maskIcon)
+                    .sizes("any")
+                    .href("/img/\(getAssets(req))/icons/mask.svg")
+                    .attribute("color", "#cafe00")
+
+                Link(rel: .shortcutIcon)
+                    .href("/img/\(getAssets(req))/favicons/favicon.ico")
+                    .type("image/x-icon")
+
+                Link(rel: .shortcutIcon)
+                    .href("/img/\(getAssets(req))/favicons/favicon.png")
+                    .type("image/png")
+                
+                ApplePwaMetaTemplate(.init(title: getTitle(req), assets: getAssets(req))).render(req)
 
                 Link(rel: .manifest)
                     .href("/manifest.json")
@@ -91,7 +88,8 @@ public struct WebIndexTemplate: TemplateRepresentable {
                                      main: .init(id: "main",
                                                  icon: Text("&#9776;"),
                                                  items: mainMenuItems(req)),
-                                     action: req.invoke(.webAction)))
+                                     action: req.invoke(.webAction),
+                                     assets: getAssets(req)))
                     .render(req)
 
                 MainTemplate(.init(body: body)).render(req)
@@ -122,6 +120,10 @@ public struct WebIndexTemplate: TemplateRepresentable {
 }
 
 private extension WebIndexTemplate {
+    
+    func getAssets(_ req: Request) -> String {
+        req.invoke(.webAssets) ?? "web"
+    }
 
     func getTitle(_ req: Request) -> String {
         let title = context.metadata?.title ?? context.title
@@ -165,4 +167,5 @@ private extension WebIndexTemplate {
                 .class("selected", req.url.path == $0.path)
         } ?? []
     }
+   
 }

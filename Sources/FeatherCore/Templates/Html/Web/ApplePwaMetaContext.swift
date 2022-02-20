@@ -10,8 +10,10 @@ import Foundation
 public struct ApplePwaMetaContext {
 
     public let title: String
+    public let assets: String
     
-    public init(title: String) {
+    public init(title: String, assets: String) {
         self.title = title
+        self.assets = assets
     }
 }

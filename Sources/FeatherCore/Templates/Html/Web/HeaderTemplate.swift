@@ -62,13 +62,11 @@ private extension HeaderTemplate {
             if let logo = req.variable("webSiteLogoDark"), !logo.isEmpty {
                 return req.fs.resolve(key: logo)
             }
-            let logoName: String? = req.invoke(.webLogo)
-            return "/img/\(logoName ?? "web/logos/feather-logo")-dark.png"
+            return "/img/\(context.assets)/logos/logo-dark.png"
         }
         if let logo = req.variable("webSiteLogo"), !logo.isEmpty {
             return req.fs.resolve(key: logo)
         }
-        let logoName: String? = req.invoke(.webLogo)
-        return "/img/\(logoName ?? "web/logos/feather-logo").png"
+        return "/img/\(context.assets)/logos/logo.png"
     }
 }
