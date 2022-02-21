@@ -236,8 +236,6 @@ hr {
     border-radius: 1rem;
 }
 img {
-    width: 100%;
-    height: auto;
     line-height: 0;
 }
 img.rounded {

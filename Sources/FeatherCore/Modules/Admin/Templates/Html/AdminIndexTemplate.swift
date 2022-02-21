@@ -39,7 +39,7 @@ public struct AdminIndexTemplate: TemplateRepresentable {
                 HeaderTemplate(.init(title: getTitle(),
                                      logoLink: req.feather.config.paths.admin.safePath(),
                                      action: .init(icon: .compass, title: "View site", link: "/"),
-                                     assets: "web"))
+                                     assets: getAssets(req)))
                     .render(req)
 
                 
@@ -65,13 +65,15 @@ public struct AdminIndexTemplate: TemplateRepresentable {
         }
         .lang(context.lang)
     }
-    
 }
-
 
 private extension AdminIndexTemplate {
     
     func getTitle() -> String {
         context.title + " - " + "Feather"
+    }
+    
+    func getAssets(_ req: Request) -> String {
+        req.invoke(.adminAssets) ?? "web"
     }
 }

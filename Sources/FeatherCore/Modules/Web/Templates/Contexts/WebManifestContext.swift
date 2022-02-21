@@ -13,7 +13,8 @@ struct WebManifestContext: Codable {
         case shortName = "short_name"
         case startUrl = "start_url"
         case display
-        case backgroundColor = "theme_color"
+        case themeColor = "theme_color"
+        case backgroundColor = "background_color"
         case icons
         case shortcuts
     }
@@ -55,6 +56,7 @@ struct WebManifestContext: Codable {
     let shortName: String
     let name: String
     let startUrl: String
+    let themeColor: String
     let backgroundColor: String
     let display: Display
     let icons: [Icon]

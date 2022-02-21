@@ -15,42 +15,49 @@ public struct ApplePwaMetaTemplate: TemplateRepresentable {
     public init(_ context: ApplePwaMetaContext) {
         self.context = context
     }
-    
+
+    func isAppleMobileDevice(_ req: Request) -> Bool {
+        let userAgent = (req.headers["user-agent"].first ?? "").lowercased()
+        return userAgent.contains("iphone") || userAgent.contains("ipad") || userAgent.contains("ipod")
+    }
+
     public func render(_ req: Request) -> Tag {
-        Meta()
-            .name(.appleMobileWebAppTitle)
-            .content(context.title)
-        Meta()
-            .name(.appleMobileWebAppCapable)
-            .content("yes")
-        Meta()
-            .name(.appleMobileWebAppStatusBarStyle)
-            .content("default")
-        
-        icon()
-        for i in [57, 72, 76, 114, 120, 144, 152, 180] {
-            icon(i)
+        if isAppleMobileDevice(req) {
+            Meta()
+                .name(.appleMobileWebAppTitle)
+                .content(context.title)
+            Meta()
+                .name(.appleMobileWebAppCapable)
+                .content("yes")
+            Meta()
+                .name(.appleMobileWebAppStatusBarStyle)
+                .content("default")
+
+            icon()
+            for i in [57, 72, 76, 114, 120, 144, 152, 180] {
+                icon(i)
+            }
+            splash(320, 568, 2, .landscape)
+            splash(320, 568, 2, .portrait)
+            splash(414, 896, 3, .landscape)
+            splash(414, 896, 2, .landscape)
+            splash(375, 812, 3, .portrait)
+            splash(414, 896, 2, .portrait)
+            splash(375, 812, 3, .landscape)
+            splash(414, 736, 3, .portrait)
+            splash(414, 736, 3, .landscape)
+            splash(375, 667, 2, .landscape)
+            splash(375, 667, 2, .portrait)
+            splash(1024, 1366, 2, .landscape)
+            splash(1024, 1366, 2, .portrait)
+            splash(834, 1194, 2, .landscape)
+            splash(834, 1194, 2, .portrait)
+            splash(834, 1112, 2, .landscape)
+            splash(414, 896, 3, .portrait)
+            splash(834, 1112, 2, .portrait)
+            splash(768, 1024, 2, .portrait)
+            splash(768, 1024, 2, .landscape)
         }
-        splash(320, 568, 2, .landscape)
-        splash(320, 568, 2, .portrait)
-        splash(414, 896, 3, .landscape)
-        splash(414, 896, 2, .landscape)
-        splash(375, 812, 3, .portrait)
-        splash(414, 896, 2, .portrait)
-        splash(375, 812, 3, .landscape)
-        splash(414, 736, 3, .portrait)
-        splash(414, 736, 3, .landscape)
-        splash(375, 667, 2, .landscape)
-        splash(375, 667, 2, .portrait)
-        splash(1024, 1366, 2, .landscape)
-        splash(1024, 1366, 2, .portrait)
-        splash(834, 1194, 2, .landscape)
-        splash(834, 1194, 2, .portrait)
-        splash(834, 1112, 2, .landscape)
-        splash(414, 896, 3, .portrait)
-        splash(834, 1112, 2, .portrait)
-        splash(768, 1024, 2, .portrait)
-        splash(768, 1024, 2, .landscape)
     }
 }
 

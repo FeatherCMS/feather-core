@@ -20,7 +20,10 @@ public struct TemplateRenderer {
         let doc = Document(.html) { template.render(req) }
         let html = DocumentRenderer(minify: minify, indent: indent).render(doc)
         return Response(status: status,
-                        headers: ["content-type": "text/html"],
+                        headers: [
+//                            "Link": "</css/web/style.css>; rel=preload; as=style",
+                            "content-type": "text/html",
+                        ],
                         body: .init(string: html))
     }
     
@@ -28,7 +31,9 @@ public struct TemplateRenderer {
         let doc = Document(.xml) { template.render(req) }
         let xml = DocumentRenderer(minify: minify, indent: indent).render(doc)
         return Response(status: .ok,
-                        headers: ["content-type": "application/xml"],
+                        headers: [
+                            "content-type": "application/xml",
+                        ],
                         body: .init(string: xml))
     }
 }
