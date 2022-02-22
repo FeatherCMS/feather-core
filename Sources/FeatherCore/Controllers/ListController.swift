@@ -52,7 +52,7 @@ public struct ListConfiguration {
                 searchKey: String = "search",
                 limitKey: String = "limit",
                 pageKey: String = "page",
-                defaultLimit: Int = 10, //Feather.config.listLimit
+                defaultLimit: Int = 20, //Feather.config.listLimit
                 defaultPage: Int = 1,
                 allowedOrders: [FieldKey] = [],
                 defaultSort: FieldSort = .asc,

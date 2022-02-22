@@ -42,7 +42,7 @@ public extension AdminListController {
                                  columns: listColumns(),
                                  rows: rows,
                                  actions: [
-                                    LinkContext(label: "Update",
+                                    LinkContext(label: "Edit",
                                                 path: "update",
                                                 permission: ApiModel.permission(for: .update).key),
                                     LinkContext(label: "Delete",

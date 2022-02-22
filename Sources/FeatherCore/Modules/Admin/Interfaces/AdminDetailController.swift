@@ -60,7 +60,7 @@ public extension AdminDetailController {
 
     func detailNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
-            LinkContext(label: "Update",
+            LinkContext(label: "Edit",
                         path: "update",
                         permission: ApiModel.permission(for: .update).key),
         ]

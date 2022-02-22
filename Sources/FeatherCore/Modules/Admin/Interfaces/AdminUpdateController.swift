@@ -71,7 +71,7 @@ public extension AdminUpdateController {
     }
     
     func updateContext(_ req: Request, _ editor: UpdateModelEditor) async -> AdminEditorPageContext {
-       .init(title: "Update " + Self.modelName.singular,
+        .init(title: "Edit " + Self.modelName.singular.lowercased(),
              form: editor.form.context(req),
              navigation: updateNavigation(req, editor.model as! DatabaseModel),
              breadcrumbs: updateBreadcrumbs(req, editor.model as! DatabaseModel),

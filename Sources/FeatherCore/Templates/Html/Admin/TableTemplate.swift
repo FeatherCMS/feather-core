@@ -68,8 +68,9 @@ public struct TableTemplate: TemplateRepresentable {
                         .id(column.key)
                         .class("field")
                     }
-                    availableActions(req).map { action in
-                        Th(action.label)
+                    if !availableActions(req).isEmpty {
+                        Th("Actions")
+                            .colspan(availableActions(req).count)
                             .class("action")
                     }
                 }
