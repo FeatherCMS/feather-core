@@ -2,8 +2,10 @@
 //  File.swift
 //  
 //
-//  Created by Tibor Bodecs on 2021. 12. 15..
+//  Created by Tibor Bodecs on 2022. 01. 14..
 //
+
+import Foundation
 
 public struct FormImageData: Codable {
         

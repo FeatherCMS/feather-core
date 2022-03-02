@@ -15,7 +15,7 @@ public protocol AdminListController: ListController {
     func listNavigation(_ req: Request) -> [LinkContext]
     func listBreadcrumbs(_ req: Request) -> [LinkContext]
     
-    func setupListRoutes(_ routes: RoutesBuilder)
+    func setUpListRoutes(_ routes: RoutesBuilder)
 }
 
 
@@ -42,7 +42,7 @@ public extension AdminListController {
                                  columns: listColumns(),
                                  rows: rows,
                                  actions: [
-                                    LinkContext(label: "Update",
+                                    LinkContext(label: "Edit",
                                                 path: "update",
                                                 permission: ApiModel.permission(for: .update).key),
                                     LinkContext(label: "Delete",
@@ -52,7 +52,7 @@ public extension AdminListController {
                                  options: .init(allowedOrders: listConfig.allowedOrders.map(\.description),
                                                 defaultSort: listConfig.defaultSort))
 
-        return .init(title: Self.modelName.plural.uppercasedFirst,
+        return .init(title: Self.modelName.plural,
                      isSearchable: listConfig.isSearchable,
                      table: table,
                      pagination: list.info,
@@ -70,13 +70,13 @@ public extension AdminListController {
     
     func listBreadcrumbs(_ req: Request) -> [LinkContext] {
         [
-            LinkContext(label: DatabaseModel.Module.featherIdentifier.uppercasedFirst,
+            LinkContext(label: Self.moduleName,
                         dropLast: 1,
-                        permission: nil), //Model.Module.permission.key),
+                        permission: ApiModel.Module.permission(for: .detail).key),
         ]
     }
     
-    func setupListRoutes(_ routes: RoutesBuilder) {
+    func setUpListRoutes(_ routes: RoutesBuilder) {
         let baseRoutes = getBaseRoutes(routes)
         
         baseRoutes.get(use: listView)

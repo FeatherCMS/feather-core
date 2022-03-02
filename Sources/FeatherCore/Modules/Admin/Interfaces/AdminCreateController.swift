@@ -18,7 +18,7 @@ public protocol AdminCreateController: CreateController {
     func createContext(_ req: Request, _ editor: CreateModelEditor) -> AdminEditorPageContext
     func createBreadcrumbs(_ req: Request) -> [LinkContext]
     
-    func setupCreateRoutes(_ routes: RoutesBuilder)
+    func setUpCreateRoutes(_ routes: RoutesBuilder)
 }
 
 public extension AdminCreateController {
@@ -34,7 +34,7 @@ public extension AdminCreateController {
             throw Abort(.forbidden)
         }
         let editor = CreateModelEditor(model: .init(), form: .init())
-        editor.form.fields = editor.formFields
+        editor.form.fields = editor.createFields(req)
         try await editor.load(req: req)
         return render(req, editor: editor)
     }
@@ -46,7 +46,7 @@ public extension AdminCreateController {
         }
         let model = DatabaseModel()
         let editor = CreateModelEditor(model: model as! CreateModelEditor.Model, form: .init())
-        editor.form.fields = editor.formFields
+        editor.form.fields = editor.createFields(req)
         try await editor.load(req: req)
         try await editor.process(req: req)
         let isValid = try await editor.validate(req: req)
@@ -77,16 +77,16 @@ public extension AdminCreateController {
     
     func createBreadcrumbs(_ req: Request) -> [LinkContext] {
         [
-            LinkContext(label: DatabaseModel.Module.featherIdentifier.uppercasedFirst,
+            LinkContext(label: Self.moduleName,
                         dropLast: 2,
-                        permission: nil), //Model.Module.permission.key),
-            LinkContext(label: Self.modelName.plural.uppercasedFirst,
+                        permission: ApiModel.Module.permission(for: .detail).key),
+            LinkContext(label: Self.modelName.plural,
                         dropLast: 1,
                         permission: ApiModel.permission(for: .list).key),
         ]
     }
     
-    func setupCreateRoutes(_ routes: RoutesBuilder) {
+    func setUpCreateRoutes(_ routes: RoutesBuilder) {
         let baseRoutes = getBaseRoutes(routes)
         baseRoutes.get(Self.createPathComponent, use: createView)
         baseRoutes.post(Self.createPathComponent, use: createAction)

@@ -15,19 +15,21 @@ struct CommonFileAdminController: CommonFileController {
     
     // MARK: - create directory
     
-    private func renderCreateDirectoryView(_ req: Request, form: FeatherForm) -> Response {
+    private func renderCreateDirectoryView(_ req: Request, form: AbstractForm) -> Response {
         let template = CommonFileCreateDirectoryTemplate(.init(form: form.context(req)))
         return req.templates.renderHtml(template)
     }
     
     func createDirectoryView(_ req: Request) async throws -> Response {
         let form = CommonFileCreateDirectoryForm()
+        form.fields = form.createFields(req)
         try await form.load(req: req)
         return renderCreateDirectoryView(req, form: form)
     }
     
     func createDirectoryAction(_ req: Request) async throws -> Response {
         let form = CommonFileCreateDirectoryForm()
+        form.fields = form.createFields(req)
         try await form.load(req: req)
         try await form.process(req: req)
         let isValid = try await form.validate(req: req)
@@ -45,7 +47,7 @@ struct CommonFileAdminController: CommonFileController {
 
     // MARK: - upload
     
-    private func renderUploadView(_ req: Request, form: FeatherForm) -> Response {
+    private func renderUploadView(_ req: Request, form: AbstractForm) -> Response {
         let formatter = ByteCountFormatter()
         formatter.countStyle = .binary
         let byteCount = req.application.routes.defaultMaxBodySize
@@ -57,12 +59,14 @@ struct CommonFileAdminController: CommonFileController {
     
     func uploadView(_ req: Request) async throws -> Response {
         let form = CommonFileUploadForm()
+        form.fields = form.createFields(req)
         try await form.load(req: req)
         return renderUploadView(req, form: form)
     }
     
     func uploadAction(_ req: Request) async throws -> Response {
         let form = CommonFileUploadForm()
+        form.fields = form.createFields(req)
         try await form.process(req: req)
         let isValid = try await form.validate(req: req)
         guard isValid else {
@@ -117,8 +121,8 @@ struct CommonFileAdminController: CommonFileController {
             try await req.fs.delete(key: keyValue)
         }
 
-        var url = "/admin/common/files/" //req.url.path//.trimmingLastPathComponents(2)
-        if let redirect = try? req.content.get(String.self, at: "redirect") {
+        var url = "/admin/common/files/"
+        if let redirect = try? req.query.get(String.self, at: "redirect") {
             url = redirect
         }
         return req.redirect(to: url)

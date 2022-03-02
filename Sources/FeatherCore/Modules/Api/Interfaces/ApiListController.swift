@@ -8,9 +8,9 @@
 public protocol ApiListController: ListController {
     associatedtype ListObject: Content
     
-    func listOutput(_ req: Request, _ model: DatabaseModel) async throws -> ListObject
+    func listOutput(_ req: Request, _ models: [DatabaseModel]) async throws -> [ListObject]
     func listApi(_ req: Request) async throws -> ListContainer<ListObject>
-    func setupListRoutes(_ routes: RoutesBuilder)
+    func setUpListRoutes(_ routes: RoutesBuilder)
 }
 
 public extension ApiListController {
@@ -21,13 +21,11 @@ public extension ApiListController {
             throw Abort(.forbidden)
         }
         let list = try await list(req)
-        let newItems = try await list.items.mapAsync { item in
-            try await listOutput(req, item)
-        }
-        return ListContainer<ListObject>(newItems, info: list.info)
+        let apiItems = try await listOutput(req, list.items)
+        return ListContainer<ListObject>(apiItems, info: list.info)
     }
     
-    func setupListRoutes(_ routes: RoutesBuilder) {
+    func setUpListRoutes(_ routes: RoutesBuilder) {
         let baseRoutes = getBaseRoutes(routes)
         baseRoutes.get(use: listApi)
     }

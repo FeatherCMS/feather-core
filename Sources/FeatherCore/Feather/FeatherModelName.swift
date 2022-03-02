@@ -13,8 +13,8 @@ public struct FeatherModelName {
     public var plural: String { pluralException ?? singular + "s" }
 
     public init(singular: String, plural exception: String? = nil) {
-        self.singular = singular
-        self.pluralException = exception
+        self.singular = singular.lowercased().capitalized
+        self.pluralException = exception?.lowercased().capitalized
     }
 }
 

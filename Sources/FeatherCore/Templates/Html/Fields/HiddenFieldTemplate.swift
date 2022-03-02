@@ -9,7 +9,7 @@ import SwiftHtml
 
 public struct HiddenFieldTemplate: TemplateRepresentable {
 
-    var context: HiddenFieldContext
+    public var context: HiddenFieldContext
     
     public init(_ context: HiddenFieldContext) {
         self.context = context

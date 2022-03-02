@@ -7,23 +7,25 @@
 
 struct WebMetadataEditor: FeatherModelEditor {
     let model: WebMetadataModel
-    let form: FeatherForm
+    let form: AbstractForm
 
-    init(model: WebMetadataModel, form: FeatherForm) {
+    init(model: WebMetadataModel, form: AbstractForm) {
         self.model = model
         self.form = form
     }
     
-    var formFields: [FormComponent] {
+    @FormFieldBuilder
+    func createFields(_ req: Request) -> [FormField] {
         InputField("slug")
             .validators {
-                FormFieldValidator($1, "Slug must be unique") { field, req in
+                FormFieldValidator($1, "Slug must be unique") { req, field in
                     try await Model.isUnique(req, \.$slug == field.input, Web.Metadata.getIdParameter(req))
                 }
             }
             .read { $1.output.context.value = model.slug }
             .write { model.slug = $1.input }
-        #warning("fixme")
+
+        // @TODO: use proper variable
         ImageField("image", path: "web/metadata")
             .read {
                 if let key = model.imageKey {
@@ -44,11 +46,11 @@ struct WebMetadataEditor: FeatherModelEditor {
         SelectField("status")
             .config {
                 $0.output.context.label.required = true
-                $0.output.context.options = FeatherMetadata.Status.allCases.map { OptionContext(key: $0.rawValue, label: $0.rawValue.uppercasedFirst) }
+                $0.output.context.options = FeatherMetadata.Status.allCases.map { OptionContext(key: $0.rawValue, label: $0.rawValue.capitalized) }
                 $0.output.context.value = FeatherMetadata.Status.draft.rawValue
             }
             .validators {
-                FormFieldValidator($1, "Invalid status") { field, _ in
+                FormFieldValidator($1, "Invalid status") { _, field in
                     FeatherMetadata.Status(rawValue: field.input) != nil
                 }
             }
@@ -57,7 +59,7 @@ struct WebMetadataEditor: FeatherModelEditor {
         
         InputField("date")
             .validators {
-                FormFieldValidator($1, "Invalid date") { field, _ in
+                FormFieldValidator($1, "Invalid date") { _, field in
                     Feather.dateFormatter().date(from: field.input) != nil
                 }
             }
@@ -65,6 +67,9 @@ struct WebMetadataEditor: FeatherModelEditor {
             .write { model.date = Feather.dateFormatter().date(from: $1.input) ?? Date() }
         
         InputField("canonicalUrl")
+            .config {
+                $0.output.context.label.title = "Canonical URL"
+            }
             .read { $1.output.context.value = model.canonicalUrl }
             .write { model.canonicalUrl = $1.input }
         

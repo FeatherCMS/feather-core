@@ -12,7 +12,7 @@ public protocol ApiUpdateController: UpdateController {
     func updateInput(_ req: Request, _ model: DatabaseModel, _ input: UpdateObject) async throws
     func updateApi(_ req: Request) async throws -> Response
     func updateResponse(_ req: Request, _ model: DatabaseModel) async throws -> Response
-    func setupUpdateRoutes(_ routes: RoutesBuilder)
+    func setUpUpdateRoutes(_ routes: RoutesBuilder)
 }
 
 public extension ApiUpdateController {
@@ -36,7 +36,7 @@ public extension ApiUpdateController {
         return try await updateResponse(req, model)
     }
     
-    func setupUpdateRoutes(_ routes: RoutesBuilder) {
+    func setUpUpdateRoutes(_ routes: RoutesBuilder) {
         let baseRoutes = getBaseRoutes(routes)
         let existingModelRoutes = baseRoutes.grouped(ApiModel.pathIdComponent)
         existingModelRoutes.post(use: updateApi)

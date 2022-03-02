@@ -11,17 +11,17 @@ public protocol AdminController: AdminListController,
                                  AdminUpdateController,
                                  AdminDeleteController
 {
-    func setupRoutes(_ routes: RoutesBuilder)
+    func setUpRoutes(_ routes: RoutesBuilder)
 }
 
 public extension AdminController {
     
-    func setupRoutes(_ routes: RoutesBuilder) {
-        setupListRoutes(routes)
-        setupDetailRoutes(routes)
-        setupCreateRoutes(routes)
-        setupUpdateRoutes(routes)
-        setupDeleteRoutes(routes)
+    func setUpRoutes(_ routes: RoutesBuilder) {
+        setUpListRoutes(routes)
+        setUpDetailRoutes(routes)
+        setUpCreateRoutes(routes)
+        setUpUpdateRoutes(routes)
+        setUpDeleteRoutes(routes)
     }
 }
 

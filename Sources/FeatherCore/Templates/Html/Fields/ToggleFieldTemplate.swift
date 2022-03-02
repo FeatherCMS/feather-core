@@ -17,13 +17,14 @@ public struct ToggleFieldTemplate: TemplateRepresentable {
 
     @TagBuilder
     public func render(_ req: Request) -> Tag {
-        LabelTemplate(context.label).render(req)
 
         Input()
             .type(.checkbox)
             .key(context.key)
             .value(String(true))
             .checked(context.value)
+        
+        LabelTemplate(context.label).render(req)
 
         if let error = context.error {
             Span(error)

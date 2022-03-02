@@ -22,48 +22,29 @@ public struct SystemIndexTemplate: TemplateRepresentable {
     public func render(_ req: Request) -> Tag {
         Html {
             Head {
-                Title(context.title)
+                Title(getTitle())
 
-                Meta()
-                    .charset(context.charset)
-                
-                Meta()
-                    .name(.viewport)
-                    .content(context.viewport)
-
-                Meta()
-                    .name(.robots)
-                    .content("noindex")
-
+                StandardMetaTemplate(.init(charset: context.charset,
+                                   viewport: context.viewport,
+                                   noindex: true)).render(req)
 
                 for file in context.css {
                     Link(rel: .stylesheet)
                         .href(file)
                 }
-
             }
             Body {
-                Header {
-                    Div {
-                        A {
-                            Img(src: "/img/web/logo.png", alt: "Logo of Feather CMS")
-                                .title("Feather CMS")
-                                .style("width: 300px")
-                        }
-                        .href("/")
-                    }
-                    .id("navigation")
-                }
-                
-                Main {
-                    Div {
-                        body
-                    }
-                    .class("container")
-                }
+                HeaderTemplate(.init(title: getTitle(), assets: "web")).render(req)
+                MainTemplate(.init(body: body)).render(req)
+                FooterTemplate(.init(displayTopSection: false)).render(req)
             }
         }
         .lang(context.lang)
     }
-    
+}
+
+private extension SystemIndexTemplate {
+    func getTitle() -> String {
+        context.title + " - " + "Feather"
+    }
 }

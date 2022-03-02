@@ -42,7 +42,7 @@ struct WebMetadataAdminController: AdminListController, AdminDetailController, A
         ]
     }
     
-    func detailFields(for model: DatabaseModel) -> [FieldContext] {
+    func detailFields(for model: DatabaseModel) -> [DetailContext] {
         [
             .init("id", model.uuid.string),
 //            .init("module", model.module),
@@ -68,12 +68,12 @@ struct WebMetadataAdminController: AdminListController, AdminDetailController, A
         []
     }
 
-    func detailLinks(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
+    func detailNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
             LinkContext(label: "Update",
                         path: Self.updatePathComponent.description,
                         permission: nil), //Self.updatePermission()),
-            // NOTE: store permission for the metadata reference?
+            // @NOTE: store permission for the metadata reference?
             LinkContext(label: "Preview",
                         path: model.slug.safePath(),
                         absolute: true,
@@ -85,7 +85,7 @@ struct WebMetadataAdminController: AdminListController, AdminDetailController, A
         ]
     }
 
-    func updateLinks(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
+    func updateNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
             LinkContext(label: "Details",
                         dropLast: 1,

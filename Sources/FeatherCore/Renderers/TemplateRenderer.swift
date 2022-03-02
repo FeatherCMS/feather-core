@@ -6,7 +6,7 @@
 //
 
 import SwiftHtml
-import SwiftCss
+import Vapor
 
 public struct TemplateRenderer {
     
@@ -16,11 +16,14 @@ public struct TemplateRenderer {
         self.req = req
     }
     
-    public func renderHtml(_ template: TemplateRepresentable, minify: Bool = true, indent: Int = 4) -> Response {
+    public func renderHtml(_ template: TemplateRepresentable, minify: Bool = true, indent: Int = 4, status: HTTPStatus = .ok) -> Response {
         let doc = Document(.html) { template.render(req) }
         let html = DocumentRenderer(minify: minify, indent: indent).render(doc)
-        return Response(status: .ok,
-                        headers: ["content-type": "text/html"],
+        return Response(status: status,
+                        headers: [
+//                            "Link": "</css/web/style.css>; rel=preload; as=style",
+                            "content-type": "text/html",
+                        ],
                         body: .init(string: html))
     }
     
@@ -28,16 +31,10 @@ public struct TemplateRenderer {
         let doc = Document(.xml) { template.render(req) }
         let xml = DocumentRenderer(minify: minify, indent: indent).render(doc)
         return Response(status: .ok,
-                        headers: ["content-type": "application/xml"],
+                        headers: [
+                            "content-type": "application/xml",
+                        ],
                         body: .init(string: xml))
-    }
-    
-    public func renderCss(_ template: CssRepresentable) -> Response {
-        let stylesheet = Stylesheet(template.rules(req))
-        let css = StylesheetRenderer().render(stylesheet)
-        return Response(status: .ok,
-                        headers: ["content-type": "text/css"],
-                        body: .init(string: css))
     }
 }
 

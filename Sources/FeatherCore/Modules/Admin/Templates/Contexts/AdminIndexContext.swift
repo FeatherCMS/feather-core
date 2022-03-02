@@ -16,7 +16,7 @@ public struct AdminIndexContext {
     public var breadcrumbs: [LinkContext]
     
     public init(title: String,
-                css: [String] = ["/css/web/global.css"],
+                css: [String] = ["/css/web/style.css", "/css/admin/admin.css"],
                 js: [String] = [],
                 lang: String = "en",
                 charset: String = "utf-8",

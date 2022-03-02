@@ -17,12 +17,15 @@ public struct WebPageTemplate: TemplateRepresentable {
     
     @TagBuilder
     public func render(_ req: Request) -> Tag {
-        WebIndexTemplate(context.index) {
-            H1(context.page.title)
-
-            Div {
-                Text(context.page.content)
+        WebIndexTemplate(.init(title: context.page.title, metadata: context.page.metadata)) {
+            Wrapper {
+                Container {
+                    H1(context.page.title)
+                    Text(context.page.content)
+                }
+                .class(add: "\(context.page.metadata.slug)-page", !context.page.metadata.slug.isEmpty)
             }
+            .id("web-page")
         }
         .render(req)
     }

@@ -12,13 +12,15 @@ public protocol FeatherModule {
     ///
     /// e.g. Bundle.module.resourceURL?.appendingPathComponent("Bundle")
     ///
-    var bundleUrl: URL? { get }
+    static var bundleUrl: URL? { get }
     
     /// a unique identifier for the module
     ///
     /// default value is the lowercased name of the module by dropping the module suffix
     ///
     static var featherIdentifier: String { get }
+    
+    static var featherName: String { get }
 
     /// module boot function
     func boot(_ app: Application) throws
@@ -30,11 +32,15 @@ public protocol FeatherModule {
 
 public extension FeatherModule {
     
-    var bundleUrl: URL? { nil }
+    static var bundleUrl: URL? { nil }
     
     static var featherIdentifier: String {
         String(describing: self).dropLast(6).lowercased()
     }
+
+    static var featherName: String {
+        featherIdentifier.capitalized
+    }    
     
     func boot(_ app: Application) throws {
         // nothing to do here...
@@ -42,5 +48,17 @@ public extension FeatherModule {
     
     func config(_ app: Application) throws {
         // nothing to do here...
+    }
+    
+    static func sample(named name: String) -> String {
+        do {
+            guard let url = bundleUrl?.appendingPathComponent("Sample").appendingPathComponent(name) else {
+                return ""
+            }
+            return try String(contentsOf: url, encoding: .utf8)
+        }
+        catch {
+            return ""
+        }
     }
 }

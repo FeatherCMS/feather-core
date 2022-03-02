@@ -18,8 +18,13 @@ public struct WebWelcomePageTemplate: TemplateRepresentable {
     @TagBuilder
     public func render(_ req: Request) -> Tag {
         WebIndexTemplate(context.index) {
-            H1(context.title)
-            P(context.message)
+            Wrapper {
+                Container {
+                    H1(context.title)
+                    P(context.message)
+                }
+            }
+            .id("welcome-page")
         }
         .render(req)
     }

@@ -22,6 +22,10 @@ public extension Request {
         return queryItems
     }
     
+    func hasQuery(_ key: String) -> Bool {
+        getQuery(key) != nil
+    }
+    
     /// Get a query parameter value as an optional string
     ///
     /// - Parameters:
@@ -30,6 +34,10 @@ public extension Request {
     ///
     func getQuery(_ key: String) -> String? {
         try? query.get(String.self, at: key)
+    }
+    
+    func getQuery<T: Decodable>(_ key: String, as: T.Type) -> T? {
+        try? query.get(T.self, at: key)
     }
     
     func buildQuery(_ dict: [String: Any]) -> String {

@@ -15,30 +15,21 @@ struct UserRouter: FeatherRouter {
     
     func webRoutesHook(args: HookArguments) {
         args.routes.grouped(UserAccountSessionAuthenticator())
-            .get(Feather.config.paths.login.pathComponent, use: authController.loginView)
+            .get(args.app.feather.config.paths.login.pathComponent, use: authController.loginView)
         args.routes.grouped(UserAccountCredentialsAuthenticator())
-            .post(Feather.config.paths.login.pathComponent, use: authController.login)
+            .post(args.app.feather.config.paths.login.pathComponent, use: authController.login)
         args.routes.grouped(UserAccountSessionAuthenticator())
-            .get(Feather.config.paths.logout.pathComponent, use: authController.logout)
+            .get(args.app.feather.config.paths.logout.pathComponent, use: authController.logout)
     }
     
     func adminRoutesHook(args: HookArguments) {
-        accountController.setupRoutes(args.routes)
-        roleController.setupRoutes(args.routes)
-        permissionController.setupRoutes(args.routes)
+        accountController.setUpRoutes(args.routes)
+        roleController.setUpRoutes(args.routes)
+        permissionController.setUpRoutes(args.routes)
         
-        args.routes.get("user") { req -> Response in
-            let template = AdminModulePageTemplate(.init(title: "User", message: "module information", links: [
-                .init(label: "Accounts",
-                      path: "/admin/user/accounts/",
-                      permission: User.Account.permission(for: .list).key),
-                .init(label: "Roles",
-                      path: "/admin/user/roles/",
-                      permission: User.Role.permission(for: .list).key),
-                .init(label: "Permissions",
-                      path: "/admin/user/permissions/",
-                      permission: User.Permission.permission(for: .list).key),
-            ]))
+        args.routes.get(User.pathKey.pathComponent) { req -> Response in
+            let template = AdminModulePageTemplate(.init(title: "User",
+                                                         tag: UserAdminWidgetTemplate().render(req)))
             return req.templates.renderHtml(template)
         }
     }
@@ -46,7 +37,7 @@ struct UserRouter: FeatherRouter {
     func publicApiRoutesHook(args: HookArguments) {
         args.routes
             .grouped(UserAccountCredentialsAuthenticator())
-            .post(Feather.config.paths.login.pathComponent, use: authController.loginApi)
+            .post(args.app.feather.config.paths.login.pathComponent, use: authController.loginApi)
     }
 
     func apiRoutesHook(args: HookArguments) {

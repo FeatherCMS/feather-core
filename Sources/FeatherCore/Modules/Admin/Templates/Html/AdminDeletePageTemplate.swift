@@ -14,23 +14,25 @@ public struct AdminDeletePageTemplate: TemplateRepresentable {
     public init(_ context: AdminDeletePageContext) {
         self.context = context
     }
+    
+    private var excerpt: String {
+        "You are about to permanently delete the<br>`\(context.name)` \(context.type.lowercased())."
+    }
 
     @TagBuilder
     public func render(_ req: Request) -> Tag {
         AdminIndexTemplate(.init(title: context.title, breadcrumbs: context.breadcrumbs)) {
-            Div {
-                Span("🗑")
-                    .class("icon")
-                H1(context.title)
-                P("You are about to permanently delete the<br>`\(context.name)` \(context.type).")
-                
-                FormTemplate(context.form).render(req)
+            Wrapper {
+                Container {
+                    LeadTemplate(.init(title: context.title, excerpt: excerpt)) .render(req)
 
-                A("Cancel")
-                    .href(req.getQuery("cancel") ?? "#")
-                    .class(["button", "cancel"])
+                    FormTemplate(context.form).render(req)
+
+                    A("Cancel")
+                        .href(req.getQuery("cancel") ?? "#")
+                }
             }
-            .class(["lead", "container", "center"])
+            .id("delete-confirmation")
         }
         .render(req)
     }

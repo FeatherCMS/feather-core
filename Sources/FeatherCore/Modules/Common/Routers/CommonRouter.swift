@@ -13,9 +13,9 @@ struct CommonRouter: FeatherRouter {
     let variableApiController = CommonVariableApiController()
 
     func adminRoutesHook(args: HookArguments) {
-        variableAdminController.setupRoutes(args.routes)
+        variableAdminController.setUpRoutes(args.routes)
 
-        let moduleRoutes = args.routes.grouped("common")
+        let moduleRoutes = args.routes.grouped(Common.pathKey.pathComponent)
         moduleRoutes.get("files", use: fileAdminController.listView)
         
         let filesRoutes = moduleRoutes.grouped("files")
@@ -29,19 +29,17 @@ struct CommonRouter: FeatherRouter {
         filesRoutes.get("delete", use: fileAdminController.deleteView)
         filesRoutes.post("delete", use: fileAdminController.deleteAction)
         
-        args.routes.get("common") { req -> Response in
-            let template = AdminModulePageTemplate(.init(title: "Common", message: "module information", links: [
-                .init(label: "Variables", path: "/admin/common/variables/"),
-                .init(label: "Files", path: "/admin/common/files/"),
-            ]))
+        args.routes.get(Common.pathKey.pathComponent) { req -> Response in
+            let template = AdminModulePageTemplate(.init(title: "Common",
+                                                         tag: CommonAdminWidgetTemplate().render(req)))
             return req.templates.renderHtml(template)
         }
     }
     
     func apiRoutesHook(args: HookArguments) {
-        variableApiController.setupRoutes(args.routes)
+        variableApiController.setUpRoutes(args.routes)
 
-        let moduleRoutes = args.routes.grouped("common")
+        let moduleRoutes = args.routes.grouped(Common.pathKey.pathComponent)
         moduleRoutes.get("files", use: fileApiController.listApi)
         moduleRoutes.post("files", use: fileApiController.uploadApi)
         moduleRoutes.delete("files", use: fileApiController.deleteApi)

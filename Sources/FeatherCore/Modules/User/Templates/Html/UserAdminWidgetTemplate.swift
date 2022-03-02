@@ -6,29 +6,31 @@
 //
 
 import SwiftHtml
+import FeatherIcons
 
 struct UserAdminWidgetTemplate: TemplateRepresentable {
     
     @TagBuilder
     func render(_ req: Request) -> Tag {
+        Svg.user
         H2("User")
         Ul {
             if req.checkPermission(User.Account.permission(for: .list)) {
                 Li {
                     A("Accounts")
-                        .href("user/accounts")
+                        .href("/admin/user/accounts")
                 }
             }
             if req.checkPermission(User.Role.permission(for: .list)) {
                 Li {
                     A("Roles")
-                        .href("user/roles")
+                        .href("/admin/user/roles")
                 }
             }
             if req.checkPermission(User.Permission.permission(for: .list)) {
                 Li {
                     A("Permissions")
-                        .href("user/permissions")
+                        .href("/admin/user/permissions")
                 }
             }
         }

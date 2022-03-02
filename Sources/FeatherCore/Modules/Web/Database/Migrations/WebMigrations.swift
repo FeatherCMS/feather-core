@@ -48,14 +48,13 @@ struct WebMigrations {
             
             try await db.schema(WebMenuItemModel.schema)
                 .id()
-                .field(WebMenuItemModel.FieldKeys.v1.icon, .string)
                 .field(WebMenuItemModel.FieldKeys.v1.label, .string, .required)
                 .field(WebMenuItemModel.FieldKeys.v1.url, .string, .required)
                 .field(WebMenuItemModel.FieldKeys.v1.priority, .int, .required)
                 .field(WebMenuItemModel.FieldKeys.v1.isBlank, .bool, .required)
                 .field(WebMenuItemModel.FieldKeys.v1.menuId, .uuid, .required)
                 .field(WebMenuItemModel.FieldKeys.v1.permission, .string)
-                .foreignKey(WebMenuItemModel.FieldKeys.v1.menuId, references: WebMenuModel.schema, .id)
+                .foreignKey(WebMenuItemModel.FieldKeys.v1.menuId, references: WebMenuModel.schema, .id, onDelete: .cascade)
                 .create()
         }
 

@@ -7,13 +7,14 @@
 
 struct UserInstallStepController: SystemInstallStepController {
 
-    private func render(_ req: Request, form: FeatherForm) -> Response {
+    private func render(_ req: Request, form: AbstractForm) -> Response {
         let template = UserInstallStepTemplate(.init(form: form.context(req)))
         return req.templates.renderHtml(template)
     }
 
     func installStep(_ req: Request, info: SystemInstallInfo) async throws -> Response {
         let form = UserInstallForm()
+        form.fields = form.createFields(req)
         try await form.load(req: req)
         try await form.read(req: req)
         return render(req, form: form)
@@ -21,6 +22,7 @@ struct UserInstallStepController: SystemInstallStepController {
 
     func performInstallStep(_ req: Request, info: SystemInstallInfo) async throws -> Response? {
         let form = UserInstallForm()
+        form.fields = form.createFields(req)
         try await form.load(req: req)
         try await form.process(req: req)
         let isValid = try await form.validate(req: req)
@@ -35,6 +37,6 @@ struct UserInstallStepController: SystemInstallStepController {
             .create(on: req.db)
         
         try await continueInstall(req, with: info.nextStep)
-        return req.redirect(to: installPath(for: info.nextStep))
+        return req.redirect(to: installPath(req, for: info.nextStep))
     }
 }

@@ -17,9 +17,9 @@ public protocol AdminUpdateController: UpdateController {
     
     func updateContext(_ req: Request, _ editor: UpdateModelEditor) async -> AdminEditorPageContext
     func updateBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
-    func updateLinks(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
+    func updateNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
     
-    func setupUpdateRoutes(_ routes: RoutesBuilder)
+    func setUpUpdateRoutes(_ routes: RoutesBuilder)
 }
 
 public extension AdminUpdateController {
@@ -38,7 +38,7 @@ public extension AdminUpdateController {
 
         let model = try await findBy(identifier(req), on: req.db)
         let editor = UpdateModelEditor(model: model as! UpdateModelEditor.Model, form: .init())
-        editor.form.fields = editor.formFields
+        editor.form.fields = editor.createFields(req)
         try await editor.load(req: req)
         try await editor.read(req: req)
         return await render(req, editor: editor)
@@ -51,7 +51,7 @@ public extension AdminUpdateController {
         }
         let model = try await findBy(identifier(req), on: req.db)
         let editor = UpdateModelEditor(model: model as! UpdateModelEditor.Model, form: .init())
-        editor.form.fields = editor.formFields
+        editor.form.fields = editor.createFields(req)
         try await editor.load(req: req)
         try await editor.process(req: req)
         let isValid = try await editor.validate(req: req)
@@ -71,10 +71,10 @@ public extension AdminUpdateController {
     }
     
     func updateContext(_ req: Request, _ editor: UpdateModelEditor) async -> AdminEditorPageContext {
-       .init(title: "Update " + Self.modelName.singular,
+        .init(title: "Edit " + Self.modelName.singular.lowercased(),
              form: editor.form.context(req),
+             navigation: updateNavigation(req, editor.model as! DatabaseModel),
              breadcrumbs: updateBreadcrumbs(req, editor.model as! DatabaseModel),
-             links: updateLinks(req, editor.model as! DatabaseModel),
              actions: [
                 LinkContext(label: "Delete",
                             path: "delete/?redirect=" + req.url.path.pathComponents.dropLast(2).path + "&cancel=" + req.url.path,
@@ -86,16 +86,16 @@ public extension AdminUpdateController {
     
     func updateBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
-            LinkContext(label: DatabaseModel.Module.featherIdentifier.uppercasedFirst,
+            LinkContext(label: Self.moduleName,
                         dropLast: 3,
-                        permission: nil), //Model.Module.permission.key),
-            LinkContext(label: Self.modelName.plural.uppercasedFirst,
+                        permission: ApiModel.Module.permission(for: .detail).key),
+            LinkContext(label: Self.modelName.plural,
                         dropLast: 2,
                         permission: ApiModel.permission(for: .list).key),
         ]
     }
     
-    func updateLinks(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
+    func updateNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
             LinkContext(label: "Details",
                         dropLast: 1,
@@ -103,7 +103,7 @@ public extension AdminUpdateController {
         ]
     }
     
-    func setupUpdateRoutes(_ routes: RoutesBuilder) {
+    func setUpUpdateRoutes(_ routes: RoutesBuilder) {
         let baseRoutes = getBaseRoutes(routes)
 
         let existingModelRoutes = baseRoutes.grouped(ApiModel.pathIdComponent)

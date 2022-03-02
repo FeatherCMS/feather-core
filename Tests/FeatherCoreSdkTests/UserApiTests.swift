@@ -6,14 +6,14 @@
 //
 
 import XCTest
-@testable Sdk
+@testable import FeatherCoreSdk
 
 final class UserApiTests: XCTestCase {
 
     func testRoutes() async throws {
         
-        let url = URL(string: "https://jsonplaceholder.typicode.com/todos/1")!
-        let result = try await HTTP.Request(method: .get, url: url).perform()
-        print(result.statusCode)
+//        let url = URL(string: "https://jsonplaceholder.typicode.com/todos/1")!
+//        let result = try await HTTP.Request(method: .get, url: url).perform()
+//        print(result.statusCode)
     }
 }

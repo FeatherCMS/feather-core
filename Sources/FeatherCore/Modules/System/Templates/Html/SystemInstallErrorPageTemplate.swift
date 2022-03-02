@@ -18,12 +18,16 @@ public struct SystemInstallErrorPageTemplate: TemplateRepresentable {
     @TagBuilder
     public func render(_ req: Request) -> Tag {
         SystemIndexTemplate(.init(title: context.title)) {
-            Span("⚠️")
-                .class("icon")
-            H1(context.title)
-            P(context.message)
-            A("Home →")
-                .href("/")
+            Wrapper {
+                Container {
+                    Span("⚠️")
+                        .class("icon")
+                    H1(context.title)
+                    P(context.message)
+                    A("Home →")
+                        .href("/")
+                }
+            }
         }
         .render(req)
     }

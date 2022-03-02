@@ -33,7 +33,7 @@ struct CommonModule: FeatherModule {
     func installHook(args: HookArguments) async throws {
         let pages: [Common.Variable.Create] = args.req.invokeAllFlat(.installCommonVariables)
         let objects = pages.map { CommonVariableModel(key: $0.key, name: $0.name, value: $0.value, notes: $0.notes) }
-        try await objects.create(on: args.req.db)
+        try await objects.create(on: args.req.db, chunks: 25)
     }
     
     func installUserPermissionsHook(args: HookArguments) -> [User.Permission.Create] {
@@ -68,26 +68,6 @@ struct CommonModule: FeatherModule {
                   name: "Page not found link URL",
                   value: "/",
                   notes: "Retry link URL for the not found page"),
-            
-            .init(key: "emptyListIcon",
-                  name: "Empty list icon",
-                  value: "🔍",
-                  notes: "Icon for the empty list results view."),
-        
-            .init(key: "emptyListTitle",
-                  name: "Empty list title",
-                  value: "Empty list",
-                  notes: "Title for the empty list results view."),
-        
-            .init(key: "emptyListDescription",
-                  name: "Empty list description",
-                  value: "Unfortunately there are no results.",
-                  notes: "Description of the empty list box"),
-        
-            .init(key: "emptyListLinkLabel",
-                  name: "Empty list link label",
-                  value: "Try again from scratch →",
-                  notes: "Start over link text for the empty list box"),
         ]
     }
     
@@ -103,10 +83,10 @@ struct CommonModule: FeatherModule {
         ]
     }
     
-    func adminWidgetsHook(args: HookArguments) -> [TemplateRepresentable] {
+    func adminWidgetsHook(args: HookArguments) -> [OrderedHookResult<TemplateRepresentable>] {
         if args.req.checkPermission(Common.permission(for: .detail)) {
             return [
-                CommonAdminWidgetTemplate(),
+                .init(CommonAdminWidgetTemplate(), order: 100),
             ]
         }
         return []

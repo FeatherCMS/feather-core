@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 11. 29..
 //
 
-public final class DeleteForm: FeatherForm {
+public final class DeleteForm: AbstractForm {
 
     public init() {
         super.init()

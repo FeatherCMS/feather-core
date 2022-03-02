@@ -26,7 +26,7 @@ public struct WebSitemapTemplate: TemplateRepresentable {
         UrlSet {
             for item in context.items {
                 Url {
-                    Loc(Feather.baseUrl + item.slug.safePath())
+                    Loc(req.feather.baseUrl + item.slug.safePath())
                     LastMod(Self.formatter.string(from: item.date))
                 }
             }

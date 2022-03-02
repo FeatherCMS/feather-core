@@ -27,7 +27,7 @@ public struct WebRssTemplate: TemplateRepresentable {
             SwiftRss.Channel {
                 Title(req.variable("webSiteTitle") ?? "")
                 Description(req.variable("webSiteExcerpt") ?? "")
-                Link(Feather.baseUrl)
+                Link(req.feather.baseUrl)
                 Language("en_US")
                 LastBuildDate(Self.formatter.string(from: .init()))
                 PubDate(Self.formatter.string(from: .init()))
@@ -35,7 +35,7 @@ public struct WebRssTemplate: TemplateRepresentable {
                 
                 for item in context.items {
                     Item {
-                        Guid(Feather.baseUrl + item.slug.safePath())
+                        Guid(req.feather.baseUrl + item.slug.safePath())
                             .isPermalink()
                         Title(item.title ?? "")
                         Description(item.excerpt ?? "")

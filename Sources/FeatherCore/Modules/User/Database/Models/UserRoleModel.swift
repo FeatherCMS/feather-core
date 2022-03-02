@@ -20,7 +20,7 @@ final class UserRoleModel: FeatherDatabaseModel {
     @Field(key: FieldKeys.v1.key) var key: String
     @Field(key: FieldKeys.v1.name) var name: String
     @Field(key: FieldKeys.v1.notes) var notes: String?
-    @Siblings(through: UserAccountRoleModel.self, from: \.$role, to: \.$user) var users: [UserAccountModel]
+    @Siblings(through: UserAccountRoleModel.self, from: \.$role, to: \.$account) var accounts: [UserAccountModel]
     @Siblings(through: UserRolePermissionModel.self, from: \.$role, to: \.$permission) var permissions: [UserPermissionModel]
 
     init() { }

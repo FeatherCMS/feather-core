@@ -7,21 +7,22 @@
 
 struct UserRoleEditor: FeatherModelEditor {
     let model: UserRoleModel
-    let form: FeatherForm
+    let form: AbstractForm
 
-    init(model: UserRoleModel, form: FeatherForm) {
+    init(model: UserRoleModel, form: AbstractForm) {
         self.model = model
         self.form = form
     }
 
-    var formFields: [FormComponent] {
+    @FormFieldBuilder
+    func createFields(_ req: Request) -> [FormField] {
         InputField("key")
             .config {
                 $0.output.context.label.required = true
             }
             .validators {
                 FormFieldValidator.required($1)
-                FormFieldValidator($1, "Key must be unique") { field, req in
+                FormFieldValidator($1, "Key must be unique") { req, field in
                     try await Model.isUnique(req, \.$key == field.input, User.Role.getIdParameter(req))
                 }
             }

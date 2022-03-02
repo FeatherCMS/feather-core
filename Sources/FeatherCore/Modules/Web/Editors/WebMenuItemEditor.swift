@@ -7,18 +7,16 @@
 
 struct WebMenuItemEditor: FeatherModelEditor {
     let model: WebMenuItemModel
-    let form: FeatherForm
+    let form: AbstractForm
 
-    init(model: WebMenuItemModel, form: FeatherForm) {
+    init(model: WebMenuItemModel, form: AbstractForm) {
         self.model = model
         self.form = form
     }
 
-    var formFields: [FormComponent] {
-        InputField("icon")
-            .read { $1.output.context.value = model.icon }
-            .write { model.icon = $1.input }
-        
+    @FormFieldBuilder
+    func createFields(_ req: Request) -> [FormField] {
+
         InputField("label")
             .config {
                 $0.output.context.label.required = true

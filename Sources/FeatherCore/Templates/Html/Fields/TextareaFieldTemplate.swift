@@ -21,6 +21,7 @@ public struct TextareaFieldTemplate: TemplateRepresentable {
         
         Textarea(context.value)
             .name(context.key)
+            .placeholder(context.placeholder)
             .class(context.size.rawValue)
         
         if let error = context.error {

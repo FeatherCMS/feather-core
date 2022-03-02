@@ -1,3 +1,43 @@
-body {
-    background: red;
+#site-logo {
+    position: absolute;
+    left: env(safe-area-inset-left);
+    transform: none;
+}
+#dashboard h2 {
+    border-bottom: 1px solid var(--bg-color-2);
+    margin-bottom: 0.5rem;
+}
+#dashboard ul, .module-page ul {
+    margin-left: 0;
+}
+#dashboard li, .module-page li {
+    list-style-type: none;
+}
+
+#dashboard .card svg {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    color: var(--link-color-1);
+}
+.module-page h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--bg-color-3);
+}
+.module-page {
+    background: var(--bg-color);
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+.module-page svg {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2rem;
+    height: 2rem;
+    color: var(--link-color-1);
 }

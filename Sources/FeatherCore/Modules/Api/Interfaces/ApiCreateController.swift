@@ -12,7 +12,7 @@ public protocol ApiCreateController: CreateController {
     func createInput(_ req: Request, _ model: DatabaseModel, _ input: CreateObject) async throws
     func createApi(_ req: Request) async throws -> Response
     func createResponse(_ req: Request, _ model: DatabaseModel) async throws -> Response
-    func setupCreateRoutes(_ routes: RoutesBuilder)
+    func setUpCreateRoutes(_ routes: RoutesBuilder)
 }
 
 public extension ApiCreateController {
@@ -36,7 +36,7 @@ public extension ApiCreateController {
         return try await createResponse(req, model)
     }
     
-    func setupCreateRoutes(_ routes: RoutesBuilder) {
+    func setUpCreateRoutes(_ routes: RoutesBuilder) {
         let baseRoutes = getBaseRoutes(routes)
         baseRoutes.post(use: createApi)
     }

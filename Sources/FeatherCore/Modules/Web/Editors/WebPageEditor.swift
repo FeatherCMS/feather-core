@@ -7,21 +7,22 @@
 
 struct WebPageEditor: FeatherModelEditor {
     let model: WebPageModel
-    let form: FeatherForm
+    let form: AbstractForm
 
-    init(model: WebPageModel, form: FeatherForm) {
+    init(model: WebPageModel, form: AbstractForm) {
         self.model = model
         self.form = form
     }
 
-    var formFields: [FormComponent] {
+    @FormFieldBuilder
+    func createFields(_ req: Request) -> [FormField] {
         InputField("title")
             .config {
                 $0.output.context.label.required = true
             }
             .validators {
                 FormFieldValidator.required($1)
-                FormFieldValidator($1, "Title must be unique") { field, req in
+                FormFieldValidator($1, "Title must be unique") { req, field in
                     guard Web.Page.getIdParameter(req) == nil else {
                         return true
                     }

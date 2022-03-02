@@ -14,7 +14,9 @@ public extension MetadataRepresentable {
 
     func filter(_ content: String, _ req: Request) async throws -> String {
         let allFilters: [FeatherFilter] = req.invokeAllFlat(.filters)
-        let filters = allFilters.filter { featherMetadata.filters.contains($0.key) }.sorted { $0.priority > $1.priority }
+        let filters = allFilters.filter { f in
+            featherMetadata.filters.isEmpty || featherMetadata.filters.contains(f.key)
+        }.sorted { $0.priority > $1.priority }
         var result = content
         try await filters.forEachAsync { filter in
             result = try await filter.filter(result, req)
@@ -59,7 +61,7 @@ public extension MetadataRepresentable {
         guard let metadata = try await Self.findMetadataBy(id: self.uuid, on: req.db) else {
             throw Abort(.notFound)
         }
-        try await WebMetadataApi().patchInput(req, metadata, block())
+        try await WebMetadataApiController().patchInput(req, metadata, block())
         try await metadata.update(on: req.db)
     }
 
@@ -79,7 +81,7 @@ public extension MetadataRepresentable {
 
 public extension AdminController where DatabaseModel: MetadataRepresentable {
     
-    func detailLinks(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
+    func detailNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
             LinkContext(label: "Update",
                         path: Self.updatePathComponent.description,
@@ -95,7 +97,7 @@ public extension AdminController where DatabaseModel: MetadataRepresentable {
         ]
     }
 
-    func updateLinks(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
+    func updateNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
             LinkContext(label: "Details",
                         dropLast: 1,

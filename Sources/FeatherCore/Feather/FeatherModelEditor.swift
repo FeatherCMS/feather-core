@@ -5,19 +5,23 @@
 //  Created by Tibor Bodecs on 2021. 11. 29..
 //
 
-public protocol FeatherModelEditor: FormComponent {
+public protocol FeatherModelEditor: FormEventResponder {
     associatedtype Model: FeatherDatabaseModel
     
     var model: Model { get }
-    var form: FeatherForm { get }
+    var form: AbstractForm { get }
     
-    init(model: Model, form: FeatherForm)
+    init(model: Model, form: AbstractForm)
         
-    @FormComponentBuilder
-    var formFields: [FormComponent] { get }
+    @FormFieldBuilder
+    func createFields(_ req: Request) -> [FormField]
 }
 
 public extension FeatherModelEditor {
+
+    func createFields(_ req: Request) -> [FormField] {
+        []
+    }
 
     func load(req: Request) async throws {
         try await form.load(req: req)
@@ -26,7 +30,7 @@ public extension FeatherModelEditor {
     func process(req: Request) async throws {
         try await form.process(req: req)
     }
-    /// NOTE: throws instead of bool
+    /// @NOTE: throws instead of bool
     func validate(req: Request) async throws -> Bool {
         try await form.validate(req: req)
     }

@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 22..
 //
 
-final class CommonFileUploadForm: FeatherForm {
+final class CommonFileUploadForm: AbstractForm {
 
     var files: [File] = []
     
@@ -15,9 +15,9 @@ final class CommonFileUploadForm: FeatherForm {
         self.action.enctype = .multipart
     }
 
-    @FormComponentBuilder
-    override func createFields() -> [FormComponent] {
-        MultifileField("files")
+    @FormFieldBuilder
+    override func createFields(_ req: Request) -> [FormField] {
+        MultipleFileField("files")
         .read { [unowned self] req, field in
             self.files = field.input
         }

@@ -10,17 +10,22 @@ public protocol AdminDetailController: DetailController {
     func detailView(_ req: Request) async throws -> Response
     func detailTemplate(_ req: Request, _ model: DatabaseModel) -> TemplateRepresentable
     
-    func detailFields(for model: DatabaseModel) -> [FieldContext]
+    func detailFields(for model: DatabaseModel) -> [DetailContext]
     func detailContext(_ req: Request, _ model: DatabaseModel) -> AdminDetailPageContext
     func detailBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
-    func detailLinks(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
+    func detailNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
     
-    func setupDetailRoutes(_ routes: RoutesBuilder)
+    func setUpDetailRoutes(_ routes: RoutesBuilder)
 }
 
 public extension AdminDetailController {
     
     func detailView(_ req: Request) async throws -> Response {
+        let hasAccess = try await detailAccess(req)
+        guard hasAccess else {
+            throw Abort(.forbidden)
+        }
+        
         let model = try await findBy(identifier(req), on: req.db)
         return req.templates.renderHtml(detailTemplate(req, model))
     }
@@ -30,10 +35,10 @@ public extension AdminDetailController {
     }
 
     func detailContext(_ req: Request, _ model: DatabaseModel) -> AdminDetailPageContext {
-        .init(title: Self.modelName.singular.uppercasedFirst + " details",
+        .init(title: Self.modelName.singular + " details",
               fields: detailFields(for: model),
+              navigation: detailNavigation(req, model),
               breadcrumbs: detailBreadcrumbs(req, model),
-              links: detailLinks(req, model),
               actions: [
                 LinkContext(label: "Delete",
                             path: "/delete/?redirect=" + req.url.path.pathComponents.dropLast().path + "&cancel=" + req.url.path,
@@ -44,24 +49,24 @@ public extension AdminDetailController {
 
     func detailBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
-            LinkContext(label: DatabaseModel.Module.featherIdentifier.uppercasedFirst,
+            LinkContext(label: Self.moduleName,
                         dropLast: 2,
-                        permission: nil), //Model.Module.permission.key),
-            LinkContext(label: Self.modelName.plural.uppercasedFirst,
+                        permission: ApiModel.Module.permission(for: .detail).key),
+            LinkContext(label: Self.modelName.plural,
                         dropLast: 1,
                         permission: ApiModel.permission(for: .list).key),
         ]
     }
 
-    func detailLinks(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
+    func detailNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
-            LinkContext(label: "Update",
+            LinkContext(label: "Edit",
                         path: "update",
                         permission: ApiModel.permission(for: .update).key),
         ]
     }
     
-    func setupDetailRoutes(_ routes: RoutesBuilder) {
+    func setUpDetailRoutes(_ routes: RoutesBuilder) {
         let baseRoutes = getBaseRoutes(routes)
                 
         let existingModelRoutes = baseRoutes.grouped(ApiModel.pathIdComponent)

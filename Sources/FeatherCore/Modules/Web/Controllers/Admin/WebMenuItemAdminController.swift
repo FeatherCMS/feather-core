@@ -11,18 +11,17 @@ struct WebMenuItemAdminController: AdminController {
     
     typealias CreateModelEditor = WebMenuItemEditor
     typealias UpdateModelEditor = WebMenuItemEditor
-
     
     static var modelName: FeatherModelName = .init(singular: "item")
 
-    func listQuery(_ req: Request, _ qb: QueryBuilder<DatabaseModel>) throws -> QueryBuilder<DatabaseModel> {
+    func listQuery(_ req: Request, _ qb: QueryBuilder<DatabaseModel>) async throws -> QueryBuilder<DatabaseModel> {
         guard let id = Web.Menu.getIdParameter(req) else {
             return qb
         }
         return qb.filter(\.$menu.$id == id)
     }
     
-    func beforeCreate(_ req: Request, model: DatabaseModel) async throws {
+    func beforeCreate(_ req: Request, _ model: DatabaseModel) async throws {
         guard let id = Web.Menu.getIdParameter(req) else {
             throw Abort(.badRequest)
         }
@@ -53,10 +52,9 @@ struct WebMenuItemAdminController: AdminController {
         ]
     }
     
-    func detailFields(for model: DatabaseModel) -> [FieldContext] {
+    func detailFields(for model: DatabaseModel) -> [DetailContext] {
         [
             .init("id", model.uuid.string),
-            .init("icon", model.icon),
             .init("label", model.label),
             .init("url", model.url),
             .init("target", "Open in " + (model.isBlank ? "new" : "same") + " window / tab"),
@@ -69,7 +67,7 @@ struct WebMenuItemAdminController: AdminController {
     }
     
 
-    // NOTE: simplify this after we've got a pattern.
+    // @NOTE: simplify this after we've got a pattern.
 
     func getBaseRoutes(_ routes: RoutesBuilder) -> RoutesBuilder {
         routes
@@ -81,47 +79,47 @@ struct WebMenuItemAdminController: AdminController {
     
     func listBreadcrumbs(_ req: Request) -> [LinkContext] {
         [
-            LinkContext(label: WebModule.featherIdentifier.uppercasedFirst,
+            LinkContext(label: WebModule.featherName,
                         dropLast: 3,
-                        permission: nil), //Model.Module.permission.key),
-            LinkContext(label: WebMenuAdminController.modelName.plural.uppercasedFirst,
+                        permission: Web.permission(for: .detail).key),
+            LinkContext(label: WebMenuAdminController.modelName.plural,
                         dropLast: 2,
                         permission: Web.Menu.permission(for: .list).key),
-            LinkContext(label: WebMenuAdminController.modelName.singular.uppercasedFirst,
+            LinkContext(label: WebMenuAdminController.modelName.singular,
                         dropLast: 1,
                         permission: Web.Menu.permission(for: .detail).key),
         ]
     }
     
-    func detailBreadcrumbs(_ req: Request, _ model: WebMenuItemModel) -> [LinkContext] {
+    func detailBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
-            LinkContext(label: WebModule.featherIdentifier.uppercasedFirst,
+            LinkContext(label: WebModule.featherName,
                         dropLast: 4,
-                        permission: nil), //Model.Module.permission.key),
-            LinkContext(label: WebMenuAdminController.modelName.plural.uppercasedFirst,
+                        permission: Web.permission(for: .detail).key),
+            LinkContext(label: WebMenuAdminController.modelName.plural,
                         dropLast: 3,
                         permission: Web.Menu.permission(for: .list).key),
-            LinkContext(label: WebMenuAdminController.modelName.singular.uppercasedFirst,
+            LinkContext(label: WebMenuAdminController.modelName.singular,
                         dropLast: 2,
                         permission: Web.Menu.permission(for: .detail).key),
-            LinkContext(label: Self.modelName.plural.uppercasedFirst,
+            LinkContext(label: Self.modelName.plural,
                         dropLast: 1,
                         permission: ApiModel.permission(for: .list).key),
         ]
     }
     
-    func updateBreadcrumbs(_ req: Request, _ model: WebMenuItemModel) -> [LinkContext] {
+    func updateBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
         [
-            LinkContext(label: WebModule.featherIdentifier.uppercasedFirst,
+            LinkContext(label: WebModule.featherName,
                         dropLast: 5,
-                        permission: nil), //Model.Module.permission.key),
-            LinkContext(label: WebMenuAdminController.modelName.plural.uppercasedFirst,
+                        permission: Web.permission(for: .detail).key),
+            LinkContext(label: WebMenuAdminController.modelName.plural,
                         dropLast: 4,
                         permission: Web.Menu.permission(for: .list).key),
-            LinkContext(label: WebMenuAdminController.modelName.singular.uppercasedFirst,
+            LinkContext(label: WebMenuAdminController.modelName.singular,
                         dropLast: 3,
                         permission: Web.Menu.permission(for: .detail).key),
-            LinkContext(label: Self.modelName.plural.uppercasedFirst,
+            LinkContext(label: Self.modelName.plural,
                         dropLast: 2,
                         permission: ApiModel.permission(for: .list).key),
         ]
@@ -129,16 +127,16 @@ struct WebMenuItemAdminController: AdminController {
     
     func createBreadcrumbs(_ req: Request) -> [LinkContext] {
         [
-            LinkContext(label: WebModule.featherIdentifier.uppercasedFirst,
+            LinkContext(label: WebModule.featherName,
                         dropLast: 4,
-                        permission: nil), //Model.Module.permission.key),
-            LinkContext(label: WebMenuAdminController.modelName.plural.uppercasedFirst,
+                        permission: Web.permission(for: .detail).key),
+            LinkContext(label: WebMenuAdminController.modelName.plural,
                         dropLast: 3,
                         permission: Web.Menu.permission(for: .list).key),
-            LinkContext(label: WebMenuAdminController.modelName.singular.uppercasedFirst,
+            LinkContext(label: WebMenuAdminController.modelName.singular,
                         dropLast: 2,
                         permission: Web.Menu.permission(for: .detail).key),
-            LinkContext(label: Self.modelName.plural.uppercasedFirst,
+            LinkContext(label: Self.modelName.plural,
                         dropLast: 1,
                         permission: ApiModel.permission(for: .list).key),
         ]

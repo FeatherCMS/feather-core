@@ -11,9 +11,9 @@ extension User.Role.Detail: Content {}
 struct UserRoleApi: ApiController {
     typealias ApiModel = User.Role
     typealias DatabaseModel = UserRoleModel
-    
-    func listOutput(_ req: Request, _ model: DatabaseModel) async throws -> User.Role.List {
-        .init(id: model.uuid, name: model.name)
+
+    func listOutput(_ req: Request, _ models: [DatabaseModel]) async throws -> [User.Role.List] {
+        models.map { model in .init(id: model.uuid, name: model.name) }
     }
     
     func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> User.Role.Detail {

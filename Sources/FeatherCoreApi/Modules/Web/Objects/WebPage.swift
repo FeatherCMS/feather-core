@@ -36,13 +36,16 @@ public extension Web.Page {
         public let id: UUID
         public let title: String
         public let content: String
+        public let metadata: FeatherMetadata
         
         public init(id: UUID,
                     title: String,
-                    content: String) {
+                    content: String,
+                    metadata: FeatherMetadata) {
             self.id = id
             self.title = title
             self.content = content
+            self.metadata = metadata
         }
     }
     

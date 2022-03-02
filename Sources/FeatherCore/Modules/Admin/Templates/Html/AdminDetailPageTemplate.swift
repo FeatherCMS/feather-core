@@ -8,44 +8,31 @@
 import SwiftHtml
 
 struct AdminDetailPageTemplate: TemplateRepresentable {
-
+    
     var context: AdminDetailPageContext
-
+    
     init(_ context: AdminDetailPageContext) {
         self.context = context
     }
-
+    
     @TagBuilder
     func render(_ req: Request) -> Tag {
         AdminIndexTemplate(.init(title: context.title, breadcrumbs: context.breadcrumbs)) {
-            Div {
-                Div {
-                    H1(context.title)
-                    context.links.compactMap { $0.render(req) }
-                }
-                .class("lead")
-               
-                Dl {
-                    for field in context.fields {
-                        if let value = field.value {
-                            Dt(field.label)
-                            switch field.type {
-                            case .text:
-                                value.isEmpty ? Dd("&nbsp;") : Dd(value.replacingOccurrences(of: "\n", with: "<br>"))
-                            case .image:
-                                Dd {
-                                    Img(src: req.fs.resolve(key: value), alt: field.label)
-                                }
-                            }
+            Wrapper {
+                Container {
+                    LeadTemplate(.init(title: context.title, links: context.navigation)).render(req)
+                    
+                    Dl {
+                        context.fields.map { DetailTemplate($0).render(req) }
+                    }
+
+                    Section {
+                        Nav {
+                            context.actions.map { LinkTemplate($0).render(req) }
                         }
                     }
                 }
-
-                Section {
-                    context.actions.compactMap { $0.render(req) }
-                }
             }
-            .class("container")
         }
         .render(req)
     }

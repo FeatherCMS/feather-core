@@ -8,7 +8,11 @@
 public extension Request {
 
     var absoluteUrl: String {
-        Feather.baseUrl + url.path.safePath()
+        absoluteUrl(url.path)
+    }
+    
+    func absoluteUrl(_ path: String) -> String {
+        feather.baseUrl + path.safePath()
     }
         
 }

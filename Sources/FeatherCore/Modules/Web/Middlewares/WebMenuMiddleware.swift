@@ -9,8 +9,8 @@ fileprivate let scope = "web.menus"
 
 public extension Request {
     
-    func menuItems(_ key: String) -> [LinkContext] {
-        globals.get(key, scope: scope) ?? []
+    func menu(_ key: String) -> MenuContext? {
+        globals.get(key, scope: scope)
     }
 }
 
@@ -21,8 +21,7 @@ struct WebMenuMiddleware: AsyncMiddleware {
         for menu in menus {
             let items = menu.items
                 .sorted { $0.priority > $1.priority }
-                .map { LinkContext(icon: $0.icon,
-                                   label: $0.label,
+                .map { LinkContext(label: $0.label,
                                    path: $0.url,
                                    absolute: true,
                                    isBlank: $0.isBlank,
@@ -31,7 +30,7 @@ struct WebMenuMiddleware: AsyncMiddleware {
                                    permission: $0.permission,
                                    style: .default) }
             
-            req.globals.set(menu.key, value: items, scope: scope)
+            req.globals.set(menu.key, value: MenuContext(key: menu.key, name: menu.name, items: items), scope: scope)
         }
         return try await next.respond(to: req)
     }

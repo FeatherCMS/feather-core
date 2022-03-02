@@ -13,6 +13,11 @@ public extension String {
         if let last = components.last, !last.contains(".") {
            newPath += "/"
         }
+        // make urls with scheme safe...
+        newPath = newPath.replacingOccurrences(of: ":/", with: "://")
+        if newPath.contains("://") {
+            return String(newPath.dropFirst())
+        }
         return newPath
     }
 }

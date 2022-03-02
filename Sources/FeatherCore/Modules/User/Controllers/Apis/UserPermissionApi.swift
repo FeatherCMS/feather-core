@@ -11,9 +11,9 @@ extension User.Permission.Detail: Content {}
 struct UserPermissionApi: ApiController {
     typealias ApiModel = User.Permission
     typealias DatabaseModel = UserPermissionModel
-    
-    func listOutput(_ req: Request, _ model: DatabaseModel) async throws -> User.Permission.List {
-        .init(id: model.uuid, name: model.name)
+
+    func listOutput(_ req: Request, _ models: [DatabaseModel]) async throws -> [User.Permission.List] {
+        models.map { model in .init(id: model.uuid, name: model.name) }
     }
     
     func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> User.Permission.Detail {

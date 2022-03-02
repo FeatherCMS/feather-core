@@ -18,12 +18,14 @@ struct UserInstallStepTemplate: TemplateRepresentable {
     @TagBuilder
     func render(_ req: Request) -> Tag {
         SystemIndexTemplate(.init(title: "Create root user")) {
-            Header {
-                H1("Create root user")
-                P("Configure your root user account")
+            Wrapper {
+                Container {
+                    LeadTemplate(.init(title: "Create root user",
+                                   excerpt: "Configure your root user account")).render(req)
+                
+                    FormTemplate(context.form).render(req)
+                }
             }
-
-            FormTemplate(context.form).render(req)
         }
         .render(req)
     }

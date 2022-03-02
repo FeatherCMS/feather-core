@@ -8,11 +8,25 @@
 public extension HookName {
     static let installWebPages: HookName = "install-web-pages"
     static let installWebMenuItems: HookName = "install-web-menu-items"
+
+    /// return a HeaderContext.Action item to display an action next to the menu
+    static let webAction: HookName = "web-action"
+    
+    /// reuturn a module name and provide the web assets under that module location `/img/[module]/...`
+    static let webAssets: HookName = "web-assets"
     
     static let webCss: HookName = "web-css"
+    static let webJs: HookName = "web-js"
 }
 
 struct WebModule: FeatherModule {
+    
+    static var bundleUrl: URL? {
+        Bundle.module.resourceURL?
+            .appendingPathComponent("Bundle")
+            .appendingPathComponent("Modules")
+            .appendingPathComponent("Web")
+    }
     
     let router = WebRouter()
     
@@ -28,12 +42,11 @@ struct WebModule: FeatherModule {
         app.hooks.register(.adminRoutes, use: router.adminRoutesHook)
         app.hooks.register(.adminWidgets, use: adminWidgetsHook)
         app.hooks.register(.webMiddlewares, use: webMiddlewaresHook)
-        app.hooks.register(.webCss, use: cssHook)
         
         app.hooks.registerAsync(.install, use: installHook)
         app.hooks.registerAsync(.response, use: responseHook)
         
-        app.hooks.registerAsync("web-welcome-page", use: webWelcomePageHook)
+//        app.hooks.registerAsync("web-welcome-page", use: webWelcomePageHook)
         
         try router.boot(app)
     }
@@ -42,7 +55,7 @@ struct WebModule: FeatherModule {
     
     func installHook(args: HookArguments) async throws {
         
-        let mainMenu = WebMenuModel(id: .init(), key: "main", name: "Main menu", notes: nil)
+        let mainMenu = WebMenuModel(id: .init(), key: "main", name: "Main", notes: nil)
         try await mainMenu.create(on: args.req.db)
         
         let aboutMenuItem = WebMenuItemModel(label: "About", url: "/about/", priority: 0, menuId: mainMenu.uuid)
@@ -53,7 +66,6 @@ struct WebModule: FeatherModule {
         let menuItems: [Web.MenuItem.Create] = args.req.invokeAllFlat(.installWebMenuItems, args: arguments)
         let items = menuItems.map { item -> WebMenuItemModel in
             WebMenuItemModel(id: .init(),
-                             icon: item.icon,
                              label: item.label,
                              url: item.url,
                              priority: item.priority,
@@ -61,29 +73,56 @@ struct WebModule: FeatherModule {
                              permission: item.permission,
                              menuId: item.menuId)
         }
-        try await items.create(on: args.req.db)
+        try await items.create(on: args.req.db, chunks: 25)
+        
+        // MARK: footer
+        
+        let footer1 = WebMenuModel(id: .init(), key: "footer-1", name: "Navigation", notes: nil)
+        try await footer1.create(on: args.req.db)
 
-        let footerMenu = WebMenuModel(id: .init(), key: "footer", name: "Footer menu", notes: nil)
-        try await footerMenu.create(on: args.req.db)
+        try await [
+            WebMenuItemModel(label: "Home", url: "/", priority: 100, menuId: footer1.uuid),
+            WebMenuItemModel(label: "About", url: "/about/", priority: 90, menuId: footer1.uuid),
+        ].create(on: args.req.db)
+        
+        let footer2 = WebMenuModel(id: .init(), key: "footer-2", name: "Feed", notes: nil)
+        try await footer2.create(on: args.req.db)
 
-        let footerItems = [
-            WebMenuItemModel(label: "Sitemap", url: "/sitemap.xml", priority: 1000, isBlank: true, menuId: footerMenu.uuid),
-            WebMenuItemModel(label: "RSS", url: "/rss.xml", priority: 900, isBlank: true, menuId: footerMenu.uuid),
-        ]
-        try await footerItems.create(on: args.req.db)
+        try await [
+            WebMenuItemModel(label: "Sitemap", url: "/sitemap.xml", priority: 100, isBlank: true, menuId: footer2.uuid),
+            WebMenuItemModel(label: "RSS", url: "/rss.xml", priority: 90, isBlank: true, menuId: footer2.uuid),
+        ].create(on: args.req.db)
+        
+        let footer3 = WebMenuModel(id: .init(), key: "footer-3", name: "User", notes: nil)
+        try await footer3.create(on: args.req.db)
+
+        try await [
+            WebMenuItemModel(label: "Admin", url: "/admin/", priority: 100, permission: "admin.module.detail", menuId: footer3.uuid),
+            WebMenuItemModel(label: "Sign in", url: "/login/", priority: 90, permission: "user.account.login", menuId: footer3.uuid),
+            WebMenuItemModel(label: "Sign out", url: "/logout/", priority: 90, permission: "user.account.logout", menuId: footer3.uuid),
+        ].create(on: args.req.db)
+        
+        let footer4 = WebMenuModel(id: .init(), key: "footer-4", name: "Links", notes: nil)
+        try await footer4.create(on: args.req.db)
+
+        try await [
+            WebMenuItemModel(label: "Feather", url: "https://feathercms.com/", priority: 100, isBlank: true, menuId: footer4.uuid),
+            WebMenuItemModel(label: "Vapor", url: "https://vapor.codes/", priority: 90, isBlank: true, menuId: footer4.uuid),
+            WebMenuItemModel(label: "Swift", url: "https://swift.org/", priority: 90, isBlank: true, menuId: footer4.uuid),
+        ].create(on: args.req.db)
         
         // MARK: pages
 
         let pageItems: [Web.Page.Create] = args.req.invokeAllFlat(.installWebPages)
         let pages = pageItems.map { WebPageModel(title: $0.title, content: $0.content) }
-        try await pages.create(on: args.req.db)
+        try await pages.create(on: args.req.db, chunks: 25)
         try await pages.forEachAsync { try await $0.publishMetadata(args.req) }
         
-        let aboutPage = WebPageModel(title: "About", content: "This is an example about page.")
+        let aboutPage = WebPageModel(title: "About", content: WebModule.sample(named: "About.md"))
         try await aboutPage.create(on: args.req.db)
         try await aboutPage.publishMetadata(args.req)
         
-        let homePage = WebPageModel(title: "Welcome", content: "[web-welcome-page]")
+        let homePage = WebPageModel(title: "Welcome", content: WebModule.sample(named: "Welcome.md"))
         try await homePage.create(on: args.req.db)
         try await homePage.publishMetadataAsHome(args.req)
     }
@@ -97,12 +136,12 @@ struct WebModule: FeatherModule {
         return permissions.map { .init($0) }
     }
 
-    func webWelcomePageHook(args: HookArguments) async throws -> Response? {
-        let template = WebWelcomePageTemplate(.init(index: .init(title: "Welcome"),
-                                                    title: "Welcome",
-                                                    message: "This is the welcome page"))
-        return args.req.templates.renderHtml(template)
-    }
+//    func webWelcomePageHook(args: HookArguments) async throws -> Response? {
+//        let template = WebWelcomePageTemplate(.init(index: .init(title: "Welcome"),
+//                                                    title: "Welcome",
+//                                                    message: "This is the welcome page"))
+//        return args.req.templates.renderHtml(template)
+//    }
     
     func installCommonVariablesHook(args: HookArguments) -> [Common.Variable.Create] {
         [
@@ -113,6 +152,10 @@ struct WebModule: FeatherModule {
             .init(key: "webSiteLogo",
                   name: "Site logo",
                   notes: "Logo of the website"),
+            
+            .init(key: "webSiteLogoDark",
+                  name: "Site logo (dark mode)",
+                  notes: "Logo of the website in dark mode"),
         
             .init(key: "webSiteTitle",
                   name: "Site title",
@@ -131,37 +174,6 @@ struct WebModule: FeatherModule {
             .init(key: "webSiteJs",
                   name: "Site JS",
                   notes: "Global JavaScript injection for the site"),
-        
-            .init(key: "welcomePageIcon",
-                  name: "Welcome page icon",
-                  value: "🪶",
-                  notes: "Icon of the welcome page"),
-
-            .init(key: "welcomePageTitle",
-                  name: "Welcome page title",
-                  value: "Welcome",
-                  notes: "Title of the welcome page"),
-            
-            .init(key: "welcomePageExcerpt",
-                  name: "Welcome page excerpt",
-                  value: "This is your brand new Feather CMS powered website",
-                  notes: "Excerpt for the welcome page"),
-
-            .init(key: "welcomePageLinkLabel",
-                  name: "Welcome page link label",
-                  value: "Start customizing →",
-                  notes: "Link label of the welcome page"),
-
-            .init(key: "welcomePageLinkUrl",
-                  name: "Welcome page link url",
-                  value: "/admin/",
-                  notes: "Link URL of the welcome page"),
-        ]
-    }
-
-    func cssHook(args: HookArguments) -> [OrderedHookResult<String>] {
-        [
-//            .init("/css/web/local.css", order: 420)
         ]
     }
 
@@ -188,8 +200,8 @@ struct WebModule: FeatherModule {
             }
         }
         
-        let data = try await WebPageApi().detailOutput(args.req, page)
-        let template = WebPageTemplate(.init(index: .init(title: page.title), page: data))
+        let data = try await WebPageApiController().detailOutput(args.req, page)
+        let template = WebPageTemplate(.init(page: data))
         return args.req.templates.renderHtml(template)
     }
 
@@ -200,10 +212,10 @@ struct WebModule: FeatherModule {
         ]
     }
 
-    func adminWidgetsHook(args: HookArguments) -> [TemplateRepresentable] {
+    func adminWidgetsHook(args: HookArguments) -> [OrderedHookResult<TemplateRepresentable>] {
         if args.req.checkPermission(Web.permission(for: .detail)) {
             return [
-                WebAdminWidgetTemplate(),
+                .init(WebAdminWidgetTemplate(), order: 900),
             ]
         }
         return []

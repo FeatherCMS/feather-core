@@ -7,6 +7,7 @@
 
 import SwiftHtml
 import SwiftSvg
+import SwiftSgml
 
 public struct WebIndexTemplate: TemplateRepresentable {
 
@@ -17,21 +18,6 @@ public struct WebIndexTemplate: TemplateRepresentable {
         self.context = context
         self.body = builder()
     }
-    
-    private func getTitle(_ req: Request) -> String {
-        var components = [context.title]
-        if let suffix = req.variable("webSiteTitle"), !suffix.isEmpty {
-            components += ["-", suffix]
-        }
-        return components.joined(separator: " ")
-    }
-    
-    private func getLogoUrl(_ req: Request) -> String {
-        if let logo = req.variable("webSiteLogo"), !logo.isEmpty {
-            return req.fs.resolve(key: logo)
-        }
-        return "/img/web/logo.png"
-    }
 
     @TagBuilder
     public func render(_ req: Request) -> Tag {
@@ -39,18 +25,42 @@ public struct WebIndexTemplate: TemplateRepresentable {
             Head {
                 Title(getTitle(req))
 
-                Meta()
-                    .charset(context.charset)
-                
-                Meta()
-                    .name(.viewport)
-                    .content(context.viewport)
+                //"width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no"
+                StandardMetaTemplate(.init(charset: context.charset,
+                                   viewport: context.viewport,
+                                   noindex: getNoindex(req)))
+                    .render(req)
 
-                if context.noindex {
-                    Meta()
-                        .name(.robots)
-                        .content("noindex")
+                // TODO: fix absolute URLs
+                if let metadata = context.metadata {
+                    TwitterMetaTemplate(.init(title: metadata.title ?? getTitle(req),
+                                              excerpt: metadata.excerpt,
+                                              imageUrl: metadata.imageKey?.resolve(req) ?? ""))
+                        .render(req)
+                    OpenGraphMetaTemplate(.init(url: "",
+                                         title: metadata.title ?? getTitle(req),
+                                         excerpt: metadata.excerpt,
+                                         imageUrl: metadata.imageKey?.resolve(req) ?? ""))
+                        .render(req)
                 }
+                
+                Link(rel: .maskIcon)
+                    .sizes("any")
+                    .href("/img/\(getAssets(req))/icons/mask.svg")
+                    .attribute("color", "#cafe00")
+
+                Link(rel: .shortcutIcon)
+                    .href("/img/\(getAssets(req))/favicons/favicon.ico")
+                    .type("image/x-icon")
+
+                Link(rel: .shortcutIcon)
+                    .href("/img/\(getAssets(req))/favicons/favicon.png")
+                    .type("image/png")
+                
+                ApplePwaMetaTemplate(.init(title: getTitle(req), assets: getAssets(req))).render(req)
+
+                Link(rel: .manifest)
+                    .href("/manifest.json")
 
                 let css: [String] = req.invokeAllOrdered(.webCss)
                 for file in context.css + css {
@@ -60,90 +70,34 @@ public struct WebIndexTemplate: TemplateRepresentable {
                 
                 if let css = req.variable("webSiteCss") {
                     SwiftHtml.Style(css)
-                        .type()
+                        .css()
                 }
-                
-                if let canonicalUrl = context.canonicalUrl {
+
+                if let css = context.metadata?.css {
+                    Style(css)
+                        .css()
+                }
+
+                if let canonicalUrl = getCanonicalUrl(req) {
                     Link(rel: .canonical)
                         .href(canonicalUrl)
                 }
             }
             Body {
-                Header {
-                    Div {
-                        A {
-                            Img(src: getLogoUrl(req), alt: "Logo of \(getTitle(req))")
-                                .title(getTitle(req))
-                                .style("width: 300px")
-                        }
-                        .href("/")
-                        Nav {
-                            Input()
-                                .type(.checkbox)
-                                .id("primary-menu-button")
-                                .name("menu-button")
-                                .class("menu-button")
-                            Label {
-                                Svg {
-                                    Line(x1: 3, y1: 12, x2: 21, y2: 12)
-                                    Line(x1: 3, y1: 6, x2: 21, y2: 6)
-                                    Line(x1: 3, y1: 18, x2: 21, y2: 18)
-                                }
-                                .width(24)
-                                .height(24)
-                                .viewBox(minX: 0, minY: 0, width: 24, height: 24)
-                                .fill("none")
-                                .stroke("currentColor")
-                                .strokeWidth(2)
-                                .strokeLinecap("round")
-                                .strokeLinejoin("round")
-                            }
-                            .for("primary-menu-button")
-                            Div {
-                                req.menuItems("main").map {
-                                    A($0.label)
-                                        .href($0.path)
-                                        .class("selected", req.url.path == $0.path)
-                                }
-                            }
-                            .class("menu-items")
-                        }
-                        .id("primary-menu")
-                    }
-                    .id("navigation")
-                }
-                
-                Main {
-                    body
-                }
+                HeaderTemplate(.init(title: getTitle(req),
+                                     main: .init(id: "main",
+                                                 icon: Text("&#9776;"),
+                                                 items: mainMenuItems(req)),
+                                     action: req.invoke(.webAction),
+                                     assets: getAssets(req)))
+                    .render(req)
 
-                Footer {
-                    Section {
-                        Nav {
-                            if let user = req.auth.get(FeatherAccount.self) {
-                                P(user.email)
+                MainTemplate(.init(body: body)).render(req)
+                // req.menuItems("footer").map { LinkTemplate($0).render(req) }
+                FooterTemplate(.init()).render(req)
 
-                                if req.checkPermission(Admin.permission(for: .detail)) {
-                                    A("Admin")
-                                        .href(Feather.config.paths.admin.safePath())
-                                }
-                                A("Sign out")
-                                    .href(Feather.config.paths.logout.safePath())
-                            }
-                            else {
-                                if req.url.path.safePath() != Feather.config.paths.login.safePath() {
-                                    A("Sign in")
-                                        .href(Feather.config.paths.login.safePath())
-                                }
-                            }
-                        }
-                        Nav {
-                            req.menuItems("footer").compactMap { $0.render(req) }
-                        }
-                    }
-                }
-
-                for file in context.js {
+                let js: [String] = req.invokeAllOrdered(.webJs)
+                for file in context.js + js {
                     Script()
                         .type(.javascript)
                         .src(file)
@@ -153,9 +107,65 @@ public struct WebIndexTemplate: TemplateRepresentable {
                     Script(js)
                         .type(.javascript)
                 }
+                
+                if let js = context.metadata?.js {
+                    Script(js)
+                        .type(.javascript)
+                }
             }
         }
         .lang(context.lang)
     }
     
+}
+
+private extension WebIndexTemplate {
+    
+    func getAssets(_ req: Request) -> String {
+        req.invoke(.webAssets) ?? "web"
+    }
+
+    func getTitle(_ req: Request) -> String {
+        let title = context.metadata?.title ?? context.title
+        var components = [title]
+        if let suffix = req.variable("webSiteTitle"), !suffix.isEmpty {
+            components += ["-", suffix]
+        }
+        return components.joined(separator: " ")
+    }
+    
+    func getNoindex(_ req: Request) -> Bool {
+        if context.noindex {
+            return true
+        }
+        if let status = context.metadata?.status, status != .published {
+            return true
+        }
+        if let noindex = req.variable("webSiteNoIndex") {
+            return Bool(noindex) ?? false
+        }
+        return false
+    }
+    
+    func getCanonicalUrl(_ req: Request) -> String? {
+        if let canonicalUrl = context.canonicalUrl, !canonicalUrl.isEmpty {
+            return canonicalUrl
+        }
+        if let canonicalUrl = context.metadata?.canonicalUrl, !canonicalUrl.isEmpty {
+            return canonicalUrl
+        }
+        if req.getQuery("page") != nil || req.getQuery("search") != nil {
+            return req.absoluteUrl
+        }
+        return nil
+    }
+
+    func mainMenuItems(_ req: Request) -> [Tag] {
+        req.menu("main")?.items.map {
+            A($0.label)
+                .href($0.path)
+                .class("selected", req.url.path == $0.path)
+        } ?? []
+    }
+   
 }

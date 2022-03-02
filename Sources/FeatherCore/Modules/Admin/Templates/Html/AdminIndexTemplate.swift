@@ -22,107 +22,58 @@ public struct AdminIndexTemplate: TemplateRepresentable {
     public func render(_ req: Request) -> Tag {
         Html {
             Head {
-                Title(context.title)
+                Title(getTitle())
 
-                Meta().charset(context.charset)
-                Meta().name(.viewport).content(context.viewport)
+                StandardMetaTemplate(.init(charset: context.charset,
+                                   viewport: context.viewport,
+                                   noindex: true))
+                    .render(req)
 
-                for file in context.css {
-                    Link(rel: .stylesheet).href(file)
+                let css: [String] = req.invokeAllOrdered(.adminCss)
+                for file in context.css + css {
+                    Link(rel: .stylesheet)
+                        .href(file)
                 }
             }
             Body {
-                Div {
-                    A {
-                        Img(src: "/img/web/logo.png", alt: "Logo of Feather CMS")
-                            .title("Feather CMS")
-                            .style("width: 300px")
-                    }
-                    .href("/")
-                    
-                    Nav {
-                        Input()
-                            .type(.checkbox)
-                            .id("secondary-menu-button")
-                            .name("menu-button")
-                            .class("menu-button")
-                        Label {
-                            Svg {
-                                Circle(cx: 12, cy: 12, r: 1)
-                                Circle(cx: 12, cy: 5, r: 1)
-                                Circle(cx: 12, cy: 19, r: 1)
-                            }
-                            .width(24)
-                            .height(24)
-                            .viewBox(minX: 0, minY: 0, width: 24, height: 24)
-                            .fill("none")
-                            .stroke("currentColor")
-                            .strokeWidth(2)
-                            .strokeLinecap("round")
-                            .strokeLinejoin("round")
-                        }
-                        .for("secondary-menu-button")
+                HeaderTemplate(.init(title: getTitle(),
+                                     logoLink: req.feather.config.paths.admin.safePath(),
+                                     action: .init(icon: .compass, title: "View site", link: "/"),
+                                     assets: getAssets(req)))
+                    .render(req)
 
-                        Div {
-                            A("Sign out")
-                                .href(Feather.config.paths.logout.safePath())
-//                                .class("selected", req.url.path == "/")
-                        }
-                        .class("menu-items")
-                    }
-                    .id("secondary-menu")
-                }
-                .id("navigation")
                 
-                Div {
-                    Nav {
-                        if req.checkPermission(Admin.permission(for: .detail)) {
-                            A("Admin")
-                                .href(Feather.config.paths.admin.safePath())
-                        }
-                        
-                        context.breadcrumbs.compactMap { $0.render(req) }
-                    }
-                }
-                .class("breadcrumb")
+                BreadcrumbTemplate(.init(links: [
+                    LinkContext(label: "Admin", path: req.feather.config.paths.admin.safePath(), absolute: true),
+                ] + context.breadcrumbs)).render(req)
+                
+                MainTemplate(.init(body: body)).render(req)
+                // req.menuItems("footer").map { LinkTemplate($0).render(req) }
+                FooterTemplate(.init()).render(req)
 
-                Main {
-                    body
-                }
+                Script()
+                    .type(.javascript)
+                    .src("/js/admin/admin.js")
                 
-                Footer {
-                    Section {
-                        Img(src: "/img/web/logo.png", alt: "Logo of Feather CMS")
-                            .title("Feather CMS")
-                            .style("width: 128px")
-
-                        P {
-                            Text("Thank you for using Feather CMS, ")
-                            A("join the discussion")
-                                .href("https://discord.gg/wMSkxCUXAD")
-                                .target(.blank)
-                            Text(" on our discord server.")
-                        }
-                        
-                        Nav {
-                            A("Feather")
-                                .href("https://feathercms.com/")
-                                .target(.blank)
-                            Text(" · ")
-                            A("Vapor")
-                                .href("https://vapor.codes/")
-                                .target(.blank)
-                            Text(" · ")
-                            A("Swift")
-                                .href("https://swift.org/")
-                                .target(.blank)
-                        }
-                    }
+                let js: [String] = req.invokeAllOrdered(.adminJs)
+                for file in context.js + js {
+                    Script()
+                        .type(.javascript)
+                        .src(file)
                 }
-                
             }
         }
         .lang(context.lang)
     }
+}
+
+private extension AdminIndexTemplate {
     
+    func getTitle() -> String {
+        context.title + " - " + "Feather"
+    }
+    
+    func getAssets(_ req: Request) -> String {
+        req.invoke(.adminAssets) ?? "web"
+    }
 }

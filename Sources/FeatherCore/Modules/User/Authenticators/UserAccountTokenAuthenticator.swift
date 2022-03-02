@@ -14,7 +14,7 @@ struct UserAccountTokenAuthenticator: AsyncBearerAuthenticator {
 //        guard token.isValid else {
 //            return try await token.delete(on: req.db)
 //        }
-        guard let user = try await UserAccountModel.findWithPermissionsBy(id: token.$user.id, on: req.db) else {
+        guard let user = try await UserAccountModel.findWithPermissionsBy(id: token.$account.id, on: req.db) else {
             return
         }
         req.auth.login(user.featherAccount)

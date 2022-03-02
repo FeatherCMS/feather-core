@@ -12,7 +12,7 @@ public protocol SystemInstallStepController: Controller {
     func performInstallStep(_ req: Request, info: SystemInstallInfo) async throws -> Response?
     
     func continueInstall(_ req: Request, with nextStep: String) async throws
-    func installPath(for step: String, next: Bool) -> String
+    func installPath(_ req: Request, for step: String, next: Bool) -> String
 }
 
 public extension SystemInstallStepController {
@@ -22,11 +22,11 @@ public extension SystemInstallStepController {
         guard steps.map(\.key).contains(nextStep) else {
             throw Abort(.badRequest)
         }
-        Feather.config.install.currentStep = nextStep
+        req.feather.config.install.currentStep = nextStep
     }
     
-    func installPath(for step: String, next: Bool = false) -> String {
-        (Feather.config.paths.install + "/" + step).safePath() + ( next ? "?next=true" : "")
+    func installPath(_ req: Request, for step: String, next: Bool = false) -> String {
+        (req.feather.config.paths.install + "/" + step).safePath() + ( next ? "?next=true" : "")
     }
     
     func performInstallStep(_ req: Request, info: SystemInstallInfo) async throws -> Response? { nil }

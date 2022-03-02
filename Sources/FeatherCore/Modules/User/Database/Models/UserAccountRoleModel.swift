@@ -12,19 +12,19 @@ final class UserAccountRoleModel: FeatherDatabaseModel {
     
     struct FieldKeys {
         struct v1 {
-            static var userId: FieldKey { "user_id" }
+            static var accountId: FieldKey { "account_id" }
             static var roleId: FieldKey { "role_id" }
         }
     }
 
     @ID() var id: UUID?
-    @Parent(key: FieldKeys.v1.userId) var user: UserAccountModel
+    @Parent(key: FieldKeys.v1.accountId) var account: UserAccountModel
     @Parent(key: FieldKeys.v1.roleId) var role: UserRoleModel
     
     init() {}
 
-    init(userId: UUID, roleId: UUID) {
-        self.$user.id = userId
+    init(accountId: UUID, roleId: UUID) {
+        self.$account.id = accountId
         self.$role.id = roleId
     }
 }

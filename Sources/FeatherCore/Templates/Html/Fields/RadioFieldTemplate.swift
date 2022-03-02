@@ -9,7 +9,7 @@ import SwiftHtml
 
 public struct RadioFieldTemplate: TemplateRepresentable {
 
-    var context: RadioFieldContext
+    public var context: RadioFieldContext
     
     public init(_ context: RadioFieldContext) {
         self.context = context

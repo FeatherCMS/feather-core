@@ -36,10 +36,14 @@ struct UserPermissionAdminController: AdminController {
         ]
     }
         
-    func detailFields(for model: DatabaseModel) -> [FieldContext] {
+    func detailFields(for model: DatabaseModel) -> [DetailContext] {
         [
             .init("id", model.uuid.string),
-            .init("email", model.name),
+            .init("namespace", model.namespace),
+            .init("context", model.context),
+            .init("action", model.action),
+            .init("name", model.name),
+            .init("notes", model.notes),
         ]
     }
 

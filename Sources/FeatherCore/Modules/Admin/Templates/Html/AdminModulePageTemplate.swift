@@ -14,25 +14,15 @@ public struct AdminModulePageTemplate: TemplateRepresentable {
     public init(_ context: AdminModulePageContext) {
         self.context = context
     }
-
+    
     @TagBuilder
     public func render(_ req: Request) -> Tag {
         AdminIndexTemplate(.init(title: context.title)) {
-            Div {
-                H1(context.title)
-                P(context.message)
-            }
-            .class("lead")
-            
-            Section {
-                Ul {
-                    context.links.map { link in
-                        Li {
-                            A(link.label)
-                                .href(link.path)
-                        }
-                    }
+            Wrapper {
+                Container {
+                    context.tag       
                 }
+                .class(add: "module-page")
             }
         }
         .render(req)

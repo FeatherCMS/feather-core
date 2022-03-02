@@ -16,7 +16,7 @@ struct UserAuthController {
     }
 
     private func getCustomRedirect(_ req: Request) -> String {
-        if let customRedirect: String = req.query[Feather.config.paths.redirectQueryKey], !customRedirect.isEmpty {
+        if let customRedirect: String = req.query[req.feather.config.paths.redirectQueryKey], !customRedirect.isEmpty {
             return customRedirect.safePath()
         }
         return "/"
@@ -27,6 +27,7 @@ struct UserAuthController {
     func loginView(_ req: Request) async throws -> Response {
         guard req.auth.has(FeatherAccount.self) else {
             let form = UserLoginForm()
+            form.fields = form.createFields(req)
             try await form.load(req: req)
             return render(req, form: form)
         }
@@ -41,6 +42,7 @@ struct UserAuthController {
         }
 
         let form = UserLoginForm()
+        form.fields = form.createFields(req)
         try await form.load(req: req)
         try await form.process(req: req)
         _ = try await form.validate(req: req)
@@ -52,8 +54,10 @@ struct UserAuthController {
         guard let user = req.auth.get(FeatherAccount.self) else {
             throw Abort(.unauthorized)
         }
-        let tokenValue = [UInt8].random(count: 16).base64
-        let token = UserTokenModel(value: tokenValue, userId: user.id)
+        let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789="
+        let tokenValue = String((0..<64).map { _ in letters.randomElement()! })
+//        let tokenValue = [UInt8].random(count: 32).base64
+        let token = UserTokenModel(value: tokenValue, accountId: user.id)
         try await token.create(on: req.db)
         return FeatherToken(id: token.uuid, value: token.value, user: user)
     }
