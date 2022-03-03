@@ -7,7 +7,6 @@ let package = Package(
        .macOS(.v12),
     ],
     products: [
-        .library(name: "FeatherRestKit", targets: ["FeatherRestKit"]),
         .library(name: "Feather", targets: ["Feather"]),
     ],
     dependencies: [
@@ -16,6 +15,7 @@ let package = Package(
         .package(url: "https://github.com/binarybirds/liquid", from: "1.3.0"),
         .package(url: "https://github.com/binarybirds/mail", from: "0.0.1"),
         .package(url: "https://github.com/binarybirds/swift-html", from: "1.6.0"),
+        .package(url: "https://github.com/feathercms/feather-api", .branch("main")),
         .package(url: "https://github.com/feathercms/feather-icons", .branch("main")),
         .package(url: "https://github.com/binarybirds/spec", from: "1.2.0"),
         .package(url: "https://github.com/vapor/fluent-sqlite-driver", from: "4.0.0"),
@@ -23,7 +23,6 @@ let package = Package(
         .package(url: "https://github.com/binarybirds/mail-aws-driver", from: "0.0.1"),
     ],
     targets: [
-        // MARK: - app
         .executableTarget(name: "FeatherApp", dependencies: [
             .target(name: "Feather"),
 
@@ -31,13 +30,10 @@ let package = Package(
             .product(name: "LiquidLocalDriver", package: "liquid-local-driver"),
             .product(name: "MailAwsDriver", package: "mail-aws-driver"),
         ]),
+
+        // MARK: - feather
         
-        // MARK: - core
-        .target(name: "FeatherRestKit", dependencies: []),
-
         .target(name: "Feather", dependencies: [
-            .target(name: "FeatherRestKit"),
-
             .product(name: "Vapor", package: "vapor"),
             .product(name: "Fluent", package: "fluent"),
             .product(name: "Liquid", package: "liquid"),
@@ -47,6 +43,7 @@ let package = Package(
             .product(name: "SwiftRss", package: "swift-html"),
             .product(name: "SwiftSitemap", package: "swift-html"),
             .product(name: "FeatherIcons", package: "feather-icons"),
+            .product(name: "FeatherApi", package: "feather-api"),
         ], resources: [
             .copy("Modules/System/Bundle"),
         ]),
@@ -61,10 +58,6 @@ let package = Package(
         .testTarget(name: "FeatherTests", dependencies: [
             .target(name: "Feather"),
         ]),
-//        .testTarget(name: "FeatherCoreSdkTests", dependencies: [
-//            .target(name: "FeatherCoreSdk"),
-//        ]),
-
         .testTarget(name: "XCTFeatherTests", dependencies: [
             .target(name: "XCTFeather"),
         ])

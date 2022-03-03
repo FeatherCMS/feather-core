@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 2022. 02. 24..
 //
 
-import FeatherRestKit
-
 struct SystemMetadataRepository: FeatherModelRepository {
     typealias DatabaseModel = SystemMetadataModel
 

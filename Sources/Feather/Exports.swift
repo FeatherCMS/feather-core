@@ -9,7 +9,7 @@
 @_exported import Fluent
 @_exported import Liquid
 @_exported import Mail
-@_exported import FeatherRestKit
+@_exported import FeatherApi
 
 
 /// https://github.com/vapor/fluent/blob/main/Sources/Fluent/Exports.swift

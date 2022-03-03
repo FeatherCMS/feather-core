@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 2019. 12. 17..
 //
 
-@_exported import FeatherRestKit
-
 import Feather
 
 import FluentSQLiteDriver
