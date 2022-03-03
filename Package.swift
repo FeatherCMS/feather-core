@@ -7,65 +7,74 @@ let package = Package(
        .macOS(.v12),
     ],
     products: [
-        .executable(name: "FeatherCli", targets: ["FeatherCli"]),
-        .library(name: "FeatherIcons", targets: ["FeatherIcons"]),
-        .library(name: "FeatherCoreApi", targets: ["FeatherCoreApi"]),
-        .library(name: "FeatherCoreSdk", targets: ["FeatherCoreSdk"]),
-        .library(name: "FeatherCore", targets: ["FeatherCore"]),
-        .library(name: "XCTFeather", targets: ["XCTFeather"]),
+        .library(name: "FeatherRestKit", targets: ["FeatherRestKit"]),
+        .library(name: "Feather", targets: ["Feather"]),
     ],
     dependencies: [
         .package(url: "https://github.com/vapor/vapor", from: "4.55.0"),
         .package(url: "https://github.com/vapor/fluent", from: "4.4.0"),
         .package(url: "https://github.com/binarybirds/liquid", from: "1.3.0"),
+        .package(url: "https://github.com/binarybirds/mail", from: "0.0.1"),
         .package(url: "https://github.com/binarybirds/swift-html", from: "1.6.0"),
-//        .package(url: "https://github.com/binarybirds/swift-css", from: "1.0.0"),
         .package(url: "https://github.com/binarybirds/spec", from: "1.2.0"),
+        .package(url: "https://github.com/vapor/fluent-sqlite-driver", from: "4.0.0"),
+        .package(url: "https://github.com/binarybirds/liquid-local-driver", from: "1.3.0"),
+        .package(url: "https://github.com/binarybirds/mail-aws-driver", from: "0.0.1"),
     ],
     targets: [
-        .executableTarget(name: "FeatherCli", dependencies: [
-            .product(name: "Vapor", package: "vapor"),
-            .target(name: "FeatherCliGenerator"),
+        // MARK: - app
+        .executableTarget(name: "FeatherApp", dependencies: [
+            .target(name: "Feather"),
+
+            .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
+            .product(name: "LiquidLocalDriver", package: "liquid-local-driver"),
+            .product(name: "MailAwsDriver", package: "mail-aws-driver"),
         ]),
-        .target(name: "FeatherIcons", dependencies: [
-            .product(name: "SwiftSvg", package: "swift-html"),
-        ]),
-        .target(name: "FeatherCliGenerator", dependencies: []),
-        .target(name: "FeatherCoreApi", dependencies: []),
-        .target(name: "FeatherCoreSdk", dependencies: [
-            .target(name: "FeatherCoreApi"),
-        ]),
-        .target(name: "FeatherCore", dependencies: [
+        
+        // MARK: - core
+        .target(name: "FeatherRestKit", dependencies: []),
+
+        .target(name: "Feather", dependencies: [
+            .target(name: "FeatherRestKit"),
             .target(name: "FeatherIcons"),
-            .target(name: "FeatherCoreApi"),
+
             .product(name: "Vapor", package: "vapor"),
             .product(name: "Fluent", package: "fluent"),
             .product(name: "Liquid", package: "liquid"),
+            .product(name: "Mail", package: "mail"),
             .product(name: "SwiftHtml", package: "swift-html"),
             .product(name: "SwiftSvg", package: "swift-html"),
             .product(name: "SwiftRss", package: "swift-html"),
             .product(name: "SwiftSitemap", package: "swift-html"),
-//            .product(name: "SwiftCss", package: "swift-css"),
         ], resources: [
-            .copy("Bundle"),
+            .copy("Modules/System/Bundle"),
         ]),
+                
+        // MARK: - icons
+        
+        .target(name: "FeatherIcons", dependencies: [
+            .product(name: "SwiftSvg", package: "swift-html"),
+        ]),
+        
+        // MARK: - XCTFeather
+    
         .target(name: "XCTFeather", dependencies: [
-            .target(name: "FeatherCore"),
+            .target(name: "Feather"),
             .product(name: "Spec", package: "spec"),
         ]),
-        .testTarget(name: "FeatherCoreTests", dependencies: [
-            .target(name: "FeatherCore"),
+        
+        // MARK: - test targets
+        
+        .testTarget(name: "FeatherTests", dependencies: [
+            .target(name: "Feather"),
         ]),
-        .testTarget(name: "FeatherCoreSdkTests", dependencies: [
-            .target(name: "FeatherCoreSdk"),
-        ]),
-        .testTarget(name: "FeatherCliGeneratorTests", dependencies: [
-            .target(name: "FeatherCliGenerator"),
-        ]),
+//        .testTarget(name: "FeatherCoreSdkTests", dependencies: [
+//            .target(name: "FeatherCoreSdk"),
+//        ]),
+
         .testTarget(name: "XCTFeatherTests", dependencies: [
             .target(name: "XCTFeather"),
         ])
     ]
 )
-
 
