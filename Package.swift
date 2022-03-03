@@ -16,6 +16,7 @@ let package = Package(
         .package(url: "https://github.com/binarybirds/liquid", from: "1.3.0"),
         .package(url: "https://github.com/binarybirds/mail", from: "0.0.1"),
         .package(url: "https://github.com/binarybirds/swift-html", from: "1.6.0"),
+        .package(url: "https://github.com/feathercms/feather-icons", .branch("main")),
         .package(url: "https://github.com/binarybirds/spec", from: "1.2.0"),
         .package(url: "https://github.com/vapor/fluent-sqlite-driver", from: "4.0.0"),
         .package(url: "https://github.com/binarybirds/liquid-local-driver", from: "1.3.0"),
@@ -36,7 +37,6 @@ let package = Package(
 
         .target(name: "Feather", dependencies: [
             .target(name: "FeatherRestKit"),
-            .target(name: "FeatherIcons"),
 
             .product(name: "Vapor", package: "vapor"),
             .product(name: "Fluent", package: "fluent"),
@@ -46,17 +46,10 @@ let package = Package(
             .product(name: "SwiftSvg", package: "swift-html"),
             .product(name: "SwiftRss", package: "swift-html"),
             .product(name: "SwiftSitemap", package: "swift-html"),
+            .product(name: "FeatherIcons", package: "feather-icons"),
         ], resources: [
             .copy("Modules/System/Bundle"),
         ]),
-                
-        // MARK: - icons
-        
-        .target(name: "FeatherIcons", dependencies: [
-            .product(name: "SwiftSvg", package: "swift-html"),
-        ]),
-        
-        // MARK: - XCTFeather
     
         .target(name: "XCTFeather", dependencies: [
             .target(name: "Feather"),
