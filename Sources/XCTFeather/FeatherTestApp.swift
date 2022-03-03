@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import FeatherCore
+import Feather
 import Spec
 
 fileprivate extension String {

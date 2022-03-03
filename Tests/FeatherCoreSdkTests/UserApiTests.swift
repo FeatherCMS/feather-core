@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import FeatherCoreSdk
+@testable import FeatherRestKit
 
 final class UserApiTests: XCTestCase {
 

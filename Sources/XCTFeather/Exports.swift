@@ -5,4 +5,4 @@
 //  Created by Tibor Bodecs on 2022. 01. 15..
 //
 
-@_exported import FeatherCore
+@_exported import Feather
