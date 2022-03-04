@@ -17,6 +17,7 @@ struct SystemRouter: FeatherRouter {
     let metadataApi = SystemMetadataApiController()
     let metadataAdmin = SystemMetadataAdminController()
     let settingsAdmin = SystemSettingsAdminController()
+    let fileApi = SystemFileApiController()
     
     func boot(_ app: Application) throws {
         
@@ -64,6 +65,7 @@ struct SystemRouter: FeatherRouter {
         metadataApi.setUpDetailRoutes(apiRoutes)
         metadataApi.setUpUpdateRoutes(apiRoutes)
         metadataApi.setUpPatchRoutes(apiRoutes)
+        fileApi.setUpRoutes(apiRoutes)
         
         var apiArguments = HookArguments()
         apiArguments.routes = apiRoutes

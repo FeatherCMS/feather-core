@@ -25,4 +25,14 @@ curl \
     {\
         "name": "486B0B47-9785-43C9-B52C-AABC5D77718D"
     }' | jq
+    
+    
+# file upload 
+
+curl \
+-X POST \
+--data-binary @my_picture.png \
+"http://localhost:8080/api/system/files/?path=user/accounts&name=my_picture&ext=png"
+
+
 ```

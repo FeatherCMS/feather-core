@@ -7,15 +7,9 @@
 
 import SwiftHtml
 
-struct SystemAdminEditorPageTemplate: TemplateRepresentable {
+public final class SystemAdminEditorPageTemplate: AbstractTemplate<SystemAdminEditorPageContext> {
 
-    var context: SystemAdminEditorPageContext
-
-    init(_ context: SystemAdminEditorPageContext) {
-        self.context = context
-    }
-
-    func render(_ req: Request) -> Tag {
+    public override func render(_ req: Request) -> Tag {
         SystemAdminIndexTemplate(.init(title: context.title, breadcrumbs: context.breadcrumbs)) {
             Wrapper {
                 Container {
