@@ -5,16 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 03. 04..
 //
 
-import Foundation
-
-extension String {
-    var fileExt: String? {
-        guard contains(".") else {
-            return nil
-        }
-        return split(separator: ".").last.map(String.init)
-    }
-}
+extension System.File.Item: Content {}
 
 struct SystemFileApiController {
             
@@ -44,7 +35,7 @@ struct SystemFileApiController {
         return name + "_" + String(n + 1)
     }
     
-    func uploadApi(_ req: Request) async throws -> HTTPStatus {
+    func uploadApi(_ req: Request) async throws -> System.File.Item {
         
         let path = try req.query.get(String.self, at: "path")
         let name = try? req.query.get(String.self, at: "name")
@@ -65,9 +56,8 @@ struct SystemFileApiController {
         }
 
         let fileKey = String((path + "/" + finalName + "." + ext).safePath().dropFirst())
-        print(fileKey)
         _ = try await req.fs.upload(key: fileKey, data: data)
-        return .ok
+        return .init(path: path, name: finalName, ext: ext)
     }
     
     func deleteApi(_ req: Request) async throws -> HTTPStatus {
