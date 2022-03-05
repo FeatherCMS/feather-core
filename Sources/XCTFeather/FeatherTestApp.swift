@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 01. 15..
 //
 
-import Foundation
+import Vapor
 import Feather
 import Spec
 
