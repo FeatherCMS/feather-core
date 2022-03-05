@@ -22,7 +22,7 @@ public struct KeyedContentValidator<T: Codable>: AsyncValidator {
         self.validation = validation
     }
 
-    public func validate(_ req: Request) async throws -> ValidationErrorDetail? {
+    public func validate(_ req: Request) async throws -> FeatherErrorDetail? {
         let optionalValue = try? req.content.get(T.self, at: key)
         if let value = optionalValue {
             return try await validation(req, value) ? nil : error

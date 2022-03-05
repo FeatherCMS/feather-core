@@ -10,12 +10,12 @@ public protocol AsyncValidator {
     var key: String { get }
     var message: String { get }
 
-    func validate(_ req: Request) async throws -> ValidationErrorDetail?
+    func validate(_ req: Request) async throws -> FeatherErrorDetail?
 }
 
 public extension AsyncValidator {
 
-    var error: ValidationErrorDetail {
+    var error: FeatherErrorDetail {
         .init(key: key, message: message)
     }
 }

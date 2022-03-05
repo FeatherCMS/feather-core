@@ -19,6 +19,11 @@ struct SystemAdminWidgetTemplate: TemplateRepresentable {
                 A("Settings")
                     .href("/admin/system/settings")
             }
+
+            Li {
+                A("Files")
+                    .href("/admin/system/files/")
+            }
             
             if req.checkPermission(System.Permission.permission(for: .list)) {
                 Li {

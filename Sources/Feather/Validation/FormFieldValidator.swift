@@ -21,7 +21,7 @@ public struct FormFieldValidator<Input: Decodable, Output: TemplateRepresentable
         self.validation = validation
     }
 
-    public func validate(_ req: Request) async throws -> ValidationErrorDetail? {
+    public func validate(_ req: Request) async throws -> FeatherErrorDetail? {
         let isValid = try await validation(req, field)
         if isValid {
             return nil

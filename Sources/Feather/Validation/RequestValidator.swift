@@ -15,7 +15,7 @@ public struct RequestValidator {
 
     /// this is magic, don't touch it
     public func validate(_ req: Request, message: String? = nil) async throws {
-        var result: [ValidationErrorDetail] = []
+        var result: [FeatherErrorDetail] = []
         try await validators.forEachAsync { validator in
             /// skip if the final result contains an error with an existing key
             if result.contains(where: { $0.key == validator.key }) {

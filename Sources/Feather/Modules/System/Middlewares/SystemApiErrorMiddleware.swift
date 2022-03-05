@@ -15,7 +15,7 @@ struct SystemApiErrorMiddleware: AsyncMiddleware {
             let status: HTTPResponseStatus
             let headers: HTTPHeaders
             let message: String?
-            let details: [ValidationErrorDetail]
+            let details: [FeatherErrorDetail]
 
             switch error {
             case let abort as ValidationAbort:
@@ -40,7 +40,7 @@ struct SystemApiErrorMiddleware: AsyncMiddleware {
             let response = Response(status: status, headers: headers)
 
             do {
-                response.body = try .init(data: JSONEncoder().encode(ValidationError(message: message, details: details)))
+                response.body = try .init(data: JSONEncoder().encode(FeatherError(message: message, details: details)))
                 response.headers.replaceOrAdd(name: .contentType, value: "application/json; charset=utf-8")
             }
             catch {

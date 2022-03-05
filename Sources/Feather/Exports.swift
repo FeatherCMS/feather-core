@@ -19,3 +19,6 @@ infix operator !~
 infix operator !=~
 infix operator !~=
 
+
+extension FeatherError: Content {}
+extension FeatherErrorDetail: Content {}

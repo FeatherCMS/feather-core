@@ -17,7 +17,7 @@ public struct KeyedRequestValidator: AsyncValidator {
         self.validation = validation
     }
 
-    public func validate(_ req: Request) async -> ValidationErrorDetail? {
+    public func validate(_ req: Request) async -> FeatherErrorDetail? {
         await validation(req) ? nil : error
     }
 }
