@@ -85,7 +85,7 @@ struct SystemModule: FeatherModule {
         [
             .init(key: "systemDeepLinkScheme",
                   name: "Deep linking URL scheme for client apps",
-                  value: "feathercms"
+                  value: "feathercms",
                   notes: """
                         Deep linking URL scheme for client apps
                         The value of this field only contains the scheme (e.g. feathercms)
