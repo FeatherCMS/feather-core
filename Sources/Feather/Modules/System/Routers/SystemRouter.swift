@@ -92,13 +92,13 @@ struct SystemRouter: FeatherRouter {
             .grouped(args.app.feather.config.paths.admin.pathComponent)
             .grouped(adminMiddlewares)
             .grouped([
-                AccessRedirectMiddleware(System.permission(for: .detail)),
+                AccessRedirectMiddleware(FeatherApi.System.permission(for: .detail)),
                 SystemAdminErrorMiddleware(),
                 SystemVariablesMiddleware()
             ])
 
         adminRoutes.get(use: adminDashboard.renderDashboardTemplate)
-        adminRoutes.get(System.pathKey.pathComponent) { req -> Response in
+        adminRoutes.get(FeatherApi.System.pathKey.pathComponent) { req -> Response in
             let template = SystemAdminModulePageTemplate(.init(title: "System",
                                                                tag: SystemAdminWidgetTemplate().render(req)))
             return req.templates.renderHtml(template)
@@ -110,8 +110,8 @@ struct SystemRouter: FeatherRouter {
         metadataAdmin.setUpDetailRoutes(adminRoutes)
         metadataAdmin.setUpUpdateRoutes(adminRoutes)
         
-        adminRoutes.grouped(System.pathKey.pathComponent).get("settings", use: settingsAdmin.settingsView)
-        adminRoutes.grouped(System.pathKey.pathComponent).post("settings", use: settingsAdmin.settings)
+        adminRoutes.grouped(FeatherApi.System.pathKey.pathComponent).get("settings", use: settingsAdmin.settingsView)
+        adminRoutes.grouped(FeatherApi.System.pathKey.pathComponent).post("settings", use: settingsAdmin.settings)
         
         
         var adminArguments = HookArguments()

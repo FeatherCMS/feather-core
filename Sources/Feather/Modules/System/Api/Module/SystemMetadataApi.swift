@@ -16,23 +16,23 @@ public struct SystemMetadataApi {
 
 public extension SystemMetadataApi {
 
-    func list() async throws -> [System.Metadata.List] {
-        try await repository.list().transform(to: [System.Metadata.List].self)
+    func list() async throws -> [FeatherApi.System.Metadata.List] {
+        try await repository.list().transform(to: [FeatherApi.System.Metadata.List].self)
     }
     
-    func listFeedItems() async throws -> [System.Metadata.List] {
-        try await repository.listFeedItems().transform(to: [System.Metadata.List].self)
+    func listFeedItems() async throws -> [FeatherApi.System.Metadata.List] {
+        try await repository.listFeedItems().transform(to: [FeatherApi.System.Metadata.List].self)
     }
     
-    func list(_ ids: [UUID]) async throws -> [System.Metadata.List] {
-        try await repository.get(ids).transform(to: [System.Metadata.List].self)
+    func list(_ ids: [UUID]) async throws -> [FeatherApi.System.Metadata.List] {
+        try await repository.get(ids).transform(to: [FeatherApi.System.Metadata.List].self)
     }
     
-    func get(_ id: UUID) async throws -> System.Metadata.Detail? {
-        try await repository.get(id).transform(to: System.Metadata.Detail.self)
+    func get(_ id: UUID) async throws -> FeatherApi.System.Metadata.Detail? {
+        try await repository.get(id).transform(to: FeatherApi.System.Metadata.Detail.self)
     }
 
-    func get(_ ids: [UUID]) async throws -> [System.Metadata.Detail] {
-        try await repository.get(ids).transform(to: [System.Metadata.Detail].self)
+    func get(_ ids: [UUID]) async throws -> [FeatherApi.System.Metadata.Detail] {
+        try await repository.get(ids).transform(to: [FeatherApi.System.Metadata.Detail].self)
     }
 }

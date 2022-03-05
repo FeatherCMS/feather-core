@@ -7,7 +7,7 @@
 
 
 struct SystemPermissionAdminController: AdminController {
-    typealias ApiModel = System.Permission
+    typealias ApiModel = FeatherApi.System.Permission
     typealias DatabaseModel = SystemPermissionModel
     
     typealias CreateModelEditor = SystemPermissionEditor

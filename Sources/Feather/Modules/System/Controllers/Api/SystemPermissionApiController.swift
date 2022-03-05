@@ -5,14 +5,14 @@
 //  Created by Tibor Bodecs on 2022. 02. 23..
 //
 
-extension System.Permission.List: Content {}
-extension System.Permission.Detail: Content {}
+extension FeatherApi.System.Permission.List: Content {}
+extension FeatherApi.System.Permission.Detail: Content {}
 
 struct SystemPermissionApiController: ApiController {
-    typealias ApiModel = System.Permission
+    typealias ApiModel = FeatherApi.System.Permission
     typealias DatabaseModel = SystemPermissionModel
 
-    func listOutput(_ req: Request, _ models: [DatabaseModel]) async throws -> [System.Permission.List] {
+    func listOutput(_ req: Request, _ models: [DatabaseModel]) async throws -> [FeatherApi.System.Permission.List] {
         models.map { model in
                 .init(id: model.uuid,
                       namespace: model.namespace,
@@ -22,7 +22,7 @@ struct SystemPermissionApiController: ApiController {
         }
     }
     
-    func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> System.Permission.Detail {
+    func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> FeatherApi.System.Permission.Detail {
         .init(id: model.uuid,
               namespace: model.namespace,
               context: model.context,
@@ -31,7 +31,7 @@ struct SystemPermissionApiController: ApiController {
               notes: model.notes)
     }
     
-    func createInput(_ req: Request, _ model: DatabaseModel, _ input: System.Permission.Create) async throws {
+    func createInput(_ req: Request, _ model: DatabaseModel, _ input: FeatherApi.System.Permission.Create) async throws {
         model.namespace = input.namespace
         model.context = input.context
         model.action = input.action
@@ -39,7 +39,7 @@ struct SystemPermissionApiController: ApiController {
         model.notes = input.notes
     }
     
-    func updateInput(_ req: Request, _ model: DatabaseModel, _ input: System.Permission.Update) async throws {
+    func updateInput(_ req: Request, _ model: DatabaseModel, _ input: FeatherApi.System.Permission.Update) async throws {
         model.namespace = input.namespace
         model.context = input.context
         model.action = input.action
@@ -47,7 +47,7 @@ struct SystemPermissionApiController: ApiController {
         model.notes = input.notes
     }
     
-    func patchInput(_ req: Request, _ model: DatabaseModel, _ input: System.Permission.Patch) async throws {
+    func patchInput(_ req: Request, _ model: DatabaseModel, _ input: FeatherApi.System.Permission.Patch) async throws {
         model.namespace = input.namespace ?? model.namespace
         model.context = input.context ?? model.context
         model.action = input.action ?? model.action

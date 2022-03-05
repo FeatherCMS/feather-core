@@ -25,19 +25,19 @@ struct SystemAdminWidgetTemplate: TemplateRepresentable {
                     .href("/admin/system/files/")
             }
             
-            if req.checkPermission(System.Permission.permission(for: .list)) {
+            if req.checkPermission(FeatherApi.System.Permission.permission(for: .list)) {
                 Li {
                     A("Permissions")
                         .href("/admin/system/permissions")
                 }
             }
-            if req.checkPermission(System.Variable.permission(for: .list)) {
+            if req.checkPermission(FeatherApi.System.Variable.permission(for: .list)) {
                 Li {
                     A("Variables")
                         .href("/admin/system/variables/")
                 }
             }
-            if req.checkPermission(System.Metadata.permission(for: .list)) {
+            if req.checkPermission(FeatherApi.System.Metadata.permission(for: .list)) {
                 Li {
                     A("Metadatas")
                         .href("/admin/system/metadatas")

@@ -57,7 +57,7 @@ public extension MetadataRepresentable {
     }
     
 
-    func patchMetadata(_ req: Request, _ block: @escaping () -> System.Metadata.Patch) async throws {
+    func patchMetadata(_ req: Request, _ block: @escaping () -> FeatherApi.System.Metadata.Patch) async throws {
         guard let metadata = try await Self.findMetadataBy(id: self.uuid, on: req.db) else {
             throw Abort(.notFound)
         }
@@ -93,7 +93,7 @@ public extension AdminController where DatabaseModel: MetadataRepresentable {
             LinkContext(label: "Metadata",
                         path: "/admin/system/metadatas/" + model.featherMetadata.id.string + "/update/",
                         absolute: true,
-                        permission: System.Metadata.permission(for: .update).key),
+                        permission: FeatherApi.System.Metadata.permission(for: .update).key),
         ]
     }
 
@@ -109,7 +109,7 @@ public extension AdminController where DatabaseModel: MetadataRepresentable {
             LinkContext(label: "Metadata",
                         path: "/admin/system/metadatas/" + model.featherMetadata.id.string + "/update/",
                         absolute: true,
-                        permission: System.Metadata.permission(for: .update).key),
+                        permission: FeatherApi.System.Metadata.permission(for: .update).key),
         ]
     }
 }

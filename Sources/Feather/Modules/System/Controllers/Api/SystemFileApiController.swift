@@ -79,8 +79,8 @@ struct SystemFileApiController {
     
     func setUpRoutes(_ routes: RoutesBuilder) {
         let group = routes
-            .grouped(System.pathKey.pathComponent)
-            .grouped(System.File.pathKey.pathComponent)
+            .grouped(FeatherApi.System.pathKey.pathComponent)
+            .grouped(FeatherApi.System.File.pathKey.pathComponent)
         
         group.post(use: uploadApi)
         

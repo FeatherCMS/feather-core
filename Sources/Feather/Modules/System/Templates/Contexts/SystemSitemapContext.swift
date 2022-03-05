@@ -7,9 +7,9 @@
 
 public struct SystemSitemapContext {
 
-    public let items: [System.Metadata.List]
+    public let items: [FeatherApi.System.Metadata.List]
     
-    public init(items: [System.Metadata.List]) {
+    public init(items: [FeatherApi.System.Metadata.List]) {
         self.items = items
     }
 }

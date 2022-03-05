@@ -5,15 +5,15 @@
 //  Created by Tibor Bodecs on 2022. 02. 23..
 //
 
-extension System.Metadata.List: Content {}
-extension System.Metadata.Detail: Content {}
+extension FeatherApi.System.Metadata.List: Content {}
+extension FeatherApi.System.Metadata.Detail: Content {}
 
 struct SystemMetadataApiController: ApiListController, ApiDetailController, ApiUpdateController, ApiPatchController {
     
-    typealias ApiModel = System.Metadata
+    typealias ApiModel = FeatherApi.System.Metadata
     typealias DatabaseModel = SystemMetadataModel
     
-    func listOutput(_ req: Request, _ models: [DatabaseModel]) async throws -> [System.Metadata.List] {
+    func listOutput(_ req: Request, _ models: [DatabaseModel]) async throws -> [FeatherApi.System.Metadata.List] {
         models.map { model in
             .init(id: model.uuid,
                   module: model.module,
@@ -33,7 +33,7 @@ struct SystemMetadataApiController: ApiListController, ApiDetailController, ApiU
         }
     }
     
-    func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> System.Metadata.Detail {
+    func detailOutput(_ req: Request, _ model: DatabaseModel) async throws -> FeatherApi.System.Metadata.Detail {
         .init(id: model.uuid,
               module: model.module,
               model: model.model,
@@ -51,7 +51,7 @@ struct SystemMetadataApiController: ApiListController, ApiDetailController, ApiU
               js: model.js)
     }
         
-    func updateInput(_ req: Request, _ model: DatabaseModel, _ input: System.Metadata.Update) async throws {
+    func updateInput(_ req: Request, _ model: DatabaseModel, _ input: FeatherApi.System.Metadata.Update) async throws {
         model.slug = input.slug
         model.title = input.title
         model.excerpt = input.excerpt
@@ -64,7 +64,7 @@ struct SystemMetadataApiController: ApiListController, ApiDetailController, ApiU
         model.js = input.js
     }
     
-    func patchInput(_ req: Request, _ model: DatabaseModel, _ input: System.Metadata.Patch) async throws {
+    func patchInput(_ req: Request, _ model: DatabaseModel, _ input: FeatherApi.System.Metadata.Patch) async throws {
         model.slug = input.slug ?? model.slug
         model.title = input.title ?? model.title
         model.excerpt = input.excerpt ?? model.excerpt
@@ -90,7 +90,7 @@ struct SystemMetadataApiController: ApiListController, ApiDetailController, ApiU
     @AsyncValidatorBuilder
     func validators(optional: Bool) -> [AsyncValidator] {
         KeyedContentValidator<String>("slug", "Slug must be unique", optional: optional) { req, value in
-            try await req.system.metadata.repository.isUnique(\.$slug == value, System.Metadata.getIdParameter(req))
+            try await req.system.metadata.repository.isUnique(\.$slug == value, FeatherApi.System.Metadata.getIdParameter(req))
         }
     }
     
