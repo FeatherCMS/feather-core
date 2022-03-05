@@ -4,10 +4,10 @@ Shared libraries for Feather CMS.
 
 ```
 curl \
-    -X POST \
-    -H 'Content-Type: application/json' \
-    -d '{"email": "root@feathercms.com", "password": "FeatherCMS"}' \
-    "http://localhost:8080/api/login/" | jq
+-X POST \
+-H 'Content-Type: application/json' \
+-d '{"email": "root@feathercms.com", "password": "FeatherCMS"}' \
+"http://localhost:8080/api/login/" | jq
 
 
 curl \

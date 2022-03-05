@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 03. 04..
 //
 
-extension System.File.Item: Content {}
+extension FeatherApi.System.File.Item: Content {}
 
 struct SystemFileApiController {
             
@@ -46,7 +46,7 @@ struct SystemFileApiController {
         return name + "_" + String(n + 1)
     }
     
-    func uploadApi(_ req: Request) async throws -> System.File.Item {
+    func uploadApi(_ req: Request) async throws -> FeatherApi.System.File.Item {
         
         let path = try req.query.get(String.self, at: "path")
         let name = try? req.query.get(String.self, at: "name")
