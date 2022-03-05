@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 27..
 //
 
+import FeatherApi
+
 public protocol ModelController: Controller {
     associatedtype ApiModel: FeatherApiModel
     associatedtype DatabaseModel: FeatherDatabaseModel

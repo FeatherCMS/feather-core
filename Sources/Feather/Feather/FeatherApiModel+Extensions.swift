@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 12. 26..
 //
 
+import FeatherApi
+
 public extension FeatherApiModel {
 
     static var pathIdComponent: PathComponent {

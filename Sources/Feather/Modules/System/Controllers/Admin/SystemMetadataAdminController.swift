@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2022. 02. 23..
 //
 
+import FeatherApi
+
 struct SystemMetadataAdminController: AdminListController, AdminDetailController, AdminUpdateController {
     typealias ApiModel = FeatherMetadata
     typealias DatabaseModel = SystemMetadataModel

@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2022. 02. 24..
 //
 
+import FeatherApi
+
 struct SystemPermissionRepository: FeatherModelRepository {
     typealias DatabaseModel = SystemPermissionModel
 

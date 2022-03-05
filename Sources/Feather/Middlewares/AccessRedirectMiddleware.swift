@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2022. 03. 01..
 //
 
+import FeatherApi
+
 public struct AccessRedirectMiddleware: AsyncMiddleware {
 
     let permission: FeatherPermission

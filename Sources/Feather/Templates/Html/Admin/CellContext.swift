@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 28..
 //
 
+import FeatherApi
+
 public struct CellContext {
 
     public enum `Type`: String {

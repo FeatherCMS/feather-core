@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 04. 02..
 //
 
+import FeatherApi
+
 public struct KeyedRequestValidator: AsyncValidator {
 
     public let key: String

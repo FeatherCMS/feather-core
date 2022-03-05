@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 12. 14..
 //
 
+import FeatherApi
+
 public protocol MetadataRepresentable: FeatherDatabaseModel {
 
     var systemMetadata: FeatherMetadata { get }

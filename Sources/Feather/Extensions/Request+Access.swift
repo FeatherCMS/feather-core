@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 24..
 //
 
+import FeatherApi
+
 public extension Request {
 
     /// Check user access

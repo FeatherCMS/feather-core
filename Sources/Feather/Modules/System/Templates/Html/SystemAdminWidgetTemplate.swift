@@ -6,6 +6,7 @@
 //
 
 import SwiftHtml
+import FeatherApi
 import FeatherIcons
 
 struct SystemAdminWidgetTemplate: TemplateRepresentable {

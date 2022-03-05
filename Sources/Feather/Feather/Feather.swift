@@ -6,10 +6,15 @@
 //
 
 import Vapor
+import FeatherApi
+
+extension FeatherError: Content {}
+extension FeatherErrorDetail: Content {}
 
 extension FeatherUser: Content {}
 extension FeatherPermission: Content {}
-
+extension FeatherMetadata: Content {}
+extension FeatherVariable: Content {}
 
 public final class Feather {
     

@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2022. 02. 23..
 //
 
+import FeatherApi
+
 extension FeatherPermission.List: Content {}
 extension FeatherPermission.Detail: Content {}
 

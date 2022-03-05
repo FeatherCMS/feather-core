@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 04. 18..
 //
 
+import FeatherApi
+
 public struct FormFieldValidator<Input: Decodable, Output: TemplateRepresentable>: AsyncValidator {
 
     public unowned var field: AbstractFormField<Input, Output>

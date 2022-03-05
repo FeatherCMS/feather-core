@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2022. 02. 23..
 //
 
+import FeatherApi
+
 final class SystemMetadataModel: FeatherDatabaseModel {
     typealias Module = SystemModule
 

@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 30..
 //
 
+import FeatherApi
+
 public extension HookArguments {
     
     var req: Request {

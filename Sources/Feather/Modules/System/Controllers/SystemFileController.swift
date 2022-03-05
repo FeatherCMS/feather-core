@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 03. 04..
 //
 
-import Foundation
+import FeatherApi
 
 extension FeatherFile.Directory.List: Content {}
 

@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 02. 23..
 //
 
+import FeatherApi
 
 struct SystemPermissionAdminController: AdminController {
     typealias ApiModel = FeatherPermission

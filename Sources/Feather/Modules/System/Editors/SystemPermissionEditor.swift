@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2022. 02. 23..
 //
 
+import FeatherApi
+
 struct SystemPermissionEditor: FeatherModelEditor {
     let model: SystemPermissionModel
     let form: AbstractForm
