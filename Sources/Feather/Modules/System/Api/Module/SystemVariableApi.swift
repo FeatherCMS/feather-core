@@ -31,4 +31,9 @@ public extension SystemVariableApi {
     func get(_ ids: [UUID]) async throws -> [System.Variable.Detail] {
         try await repository.get(ids).transform(to: [System.Variable.Detail].self)
     }
+    
+    func find(_ key: String) async throws -> System.Variable.Detail? {
+        try await repository.find(key).transform(to: System.Variable.Detail.self)
+    }
+
 }

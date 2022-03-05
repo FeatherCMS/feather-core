@@ -14,3 +14,10 @@ struct SystemVariableRepository: FeatherModelRepository {
         self.req = req
     }
 }
+
+extension SystemVariableRepository {
+
+    func find(_ key: String) async throws -> DatabaseModel? {
+        try await query().filter(\.$key == key).first()
+    }
+}
