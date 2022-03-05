@@ -62,7 +62,7 @@ struct SystemVariablesMiddleware: AsyncMiddleware {
 //            return
 //        }
 //        print("load")
-//        let variables = try await CommonVariableModel.query(on: req.db).all()
+//        let variables = try await SystemVariableModel.query(on: req.db).all()
 //        for variable in variables {
 //            if let value = variable.value {
 //                req.globals.set(variable.key, value: value, scope: scope)

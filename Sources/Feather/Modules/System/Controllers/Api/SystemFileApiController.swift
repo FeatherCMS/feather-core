@@ -9,6 +9,17 @@ extension System.File.Item: Content {}
 
 struct SystemFileApiController {
             
+//    func listApi(_ req: Request) async throws -> SystemFile.List {
+//        try await list(req)
+//    }
+//
+//    func createDirectoryApi(_ req: Request) async throws -> HTTPStatus {
+//        let input = try req.content.decode(SystemFile.Directory.Create.self)
+//        let directoryKey = String(((input.key ?? "") + "/" + input.name).safePath().dropFirst().dropLast())
+//        try await req.fs.createDirectory(key: directoryKey)
+//        return .noContent
+//    }
+    
     private func getValidFileName(_ name: String, _ ext: String, existing: [String]) -> String {
         let fullName = name + "." + ext
         guard existing.contains(fullName) else {
@@ -72,6 +83,14 @@ struct SystemFileApiController {
             .grouped(System.File.pathKey.pathComponent)
         
         group.post(use: uploadApi)
+        
+//        let moduleRoutes = args.routes.grouped(System.pathKey.pathComponent)
+//        moduleRoutes.get("files", use: fileApiController.listApi)
+//        moduleRoutes.post("files", use: fileApiController.uploadApi)
+//        moduleRoutes.delete("files", use: fileApiController.deleteApi)
+//        
+//        let filesRoutes = moduleRoutes.grouped("files")
+//        filesRoutes.post("directory", use: fileApiController.createDirectoryApi)
     }
 }
 
