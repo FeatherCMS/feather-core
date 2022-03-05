@@ -7,7 +7,7 @@
 
 public struct SystemVariableApi {
 
-    private let repository: SystemVariableRepository
+    let repository: SystemVariableRepository
     
     init(_ repository: SystemVariableRepository) {
         self.repository = repository

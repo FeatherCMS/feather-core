@@ -41,7 +41,12 @@ struct SystemVariableApiController: ApiController {
         model.notes = input.notes ?? model.notes
     }
     
+    @AsyncValidatorBuilder
     func validators(optional: Bool) -> [AsyncValidator] {
-        []
+        KeyedContentValidator<String>.required("key")
+        KeyedContentValidator<String>.required("name")
+        KeyedContentValidator<String>("key", "Key must be unique", optional: optional) { req, value in
+            try await req.system.variable.repository.isUnique(\.$key == value, FeatherApi.System.Variable.getIdParameter(req))
+        }
     }
 }

@@ -49,6 +49,10 @@ struct SystemRouter: FeatherRouter {
         
         publicApiRoutes.get("status") { _ in "ok" }
         publicApiRoutes.get(.catchall) { _ -> Response in throw Abort(.notFound) }
+        publicApiRoutes.post(.catchall) { _ -> Response in throw Abort(.notFound) }
+        publicApiRoutes.put(.catchall) { _ -> Response in throw Abort(.notFound) }
+        publicApiRoutes.patch(.catchall) { _ -> Response in throw Abort(.notFound) }
+        publicApiRoutes.delete(.catchall) { _ -> Response in throw Abort(.notFound) }
         
         var publicApiArguments = HookArguments()
         publicApiArguments.routes = publicApiRoutes
