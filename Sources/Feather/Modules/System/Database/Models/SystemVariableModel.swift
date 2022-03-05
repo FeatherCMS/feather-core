@@ -5,6 +5,9 @@
 //  Created by Tibor Bodecs on 2022. 02. 23..
 //
 
+import Fluent
+import Fluent
+
 final class SystemVariableModel: FeatherDatabaseModel {
     typealias Module = SystemModule
 

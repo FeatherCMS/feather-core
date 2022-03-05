@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2022. 02. 24..
 //
 
+import Fluent
+
 public protocol FeatherModelRepository {
     var req: Request { get }
 

@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2022. 02. 23..
 //
 
+import Fluent
+
 struct SystemMigrations {
 
     struct v1: AsyncMigration {

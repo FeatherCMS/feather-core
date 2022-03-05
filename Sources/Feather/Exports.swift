@@ -6,13 +6,3 @@
 //
 
 @_exported import Vapor
-@_exported import Fluent
-
-/// https://github.com/vapor/fluent/blob/main/Sources/Fluent/Exports.swift
-infix operator ~~
-infix operator =~
-infix operator !~
-infix operator !=~
-infix operator !~=
-
-

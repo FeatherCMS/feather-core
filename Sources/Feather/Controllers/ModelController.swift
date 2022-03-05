@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 11. 27..
 //
 
+import Fluent
 import FeatherApi
 
 public protocol ModelController: Controller {

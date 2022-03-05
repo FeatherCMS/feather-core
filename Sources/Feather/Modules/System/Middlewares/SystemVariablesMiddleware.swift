@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2022. 02. 23..
 //
 
+import Fluent
+
 fileprivate let scope = "system.variables"
 
 public extension Request {

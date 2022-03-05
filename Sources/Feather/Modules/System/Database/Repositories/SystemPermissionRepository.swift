@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 02. 24..
 //
 
+import Fluent
 import FeatherApi
 
 struct SystemPermissionRepository: FeatherModelRepository {

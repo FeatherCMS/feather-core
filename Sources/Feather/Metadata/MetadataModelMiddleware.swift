@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 12. 14..
 //
 
+import Fluent
+
 public struct MetadataModelMiddleware<T: MetadataRepresentable>: AsyncModelMiddleware {
 
     public init() {}

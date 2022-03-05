@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 02. 23..
 //
 
+import Fluent
 import FeatherApi
 
 extension FeatherMetadata.List: Content {}

@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 24..
 //
 
+import Fluent
+
 public protocol FeatherDatabaseModel: Model where Self.IDValue == UUID {
     associatedtype Module: FeatherModule
 

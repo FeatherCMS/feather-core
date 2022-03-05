@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 12. 26..
 //
 
+import Fluent
+
 public protocol AdminListController: ListController {
     func listView(_ req: Request) async throws -> Response
     func listTemplate(_ req: Request, _ list: ListContainer<DatabaseModel>) -> TemplateRepresentable

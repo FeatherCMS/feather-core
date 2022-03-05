@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 14..
 //
 
+import Fluent
 import FeatherApi
 
 public extension QueryBuilder where Model: MetadataRepresentable {

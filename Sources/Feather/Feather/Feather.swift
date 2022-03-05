@@ -6,6 +6,7 @@
 //
 
 import Vapor
+import Fluent
 import FeatherApi
 
 extension FeatherError: Content {}

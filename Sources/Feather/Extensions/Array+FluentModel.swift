@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2022. 02. 18..
 //
 
+import Fluent
+
 public extension Array where Element: FluentKit.Model {
 
     /// chunks an array into smaller pieces

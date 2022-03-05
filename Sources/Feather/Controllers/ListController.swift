@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 27..
 //
 
+import Fluent
+
 public enum FieldSort: String, Codable, CaseIterable {
     case asc
     case desc

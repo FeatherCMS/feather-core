@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 30..
 //
 
+import Fluent
+
 extension QueryBuilder {
 
     func paginate(limit: Int, page: Int) async throws -> ListContainer<Model> {
