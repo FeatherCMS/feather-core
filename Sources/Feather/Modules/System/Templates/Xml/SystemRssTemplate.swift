@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 23..
 //
 
+import Vapor
 import SwiftRss
 
 final class SystemRssTemplate: AbstractTemplate<SystemRssContext> {

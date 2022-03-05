@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 02. 23..
 //
 
+import Vapor
 import SwiftHtml
 
 final class SystemWebPageTemplate: AbstractTemplate<SystemWebPageContext> {

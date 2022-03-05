@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 11. 27..
 //
 
+import Vapor
 import Fluent
 
 public enum FieldSort: String, Codable, CaseIterable {

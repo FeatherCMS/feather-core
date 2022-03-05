@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 01. 25..
 //
 
+import Vapor
 import SwiftHtml
 
 // https://developer.twitter.com/en/docs/twitter-for-websites/cards/guides/getting-started

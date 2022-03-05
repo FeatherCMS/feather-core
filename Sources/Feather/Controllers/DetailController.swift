@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 12. 01..
 //
 
+import Vapor
+
 public protocol DetailController: ModelController {
     func detailAccess(_ req: Request) async throws -> Bool    
 }

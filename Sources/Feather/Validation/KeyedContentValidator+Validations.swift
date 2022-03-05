@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 04. 02..
 //
 
+import Vapor
+
 public extension KeyedContentValidator where T == String {
 
     static func required(_ key: String, _ message: String? = nil, optional: Bool = false) -> KeyedContentValidator<T> {

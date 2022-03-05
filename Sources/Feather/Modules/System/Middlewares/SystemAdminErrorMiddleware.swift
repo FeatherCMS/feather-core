@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 30..
 //
 
+import Vapor
+
 struct SystemAdminErrorMiddleware: AsyncMiddleware {
 
     func respond(to req: Request, chainingTo next: AsyncResponder) async throws -> Response {

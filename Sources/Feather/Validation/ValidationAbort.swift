@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 05. 04..
 //
 
+import Vapor
 import FeatherApi
 
 public struct ValidationAbort: AbortError {

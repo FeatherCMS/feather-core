@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 29..
 //
 
+import Vapor
+
 public protocol FeatherModelEditor: FormEventResponder {
     associatedtype Model: FeatherDatabaseModel
 

@@ -8,13 +8,13 @@
 import SwiftHtml
 
 public struct FormAction {
-    public var method: SwiftHtml.Method
+    public var method: Method
     public var url: String?
-    public var enctype: SwiftHtml.Enctype?
+    public var enctype: Enctype?
     
-    public init(method: SwiftHtml.Method = .post,
+    public init(method: Method = .post,
                 url: String? = nil,
-                enctype: SwiftHtml.Enctype? = nil) {
+                enctype: Enctype? = nil) {
         self.method = method
         self.url = url
         self.enctype = enctype

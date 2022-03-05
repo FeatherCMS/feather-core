@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 01. 14..
 //
 
+import Vapor
 import SwiftHtml
 
 public struct CellTemplate: TemplateRepresentable {

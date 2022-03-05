@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 12. 26..
 //
 
+import Vapor
+
 public protocol AdminUpdateController: UpdateController {
     associatedtype UpdateModelEditor: FeatherModelEditor
     

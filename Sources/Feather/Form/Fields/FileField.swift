@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 12. 01..
 //
 
+import Vapor
+
 public final class FileField: AbstractFormField<File, FileFieldTemplate> {
 
     public convenience init(_ key: String) {

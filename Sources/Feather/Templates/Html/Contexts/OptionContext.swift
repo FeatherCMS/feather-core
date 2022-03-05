@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 12. 01..
 //
 
+import Foundation
+
 public struct OptionContext {
 
     public var key: String

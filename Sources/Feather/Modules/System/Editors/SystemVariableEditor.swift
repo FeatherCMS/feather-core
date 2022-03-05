@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2022. 02. 23..
 //
 
+import Vapor
+
 struct SystemVariableEditor: FeatherModelEditor {
     let model: SystemVariableModel
     let form: AbstractForm

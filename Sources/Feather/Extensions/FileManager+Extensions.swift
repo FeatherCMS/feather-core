@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 12. 23..
 //
 
+import Foundation
+
 public extension FileManager {
     
     /// check if directory exists

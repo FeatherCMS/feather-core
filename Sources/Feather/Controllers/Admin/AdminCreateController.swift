@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 26..
 //
 
+import Vapor
 import FeatherApi
 
 public protocol AdminCreateController: CreateController {

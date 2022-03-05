@@ -6,6 +6,7 @@
 //
 
 
+import Vapor
 import SwiftHtml
 
 struct SystemErrorPageTemplate: TemplateRepresentable {

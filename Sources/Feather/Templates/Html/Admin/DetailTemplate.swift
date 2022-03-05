@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 01. 14..
 //
 
-import Foundation
+import Vapor
 import SwiftHtml
 
 public struct DetailTemplate: TemplateRepresentable {

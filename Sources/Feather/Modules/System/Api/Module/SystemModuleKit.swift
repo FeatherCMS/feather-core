@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2022. 02. 23..
 //
 
+import Vapor
+
 public struct SystemApi {
     private var req: Request
     

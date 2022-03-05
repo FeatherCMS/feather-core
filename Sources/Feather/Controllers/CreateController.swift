@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 29..
 //
 
+import Vapor
+
 public protocol CreateController: ModelController {    
     func createAccess(_ req: Request) async throws -> Bool
     func beforeCreate(_ req: Request, _ model: DatabaseModel) async throws

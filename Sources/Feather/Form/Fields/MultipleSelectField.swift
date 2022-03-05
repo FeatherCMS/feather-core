@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 12. 01..
 //
 
+import Vapor
+
 public final class MultipleSelectField: AbstractFormField<[String], MultipleSelectFieldTemplate> {
 
     public convenience init(_ key: String) {

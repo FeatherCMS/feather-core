@@ -7,7 +7,6 @@
 
 import Vapor
 
-
 public final class TemplateEngine {
     
     var templates: [FeatherTemplate]

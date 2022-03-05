@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 24..
 //
 
+import Vapor
+
 /// abstract router insterface
 public protocol FeatherRouter {
     

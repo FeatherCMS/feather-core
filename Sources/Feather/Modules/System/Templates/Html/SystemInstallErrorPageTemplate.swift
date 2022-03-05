@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 06..
 //
 
+import Vapor
 import SwiftHtml
 
 struct SystemInstallErrorPageTemplate: TemplateRepresentable {

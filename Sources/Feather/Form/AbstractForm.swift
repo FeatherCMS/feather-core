@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 26..
 //
 
+import Vapor
+
 open class AbstractForm: FormEventResponder {
 
     struct FormInput: Decodable {

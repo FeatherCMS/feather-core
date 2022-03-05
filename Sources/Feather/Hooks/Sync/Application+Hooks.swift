@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2022. 01. 12..
 //
 
+import Vapor
+
 public extension Application {
     
     func invoke<ReturnType>(_ name: String, args: HookArguments = [:]) -> ReturnType? {

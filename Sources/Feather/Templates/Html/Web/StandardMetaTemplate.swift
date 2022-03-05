@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 01. 26..
 //
 
+import Vapor
 import SwiftHtml
 
 public struct StandardMetaTemplate: TemplateRepresentable {

@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 11. 30..
 //
 
+import Vapor
 import FeatherApi
 
 struct SystemApiErrorMiddleware: AsyncMiddleware {

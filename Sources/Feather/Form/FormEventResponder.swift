@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 26..
 //
 
+import Vapor
+
 public protocol FormEventResponder {
     
     func load(req: Request) async throws

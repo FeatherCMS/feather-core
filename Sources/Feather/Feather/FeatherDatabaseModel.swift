@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 11. 24..
 //
 
+import Vapor
 import Fluent
 
 public protocol FeatherDatabaseModel: Model where Self.IDValue == UUID {

@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 30..
 //
 
+import Vapor
+
 public extension Request {
 
     /// turns the query into key-value paris separated by the proper url query characters

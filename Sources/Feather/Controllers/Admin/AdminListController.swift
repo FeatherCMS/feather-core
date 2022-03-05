@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 26..
 //
 
+import Vapor
 import Fluent
 
 public protocol AdminListController: ListController {

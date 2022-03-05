@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 11. 24..
 //
 
+import Vapor
 
 /// abstract module interface
 public protocol FeatherModule {

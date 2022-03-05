@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 04. 30..
 //
 
+import Vapor
+
 public extension FormFieldValidator where Input == String {
 
     static func required(_ field: AbstractFormField<Input, Output>, _ message: String? = nil) -> FormFieldValidator<Input, Output> {

@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2020. 11. 21..
 //
 
+import Vapor
+
 public extension Application {
 
     private struct HookStorageKey: StorageKey {

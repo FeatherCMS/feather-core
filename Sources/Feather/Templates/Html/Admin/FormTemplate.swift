@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 11. 26..
 //
 
+import Vapor
 import SwiftHtml
 
 public struct FormTemplate: TemplateRepresentable {

@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 27..
 //
 
+import Vapor
 import FeatherApi
 
 public struct AccessGuardMiddleware: AsyncMiddleware {

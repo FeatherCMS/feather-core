@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 02. 17..
 //
 
+import Vapor
 import SwiftHtml
 
 public struct SeparatorFieldTemplate: TemplateRepresentable {

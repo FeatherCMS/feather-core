@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2022. 01. 12..
 //
 
+import Vapor
+
 public extension Request {
 
     func invokeAsync<ReturnType>(_ name: String, args: HookArguments = [:]) async throws -> ReturnType? {

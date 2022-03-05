@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 12. 01..
 //
 
+import Vapor
 import SwiftHtml
 
 public struct HiddenFieldTemplate: TemplateRepresentable {

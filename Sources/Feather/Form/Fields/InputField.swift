@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 25..
 //
 
+import Vapor
+
 public final class InputField: AbstractFormField<String, InputFieldTemplate> {
 
     public convenience init(_ key: String) {

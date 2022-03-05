@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 26..
 //
 
+import Vapor
+
 open class AbstractFormField<Input: Decodable, Output: TemplateRepresentable>: FormField {
 
     public typealias AsyncFormFieldBlock = (Request, AbstractFormField<Input, Output>) async throws -> Void

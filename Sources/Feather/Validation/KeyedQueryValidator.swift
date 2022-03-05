@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 03. 05..
 //
 
+import Vapor
 import FeatherApi
 
 public struct KeyedQueryValidator<T: Codable>: AsyncValidator {

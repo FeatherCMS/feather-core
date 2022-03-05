@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2022. 03. 05..
 //
 
+import Vapor
+
 public extension KeyedQueryValidator where T == String {
 
     static func required(_ key: String, _ message: String? = nil, optional: Bool = false) -> KeyedQueryValidator<T> {

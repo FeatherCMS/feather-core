@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 12. 14..
 //
 
+import Vapor
+
 struct SystemInstallGuardMiddleware: AsyncMiddleware {
 
     func respond(to req: Request, chainingTo next: AsyncResponder) async throws -> Response {

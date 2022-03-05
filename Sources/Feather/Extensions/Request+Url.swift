@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 12. 24..
 //
 
+import Vapor
+
 public extension Request {
 
     var absoluteUrl: String {

@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 27..
 //
 
+import Vapor
+
 struct SystemAdminDashboardController {
     
     func renderDashboardTemplate(_ req: Request) async throws -> Response {

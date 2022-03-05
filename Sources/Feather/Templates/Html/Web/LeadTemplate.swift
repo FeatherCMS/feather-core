@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 01. 24..
 //
 
+import Vapor
 import SwiftHtml
 
 public struct LeadTemplate: TemplateRepresentable {

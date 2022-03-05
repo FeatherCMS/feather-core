@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 29..
 //
 
+import Vapor
+
 public protocol PatchController: ModelController {
     
     func patchAccess(_ req: Request) async throws -> Bool

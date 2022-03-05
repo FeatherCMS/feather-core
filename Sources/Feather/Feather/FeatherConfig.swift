@@ -5,8 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 30..
 //
 
+import Foundation
 
-    
 public struct Config: Codable {
     
     public struct Install: Codable {

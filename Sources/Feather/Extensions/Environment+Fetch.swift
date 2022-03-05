@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2021. 11. 30..
 //
 
+import Vapor
+
 extension Environment {
     
     private static func featherKey(_ key: String) -> String {

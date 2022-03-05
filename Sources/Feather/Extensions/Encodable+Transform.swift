@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2022. 02. 24..
 //
 
+import Foundation
+
 public extension Encodable {
 
     /// transforms an encodable object into another decodable if possible.

@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 02. 23..
 //
 
+import Vapor
 import FeatherApi
 
 extension FeatherPermission.List: Content {}

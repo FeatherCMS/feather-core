@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 11. 15..
 //
 
+import Vapor
 import SwiftHtml
 import SwiftSvg
 

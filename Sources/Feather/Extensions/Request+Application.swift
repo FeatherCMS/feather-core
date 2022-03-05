@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 01. 15..
 //
 
+import Vapor
 
 public extension Request {
 
