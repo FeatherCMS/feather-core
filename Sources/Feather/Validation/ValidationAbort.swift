@@ -16,7 +16,7 @@ public struct ValidationAbort: AbortError {
     
     public init(abort: Abort, message: String? = nil, details: [FeatherErrorDetail]) {
         self.abort = abort
-        self.message = message
+        self.message = message ?? abort.reason
         self.details = details
     }
 }
