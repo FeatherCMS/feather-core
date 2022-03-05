@@ -19,7 +19,7 @@ struct SystemMetadataEditor: FeatherModelEditor {
         InputField("slug")
             .validators {
                 FormFieldValidator($1, "Slug must be unique") { req, field in
-                    try await req.system.metadata.repository.isUnique(\.$slug == field.input, FeatherApi.System.Metadata.getIdParameter(req))
+                    try await req.system.metadata.repository.isUnique(\.$slug == field.input, FeatherMetadata.getIdParameter(req))
                 }
             }
             .read { $1.output.context.value = model.slug }

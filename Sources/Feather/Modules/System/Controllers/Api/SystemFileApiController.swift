@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 03. 04..
 //
 
-extension FeatherApi.System.File.Detail: Content {}
+
 
 struct SystemFileApiController {
             
@@ -46,7 +46,7 @@ struct SystemFileApiController {
         return name + "_" + String(n + 1)
     }
     
-    func uploadApi(_ req: Request) async throws -> FeatherApi.System.File.Detail {
+    func uploadApi(_ req: Request) async throws -> FeatherFile {
         try await RequestValidator([
             KeyedQueryValidator<String>.required("path"),
             KeyedQueryValidator<String>.required("ext"),
@@ -83,8 +83,8 @@ struct SystemFileApiController {
     
     func setUpRoutes(_ routes: RoutesBuilder) {
         let group = routes
-            .grouped(FeatherApi.System.pathKey.pathComponent)
-            .grouped(FeatherApi.System.File.pathKey.pathComponent)
+            .grouped(FeatherSystem.pathKey.pathComponent)
+            .grouped(FeatherFile.pathKey.pathComponent)
         
         group.post(use: uploadApi)
         

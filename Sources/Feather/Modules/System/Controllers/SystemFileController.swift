@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension FeatherApi.System.File.Directory.List: Content {}
+extension FeatherFile.Directory.List: Content {}
 
 extension String {
     var fileExt: String? {
@@ -19,12 +19,12 @@ extension String {
 }
 
 protocol SystemFileController {
-    func list(_ req: Request) async throws -> FeatherApi.System.File.Directory.List
+    func list(_ req: Request) async throws -> FeatherFile.Directory.List
 }
 
 extension SystemFileController {
 
-    func list(_ req: Request) async throws -> FeatherApi.System.File.Directory.List {
+    func list(_ req: Request) async throws -> FeatherFile.Directory.List {
         var currentKey: String? = nil
         var exists = true
         if let rawPath = try? req.query.get(String.self, at: "key"), !rawPath.isEmpty {
@@ -36,7 +36,7 @@ extension SystemFileController {
         }
 
         let children = try await req.fs.list(key: currentKey)
-            .map { key -> FeatherApi.System.File.Item in
+            .map { key -> FeatherFile.Item in
                 var fileKey = key
                 if let parentPath = currentKey, !parentPath.isEmpty {
                     fileKey = parentPath + "/" + key
@@ -54,8 +54,8 @@ extension SystemFileController {
                 return lhs.path < rhs.path
             }
 
-        var current: FeatherApi.System.File.Item?
-        var parent: FeatherApi.System.File.Item?
+        var current: FeatherFile.Item?
+        var parent: FeatherFile.Item?
         if let currentKey = currentKey, !currentKey.isEmpty {
             let currentName = String(currentKey.split(separator: "/").last!)
             current = .init(path: currentKey, name: currentName, ext: currentKey.fileExt)

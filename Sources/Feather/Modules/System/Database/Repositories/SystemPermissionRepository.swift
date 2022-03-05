@@ -34,7 +34,7 @@ struct SystemPermissionRepository: FeatherModelRepository {
             .filter(\.$context == permission.context)
             .filter(\.$action == permission.action.key)
 
-        if let modelId = FeatherApi.System.Permission.getIdParameter(req) {
+        if let modelId = FeatherPermission.getIdParameter(req) {
             query = query.filter(\.$id != modelId)
         }
         let count = try await query.count()

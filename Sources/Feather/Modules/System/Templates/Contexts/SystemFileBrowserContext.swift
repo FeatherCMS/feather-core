@@ -7,9 +7,9 @@
 
 struct SystemFileBrowserContext {
 
-    let list: FeatherApi.System.File.Directory.List
+    let list: FeatherFile.Directory.List
     
-    init(list: FeatherApi.System.File.Directory.List) {
+    init(list: FeatherFile.Directory.List) {
         self.list = list
     }
 }

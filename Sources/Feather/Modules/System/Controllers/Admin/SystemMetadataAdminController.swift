@@ -6,7 +6,7 @@
 //
 
 struct SystemMetadataAdminController: AdminListController, AdminDetailController, AdminUpdateController {
-    typealias ApiModel = FeatherApi.System.Metadata
+    typealias ApiModel = FeatherMetadata
     typealias DatabaseModel = SystemMetadataModel
     
     typealias UpdateModelEditor = SystemMetadataEditor
@@ -36,7 +36,7 @@ struct SystemMetadataAdminController: AdminListController, AdminDetailController
     
     func listCells(for model: DatabaseModel) -> [CellContext] {
         [
-            .init(model.title, link: LinkContext(label: model.title ?? "Details", permission: FeatherApi.System.Metadata.permission(for: .detail).key)),
+            .init(model.title, link: LinkContext(label: model.title ?? "Details", permission: FeatherMetadata.permission(for: .detail).key)),
 //            .init(model.module),
 //            .init(model.model),
         ]

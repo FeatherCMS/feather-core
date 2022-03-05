@@ -7,9 +7,9 @@
 
 public struct SystemRssContext {
 
-    public let items: [FeatherApi.System.Metadata.List]
+    public let items: [FeatherMetadata.List]
     
-    public init(items: [FeatherApi.System.Metadata.List]) {
+    public init(items: [FeatherMetadata.List]) {
         self.items = items
     }
 }

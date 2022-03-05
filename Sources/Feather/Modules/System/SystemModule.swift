@@ -7,7 +7,9 @@
 
 import FeatherApi
 
-extension FeatherApi.System.File {
+extension FeatherFile: Content {}
+
+extension FeatherFile {
 
     struct Item: Codable {
         public let path: String
@@ -81,7 +83,7 @@ struct SystemModule: FeatherModule {
     }
     
     func installHook(args: HookArguments) async throws {
-        let permissions: [FeatherApi.System.Permission.Create] = args.req.invokeAllFlat(.installPermissions)
+        let permissions: [FeatherPermission.Create] = args.req.invokeAllFlat(.installPermissions)
 
         try await permissions.map {
             SystemPermissionModel(namespace: $0.namespace,
@@ -92,7 +94,7 @@ struct SystemModule: FeatherModule {
         }
         .create(on: args.req.db, chunks: 25)
 
-        let variables: [FeatherApi.System.Variable.Create] = args.req.invokeAllFlat(.installVariables)
+        let variables: [FeatherVariable.Create] = args.req.invokeAllFlat(.installVariables)
         try await variables.map {
             SystemVariableModel(key: $0.key,
                                 name: $0.name,
@@ -113,11 +115,11 @@ struct SystemModule: FeatherModule {
         return nil
     }
 
-    func installPermissionsHook(args: HookArguments) -> [FeatherApi.System.Permission.Create] {
-        var permissions = FeatherApi.System.availablePermissions()
-        permissions += FeatherApi.System.Permission.availablePermissions()
-        permissions += FeatherApi.System.Variable.availablePermissions()
-        permissions += FeatherApi.System.Metadata.availablePermissions()
+    func installPermissionsHook(args: HookArguments) -> [FeatherPermission.Create] {
+        var permissions = FeatherSystem.availablePermissions()
+        permissions += FeatherPermission.availablePermissions()
+        permissions += FeatherVariable.availablePermissions()
+        permissions += FeatherMetadata.availablePermissions()
         return permissions.map { .init($0) }
     }
     
@@ -127,7 +129,7 @@ struct SystemModule: FeatherModule {
         ]
     }
     
-    func installSystemVariablesHook(args: HookArguments) -> [FeatherApi.System.Variable.Create] {
+    func installSystemVariablesHook(args: HookArguments) -> [FeatherVariable.Create] {
         [
             .init(key: "systemDeepLinkScheme",
                   name: "Deep linking URL scheme for client apps",

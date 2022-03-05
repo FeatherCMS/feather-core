@@ -6,7 +6,7 @@
 //
 
 struct SystemVariableAdminController: AdminController {
-    typealias ApiModel = FeatherApi.System.Variable
+    typealias ApiModel = FeatherVariable
     typealias DatabaseModel = SystemVariableModel
     
     typealias CreateModelEditor = SystemVariableEditor

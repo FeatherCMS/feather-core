@@ -16,24 +16,24 @@ public struct SystemPermissionApi {
 
 public extension SystemPermissionApi {
 
-    func list() async throws -> [FeatherApi.System.Permission.List] {
-        try await repository.list().transform(to: [FeatherApi.System.Permission.List].self)
+    func list() async throws -> [FeatherPermission.List] {
+        try await repository.list().transform(to: [FeatherPermission.List].self)
     }
     
-    func list(_ ids: [UUID]) async throws -> [FeatherApi.System.Permission.List] {
-        try await repository.get(ids).transform(to: [FeatherApi.System.Permission.List].self)
+    func list(_ ids: [UUID]) async throws -> [FeatherPermission.List] {
+        try await repository.get(ids).transform(to: [FeatherPermission.List].self)
     }
     
-    func get(_ id: UUID) async throws -> FeatherApi.System.Permission.Detail? {
-        try await repository.get(id)?.transform(to: FeatherApi.System.Permission.Detail.self)
+    func get(_ id: UUID) async throws -> FeatherPermission.Detail? {
+        try await repository.get(id)?.transform(to: FeatherPermission.Detail.self)
     }
     
-    func get(_ key: String) async throws -> FeatherApi.System.Permission.Detail? {
-        try await repository.get(key)?.transform(to: FeatherApi.System.Permission.Detail.self)
+    func get(_ key: String) async throws -> FeatherPermission.Detail? {
+        try await repository.get(key)?.transform(to: FeatherPermission.Detail.self)
     }
 
-    func get(_ ids: [UUID]) async throws -> [FeatherApi.System.Permission.Detail] {
-        try await repository.get(ids).transform(to: [FeatherApi.System.Permission.Detail].self)
+    func get(_ ids: [UUID]) async throws -> [FeatherPermission.Detail] {
+        try await repository.get(ids).transform(to: [FeatherPermission.Detail].self)
     }
 
     func optionList() async throws -> [OptionContext] {
