@@ -25,6 +25,7 @@ struct SystemModule: FeatherModule {
         app.hooks.registerAsync(.installResponse, use: installResponseHook)
         app.hooks.register(.installPermissions, use: installPermissionsHook)
         app.hooks.register(.adminWidgets, use: adminWidgetsHook, priority: 1000)
+        app.hooks.register(.installVariables, use: installSystemVariablesHook)
         
         try router.boot(app)
     }
@@ -77,6 +78,20 @@ struct SystemModule: FeatherModule {
     func adminWidgetsHook(args: HookArguments) -> [TemplateRepresentable] {
         [
             SystemAdminWidgetTemplate()
+        ]
+    }
+    
+    func installSystemVariablesHook(args: HookArguments) -> [System.Variable.Create] {
+        [
+            .init(key: "systemDeepLinkScheme",
+                  name: "Deep linking URL scheme for client apps",
+                  value: "feathercms"
+                  notes: """
+                        Deep linking URL scheme for client apps
+                        The value of this field only contains the scheme (e.g. feathercms)
+                        The final URL can be constructed should be constructed using the scheme:
+                        e.g. feathercms://[other-url-parts]
+                    """),
         ]
     }
     
