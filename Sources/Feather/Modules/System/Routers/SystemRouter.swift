@@ -48,6 +48,7 @@ struct SystemRouter: FeatherRouter {
             .grouped(publicApiMiddlewares)
         
         publicApiRoutes.get("status") { _ in "ok" }
+        publicApiRoutes.get(.catchall) { _ -> Response in throw Abort(.notFound) }
         
         var publicApiArguments = HookArguments()
         publicApiArguments.routes = publicApiRoutes
