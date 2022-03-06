@@ -16,8 +16,7 @@ public extension HookName {
     
     static let publicApiRoutes: HookName = "public-api-routes"
     static let publicApiMiddlewares: HookName = "public-api-middlewares"
-    
-    static let webMenu: HookName = "web-menu"
+
     static let webRoutes: HookName = "web-routes"
     static let webMiddlewares: HookName = "web-middlewares"
 
@@ -26,6 +25,7 @@ public extension HookName {
     static let installResponse: HookName = "install-response"
     static let installPermissions: HookName = "install-permissions"
     static let installVariables: HookName = "install-variables"
+    static let installMenuItems: HookName = "install-menu-items"
     
     static let filters: HookName = "filters"
     
@@ -43,4 +43,8 @@ public extension HookName {
     
     static let permission: HookName = "permission"
     static let access: HookName = "access"
+    
+    static let menu: HookName = "menu"
+    static let variable: HookName = "variable"
+//    static let menuItem: HookName = "menuItem"
 }

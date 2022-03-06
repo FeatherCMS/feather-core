@@ -59,9 +59,7 @@ private extension FooterTemplate {
     }
     
     func renderSection(_ req: Request, _ id: String) -> Tag? {
-        var arguments = HookArguments()
-        arguments["menu-id"] = id
-        let ctx: MenuContext? = req.invokeAllFirst(.webMenu, args: arguments)
+        let ctx: MenuContext? = req.menu(id)
         guard let menu = ctx else {
             return nil
         }

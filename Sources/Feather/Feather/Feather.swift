@@ -159,7 +159,7 @@ public final class Feather {
         app.migrations.add(SessionRecord.migration)
         app.middleware.use(app.sessions.middleware)
         app.middleware.use(FeatherGuestUserAuthenticator())
-        
+        app.middleware.use(FeatherVariableMiddleware())
         
         var systemTemplate: SystemModuleTemplate = DefaultSystemModuleTemplate()
         if let tpl = template {

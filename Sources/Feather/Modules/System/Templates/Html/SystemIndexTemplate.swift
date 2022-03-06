@@ -53,9 +53,7 @@ private extension SystemIndexTemplate {
     }
     
     func mainMenuItems(_ req: Request) -> [Tag] {
-        var arguments = HookArguments()
-        arguments["menu-id"] = "main"
-        let ctx: MenuContext? = req.invokeAllFirst(.webMenu, args: arguments)
+        let ctx: MenuContext? = req.menu("main")
         return ctx?.items.map {
             A($0.label)
                 .href($0.path)

@@ -83,11 +83,9 @@ struct SystemRouter: FeatherRouter {
         
         let webMiddlewares: [Middleware] = args.app.invokeAllFlat(.webMiddlewares)
         let webRoutes = args.routes
+            .grouped(FeatherMenuMiddleware())
             .grouped(webMiddlewares)
-            .grouped([
-                SystemVariablesMiddleware(),
-                SystemErrorMiddleware()
-            ])
+            .grouped(SystemErrorMiddleware())
         
         var webArguments = HookArguments()
         webArguments.routes = webRoutes
@@ -102,7 +100,6 @@ struct SystemRouter: FeatherRouter {
             .grouped([
                 AccessRedirectMiddleware(FeatherSystem.permission(for: .detail)),
                 SystemAdminErrorMiddleware(),
-                SystemVariablesMiddleware()
             ])
 
         adminRoutes.get(use: adminDashboard.renderDashboardTemplate)

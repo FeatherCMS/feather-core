@@ -33,11 +33,11 @@ public extension Request {
     }
 }
 
-struct SystemVariablesMiddleware: AsyncMiddleware {
+struct FeatherVariableMiddleware: AsyncMiddleware {
 
     func respond(to req: Request, chainingTo next: AsyncResponder) async throws -> Response {
 //        try await req.application.myConfiguration.loadVariables(req)
-//        let _: [Void] = try await req.invokeAllFlatAsync(.loadVariables)
+//        let _: [FeatherVariable] = try await req.invokeAllFlatAsync(.loadVariables)
         let variables = try await SystemVariableModel.query(on: req.db).all()
         for variable in variables {
             if let value = variable.value {
