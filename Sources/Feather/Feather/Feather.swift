@@ -76,7 +76,7 @@ public final class Feather {
     unowned var app: Application
     public private(set) var moduleManager: FeatherModuleManager
     
-    public let baseUrl: String
+    public let publicUrl: String
     public let workDir: String
     public let https: Bool
     public let hostname: String
@@ -127,10 +127,11 @@ public final class Feather {
         self.https = Environment.featherBool("https")
         self.hostname = Environment.featherString("hostname", "127.0.0.1")
         self.port = Environment.featherInt("port", 8080)
+        let baseUrl = (https ? "https" : "http") + "://" + hostname + (port != 80 ? ":\(port)" : "")
+        self.publicUrl = Environment.featherString("public_url", baseUrl)
         self.maxBodySize = ByteCount(stringLiteral: Environment.featherString("max_body_size", "10mb"))
         self.disableFileMiddleware = Environment.featherBool("disable_file_middleware")
         self.disableApiSessionAuthMiddleware = Environment.featherBool("disable_api_session_middleware")
-        self.baseUrl = (https ? "https" : "http") + "://" + hostname + ":" + (port == 80 ? "" : String(port))
         self.paths = Paths(workDir)
     }
 
@@ -217,13 +218,10 @@ private extension Feather {
     }
 
     func copySystemModuleBundle() throws {
-        Self.logger.warning(.init(stringLiteral: Bundle.module.resourceURL?.path ?? ""))
         guard let bundleUrl = Bundle.module.resourceURL?.appendingPathComponent("Bundle") else {
-            Self.logger.warning("no system bundle")
             return
         }
         let moduleUrl = bundleUrl.appendingPathComponent(SystemModule.uniqueKey.capitalized)
-        Self.logger.warning(.init(stringLiteral: moduleUrl.path))
         try copyPublicFiles(at: moduleUrl, to: SystemModule.uniqueKey)
     }
     
@@ -232,8 +230,6 @@ private extension Feather {
             let staticModule = type(of: module)
             let moduleUrl = staticModule.bundleUrl!
             let moduleName = staticModule.uniqueKey.lowercased()
-            
-            Self.logger.warning(.init(stringLiteral: moduleUrl.path))
             try copyPublicFiles(at: moduleUrl, to: moduleName)
         }
     }
