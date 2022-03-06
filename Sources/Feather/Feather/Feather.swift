@@ -23,8 +23,9 @@ public final class Feather {
      # .env example
      FEATHER_WORK_DIR=/Users/me/feather
      FEATHER_HTTPS=false
-     FEATHER_DOMAIN=localhost
+     FEATHER_HOSTNAME="0.0.0.0"
      FEATHER_PORT=8080
+     FEATHER_PUBLIC_URL="https://feathercms.com"
      FEATHER_MAX_BODY_SIZE=10mb
      FEATHER_DISABLE_FILE_MIDDLEWARE=true
      FEATHER_DISABLE_API_SESSION_MIDDLEWARE=true
