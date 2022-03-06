@@ -13,17 +13,6 @@ import LiquidLocalDriver
 import Mail
 import MailAwsDriver
 
-//import SystemModule
-//import WebModule
-
-/// https://github.com/vapor/fluent/blob/main/Sources/Fluent/Exports.swift
-infix operator ~~
-infix operator =~
-infix operator !~
-infix operator !=~
-infix operator !~=
-
-
 public func configure(_ app: Application) throws {
     app.feather.boot()
 
@@ -35,11 +24,7 @@ public func configure(_ app: Application) throws {
 
     app.mailProviders.use(.ses(credentialProvider: .default, region: .eucentral1), as: .ses)
 
-    
-    try app.feather.start([
-//        SystemBuilder().build(),
-//        WebBuilder().build(),
-    ])//, template: CustomSystemModuleTemplate())
+    try app.feather.start() //template: CustomSystemModuleTemplate())
 }
 
 var env = try Environment.detect()
