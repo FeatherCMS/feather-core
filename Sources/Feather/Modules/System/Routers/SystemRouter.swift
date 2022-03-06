@@ -96,6 +96,7 @@ struct SystemRouter: FeatherRouter {
         let adminMiddlewares: [Middleware] = args.app.invokeAllFlat(.adminMiddlewares)
         let adminRoutes = args.routes
             .grouped(args.app.feather.config.paths.admin.pathComponent)
+            .grouped(FeatherMenuMiddleware())
             .grouped(adminMiddlewares)
             .grouped([
                 AccessRedirectMiddleware(FeatherSystem.permission(for: .detail)),
