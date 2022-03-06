@@ -222,7 +222,7 @@ private extension Feather {
             Self.logger.warning("no system bundle")
             return
         }
-        let moduleUrl = bundleUrl.appendingPathComponent(SystemModule.uniqueKey)
+        let moduleUrl = bundleUrl.appendingPathComponent(SystemModule.uniqueKey.capitalized)
         Self.logger.warning(.init(stringLiteral: moduleUrl.path))
         try copyPublicFiles(at: moduleUrl, to: SystemModule.uniqueKey)
     }
