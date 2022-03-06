@@ -110,7 +110,7 @@ struct SystemFileBrowserTemplate: TemplateRepresentable {
                                     Td {
                                         A("Delete")
                                             .href(("/admin/system/files/delete/".safePath() +
-                                                   "?key=" + item.path +
+                                                   "?path=" + item.path +
                                                    "&cancel=" + req.url.path + "?path=" + currentPath(req) +
                                                    "&redirect=" + req.url.path + "?path=" + currentPath(req)))
                                     }
