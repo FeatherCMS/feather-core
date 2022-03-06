@@ -36,6 +36,7 @@ curl \
 
 
 # create directory
+
 curl \
 -X POST "http://localhost:8080/api/system/files/directory/" \
 -H 'Content-Type: application/json' \
@@ -44,5 +45,12 @@ curl \
 # list directory
 
 curl -X GET "http://localhost:8080/api/system/files/?path=user"| jq 
+
+# delete object
+curl \
+-X DELETE "http://localhost:8080/api/system/files/" \
+-H 'Content-Type: application/json' \
+-d '{"key": "user/accounts/my_picture.png"}' | jq
+
 
 ```

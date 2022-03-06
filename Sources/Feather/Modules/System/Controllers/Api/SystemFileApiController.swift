@@ -38,7 +38,7 @@ struct SystemFileApiController: SystemFileController {
     
     // MARK: - api
     
-    func listApi(_ req: Request) async throws -> FeatherFile.Directory.List {
+    func listApi(_ req: Request) async throws -> FeatherFile.List {
         try await list(req)
     }
 

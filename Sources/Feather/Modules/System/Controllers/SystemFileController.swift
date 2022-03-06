@@ -8,7 +8,7 @@
 import Vapor
 import FeatherApi
 
-extension FeatherFile.Directory.List: Content {}
+extension FeatherFile.List: Content {}
 
 extension String {
     var fileExt: String? {
@@ -25,7 +25,7 @@ protocol SystemFileController {
     func createFileAccess(_ req: Request) async throws -> Bool
     func deleteFileAccess(_ req: Request) async throws -> Bool
         
-    func list(_ req: Request) async throws -> FeatherFile.Directory.List
+    func list(_ req: Request) async throws -> FeatherFile.List
 }
 
 extension SystemFileController {
@@ -42,7 +42,7 @@ extension SystemFileController {
         try await req.checkAccess(for: FeatherFile.permission(for: .delete))
     }
     
-    func list(_ req: Request) async throws -> FeatherFile.Directory.List {
+    func list(_ req: Request) async throws -> FeatherFile.List {
         guard try await listFileAccess(req) else {
             throw Abort(.forbidden)
         }
@@ -57,7 +57,7 @@ extension SystemFileController {
         }
 
         let children = try await req.fs.list(key: currentKey)
-            .map { key -> FeatherFile.Item in
+            .map { key -> FeatherFile.List.Item in
                 var fileKey = key
                 if let parentPath = currentKey, !parentPath.isEmpty {
                     fileKey = parentPath + "/" + key
@@ -75,8 +75,8 @@ extension SystemFileController {
                 return lhs.path < rhs.path
             }
 
-        var current: FeatherFile.Item?
-        var parent: FeatherFile.Item?
+        var current: FeatherFile.List.Item?
+        var parent: FeatherFile.List.Item?
         if let currentKey = currentKey, !currentKey.isEmpty {
             let currentName = String(currentKey.split(separator: "/").last!)
             current = .init(path: currentKey, name: currentName, ext: currentKey.fileExt)

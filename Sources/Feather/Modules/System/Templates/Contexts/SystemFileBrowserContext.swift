@@ -9,9 +9,9 @@ import FeatherApi
 
 struct SystemFileBrowserContext {
 
-    let list: FeatherFile.Directory.List
+    let list: FeatherFile.List
     
-    init(list: FeatherFile.Directory.List) {
+    init(list: FeatherFile.List) {
         self.list = list
     }
 }
