@@ -77,6 +77,7 @@ struct SystemModule: FeatherModule {
         permissions += FeatherPermission.availablePermissions()
         permissions += FeatherVariable.availablePermissions()
         permissions += FeatherMetadata.availablePermissions()
+        permissions += FeatherFile.availablePermissions()
         return permissions.map { .init($0) }
     }
     
