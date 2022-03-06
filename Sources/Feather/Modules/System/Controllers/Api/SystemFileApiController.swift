@@ -8,18 +8,7 @@
 import Vapor
 import FeatherApi
 
-struct SystemFileApiController {
-            
-//    func listApi(_ req: Request) async throws -> SystemFile.List {
-//        try await list(req)
-//    }
-//
-//    func createDirectoryApi(_ req: Request) async throws -> HTTPStatus {
-//        let input = try req.content.decode(SystemFile.Directory.Create.self)
-//        let directoryKey = String(((input.key ?? "") + "/" + input.name).safePath().dropFirst().dropLast())
-//        try await req.fs.createDirectory(key: directoryKey)
-//        return .noContent
-//    }
+struct SystemFileApiController: SystemFileController {
     
     private func getValidFileName(_ name: String, _ ext: String, existing: [String]) -> String {
         let fullName = name + "." + ext
@@ -47,7 +36,31 @@ struct SystemFileApiController {
         return name + "_" + String(n + 1)
     }
     
+    // MARK: - api
+    
+    func listApi(_ req: Request) async throws -> FeatherFile.Directory.List {
+        try await list(req)
+    }
+
+    func createDirectoryApi(_ req: Request) async throws -> HTTPStatus {
+        guard try await createFileAccess(req) else {
+            throw Abort(.forbidden)
+        }
+        
+        try await RequestValidator([
+            KeyedContentValidator<String>.required("name"),
+        ]).validate(req)
+
+        let input = try req.content.decode(FeatherFile.Directory.Create.self)
+        let directoryKey = String(((input.path ?? "") + "/" + input.name).safePath().dropFirst().dropLast())
+        try await req.fs.createDirectory(key: directoryKey)
+        return .noContent
+    }
+    
     func uploadApi(_ req: Request) async throws -> FeatherFile {
+        guard try await createFileAccess(req) else {
+            throw Abort(.forbidden)
+        }
         try await RequestValidator([
             KeyedQueryValidator<String>.required("path"),
             KeyedQueryValidator<String>.required("ext"),
@@ -75,8 +88,15 @@ struct SystemFileApiController {
         _ = try await req.fs.upload(key: fileKey, data: data)
         return .init(path: path, name: finalName, ext: ext)
     }
-    
+
     func deleteApi(_ req: Request) async throws -> HTTPStatus {
+        guard try await deleteFileAccess(req) else {
+            throw Abort(.forbidden)
+        }
+        try await RequestValidator([
+            KeyedContentValidator<String>.required("key"),
+        ]).validate(req)
+
         let key = try req.query.get(String.self, at: "key")
         _ = try await req.fs.delete(key: key)
         return .noContent
@@ -86,16 +106,14 @@ struct SystemFileApiController {
         let group = routes
             .grouped(FeatherSystem.pathKey.pathComponent)
             .grouped(FeatherFile.pathKey.pathComponent)
-        
+
         group.post(use: uploadApi)
-        
-//        let moduleRoutes = args.routes.grouped(System.pathKey.pathComponent)
-//        moduleRoutes.get("files", use: fileApiController.listApi)
-//        moduleRoutes.post("files", use: fileApiController.uploadApi)
-//        moduleRoutes.delete("files", use: fileApiController.deleteApi)
-//        
-//        let filesRoutes = moduleRoutes.grouped("files")
-//        filesRoutes.post("directory", use: fileApiController.createDirectoryApi)
+        group.get(use: listApi)
+        group.delete(use: deleteApi)
+
+        group.group("directory") { group in
+            group.post(use: createDirectoryApi)
+        }
     }
 }
 

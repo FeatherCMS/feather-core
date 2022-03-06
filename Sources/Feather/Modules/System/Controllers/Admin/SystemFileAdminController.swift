@@ -11,6 +11,9 @@ import FeatherApi
 struct SystemFileAdminController: SystemFileController {
 
     func listView(_ req: Request) async throws -> Response {
+        guard try await listFileAccess(req) else {
+            throw Abort(.forbidden)
+        }
         let list = try await list(req)
         let template = SystemFileBrowserTemplate(.init(list: list))
         return req.templates.renderHtml(template)
@@ -24,6 +27,9 @@ struct SystemFileAdminController: SystemFileController {
     }
     
     func createDirectoryView(_ req: Request) async throws -> Response {
+        guard try await createFileAccess(req) else {
+            throw Abort(.forbidden)
+        }
         let form = SystemFileCreateDirectoryForm()
         form.fields = form.createFields(req)
         try await form.load(req: req)
@@ -31,6 +37,9 @@ struct SystemFileAdminController: SystemFileController {
     }
     
     func createDirectoryAction(_ req: Request) async throws -> Response {
+        guard try await createFileAccess(req) else {
+            throw Abort(.forbidden)
+        }
         let form = SystemFileCreateDirectoryForm()
         form.fields = form.createFields(req)
         try await form.load(req: req)
@@ -40,8 +49,8 @@ struct SystemFileAdminController: SystemFileController {
             return renderCreateDirectoryView(req, form: form)
         }
         try await form.read(req: req)
-        let key = req.query["key"] ?? ""
-        let queryString = key.isEmpty ? "" : "?key=\(key)"
+        let key = req.query["path"] ?? ""
+        let queryString = key.isEmpty ? "" : "?path=\(key)"
         /// remove leading and trailing / after safePath call
         let directoryKey = String((key + "/" + form.name).safePath().dropFirst().dropLast())
         try await req.fs.createDirectory(key: directoryKey)
@@ -61,6 +70,9 @@ struct SystemFileAdminController: SystemFileController {
     }
     
     func uploadView(_ req: Request) async throws -> Response {
+        guard try await createFileAccess(req) else {
+            throw Abort(.forbidden)
+        }
         let form = SystemFileUploadForm()
         form.fields = form.createFields(req)
         try await form.load(req: req)
@@ -68,6 +80,9 @@ struct SystemFileAdminController: SystemFileController {
     }
     
     func uploadAction(_ req: Request) async throws -> Response {
+        guard try await createFileAccess(req) else {
+            throw Abort(.forbidden)
+        }
         let form = SystemFileUploadForm()
         form.fields = form.createFields(req)
         try await form.process(req: req)
@@ -76,8 +91,8 @@ struct SystemFileAdminController: SystemFileController {
             return renderUploadView(req, form: form)
         }
         try await form.read(req: req)
-        let key = req.query["key"] ?? ""
-        let queryString = key.isEmpty ? "" : "?key=\(key)"
+        let key = req.query["path"] ?? ""
+        let queryString = key.isEmpty ? "" : "?path=\(key)"
         try await form.files.forEachAsync { file  in
             let fileKey = String((key + "/" + file.filename).safePath().dropFirst())
             _ = try await req.fs.upload(key: fileKey, data: file.byteBuffer.data!)
@@ -88,9 +103,12 @@ struct SystemFileAdminController: SystemFileController {
     // MARK: - delete
     
     func deleteView(_ req: Request) async throws -> Response {
+        guard try await deleteFileAccess(req) else {
+            throw Abort(.forbidden)
+        }
         var key: String? = nil
         var exists: Bool = true
-        if let keyValue = try? req.query.get(String.self, at: "key"), !keyValue.isEmpty {
+        if let keyValue = try? req.query.get(String.self, at: "path"), !keyValue.isEmpty {
             key = keyValue
             exists = await req.fs.exists(key: keyValue)
         }
@@ -109,10 +127,9 @@ struct SystemFileAdminController: SystemFileController {
     }
     
     func deleteAction(_ req: Request) async throws -> Response {
-//        let hasAccess = try await deleteAccess(req)
-//        guard hasAccess else {
-//            throw Abort(.forbidden)
-//        }
+        guard try await deleteFileAccess(req) else {
+            throw Abort(.forbidden)
+        }
         let form = DeleteForm()
         /// validate nonce token
         let isValid = try await form.validate(req: req)
@@ -120,7 +137,7 @@ struct SystemFileAdminController: SystemFileController {
             throw Abort(.badRequest)
         }
         
-        if let keyValue = try? req.query.get(String.self, at: "key"), !keyValue.isEmpty {
+        if let keyValue = try? req.query.get(String.self, at: "path"), !keyValue.isEmpty {
             try await req.fs.delete(key: keyValue)
         }
 

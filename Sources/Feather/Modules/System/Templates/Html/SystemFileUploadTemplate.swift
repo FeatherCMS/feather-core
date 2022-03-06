@@ -8,23 +8,9 @@
 import Vapor
 import SwiftHtml
 
-struct SystemFileUploadTemplate: TemplateRepresentable {
+final class SystemFileUploadTemplate: AbstractTemplate<SystemFileUploadContext> {
     
-    var context: SystemFileUploadContext
-    
-    init(_ context: SystemFileUploadContext) {
-        self.context = context
-    }
-    
-    func currentKey(_ req: Request) -> String {
-        if let key = try? req.query.get(String.self, at: "key") {
-            return key
-        }
-        return ""
-    }
-    
-    @TagBuilder
-    func render(_ req: Request) -> Tag {
+    override func render(_ req: Request) -> Tag {
         SystemIndexTemplate(.init(title: "Upload files")) { //}, breadcrumbs: [
 //            LinkContext(label: "System", dropLast: 2),
 //            LinkContext(label: "Files", dropLast: 1),

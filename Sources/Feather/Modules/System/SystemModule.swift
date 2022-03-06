@@ -30,12 +30,13 @@ extension FeatherFile {
     struct Directory: Codable {
     
         public struct Create: Codable {
-            public let key: String?
             public let name: String
-            
-            public init(key: String?, name: String) {
-                self.key = key
+            public let path: String?
+
+            public init(name: String, path: String? = nil) {
+                
                 self.name = name
+                self.path = path
             }
         }
         

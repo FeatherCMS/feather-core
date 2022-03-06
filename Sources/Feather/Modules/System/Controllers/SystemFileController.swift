@@ -20,15 +20,35 @@ extension String {
 }
 
 protocol SystemFileController {
+
+    func listFileAccess(_ req: Request) async throws -> Bool
+    func createFileAccess(_ req: Request) async throws -> Bool
+    func deleteFileAccess(_ req: Request) async throws -> Bool
+        
     func list(_ req: Request) async throws -> FeatherFile.Directory.List
 }
 
 extension SystemFileController {
+    
+    func listFileAccess(_ req: Request) async throws -> Bool {
+        try await req.checkAccess(for: FeatherFile.permission(for: .list))
+    }
 
+    func createFileAccess(_ req: Request) async throws -> Bool {
+        try await req.checkAccess(for: FeatherFile.permission(for: .create))
+    }
+    
+    func deleteFileAccess(_ req: Request) async throws -> Bool {
+        try await req.checkAccess(for: FeatherFile.permission(for: .delete))
+    }
+    
     func list(_ req: Request) async throws -> FeatherFile.Directory.List {
+        guard try await listFileAccess(req) else {
+            throw Abort(.forbidden)
+        }
         var currentKey: String? = nil
         var exists = true
-        if let rawPath = try? req.query.get(String.self, at: "key"), !rawPath.isEmpty {
+        if let rawPath = try? req.query.get(String.self, at: "path"), !rawPath.isEmpty {
             exists = await req.fs.exists(key: rawPath)
             currentKey = rawPath
         }

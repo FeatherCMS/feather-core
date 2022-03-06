@@ -17,9 +17,9 @@ struct SystemFileBrowserTemplate: TemplateRepresentable {
         self.context = context
     }
 
-    func currentKey(_ req: Request) -> String {
-        if let key = try? req.query.get(String.self, at: "key") {
-            return key
+    func currentPath(_ req: Request) -> String {
+        if let path = try? req.query.get(String.self, at: "path") {
+            return path
         }
         return ""
     }
@@ -33,10 +33,10 @@ struct SystemFileBrowserTemplate: TemplateRepresentable {
                 LeadTemplate(.init(title: "File browser",
                                    links: [
                                     .init(label: "Create directory",
-                                          path: "/admin/system/files/directory/?key=" + currentKey(req),
+                                          path: "/admin/system/files/directory/?path=" + currentPath(req),
                                           absolute: true),
                                     .init(label: "Upload files",
-                                          path: "/admin/system/files/upload/?key=" + currentKey(req),
+                                          path: "/admin/system/files/upload/?path=" + currentPath(req),
                                           absolute: true),
                                    ])).render(req)
 
@@ -58,11 +58,11 @@ struct SystemFileBrowserTemplate: TemplateRepresentable {
                                     A {
                                         Svg.folder
                                     }
-                                    .href((req.url.path.safePath() + "?key=" + parent.path))
+                                    .href((req.url.path.safePath() + "?path=" + parent.path))
                                 }
                                 Td {
                                     A("..")
-                                        .href((req.url.path.safePath() + "?key=" + parent.path))
+                                        .href((req.url.path.safePath() + "?path=" + parent.path))
                                 }
                                 if req.checkPermission("file.browser.delete") {
                                     Td("&nbsp;")
@@ -102,7 +102,7 @@ struct SystemFileBrowserTemplate: TemplateRepresentable {
                                     }
                                     else {
                                         A(item.name)
-                                            .href((req.url.path.safePath() + "?key=" + item.path))
+                                            .href((req.url.path.safePath() + "?path=" + item.path))
                                             
                                     }
                                 }
@@ -111,8 +111,8 @@ struct SystemFileBrowserTemplate: TemplateRepresentable {
                                         A("Delete")
                                             .href(("/admin/system/files/delete/".safePath() +
                                                    "?key=" + item.path +
-                                                   "&cancel=" + req.url.path + "?key=" + currentKey(req) +
-                                                   "&redirect=" + req.url.path + "?key=" + currentKey(req)))
+                                                   "&cancel=" + req.url.path + "?path=" + currentPath(req) +
+                                                   "&redirect=" + req.url.path + "?path=" + currentPath(req)))
                                     }
                                     .class("action")
                                 }

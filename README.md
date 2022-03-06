@@ -35,4 +35,14 @@ curl \
 "http://localhost:8080/api/system/files/?path=user/accounts&name=my_picture&ext=png"
 
 
+# create directory
+curl \
+-X POST "http://localhost:8080/api/system/files/directory/" \
+-H 'Content-Type: application/json' \
+-d '{"path": "user/accounts", "name": "my_dir" }' | jq
+
+# list directory
+
+curl -X GET "http://localhost:8080/api/system/files/?path=user"| jq 
+
 ```
