@@ -19,6 +19,7 @@ struct SystemRouter: FeatherRouter {
     let variableAdmin = SystemVariableAdminController()
     let metadataApi = SystemMetadataApiController()
     let metadataAdmin = SystemMetadataAdminController()
+    let fileAdmin = SystemFileAdminController()
     let fileApi = SystemFileApiController()
     
     func config(_ app: Application) throws {
@@ -109,6 +110,7 @@ struct SystemRouter: FeatherRouter {
         metadataAdmin.setUpListRoutes(adminRoutes)
         metadataAdmin.setUpDetailRoutes(adminRoutes)
         metadataAdmin.setUpUpdateRoutes(adminRoutes)
+        fileAdmin.setUpRoutes(adminRoutes)
 
         var adminArguments = HookArguments()
         adminArguments.routes = adminRoutes

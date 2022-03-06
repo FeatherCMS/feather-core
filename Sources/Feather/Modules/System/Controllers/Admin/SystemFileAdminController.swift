@@ -6,6 +6,7 @@
 //
 
 import Vapor
+import FeatherApi
 
 struct SystemFileAdminController: SystemFileController {
 
@@ -44,7 +45,7 @@ struct SystemFileAdminController: SystemFileController {
         /// remove leading and trailing / after safePath call
         let directoryKey = String((key + "/" + form.name).safePath().dropFirst().dropLast())
         try await req.fs.createDirectory(key: directoryKey)
-        return req.redirect(to: "/admin/common/files/" + queryString)
+        return req.redirect(to: "/admin/system/files/" + queryString)
     }
 
     // MARK: - upload
@@ -81,7 +82,7 @@ struct SystemFileAdminController: SystemFileController {
             let fileKey = String((key + "/" + file.filename).safePath().dropFirst())
             _ = try await req.fs.upload(key: fileKey, data: file.byteBuffer.data!)
         }
-        return req.redirect(to: "/admin/common/files/" + queryString)
+        return req.redirect(to: "/admin/system/files/" + queryString)
     }
     
     // MARK: - delete
@@ -123,27 +124,26 @@ struct SystemFileAdminController: SystemFileController {
             try await req.fs.delete(key: keyValue)
         }
 
-        var url = "/admin/common/files/"
+        var url = "/admin/system/files/"
         if let redirect = try? req.query.get(String.self, at: "redirect") {
             url = redirect
         }
         return req.redirect(to: url)
     }
     
-    func setUpRoutes() {
-//        let moduleRoutes = args.routes.grouped(System.pathKey.pathComponent)
-//        moduleRoutes.get("files", use: fileAdminController.listView)
-//
-//        let filesRoutes = moduleRoutes.grouped("files")
-//
-//        filesRoutes.get("directory", use: fileAdminController.createDirectoryView)
-//        filesRoutes.post("directory", use: fileAdminController.createDirectoryAction)
-//
-//        filesRoutes.get("upload", use: fileAdminController.uploadView)
-//        filesRoutes.post("upload", use: fileAdminController.uploadAction)
-//
-//        filesRoutes.get("delete", use: fileAdminController.deleteView)
-//        filesRoutes.post("delete", use: fileAdminController.deleteAction)
-        
+    func setUpRoutes(_ routes: RoutesBuilder) {
+        let moduleRoutes = routes.grouped(FeatherSystem.pathKey.pathComponent)
+        moduleRoutes.get("files", use: listView)
+
+        let filesRoutes = moduleRoutes.grouped("files")
+
+        filesRoutes.get("directory", use: createDirectoryView)
+        filesRoutes.post("directory", use: createDirectoryAction)
+
+        filesRoutes.get("upload", use: uploadView)
+        filesRoutes.post("upload", use: uploadAction)
+
+        filesRoutes.get("delete", use: deleteView)
+        filesRoutes.post("delete", use: deleteAction)
     }
 }

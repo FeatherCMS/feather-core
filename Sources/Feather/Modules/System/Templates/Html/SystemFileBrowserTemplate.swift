@@ -33,10 +33,10 @@ struct SystemFileBrowserTemplate: TemplateRepresentable {
                 LeadTemplate(.init(title: "File browser",
                                    links: [
                                     .init(label: "Create directory",
-                                          path: "/admin/common/files/directory/?key=" + currentKey(req),
+                                          path: "/admin/system/files/directory/?key=" + currentKey(req),
                                           absolute: true),
                                     .init(label: "Upload files",
-                                          path: "/admin/common/files/upload/?key=" + currentKey(req),
+                                          path: "/admin/system/files/upload/?key=" + currentKey(req),
                                           absolute: true),
                                    ])).render(req)
 
@@ -109,7 +109,7 @@ struct SystemFileBrowserTemplate: TemplateRepresentable {
                                 if req.checkPermission("file.browser.delete") {
                                     Td {
                                         A("Delete")
-                                            .href(("/admin/common/files/delete/".safePath() +
+                                            .href(("/admin/system/files/delete/".safePath() +
                                                    "?key=" + item.path +
                                                    "&cancel=" + req.url.path + "?key=" + currentKey(req) +
                                                    "&redirect=" + req.url.path + "?key=" + currentKey(req)))
