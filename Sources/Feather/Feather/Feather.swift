@@ -217,10 +217,13 @@ private extension Feather {
     }
 
     func copySystemModuleBundle() throws {
+        Self.logger.warning(.init(stringLiteral: Bundle.module.resourceURL?.path ?? ""))
         guard let bundleUrl = Bundle.module.resourceURL?.appendingPathComponent("Bundle") else {
+            Self.logger.warning("no system bundle")
             return
         }
         let moduleUrl = bundleUrl.appendingPathComponent(SystemModule.uniqueKey)
+        Self.logger.warning(.init(stringLiteral: moduleUrl.path))
         try copyPublicFiles(at: moduleUrl, to: SystemModule.uniqueKey)
     }
     
@@ -229,6 +232,8 @@ private extension Feather {
             let staticModule = type(of: module)
             let moduleUrl = staticModule.bundleUrl!
             let moduleName = staticModule.uniqueKey.lowercased()
+            
+            Self.logger.warning(.init(stringLiteral: moduleUrl.path))
             try copyPublicFiles(at: moduleUrl, to: moduleName)
         }
     }
