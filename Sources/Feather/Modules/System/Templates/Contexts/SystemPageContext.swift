@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2022. 02. 23..
 //
 
-public struct SystemWebPageContext {
+public struct SystemPageContext {
 
     public var title: String
     public var message: String

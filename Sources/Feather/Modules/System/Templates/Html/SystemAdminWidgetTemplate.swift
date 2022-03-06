@@ -17,26 +17,22 @@ struct SystemAdminWidgetTemplate: TemplateRepresentable {
         Svg.command
         H2("System")
         Ul {
-            Li {
-                A("Settings")
-                    .href("/admin/system/settings")
-            }
-
-            Li {
-                A("Files")
-                    .href("/admin/system/files/")
-            }
-            
-            if req.checkPermission(FeatherPermission.permission(for: .list)) {
+            if req.checkPermission(FeatherFile.permission(for: .list)) {
                 Li {
-                    A("Permissions")
-                        .href("/admin/system/permissions")
+                    A("Files")
+                        .href("/admin/system/files/")
                 }
             }
             if req.checkPermission(FeatherVariable.permission(for: .list)) {
                 Li {
                     A("Variables")
                         .href("/admin/system/variables/")
+                }
+            }
+            if req.checkPermission(FeatherPermission.permission(for: .list)) {
+                Li {
+                    A("Permissions")
+                        .href("/admin/system/permissions")
                 }
             }
             if req.checkPermission(FeatherMetadata.permission(for: .list)) {

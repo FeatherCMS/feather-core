@@ -19,17 +19,8 @@ struct SystemRouter: FeatherRouter {
     let variableAdmin = SystemVariableAdminController()
     let metadataApi = SystemMetadataApiController()
     let metadataAdmin = SystemMetadataAdminController()
-    let settingsAdmin = SystemSettingsAdminController()
     let fileApi = SystemFileApiController()
     
-    func boot(_ app: Application) throws {
-        
-        app.routes.get(app.feather.config.paths.sitemap.pathComponent, use: responseController.renderSitemapTemplate)
-        app.routes.get(app.feather.config.paths.rss.pathComponent, use: responseController.renderRssTemplate)
-        app.routes.get(app.feather.config.paths.robots.pathComponent, use: responseController.renderRobotsTemplate)
-        app.routes.get(app.feather.config.paths.manifest.pathComponent, use: responseController.renderManifestFile)
-    }
-
     func config(_ app: Application) throws {
         let middlewares: [Middleware] = app.invokeAllFlat(.middlewares)
         let routes = app.routes
@@ -103,8 +94,6 @@ struct SystemRouter: FeatherRouter {
                 SystemAdminErrorMiddleware(),
             ])
 
-        adminRoutes.grouped(FeatherSystem.pathKey.pathComponent).get("settings", use: settingsAdmin.settingsView)
-        adminRoutes.grouped(FeatherSystem.pathKey.pathComponent).post("settings", use: settingsAdmin.settings)
         adminRoutes.get(use: adminDashboard.renderDashboardTemplate)
         adminRoutes.get(FeatherSystem.pathKey.pathComponent) { req -> Response in
             let template = SystemAdminModulePageTemplate(.init(title: "System",

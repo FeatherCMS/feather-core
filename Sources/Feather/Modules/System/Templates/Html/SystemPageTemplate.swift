@@ -8,7 +8,7 @@
 import Vapor
 import SwiftHtml
 
-final class SystemWebPageTemplate: AbstractTemplate<SystemWebPageContext> {
+final class SystemPageTemplate: AbstractTemplate<SystemPageContext> {
 
     override func render(_ req: Request) -> Tag {
         req.app.templateEngine.system.index(.init(title: context.title)) {
