@@ -25,8 +25,8 @@ struct SystemAdminErrorTemplate: TemplateRepresentable {
                         .class("icon")
                     H1(context.title)
                     P(context.message)
-                    A("Home →")
-                        .href("/")
+                    A("Dashboard →")
+                        .href("/admin/")
                 }
             }
         }

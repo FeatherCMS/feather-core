@@ -103,23 +103,23 @@ struct SystemRouter: FeatherRouter {
                 SystemAdminErrorMiddleware(),
             ])
 
+        adminRoutes.grouped(FeatherSystem.pathKey.pathComponent).get("settings", use: settingsAdmin.settingsView)
+        adminRoutes.grouped(FeatherSystem.pathKey.pathComponent).post("settings", use: settingsAdmin.settings)
         adminRoutes.get(use: adminDashboard.renderDashboardTemplate)
         adminRoutes.get(FeatherSystem.pathKey.pathComponent) { req -> Response in
             let template = SystemAdminModulePageTemplate(.init(title: "System",
                                                                tag: SystemAdminWidgetTemplate().render(req)))
             return req.templates.renderHtml(template)
         }
+        adminRoutes.get(.catchall) { _ -> Response in throw Abort(.notFound) }
+        adminRoutes.post(.catchall) { _ -> Response in throw Abort(.notFound) }
         
         permissionAdmin.setUpRoutes(adminRoutes)
         variableAdmin.setUpRoutes(adminRoutes)
         metadataAdmin.setUpListRoutes(adminRoutes)
         metadataAdmin.setUpDetailRoutes(adminRoutes)
         metadataAdmin.setUpUpdateRoutes(adminRoutes)
-        
-        adminRoutes.grouped(FeatherSystem.pathKey.pathComponent).get("settings", use: settingsAdmin.settingsView)
-        adminRoutes.grouped(FeatherSystem.pathKey.pathComponent).post("settings", use: settingsAdmin.settings)
-        
-        
+
         var adminArguments = HookArguments()
         adminArguments.routes = adminRoutes
         let _: [Void] = args.app.invokeAll(.adminRoutes, args: adminArguments)
