@@ -44,6 +44,9 @@ public extension HookName {
     static let permission: HookName = "permission"
     static let access: HookName = "access"
     
+    /// login path hook
+    static let loginPath: HookName = "login-path"
+    
     static let menu: HookName = "menu"
     static let variable: HookName = "variable"
 //    static let menuItem: HookName = "menuItem"
