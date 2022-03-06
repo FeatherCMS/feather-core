@@ -23,7 +23,7 @@ public struct FooterTemplate: TemplateRepresentable {
                 if context.displayTopSection {
                     Wrapper {
                         Div {
-                            (1...4).compactMap { renderSection(req, "footer-\($0)") }
+                            ["nav", "feeds", "account", "links"].compactMap { renderSection(req, "footer-\($0)") }
                         }
                         .class("grid-421")
                     }
