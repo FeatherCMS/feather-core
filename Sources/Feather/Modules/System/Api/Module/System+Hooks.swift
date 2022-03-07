@@ -41,7 +41,6 @@ public extension HookName {
     static let webAssets: HookName = "web-assets"
     static let webCss: HookName = "web-css"
     static let webJs: HookName = "web-js"
-    static let webAction: HookName = "web-action"
     
     static let guestRole: HookName = "guestRole"
     static let authenticatedRole: HookName = "authenticatedRole"
