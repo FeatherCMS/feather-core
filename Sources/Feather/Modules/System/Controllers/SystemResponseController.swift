@@ -7,6 +7,8 @@
 
 import Vapor
 
+extension SystemManifestContext: Content {}
+
 struct SystemResponseController {
     
     func handle(_ req: Request) async throws -> Response {
@@ -41,5 +43,30 @@ struct SystemResponseController {
             throw Abort(.notFound)
         }
         return response
+    }
+    
+    func renderManifestFile(_ req: Request) async throws -> SystemManifestContext {
+        let assetsPath = getAssets(req)
+        let title = req.variable("webSiteTitle") ?? "Feather"
+        return .init(shortName: title,
+                     name: title,
+                     startUrl: "",
+                     themeColor: "#fff",
+                     backgroundColor: "#fff",
+                     display: .standalone,
+                     icons: getWebIcons(assetsPath) + [
+                        .init(src: "/img/\(assetsPath)/icons/mask.svg", sizes: "512x512", type: "image/svg+xml"),
+                     ],
+                     shortcuts: [])
+    }
+    
+    private func getAssets(_ req: Request) -> String {
+        req.invoke(.webAssets) ?? "system"
+    }
+    
+    private func getWebIcons(_ path: String) -> [SystemManifestContext.Icon] {
+        [57, 72, 76, 114, 120, 144, 152, 180, 192].map {
+            .init(src: "/img/\(path)/apple/icons/\($0).png", sizes: "\($0)x\($0)", type: "image/png")
+        }
     }
 }

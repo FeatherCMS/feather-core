@@ -22,6 +22,10 @@ struct SystemRouter: FeatherRouter {
     let fileAdmin = SystemFileAdminController()
     let fileApi = SystemFileApiController()
     
+    func boot(_ app: Application) throws {
+        app.routes.get(app.feather.config.paths.manifest.pathComponent, use: responseController.renderManifestFile)
+    }
+
     func config(_ app: Application) throws {
         let middlewares: [Middleware] = app.invokeAllFlat(.middlewares)
         let routes = app.routes

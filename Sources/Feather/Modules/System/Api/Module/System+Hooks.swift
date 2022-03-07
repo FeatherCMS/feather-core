@@ -37,6 +37,11 @@ public extension HookName {
     static let adminCss: HookName = "admin-css"
     static let adminJs: HookName = "admin-js"
     
+    static let webAssets: HookName = "web-assets"
+    static let webCss: HookName = "web-css"
+    static let webJs: HookName = "web-js"
+    static let webAction: HookName = "web-action"
+    
     static let guestRole: HookName = "guestRole"
     static let authenticatedRole: HookName = "authenticatedRole"
     static let rootRole: HookName = "rootRole"
