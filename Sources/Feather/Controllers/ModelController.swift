@@ -7,10 +7,10 @@
 
 import Vapor
 import Fluent
-import FeatherApi
+import FeatherObjects
 
 public protocol ModelController: Controller {
-    associatedtype ApiModel: FeatherApiModel
+    associatedtype ApiModel: FeatherObjectModel
     associatedtype DatabaseModel: FeatherDatabaseModel
     
     static var moduleName: String { get }

@@ -7,7 +7,7 @@
 
 import Vapor
 import Fluent
-import FeatherApi
+import FeatherObjects
 
 struct SystemVariableAdminController: AdminController {
     typealias ApiModel = FeatherVariable

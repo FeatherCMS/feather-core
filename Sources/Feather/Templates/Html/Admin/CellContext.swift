@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2021. 11. 28..
 //
 
-import FeatherApi
+import FeatherObjects
 
 public struct CellContext {
 

@@ -6,7 +6,7 @@
 //
 
 import Vapor
-import FeatherApi
+import FeatherObjects
 
 struct SystemApiErrorMiddleware: AsyncMiddleware {
 

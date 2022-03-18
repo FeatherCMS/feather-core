@@ -7,7 +7,7 @@
 
 import Vapor
 import Fluent
-import FeatherApi
+import FeatherObjects
 
 extension FeatherError: Content {}
 extension FeatherErrorDetail: Content {}

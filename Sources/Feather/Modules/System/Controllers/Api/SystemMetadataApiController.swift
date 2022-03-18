@@ -7,7 +7,7 @@
 
 import Vapor
 import Fluent
-import FeatherApi
+import FeatherObjects
 
 extension FeatherMetadata.List: Content {}
 extension FeatherMetadata.Detail: Content {}

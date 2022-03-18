@@ -29,20 +29,20 @@
         }
       },
       {
-        "package": "feather-api",
-        "repositoryURL": "https://github.com/feathercms/feather-api",
-        "state": {
-          "branch": "main",
-          "revision": "2d39fe35b8869390f1d938a6715aa079f95f3f92",
-          "version": null
-        }
-      },
-      {
         "package": "feather-icons",
         "repositoryURL": "https://github.com/feathercms/feather-icons",
         "state": {
           "branch": "main",
           "revision": "2d1e6715ad6f6a810434f1306d5d94691d1338d7",
+          "version": null
+        }
+      },
+      {
+        "package": "feather-objects",
+        "repositoryURL": "https://github.com/feathercms/feather-objects",
+        "state": {
+          "branch": "main",
+          "revision": "169386ce3bf664fa768186467e4aec1caaee0fcf",
           "version": null
         }
       },
@@ -60,26 +60,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-kit.git",
         "state": {
           "branch": null,
-          "revision": "9c7fbdc931ef6afa2dcd45edf253d25cadbbd5fc",
-          "version": "1.22.0"
-        }
-      },
-      {
-        "package": "fluent-sqlite-driver",
-        "repositoryURL": "https://github.com/vapor/fluent-sqlite-driver",
-        "state": {
-          "branch": null,
-          "revision": "9ca34be792979fb0f1dbd8e45b8af9f1e1440474",
-          "version": "4.1.0"
-        }
-      },
-      {
-        "package": "jmespath.swift",
-        "repositoryURL": "https://github.com/adam-fowler/jmespath.swift.git",
-        "state": {
-          "branch": null,
-          "revision": "4513d319c4aaa6c3b2ac18e1e6566a803515ad91",
-          "version": "1.0.2"
+          "revision": "19da0d91d0fa9a0cf93958d67823c0e94ef666f1",
+          "version": "1.23.0"
         }
       },
       {
@@ -101,30 +83,12 @@
         }
       },
       {
-        "package": "liquid-local-driver",
-        "repositoryURL": "https://github.com/binarybirds/liquid-local-driver",
-        "state": {
-          "branch": null,
-          "revision": "b068a1ab399d21f5d4b60eb4b0568fad4c398a59",
-          "version": "1.3.2"
-        }
-      },
-      {
         "package": "mail",
         "repositoryURL": "https://github.com/binarybirds/mail",
         "state": {
           "branch": null,
           "revision": "f1dc8be5ea3b80952fb000b32d69609961b0b3bf",
           "version": "0.0.2"
-        }
-      },
-      {
-        "package": "mail-aws-driver",
-        "repositoryURL": "https://github.com/binarybirds/mail-aws-driver",
-        "state": {
-          "branch": null,
-          "revision": "8fa1e8056a44170f2baef95fb06da609986180e9",
-          "version": "0.0.1"
         }
       },
       {
@@ -155,24 +119,6 @@
         }
       },
       {
-        "package": "soto",
-        "repositoryURL": "https://github.com/soto-project/soto.git",
-        "state": {
-          "branch": null,
-          "revision": "b98994beabdced18cbedbe50e947e6f2c8e0d602",
-          "version": "5.12.1"
-        }
-      },
-      {
-        "package": "soto-core",
-        "repositoryURL": "https://github.com/soto-project/soto-core.git",
-        "state": {
-          "branch": null,
-          "revision": "a216ea49b9ff2480ccbc5880b1aa648032433798",
-          "version": "5.9.2"
-        }
-      },
-      {
         "package": "spec",
         "repositoryURL": "https://github.com/binarybirds/spec",
         "state": {
@@ -188,24 +134,6 @@
           "branch": null,
           "revision": "9cc30f8cef132e91a07e36005612b37f918731fc",
           "version": "3.16.0"
-        }
-      },
-      {
-        "package": "sqlite-kit",
-        "repositoryURL": "https://github.com/vapor/sqlite-kit.git",
-        "state": {
-          "branch": null,
-          "revision": "0b3b12b032991de3ab5999b428a652ec29139746",
-          "version": "4.1.0"
-        }
-      },
-      {
-        "package": "sqlite-nio",
-        "repositoryURL": "https://github.com/vapor/sqlite-nio.git",
-        "state": {
-          "branch": null,
-          "revision": "6481dd0b01112d082dd7eb362782126e81964138",
-          "version": "1.1.0"
         }
       },
       {
@@ -231,8 +159,8 @@
         "repositoryURL": "https://github.com/binarybirds/swift-html",
         "state": {
           "branch": null,
-          "revision": "b2620a6747fd664c892cfd20ff38d4c445bfa0d3",
-          "version": "1.6.8"
+          "revision": "e07678a77d296e66fa891a9d4d08acc4471d1783",
+          "version": "1.6.11"
         }
       },
       {
@@ -249,8 +177,8 @@
         "repositoryURL": "https://github.com/apple/swift-metrics.git",
         "state": {
           "branch": null,
-          "revision": "3edd2f57afc4e68e23c3e4956bc8b65ca6b5b2ff",
-          "version": "2.2.0"
+          "revision": "eadb828f878fed144387e3845866225bb7082c56",
+          "version": "2.3.0"
         }
       },
       {
@@ -276,8 +204,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-http2.git",
         "state": {
           "branch": null,
-          "revision": "000ca94f9de92c95b9ac85d44600b7b0fe25a3e5",
-          "version": "1.19.2"
+          "revision": "ac2a5afce3dbb6795b4f78ec3f19726dc28f5617",
+          "version": "1.20.0"
         }
       },
       {
@@ -303,8 +231,8 @@
         "repositoryURL": "https://github.com/vapor/vapor",
         "state": {
           "branch": null,
-          "revision": "e0fd4f3d76469dd6a0efb2be5c0b2f96b7581187",
-          "version": "4.55.1"
+          "revision": "5861bf9e2cff2c4cb0dcfb0c15ecfaa8bc5630e0",
+          "version": "4.55.3"
         }
       },
       {

@@ -7,6 +7,7 @@
 
 import Vapor
 import Fluent
+import FeatherObjects
 
 public enum FieldSort: String, Codable, CaseIterable {
     case asc

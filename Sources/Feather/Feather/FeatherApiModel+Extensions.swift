@@ -6,9 +6,9 @@
 //
 
 import Vapor
-import FeatherApi
+import FeatherObjects
 
-public extension FeatherApiModel {
+public extension FeatherObjectModel {
 
     static var pathIdComponent: PathComponent {
         .init(stringLiteral: ":" + pathIdKey)

@@ -7,7 +7,7 @@
 
 import Foundation
 import Fluent
-import FeatherApi
+import FeatherObjects
 
 final class SystemPermissionModel: FeatherDatabaseModel {
     typealias Module = SystemModule

@@ -7,7 +7,7 @@
 
 import Vapor
 import Fluent
-import FeatherApi
+import FeatherObjects
 
 struct SystemMetadataAdminController: AdminListController, AdminDetailController, AdminUpdateController {
     typealias ApiModel = FeatherMetadata

@@ -7,7 +7,7 @@
 
 import Foundation
 import Fluent
-import FeatherApi
+import FeatherObjects
 
 public extension QueryBuilder where Model: MetadataRepresentable {
 

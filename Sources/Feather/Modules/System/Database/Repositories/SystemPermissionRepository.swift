@@ -7,7 +7,7 @@
 
 import Vapor
 import Fluent
-import FeatherApi
+import FeatherObjects
 
 struct SystemPermissionRepository: FeatherModelRepository {
     typealias DatabaseModel = SystemPermissionModel

@@ -7,7 +7,7 @@
 
 import Vapor
 import SwiftHtml
-import FeatherApi
+import FeatherObjects
 import FeatherIcons
 
 struct SystemAdminWidgetTemplate: TemplateRepresentable {

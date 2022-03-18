@@ -6,7 +6,7 @@
 //
 
 import Vapor
-import FeatherApi
+import FeatherObjects
 
 extension FeatherPermission.List: Content {}
 extension FeatherPermission.Detail: Content {}

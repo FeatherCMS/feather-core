@@ -6,7 +6,7 @@
 //
 
 import Vapor
-import FeatherApi
+import FeatherObjects
 
 public protocol AdminCreateController: CreateController {
     associatedtype CreateModelEditor: FeatherModelEditor
