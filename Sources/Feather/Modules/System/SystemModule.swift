@@ -98,6 +98,13 @@ struct SystemModule: FeatherModule {
                         The final URL can be constructed should be constructed using the scheme:
                         e.g. feathercms://[other-url-parts]
                     """),
+  
+            .init(key: "systemEmailAddress",
+                  name: "Sender address for general email messages",
+                  value: "noreply@feathercms.com",
+                  notes: """
+                        This mail address is going to be used as a sender address for system mails.
+                    """),
         ]
     }
     

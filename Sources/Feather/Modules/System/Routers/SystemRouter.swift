@@ -89,14 +89,14 @@ struct SystemRouter: FeatherRouter {
         
         // MARK: - admin
        
-        let path: String? = args.app.invoke(.loginPath)
+//        let path: String? = args.app.invoke(.loginPath)
         let adminMiddlewares: [Middleware] = args.app.invokeAllFlat(.adminMiddlewares)
         let adminRoutes = args.routes
             .grouped(args.app.feather.config.paths.admin.pathComponent)
             .grouped(FeatherMenuMiddleware())
             .grouped(adminMiddlewares)
             .grouped([
-                AccessRedirectMiddleware(FeatherSystem.permission(for: .detail), path: path ?? "/"),
+                AccessRedirectMiddleware(FeatherSystem.permission(for: .detail), path: "/"),
                 SystemAdminErrorMiddleware(),
             ])
 
