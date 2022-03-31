@@ -11,10 +11,10 @@ import Fluent
 struct SystemVariableRepository: FeatherModelRepository {
     typealias DatabaseModel = SystemVariableModel
 
-    public private(set) var req: Request
+    public private(set) var db: Database
     
-    init(_ req: Request) {
-        self.req = req
+    init(_ db: Database) {
+        self.db = db
     }
 }
 

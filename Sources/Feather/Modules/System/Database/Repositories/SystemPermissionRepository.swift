@@ -12,16 +12,16 @@ import FeatherObjects
 struct SystemPermissionRepository: FeatherModelRepository {
     typealias DatabaseModel = SystemPermissionModel
 
-    public private(set) var req: Request
+    public private(set) var db: Database
     
-    init(_ req: Request) {
-        self.req = req
+    init(_ db: Database) {
+        self.db = db
     }
 
     // MARK: - additional query methods
 
     func get(_ permission: FeatherPermission) async throws -> DatabaseModel? {
-        try await DatabaseModel.query(on: req.db)
+        try await DatabaseModel.query(on: db)
                 .filter(\.$namespace == permission.namespace)
                 .filter(\.$context == permission.context)
                 .filter(\.$action == permission.action.key)
@@ -32,13 +32,13 @@ struct SystemPermissionRepository: FeatherModelRepository {
         try await get(.init(key))
     }
 
-    func isUnique(_ permission: FeatherPermission) async throws -> Bool {
-        var query = SystemPermissionModel.query(on: req.db)
+    func isUnique(_ permission: FeatherPermission, id: UUID? = nil) async throws -> Bool {
+        var query = SystemPermissionModel.query(on: db)
             .filter(\.$namespace == permission.namespace)
             .filter(\.$context == permission.context)
             .filter(\.$action == permission.action.key)
 
-        if let modelId = FeatherPermission.getIdParameter(req) {
+        if let modelId = id {
             query = query.filter(\.$id != modelId)
         }
         let count = try await query.count()

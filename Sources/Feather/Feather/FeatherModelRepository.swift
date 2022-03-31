@@ -9,7 +9,7 @@ import Vapor
 import Fluent
 
 public protocol FeatherModelRepository {
-    var req: Request { get }
+    var db: Database { get }
 
     associatedtype DatabaseModel: FeatherDatabaseModel    
 }
@@ -17,7 +17,7 @@ public protocol FeatherModelRepository {
 public extension FeatherModelRepository where DatabaseModel.IDValue == UUID {
 
     func query() -> QueryBuilder<DatabaseModel> {
-        DatabaseModel.query(on: req.db)
+        DatabaseModel.query(on: db)
     }
     
     func query(_ id: UUID) -> QueryBuilder<DatabaseModel> {
@@ -41,12 +41,12 @@ public extension FeatherModelRepository where DatabaseModel.IDValue == UUID {
     }
 
     func create(_ model: DatabaseModel) async throws -> DatabaseModel {
-        try await model.create(on: req.db)
+        try await model.create(on: db)
         return model
     }
     
     func update(_ model: DatabaseModel) async throws -> DatabaseModel {
-        try await model.update(on: req.db)
+        try await model.update(on: db)
         return model
     }
 

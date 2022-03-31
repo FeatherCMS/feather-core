@@ -6,23 +6,24 @@
 //
 
 import Vapor
+import Fluent
 
 public struct SystemApi {
-    private var req: Request
+    private var db: Database
     
-    public var permission: SystemPermissionApi { .init(.init(req)) }
-    public var variable: SystemVariableApi { .init(.init(req)) }
-    public var metadata: SystemMetadataApi { .init(.init(req)) }
+    public var permission: SystemPermissionApi { .init(.init(db)) }
+    public var variable: SystemVariableApi { .init(.init(db)) }
+    public var metadata: SystemMetadataApi { .init(.init(db)) }
 
-    init(_ req: Request) {
-        self.req = req
+    init(_ db: Database) {
+        self.db = db
     }
 }
 
 
 public extension Request {
 
-    var system: SystemApi { .init(self) }
+    var system: SystemApi { .init(self.db) }
 }
 
 public extension TemplateEngine {
