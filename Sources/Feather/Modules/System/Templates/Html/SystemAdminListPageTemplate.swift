@@ -8,16 +8,15 @@
 import Vapor
 import SwiftHtml
 
-struct SystemAdminListPageTemplate: TemplateRepresentable {
+public struct SystemAdminListPageTemplate: TemplateRepresentable {
     
     var context: SystemAdminListPageContext
 
-    init(_ context: SystemAdminListPageContext) {
+    public init(_ context: SystemAdminListPageContext) {
         self.context = context
     }
 
-    @TagBuilder
-    func render(_ req: Request) -> Tag {
+    public func render(_ req: Request) -> Tag {
         SystemAdminIndexTemplate(.init(title: context.title, breadcrumbs: context.breadcrumbs)) {
             Wrapper {
                 LeadTemplate(.init(title: context.title, links: context.navigation)).render(req)
