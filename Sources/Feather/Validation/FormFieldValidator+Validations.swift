@@ -19,7 +19,7 @@ public extension FormFieldValidator where Input == String {
     }
     
     static func max(_ field: AbstractFormField<Input, Output>, length: Int, message: String? = nil) -> FormFieldValidator<Input, Output> {
-        let msg = message ?? "\(field.key.capitalized) is too short (min: \(length) characters)"
+        let msg = message ?? "\(field.key.capitalized) is too long (min: \(length) characters)"
         return .init(field, msg) { _, field in field.input.count <= length }
     }
 
