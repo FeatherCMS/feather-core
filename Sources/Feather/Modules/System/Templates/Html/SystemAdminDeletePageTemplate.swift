@@ -8,11 +8,11 @@
 import Vapor
 import SwiftHtml
 
-struct SystemAdminDeletePageTemplate: TemplateRepresentable {
+public struct SystemAdminDeletePageTemplate: TemplateRepresentable {
 
-    var context: SystemAdminDeletePageContext
+    public var context: SystemAdminDeletePageContext
 
-    init(_ context: SystemAdminDeletePageContext) {
+    public init(_ context: SystemAdminDeletePageContext) {
         self.context = context
     }
     
@@ -20,7 +20,7 @@ struct SystemAdminDeletePageTemplate: TemplateRepresentable {
         "You are about to permanently delete the<br>`\(context.name)` \(context.type.lowercased())."
     }
 
-    func render(_ req: Request) -> Tag {
+    public func render(_ req: Request) -> Tag {
         SystemAdminIndexTemplate(.init(title: context.title, breadcrumbs: context.breadcrumbs)) {
             Wrapper {
                 Container {
