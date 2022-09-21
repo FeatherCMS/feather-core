@@ -7,8 +7,15 @@
 
 import SwiftHtml
 
-public struct SystemAdminDashboardContext {
+struct SystemAdminDashboardContext {
 
-    var title: String
-    var widgets: [Tag]
+    struct WidgetGroupContext {
+        let id: String
+        let title: String
+        let excerpt: String 
+        let tags: [Tag]
+    }
+    
+    let title: String
+    let groups: [WidgetGroupContext]
 }

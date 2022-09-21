@@ -33,6 +33,8 @@ public extension HookName {
     static let adminMiddlewares: HookName = "admin-middlewares"
     static let adminWidgets: HookName = "admin-widgets"
     
+    static let adminWidgetGroups: HookName = "admin-widget-groups"
+    
     static let adminAssets: HookName = "admin-assets"
     static let adminCss: HookName = "admin-css"
     static let adminJs: HookName = "admin-js"
