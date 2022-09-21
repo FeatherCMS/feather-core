@@ -20,9 +20,15 @@ struct SystemAdminDashboardTemplate: TemplateRepresentable {
     func render(_ req: Request) -> Tag {
         SystemAdminIndexTemplate(.init(title: context.title)) {
             Wrapper {
+                H1("Dashboard")
+                P("Welcome to the admin interface.")
+                
                 for group in context.groups {
-                    LeadTemplate(.init(title: group.title, excerpt: group.excerpt))
-                        .render(req)
+                    Div {
+                        H2(group.title)
+                        P(group.excerpt)
+                    }
+                    .class("lead")
 
                     Section {
                         group.tags.map { tag in
