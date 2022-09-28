@@ -17,9 +17,12 @@ public protocol AdminUpdateController: UpdateController {
     
     func updateTemplate(_ req: Request, _ editor: UpdateModelEditor) -> TemplateRepresentable
     
+    
     func updateContext(_ req: Request, _ editor: UpdateModelEditor) -> SystemAdminEditorPageContext
+    func updateTitle(_ req: Request, _ model: DatabaseModel) -> String
     func updateBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
     func updateNavigation(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
+    func updateActions(_ req: Request, _ model: DatabaseModel) -> [LinkContext]
     
     func setUpUpdateRoutes(_ routes: RoutesBuilder)
 }
@@ -73,17 +76,15 @@ public extension AdminUpdateController {
     }
     
     func updateContext(_ req: Request, _ editor: UpdateModelEditor) -> SystemAdminEditorPageContext {
-        .init(title: "Edit " + Self.modelName.singular.lowercased(),
+        .init(title: updateTitle(req, editor.model as! DatabaseModel),
              form: editor.form.context(req),
              navigation: updateNavigation(req, editor.model as! DatabaseModel),
              breadcrumbs: updateBreadcrumbs(req, editor.model as! DatabaseModel),
-             actions: [
-                LinkContext(label: "Delete",
-                            path: "delete/?redirect=" + req.url.path.pathComponents.dropLast(2).path + "&cancel=" + req.url.path,
-                            dropLast: 1,
-                            permission: ApiModel.permission(for: .delete).key,
-                            style: .destructive),
-             ])
+              actions: updateActions(req, editor.model as! DatabaseModel))
+    }
+    
+    func updateTitle(_ req: Request, _ model: DatabaseModel) -> String {
+        "Edit " + Self.modelName.singular.lowercased()
     }
     
     func updateBreadcrumbs(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
@@ -102,6 +103,16 @@ public extension AdminUpdateController {
             LinkContext(label: "Details",
                         dropLast: 1,
                         permission: ApiModel.permission(for: .detail).key),
+        ]
+    }
+    
+    func updateActions(_ req: Request, _ model: DatabaseModel) -> [LinkContext] {
+        [
+           LinkContext(label: "Delete",
+                       path: "delete/?redirect=" + req.url.path.pathComponents.dropLast(2).path + "&cancel=" + req.url.path,
+                       dropLast: 1,
+                       permission: ApiModel.permission(for: .delete).key,
+                       style: .destructive),
         ]
     }
     
