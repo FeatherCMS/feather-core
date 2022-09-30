@@ -17,6 +17,7 @@ public protocol AdminListController: ListController {
     func listContext(_ req: Request, _ list: ListContainer<DatabaseModel>) -> SystemAdminListPageContext
     func listNavigation(_ req: Request) -> [LinkContext]
     func listBreadcrumbs(_ req: Request) -> [LinkContext]
+    func listActions(_ req: Request) -> [LinkContext]
     
     func setUpListRoutes(_ routes: RoutesBuilder)
 }
@@ -44,14 +45,7 @@ public extension AdminListController {
         let table = TableContext(id: [DatabaseModel.Module.uniqueKey, DatabaseModel.uniqueKey, "table"].joined(separator: "-"),
                                  columns: listColumns(),
                                  rows: rows,
-                                 actions: [
-                                    LinkContext(label: "Edit",
-                                                path: "update",
-                                                permission: ApiModel.permission(for: .update).key),
-                                    LinkContext(label: "Delete",
-                                                path: "delete/?redirect=" + req.url.path + "&cancel=" + req.url.path,
-                                                permission: ApiModel.permission(for: .delete).key),
-                                 ],
+                                 actions: listActions(req),
                                  options: .init(allowedOrders: listConfig.allowedOrders.map(\.description),
                                                 defaultSort: listConfig.defaultSort))
 
@@ -76,6 +70,17 @@ public extension AdminListController {
             LinkContext(label: Self.moduleName,
                         dropLast: 1,
                         permission: ApiModel.Module.permission(for: .detail).key),
+        ]
+    }
+    
+    func listActions(_ req: Request) -> [LinkContext] {
+        [
+            LinkContext(label: "Edit",
+                        path: "update",
+                        permission: ApiModel.permission(for: .update).key),
+            LinkContext(label: "Delete",
+                        path: "delete/?redirect=" + req.url.path + "&cancel=" + req.url.path,
+                        permission: ApiModel.permission(for: .delete).key),
         ]
     }
     
