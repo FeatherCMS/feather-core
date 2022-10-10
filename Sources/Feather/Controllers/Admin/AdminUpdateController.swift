@@ -55,6 +55,7 @@ public extension AdminUpdateController {
             throw Abort(.forbidden)
         }
         let model = try await findBy(identifier(req), req)
+        try await afterModelFetch(req, model)
         let editor = UpdateModelEditor(model: model as! UpdateModelEditor.Model, form: .init())
         editor.form.fields = editor.createFields(req)
         try await editor.load(req: req)

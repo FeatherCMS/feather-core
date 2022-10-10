@@ -48,8 +48,10 @@ public extension AdminCreateController {
             throw Abort(.forbidden)
         }
         let model = DatabaseModel()
+        try await afterModelSetup(req, model)
         let editor = CreateModelEditor(model: model as! CreateModelEditor.Model, form: .init())
         editor.form.fields = editor.createFields(req)
+
         try await editor.load(req: req)
         try await editor.process(req: req)
         let isValid = try await editor.validate(req: req)

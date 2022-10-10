@@ -9,7 +9,10 @@ import Vapor
 
 public protocol UpdateController: ModelController {
 
+    
     func updateAccess(_ req: Request) async throws -> Bool
+    
+    func afterModelFetch(_ req: Request, _ model: DatabaseModel) async throws
     func beforeUpdate(_ req: Request, _ model: DatabaseModel) async throws
     func afterUpdate(_ req: Request, _ model: DatabaseModel) async throws
     
@@ -21,6 +24,10 @@ public extension UpdateController {
         try await req.checkAccess(for: ApiModel.permission(for: .update))
     }
     
+    func afterModelFetch(_ req: Request, _ model: DatabaseModel) async throws {
+        
+    }
+
     func beforeUpdate(_ req: Request, _ model: DatabaseModel) async throws {
         
     }

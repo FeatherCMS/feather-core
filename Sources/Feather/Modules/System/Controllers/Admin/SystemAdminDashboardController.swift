@@ -39,6 +39,8 @@ struct SystemAdminDashboardController {
             groups.append(.init(id: group.id, title: group.title, excerpt: group.excerpt, tags: tags))
         }
         
+        groups = groups.filter { !$0.tags.isEmpty }
+        
         let template = SystemAdminDashboardTemplate(.init(title: "Dashboard", groups: groups))
         return req.templates.renderHtml(template)
     }

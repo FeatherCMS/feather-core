@@ -96,9 +96,17 @@ struct SystemModule: FeatherModule {
         else {
             return []
         }
-        return [
-            SystemAdminWidgetTemplate()
-        ]
+        if
+            args.req.checkPermission(FeatherFile.permission(for: .list)) &&
+                args.req.checkPermission(FeatherVariable.permission(for: .list)) &&
+                args.req.checkPermission(FeatherPermission.permission(for: .list)) &&
+                args.req.checkPermission(FeatherMetadata.permission(for: .list))
+        {
+            return [
+                SystemAdminWidgetTemplate()
+            ]
+        }
+        return []
     }
     
     func installSystemVariablesHook(args: HookArguments) -> [FeatherVariable.Create] {

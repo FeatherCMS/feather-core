@@ -7,8 +7,10 @@
 
 import Vapor
 
-public protocol CreateController: ModelController {    
+public protocol CreateController: ModelController {
+
     func createAccess(_ req: Request) async throws -> Bool
+    func afterModelSetup(_ req: Request, _ model: DatabaseModel) async throws
     func beforeCreate(_ req: Request, _ model: DatabaseModel) async throws
     func afterCreate(_ req: Request, _ model: DatabaseModel) async throws
 }
@@ -18,6 +20,10 @@ public extension CreateController {
 
     func createAccess(_ req: Request) async throws -> Bool {
         try await req.checkAccess(for: ApiModel.permission(for: .create))
+    }
+    
+    func afterModelSetup(_ req: Request, _ model: DatabaseModel) async throws {
+        
     }
     
     func beforeCreate(_ req: Request, _ model: DatabaseModel) async throws {
