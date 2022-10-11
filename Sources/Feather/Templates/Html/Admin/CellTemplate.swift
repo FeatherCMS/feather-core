@@ -28,7 +28,7 @@ public struct CellTemplate: TemplateRepresentable {
                         LinkTemplate(link, pathInfix: rowId).render(req)
                     }
                     else {
-                        Text(link.label)
+                        Text(context.value ?? link.label)
                     }
                 }
                 else {

@@ -18,14 +18,23 @@ public struct DetailTemplate: TemplateRepresentable {
 
     @TagBuilder
     public func render(_ req: Request) -> Tag {
-        Dt(context.label)
+        if context.type == .separator {
+            Dt {
+                H3(context.label)
+                    .style("border-bottom: 4px solid var(--bg-color-2); text-align: left; color: var(--text-color-2)")
+            }
+        }
+        else {
+            Dt(context.label)
+        }
+        
         switch context.type {
         case .text:
             if let value = context.value, !value.isEmpty {
                 Dd(value.replacingOccurrences(of: "\n", with: "<br>"))
             }
             else {
-                Dd("&nbsp;")
+                Dd("-")
             }
         case .image:
             Dd {
@@ -33,9 +42,11 @@ public struct DetailTemplate: TemplateRepresentable {
                     Img(src: req.fs.resolve(key: value), alt: context.label)
                 }
                 else {
-                    Text("&nbsp;")
+                    Text("-")
                 }
             }
+        case .separator:
+            Dd("").style("display: none; visibility: hidden;")
         }
     }
 }

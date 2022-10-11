@@ -10,6 +10,7 @@ public struct DetailContext {
     public enum `Type`: String {
         case text
         case image
+        case separator
     }
 
     public let key: String
@@ -25,5 +26,9 @@ public struct DetailContext {
         self.label = label ?? key.capitalized
         self.value = value
         self.type = type
+    }
+    
+    public static func separator(_ title: String) -> DetailContext {
+        .init(title, nil, type: .separator)
     }
 }
