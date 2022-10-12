@@ -28,7 +28,7 @@ public struct MultipleSelectFieldTemplate: TemplateRepresentable {
                     .selected(context.values.contains(item.key))
             }
         }
-        .name(context.key)
+        .name(context.key + "[]")
         .multiple()
 
         if let error = context.error {
