@@ -37,33 +37,30 @@ public struct CellTemplate: TemplateRepresentable {
             case .image:
                 if let link = context.link {
                     if req.checkPermission(link.permission) {
-                        LinkTemplate(link, pathInfix: rowId) { [unowned req] label in
-                            if let value = context.value, !value.isEmpty {
-                                return Img(src: req.fs.resolve(key: value), alt: label)
-                            }
-                            return Text("&nbsp;")
+                        LinkTemplate(link, pathInfix: rowId) { [unowned req] _ in
+                            getImageTag(req)
                         }
                         .render(req)
                     }
                     else {
-                        if let value = context.value, !value.isEmpty {
-                            Img(src: req.fs.resolve(key: value), alt: link.label)
-                        }
-                        else {
-                            Text("&nbsp;")
-                        }
+                        getImageTag(req)
                     }
                 }
                 else {
-                    if let value = context.value, !value.isEmpty {
-                        Img(src: req.fs.resolve(key: value), alt: value)
-                    }
-                    else {
-                        Text("&nbsp;")
-                    }
+                    getImageTag(req)
                 }
             }
         }
         .class("image", context.type == .image)
+    }
+
+    private func getImageTag(_ req: Request) -> Tag {
+        if let value = context.value, !value.isEmpty {
+            return Img(src: req.fs.resolve(key: value), alt: context.link?.label ?? value)
+        }
+        if let placeholder = context.placeholder {
+            return Img(src: placeholder, alt: context.link?.label ?? placeholder)
+        }
+        return Text("&nbsp;")
     }
 }
