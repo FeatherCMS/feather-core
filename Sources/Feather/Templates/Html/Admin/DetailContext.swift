@@ -9,6 +9,7 @@ public struct DetailContext {
 
     public enum `Type`: String {
         case text
+        case link
         case image
         case separator
     }

@@ -36,6 +36,16 @@ public struct DetailTemplate: TemplateRepresentable {
             else {
                 Dd("-")
             }
+        case .link:
+            if let value = context.value, !value.isEmpty {
+                Dd {
+                    A(value)
+                        .href(value.resolve(req))
+                }
+            }
+            else {
+                Dd("-")
+            }
         case .image:
             Dd {
                 if let value = context.value, !value.isEmpty {
