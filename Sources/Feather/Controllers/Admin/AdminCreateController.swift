@@ -67,7 +67,7 @@ public extension AdminCreateController {
         components += [
             editor.model.uuid.string.pathComponent
         ]
-        return req.redirect(to: components.path)
+        return req.redirect(to: editor.form.getFormRedirect(req) ?? components.path)
     }
     
     func createTemplate(_ req: Request, _ editor: CreateModelEditor) -> TemplateRepresentable {

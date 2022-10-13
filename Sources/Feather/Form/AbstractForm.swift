@@ -12,6 +12,7 @@ open class AbstractForm: FormEventResponder {
     struct FormInput: Decodable {
         let formId: String
         let formToken: String
+        let formRedirect: String?
     }
     
     open var id: String
@@ -19,6 +20,8 @@ open class AbstractForm: FormEventResponder {
     open var action: FormAction
     open var error: String?
     open var submit: String?
+    open var redirect: String?
+    
     open var fields: [FormField] {
         didSet {
             if !fields.filter({ $0 is ImageField || $0 is MultipleFileField /*|| $0 is FileField*/ }).isEmpty {
@@ -32,12 +35,14 @@ open class AbstractForm: FormEventResponder {
                 action: FormAction = .init(),
                 error: String? = nil,
                 submit: String? = nil,
+                redirect: String? = nil,
                 fields: [FormField] = []) {
         self.id = id
         self.token = token
         self.action = action
         self.error = error
         self.submit = submit
+        self.redirect = redirect
         self.fields = fields
     }
 
@@ -46,9 +51,16 @@ open class AbstractForm: FormEventResponder {
         
     }
 
+    private func getFormInput(_ req: Request) throws -> FormInput {
+        try req.content.decode(FormInput.self)
+    }
     public func validateToken(_ req: Request) throws {
-        let context = try req.content.decode(FormInput.self)
+        let context = try getFormInput(req)
         try req.useNonce(id: context.formId, token: context.formToken)
+    }
+
+    public func getFormRedirect(_ req: Request) -> String? {
+        try? getFormInput(req).formRedirect
     }
     
     public func context(_ req: Request) -> FormContext {
@@ -57,6 +69,7 @@ open class AbstractForm: FormEventResponder {
               action: action,
               error: error,
               submit: submit,
+              redirect: redirect,
               fields: fields.map { $0.render(req: req) })
     }
     

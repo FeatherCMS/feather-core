@@ -69,7 +69,7 @@ public extension AdminUpdateController {
         try await editor.model.update(on: req.db)
         try await afterUpdate(req, model)
         try await editor.save(req: req)
-        return req.redirect(to: req.url.path)
+        return req.redirect(to: editor.form.getFormRedirect(req) ?? req.url.path)
     }
     
     func updateTemplate(_ req: Request, _ editor: UpdateModelEditor) -> TemplateRepresentable {

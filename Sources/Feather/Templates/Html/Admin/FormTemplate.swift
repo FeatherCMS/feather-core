@@ -33,6 +33,13 @@ public struct FormTemplate: TemplateRepresentable {
                 .type(.hidden)
                 .name("formToken")
                 .value(context.token)
+
+            if let redirect = context.redirect {
+                Input()
+                    .type(.hidden)
+                    .name("formRedirect")
+                    .value(redirect)
+            }
             
             context.fields.map { field in
                 Section(field.render(req))
