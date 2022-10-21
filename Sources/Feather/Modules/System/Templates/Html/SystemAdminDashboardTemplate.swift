@@ -9,8 +9,9 @@ import Vapor
 import SwiftHtml
 
 struct SystemAdminDashboardTemplate: TemplateRepresentable {
-
-    let context: SystemAdminDashboardContext
+    
+    
+    var context: SystemAdminDashboardContext
     
     init(_ context: SystemAdminDashboardContext) {
         self.context = context
@@ -20,29 +21,21 @@ struct SystemAdminDashboardTemplate: TemplateRepresentable {
     func render(_ req: Request) -> Tag {
         SystemAdminIndexTemplate(.init(title: context.title)) {
             Wrapper {
-                H1("Dashboard")
-                P("Welcome to the admin interface.")
+                LeadTemplate(.init(title: "Dashboard",
+                                   excerpt: "Overview of the content management system.")).render(req)
                 
-                for group in context.groups {
-                    Div {
-                        H2(group.title)
-                        P(group.excerpt)
-                    }
-                    .class("lead")
-
-                    Section {
-                        group.tags.map { tag in
+                Section {
+                    context.widgets.map { widget in
+                        Div {
                             Div {
-                                Div {
-                                    tag
-                                }
-                                .class("content")
+                                widget
                             }
-                            .class("card")
+                            .class("content")
                         }
+                        .class("card")
                     }
-                    .class("grid-321")
                 }
+                .class("grid-321")
             }
             .id("dashboard")
         }

@@ -32,8 +32,6 @@ struct SystemModule: FeatherModule {
         app.hooks.register(.adminWidgets, use: adminWidgetsHook, priority: 1000)
         app.hooks.register(.installVariables, use: installSystemVariablesHook)
         
-        app.hooks.registerAsync(.adminWidgetGroups, use: adminWidgetGroupsHook)
-        
         try router.boot(app)
     }
     
@@ -83,19 +81,7 @@ struct SystemModule: FeatherModule {
         return permissions.map { .init($0) }
     }
     
-    func adminWidgetGroupsHook(args: HookArguments) async throws -> [WidgetGroup] {
-        [
-            .init(id: "system", title: "System", excerpt: "System group")
-        ]
-    }
-    
     func adminWidgetsHook(args: HookArguments) -> [TemplateRepresentable] {
-        guard
-            let widgetGroup = args["widgetGroup"] as? WidgetGroup,
-            widgetGroup.id == "system"
-        else {
-            return []
-        }
         if
             args.req.checkPermission(FeatherFile.permission(for: .list)) &&
                 args.req.checkPermission(FeatherVariable.permission(for: .list)) &&
