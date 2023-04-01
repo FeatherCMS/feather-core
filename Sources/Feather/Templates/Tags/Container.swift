@@ -13,8 +13,8 @@ public final class Container: Div {
         .init(type: .standard, name: "div")
     }
 
-    public init(@TagBuilder _ builder: () -> [Tag]) {
-        super.init(builder())
+    public init(@TagBuilder _ builder: () -> Tag) {
+        super.init([builder()])
         
         _ = self.class("container")
     }

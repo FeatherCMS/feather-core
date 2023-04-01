@@ -41,7 +41,7 @@ public struct FormTemplate: TemplateRepresentable {
                     .value(redirect)
             }
             
-            context.fields.map { field in
+            for field in context.fields {
                 Section(field.render(req))
             }
             

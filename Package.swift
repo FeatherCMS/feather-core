@@ -10,11 +10,11 @@ let package = Package(
         .library(name: "Feather", targets: ["Feather"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/vapor/vapor", from: "4.55.0"),
+        .package(url: "https://github.com/vapor/vapor", from: "4.70.0"),
         .package(url: "https://github.com/vapor/fluent", from: "4.4.0"),
         .package(url: "https://github.com/binarybirds/liquid", from: "1.3.0"),
         .package(url: "https://github.com/binarybirds/mail", from: "0.0.1"),
-        .package(url: "https://github.com/binarybirds/swift-html", from: "1.6.0"),
+        .package(url: "https://github.com/binarybirds/swift-html", from: "1.7.0"),
         .package(url: "https://github.com/feathercms/feather-objects", .branch("main")),
         .package(url: "https://github.com/feathercms/feather-icons", .branch("main")),
         .package(url: "https://github.com/binarybirds/spec", from: "1.2.0"),

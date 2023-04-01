@@ -83,7 +83,7 @@ public struct TableTemplate: TemplateRepresentable {
                             CellTemplate(cell, rowId: row.id).render(req)
                         }
 
-                        availableActions(req).map { action in
+                        for action in availableActions(req) {
                             Td {
                                 A(action.label)
                                     .href(action.url(req, row.id.pathComponents))
