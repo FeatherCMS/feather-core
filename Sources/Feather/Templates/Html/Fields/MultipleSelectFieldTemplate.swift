@@ -29,6 +29,8 @@ public struct MultipleSelectFieldTemplate: TemplateRepresentable {
             }
         }
         .name(context.key + "[]")
+        .flagAttribute("data-multi-select-plugin")
+        .attribute("placeholder", "Select " + (context.label.title ?? context.key))
         .multiple()
 
         if let error = context.error {
