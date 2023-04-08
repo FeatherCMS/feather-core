@@ -48,7 +48,7 @@ function initMultiSelect(element) {
     input.addEventListener("keydown", deletePressed);
     input.addEventListener("click", openOptions);
     const dropdown_icon = document.createElement("a");
-    dropdown_icon.setAttribute("href", "#");
+//    dropdown_icon.setAttribute("href", "#");
     dropdown_icon.classList.add("dropdown-icon");
     dropdown_icon.addEventListener("click", clickDropdown);
     const autocomplete_list = document.createElement("ul");
@@ -107,9 +107,10 @@ function clickOnWrapper(e) {
             const event = new Event('click');
             dropdown.dispatchEvent(event);
         }
-        input_search.focus();
+//        input_search.focus();
         removePlaceholder(wrapper);
     }
+    return false
 }
 function openOptions(e) {
     const input_search = e.target;
@@ -119,23 +120,26 @@ function openOptions(e) {
         const event = new Event('click');
         dropdown.dispatchEvent(event);
     }
+    e.preventDefault();
     e.stopPropagation();
 
 }
 function createToken(wrapper, value) {
+    const option = wrapper.querySelector(`select option[value="${value}"]`);
     const search = wrapper.querySelector(".search-container");
     const token = document.createElement("div");
     token.classList.add("selected-wrapper");
     const token_span = document.createElement("span");
     token_span.classList.add("selected-label");
-    token_span.innerText = value;
+    token_span.innerText = option.label;
+    token_span.setAttribute("data", value);
     const close = document.createElement("a");
     close.classList.add("selected-close");
     close.classList.add("icon-link");
     close.setAttribute("tabindex", "-1");
     close.setAttribute("data-option", value);
     close.setAttribute("data-hits", 0);
-    close.setAttribute("href", "#");
+//    close.setAttribute("href", "#");
     close.addEventListener("click", removeToken)
     token.appendChild(token_span);
     token.appendChild(close);
@@ -150,7 +154,7 @@ function clickDropdown(e) {
 
     if (dropdown.classList.contains("active")) {
         removePlaceholder(wrapper);
-        input_search.focus();
+//        input_search.focus();
 
         if (!input_search.value) {
             populateAutocompleteList(select, "", true);
@@ -162,6 +166,7 @@ function clickDropdown(e) {
         clearAutocompleteList(select);
         addPlaceholder(wrapper);
     }
+    return false
 }
 function clearAutocompleteList(select) {
     const wrapper = select.parentNode;
@@ -188,22 +193,23 @@ function populateAutocompleteList(select, query, dropdown = false) {
     const result_size = options_to_show.length;
 
     if (result_size == 1) {
-
+        const option = wrapper.querySelector(`select option[value="${options_to_show[0]}"]`);
+        
         const li = document.createElement("li");
-        li.innerText = options_to_show[0];
+        li.innerText = option.label
         li.setAttribute('data-value', options_to_show[0]);
         li.addEventListener("click", selectOption);
         autocomplete_list.appendChild(li);
         if (query.length == options_to_show[0].length) {
             const event = new Event('click');
             li.dispatchEvent(event);
-
         }
     } else if (result_size > 1) {
 
         for (let i = 0; i < result_size; i++) {
+            const option = wrapper.querySelector(`select option[value="${options_to_show[i]}"]`);
             const li = document.createElement("li");
-            li.innerText = options_to_show[i];
+            li.innerText = option.label;
             li.setAttribute('data-value', options_to_show[i]);
             li.addEventListener("click", selectOption);
             autocomplete_list.appendChild(li);
@@ -227,7 +233,7 @@ function selectOption(e) {
         input_search.value = "";
     }
 
-    input_search.focus();
+//    input_search.focus();
 
     e.target.remove();
     const autocomplete_list = wrapper.querySelector(".autocomplete-list");
@@ -242,6 +248,7 @@ function selectOption(e) {
 
     const event = new Event('keyup');
     input_search.dispatchEvent(event);
+    e.preventDefault();
     e.stopPropagation();
 }
 
@@ -284,7 +291,6 @@ function getOptions(select) {
         options_selected,
         autocomplete_options
     };
-
 }
 
 function removeToken(e) {
@@ -298,10 +304,11 @@ function removeToken(e) {
     option_to_unselect.removeAttribute("selected");
     // Remove token attribute
     e.target.parentNode.remove();
-    input_search.focus();
+//    input_search.focus();
     dropdown.classList.remove("active");
     const event = new Event('click');
     dropdown.dispatchEvent(event);
+    e.preventDefault();
     e.stopPropagation();
 }
 
