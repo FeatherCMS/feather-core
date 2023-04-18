@@ -184,7 +184,7 @@ function populateAutocompleteList(select, query, dropdown = false) {
     if (dropdown)
         options_to_show = autocomplete_options;
     else
-        options_to_show = autocomplete(query, autocomplete_options);
+        options_to_show = autocomplete(select, query, autocomplete_options);
 
     const wrapper = select.parentNode;
     const input_search = wrapper.querySelector(".search-container");
@@ -252,7 +252,7 @@ function selectOption(e) {
     e.stopPropagation();
 }
 
-function autocomplete(query, options) {
+function autocomplete(select, query, options) {
     // No query passed, just return entire list
     if (!query) {
         return options;
@@ -260,7 +260,11 @@ function autocomplete(query, options) {
     let options_return = [];
 
     for (let i = 0; i < options.length; i++) {
-        if (query.toLowerCase() === options[i].slice(0, query.length).toLowerCase()) {
+        const opt = options[i];
+        const option = select.querySelector(`option[value="${opt}"]`);
+        const label = option.label.slice(0, query.length)
+
+        if (query.toLowerCase() === label.toLowerCase()) {
             options_return.push(options[i]);
         }
     }
