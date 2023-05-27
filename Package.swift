@@ -15,11 +15,13 @@ let package = Package(
 		.package(url: "https://github.com/binarybirds/liquid", from: "1.3.0"),
 		.package(url: "https://github.com/binarybirds/mail", from: "0.0.1"),
 		.package(url: "https://github.com/binarybirds/swift-html", from: "1.7.0"),
-		.package(path: "../feather-objects"),
-		.package(path: "../feather-icons"),
-//		.package(url: "https://github.com/feathercms/feather-objects", .branch("main")),
-//		.package(url: "https://github.com/feathercms/feather-icons", .branch("main")),
+//		.package(path: "../feather-objects"),
+//		.package(path: "../feather-icons"),
 		.package(url: "https://github.com/binarybirds/spec", from: "1.2.0"),
+		.package(url: "https://github.com/Rando-Coderissian/feather-objects", .branch("test-refactor-modules")),
+		//		.package(url: "https://github.com/feathercms/feather-objects", .branch("main")),
+		.package(url: "https://github.com/feathercms/feather-icons", .branch("main")),
+
 	],
 	targets: [
 		.target(name: "FeatherCore", dependencies: [
