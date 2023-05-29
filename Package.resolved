@@ -39,9 +39,9 @@
       },
       {
         "package": "feather-objects",
-        "repositoryURL": "https://github.com/feathercms/feather-objects",
+        "repositoryURL": "https://github.com/Rando-Coderissian/feather-objects",
         "state": {
-          "branch": "main",
+          "branch": "test-refactor-modules",
           "revision": "169386ce3bf664fa768186467e4aec1caaee0fcf",
           "version": null
         }
