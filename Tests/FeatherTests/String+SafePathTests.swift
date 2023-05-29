@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import Feather
+@testable import FeatherCore
 
 final class String_SafePathTests: XCTestCase {
 
